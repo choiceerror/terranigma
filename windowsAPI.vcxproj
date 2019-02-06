@@ -150,16 +150,24 @@
     <ClInclude Include="action.h" />
     <ClInclude Include="animation.h" />
     <ClInclude Include="button.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="dungeon.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="effectManager.h" />
+    <ClInclude Include="enemyManager.h" />
     <ClInclude Include="gameNode.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="imageManager.h" />
     <ClInclude Include="inGameScene.h" />
     <ClInclude Include="iniDataManager.h" />
+    <ClInclude Include="item.h" />
     <ClInclude Include="keyAniManager.h" />
     <ClInclude Include="keyManager.h" />
     <ClInclude Include="loadingScene.h" />
+    <ClInclude Include="mapTool.h" />
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="npc.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="playGround.h" />
     <ClInclude Include="progressBar.h" />
     <ClInclude Include="randomFunction.h" />
@@ -170,25 +178,37 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="commonMacroFunction.h" />
+    <ClInclude Include="tileMap.h" />
     <ClInclude Include="timeManager.h" />
     <ClInclude Include="timer.h" />
+    <ClInclude Include="town.h" />
     <ClInclude Include="txtData.h" />
+    <ClInclude Include="ui.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="worldMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="action.cpp" />
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="button.cpp" />
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="dungeon.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="effectManager.cpp" />
+    <ClCompile Include="enemyManager.cpp" />
     <ClCompile Include="gameNode.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="imageManager.cpp" />
     <ClCompile Include="inGameScene.cpp" />
     <ClCompile Include="iniDataManager.cpp" />
+    <ClCompile Include="item.cpp" />
     <ClCompile Include="keyAniManager.cpp" />
     <ClCompile Include="keyManager.cpp" />
     <ClCompile Include="loadingScene.cpp" />
+    <ClCompile Include="mapTool.cpp" />
+    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="npc.cpp" />
+    <ClCompile Include="player.cpp" />
     <ClCompile Include="playGround.cpp" />
     <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="sceneManager.cpp" />
@@ -199,11 +219,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="tileMap.cpp" />
     <ClCompile Include="timeManager.cpp" />
     <ClCompile Include="timer.cpp" />
+    <ClCompile Include="town.cpp" />
     <ClCompile Include="txtData.cpp" />
+    <ClCompile Include="ui.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="windowsAPI.cpp" />
+    <ClCompile Include="worldMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="windowsAPI.rc" />

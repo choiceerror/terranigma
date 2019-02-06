@@ -52,6 +52,48 @@
     <Filter Include="2DFramework\loading">
       <UniqueIdentifier>{d69867cb-32ec-4cbf-bdb7-1cb47c6d89b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayGround\Scene">
+      <UniqueIdentifier>{f00335ff-c296-47de-aae7-ef46b0b7933f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\Scene\menu">
+      <UniqueIdentifier>{0d268339-3b57-4bd0-b3e9-beb8861628e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\Scene\town">
+      <UniqueIdentifier>{ba7f124b-be61-4dc6-ad0e-b06aa0858a4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\Scene\UI">
+      <UniqueIdentifier>{6656cf5e-7c60-40c0-98aa-ebe031fa0b0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\Scene\worldMap">
+      <UniqueIdentifier>{08c719e6-de10-4ce3-ae83-c06c07022ee5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\Scene\mapTool">
+      <UniqueIdentifier>{4013ed81-1b1d-4f56-af37-e25cb0c1c412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\Scene\dungeon">
+      <UniqueIdentifier>{8eebf6c3-a48f-4ee8-94d2-00310fb611c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\player">
+      <UniqueIdentifier>{66de6247-4e26-4a67-b533-144cb159d19c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\tileMap">
+      <UniqueIdentifier>{d76d5014-f81d-425c-a10b-75fbd73b86af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\enemyManager">
+      <UniqueIdentifier>{c89928db-59e5-4dff-b991-f3d2d6161a0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\item">
+      <UniqueIdentifier>{f9a3f0d3-9d3d-4030-af62-a982dd415d5a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\npc">
+      <UniqueIdentifier>{07ecd566-7071-4bc8-8e77-8b5d6770e3d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\camera">
+      <UniqueIdentifier>{50e45c2e-ec9e-45a2-b15f-297557077410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\enemy">
+      <UniqueIdentifier>{bc01b447-9401-4074-a3e8-81da2b6c98b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -135,6 +177,42 @@
     <ClInclude Include="inGameScene.h">
       <Filter>2DFramework\loading</Filter>
     </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>PlayGround\Scene\menu</Filter>
+    </ClInclude>
+    <ClInclude Include="town.h">
+      <Filter>PlayGround\Scene\town</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>PlayGround\camera</Filter>
+    </ClInclude>
+    <ClInclude Include="ui.h">
+      <Filter>PlayGround\Scene\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="worldMap.h">
+      <Filter>PlayGround\Scene\worldMap</Filter>
+    </ClInclude>
+    <ClInclude Include="mapTool.h">
+      <Filter>PlayGround\Scene\mapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="dungeon.h">
+      <Filter>PlayGround\Scene\dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>PlayGround\player</Filter>
+    </ClInclude>
+    <ClInclude Include="tileMap.h">
+      <Filter>PlayGround\tileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="enemyManager.h">
+      <Filter>PlayGround\enemyManager</Filter>
+    </ClInclude>
+    <ClInclude Include="item.h">
+      <Filter>PlayGround\item</Filter>
+    </ClInclude>
+    <ClInclude Include="npc.h">
+      <Filter>PlayGround\npc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -205,6 +283,42 @@
     </ClCompile>
     <ClCompile Include="inGameScene.cpp">
       <Filter>2DFramework\loading</Filter>
+    </ClCompile>
+    <ClCompile Include="menu.cpp">
+      <Filter>PlayGround\Scene\menu</Filter>
+    </ClCompile>
+    <ClCompile Include="town.cpp">
+      <Filter>PlayGround\Scene\town</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>PlayGround\camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ui.cpp">
+      <Filter>PlayGround\Scene\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="worldMap.cpp">
+      <Filter>PlayGround\Scene\worldMap</Filter>
+    </ClCompile>
+    <ClCompile Include="mapTool.cpp">
+      <Filter>PlayGround\Scene\mapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="dungeon.cpp">
+      <Filter>PlayGround\Scene\dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>PlayGround\player</Filter>
+    </ClCompile>
+    <ClCompile Include="tileMap.cpp">
+      <Filter>PlayGround\tileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="enemyManager.cpp">
+      <Filter>PlayGround\enemyManager</Filter>
+    </ClCompile>
+    <ClCompile Include="item.cpp">
+      <Filter>PlayGround\item</Filter>
+    </ClCompile>
+    <ClCompile Include="npc.cpp">
+      <Filter>PlayGround\npc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
