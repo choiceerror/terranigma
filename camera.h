@@ -73,9 +73,18 @@ public:
 
 	float getCameraX() { return _camera.x; }
 	void setCameraX(float x) { _camera.x = x; }
-
 	float getCameraY() { return _camera.y; }
 	void setCameraY(float y) { _camera.y = y; }
+
+	float getWinSizeX() { return _winSizeX; }
+	void setWinSizeX(float x) { _winSizeX = x; }
+	float getWinSizeY() { return _winSizeY; }
+	void setWinSizeY(float y) { _winSizeY = y; }
+
+	float getWorldMapSizeX() { return _worldMapSizeX; }
+	void setWorldMapSizeX(float x) { _worldMapSizeX = x; }
+	float getWorldMapSizeY() { return _worldMapSizeY; }
+	void setWorldMapSizeY(float y) { _worldMapSizeY = y; }
 
 	CAMERAMOD getCameraMode() { return _cameraMode; }
 	void setCameraMode(CAMERAMOD v) { _cameraMode = v; }
@@ -83,6 +92,5 @@ public:
 	void setDistance(float v) { _distance = v; }
 
 	void setAngle(float v) { _distance = v; }
-
 };
 
