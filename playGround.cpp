@@ -16,6 +16,22 @@ HRESULT playGround::init()
 {
 	gameNode::init(true);
 
+	_worldMap = new worldMap;
+	_ui = new ui;
+	_town = new town;
+	_menu = new menu;
+	_mapTool = new mapTool;
+	_dungeon = new dungeon;
+
+	SCENEMANAGER->addScene("worldMap", _worldMap);
+	SCENEMANAGER->addScene("ui", _ui);
+	SCENEMANAGER->addScene("town", _town);
+	SCENEMANAGER->addScene("menu", _menu);
+	SCENEMANAGER->addScene("mapTool", _mapTool);
+	SCENEMANAGER->addScene("dungeon", _dungeon);
+
+	SCENEMANAGER->changeScene("town");
+
 
 	return S_OK;
 }
@@ -25,7 +41,14 @@ void playGround::release()
 {
 	gameNode::release();
 
+	SCENEMANAGER->release();
 
+	SAFE_DELETE(_worldMap);
+	SAFE_DELETE(_ui);
+	SAFE_DELETE(_town);
+	SAFE_DELETE(_menu);
+	SAFE_DELETE(_mapTool);
+	SAFE_DELETE(_dungeon);
 }
 
 
@@ -33,6 +56,7 @@ void playGround::update()
 {
 	gameNode::update();
 
+	SCENEMANAGER->update();
 	
 }
 
@@ -43,7 +67,7 @@ void playGround::render()
 	PatBlt(getMemDC(), 0, 0, WINSIZEX, WINSIZEY, WHITENESS);
 	//===========================================================
 
-
+	SCENEMANAGER->render();
 
 	
 	//===========================================================

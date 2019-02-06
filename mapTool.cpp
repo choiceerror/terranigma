@@ -10,3 +10,20 @@ mapTool::mapTool()
 mapTool::~mapTool()
 {
 }
+
+HRESULT mapTool::init()
+{
+	return S_OK;
+}
+
+void mapTool::release()
+{
+}
+
+void mapTool::update()
+{
+}
+
+void mapTool::render()
+{
+}
