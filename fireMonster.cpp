@@ -18,17 +18,16 @@ HRESULT fireMonster::init(string enemyName, const char * imageName, float x, flo
 
 	_enemy.direction = FIREMONSTER_IDLE;
 
-	int idle[] = { 0 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "idle", imageName, idle, 1, 3, true);
+	int idle[] = { 0, 1, 2, 3 };
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "idle", imageName, idle, 4, 3, true);
 
-	int move[] = { 0,1,2,3 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "move", imageName, move, 4, 6, false);
+	int move[] = { 0, 1, 2, 3 };
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "move", imageName, move, 4, 3, true);
 
 	int dead[] = { 5, 6, 7, 8, 9, 4 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "dead", imageName, dead, 6, 4, false);
 
-	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "move");
-
+	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "idle");
 	return S_OK;
 }
 
@@ -40,9 +39,6 @@ void fireMonster::update(float cameraX, float cameraY)
 {
 	enemy::update(cameraX, cameraY);
 
-	_enemy.motion->start();
-	KEYANIMANAGER->update();
-	
 	move();
 }
 
@@ -53,5 +49,37 @@ void fireMonster::render(float viewX, float viewY)
 
 void fireMonster::move()
 {
-	
+	if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+	{
+		_enemy.direction = FIREMONSTER_DEAD;
+	}
+	else if (KEYMANAGER->isOnceKeyDown('S'))
+	{
+		_enemy.direction = FIREMONSTER_RIGHT_MOVE;
+	}
+	switch (_enemy.direction)
+	{
+	case FIREMONSTER_IDLE:
+
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "idle");
+		_enemy.motion->start();
+
+		break;
+	case FIREMONSTER_LEFT_MOVE:
+	case FIREMONSTER_RIGHT_MOVE:
+
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "move");
+		_enemy.motion->start();
+
+		_enemy.x += 2;
+
+		break;
+	case FIREMONSTER_DEAD:
+
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "dead");
+		_enemy.motion->start();
+		
+		
+		break;
+	}
 }

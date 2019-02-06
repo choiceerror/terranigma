@@ -30,7 +30,7 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("mapTool", _mapTool);
 	SCENEMANAGER->addScene("dungeon", _dungeon);
 
-	SCENEMANAGER->changeScene("town");
+	SCENEMANAGER->changeScene("dungeon");
 
 
 	return S_OK;
@@ -41,8 +41,6 @@ void playGround::release()
 {
 	gameNode::release();
 
-	SCENEMANAGER->release();
-
 }
 
 
@@ -51,7 +49,7 @@ void playGround::update()
 	gameNode::update();
 
 	SCENEMANAGER->update();
-	
+	KEYANIMANAGER->update();
 }
 
 

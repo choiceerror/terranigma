@@ -12,5 +12,12 @@ public:
 	virtual void render(float viewX, float viewY);
 
 	void move();
+
+public:
+	//접근자 설정자 모음
+	float getX() { return _enemy.x; }
+	float getY() { return _enemy.y; }
+	float getViewX() { return _enemy.viewX; }
+	float getViewY() { return _enemy.viewY; }
 };
 

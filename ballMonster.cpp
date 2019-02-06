@@ -16,7 +16,7 @@ HRESULT ballMonster::init(string enemyName, const char * imageName, float x, flo
 	enemy::init(enemyName, imageName, x, y, idX, idY);
 
 	_enemy.name = enemyName;
-	_enemy.direction = BALLMONSTER_DOWN_IDLE; //처음은 아래 가만히있는상태로
+	_enemy.direction = BALLMONSTER_RIGHT_MOVE;
 
 	int upIdle[] = { 0 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upIdle", imageName, upIdle, 1, 3, true);
@@ -54,7 +54,6 @@ void ballMonster::update(float cameraX, float cameraY)
 {
 	enemy::update(cameraX, cameraY);
 	move();
-	KEYANIMANAGER->update();
 	
 }
 
@@ -66,6 +65,20 @@ void ballMonster::render(float viewX, float viewY)
 
 void ballMonster::move()
 {
-	_enemy.x += 1;
-	_enemy.motion->start();
+	switch (_enemy.direction)
+	{
+	case BALLMONSTER_DOWN_IDLE:
+		_enemy.direction = BALLMONSTER_DOWN_IDLE;
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downIdle");
+		_enemy.motion->start();
+		break;
+	case BALLMONSTER_RIGHT_MOVE:
+		_enemy.direction = BALLMONSTER_RIGHT_MOVE;
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
+		_enemy.motion->start();
+		_enemy.x += 1;
+		break;
+	
+	}
+
 }

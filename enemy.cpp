@@ -45,6 +45,5 @@ void enemy::enemyMove(float cameraX, float cameraY)
 {
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
-	_enemy.motion->start();
 	_enemy.rc = RectMake(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 }

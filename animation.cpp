@@ -634,8 +634,11 @@ void animation::frameUpdate(float elapsedTime)
 			if (_nowPlayIndex == _playList.size())
 			{
 				if (_loop) _nowPlayIndex = 0;
+
 				else
 				{
+					_nowPlayIndex--;
+
 					if (_obj == NULL)
 					{
 						if (_callbackFunction != NULL) _callbackFunction();
@@ -643,21 +646,22 @@ void animation::frameUpdate(float elapsedTime)
 					else
 					{
 						_callbackFunctionParameter(_obj);
+						_nowPlayIndex = 0;
 					}
 
-
-					_nowPlayIndex--;
 					_play = FALSE;
 				}
 			}
 		}
 	}
+
 }
 
 void animation::start()
 {
 	_play = TRUE;
-	_nowPlayIndex = 0;
+	//_nowPlayIndex = 0;
+
 }
 
 void animation::stop()
