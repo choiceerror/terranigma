@@ -1,0 +1,223 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="2DFramework">
+      <UniqueIdentifier>{771b621e-ae3b-474c-b610-ddc16a0a360f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2DFramework\singletonBase">
+      <UniqueIdentifier>{39a0cede-90e4-4e9a-bd8c-8466c02fcc50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround">
+      <UniqueIdentifier>{e37d5369-ec86-4a52-8402-8a314525fb73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2DFramework\Manager">
+      <UniqueIdentifier>{793f1ed7-4eab-4a98-beb1-b6c6e0c4a84d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2DFramework\image">
+      <UniqueIdentifier>{c62ccf59-8b92-4322-a311-2b974dd6a54c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="2DFramework\progressBar">
+      <UniqueIdentifier>{131d8384-2305-4f91-9eb9-416cbfaa3e49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2DFramework\txtData">
+      <UniqueIdentifier>{6c3fff83-36d5-4a78-bb15-86d79f2ca639}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2DFramework\Timer">
+      <UniqueIdentifier>{72124606-8050-45c3-ae12-ed9db2dbbe34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2DFramework\animation">
+      <UniqueIdentifier>{514037f8-8d44-4576-bf4f-edde874f8e40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2DFramework\effect">
+      <UniqueIdentifier>{5a079868-c63d-448c-ad91-e3529a2f0702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2DFramework\button">
+      <UniqueIdentifier>{da32caab-0f28-47e9-aacd-ff92bf32a846}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2DFramework\action">
+      <UniqueIdentifier>{29ce7e2b-17af-439c-a519-f3ca2bf12ff1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2DFramework\loading">
+      <UniqueIdentifier>{d69867cb-32ec-4cbf-bdb7-1cb47c6d89b9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="commonMacroFunction.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="singletonBase.h">
+      <Filter>2DFramework\singletonBase</Filter>
+    </ClInclude>
+    <ClInclude Include="randomFunction.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="playGround.h">
+      <Filter>PlayGround</Filter>
+    </ClInclude>
+    <ClInclude Include="keyManager.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="image.h">
+      <Filter>2DFramework\image</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="imageManager.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="progressBar.h">
+      <Filter>2DFramework\progressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="txtData.h">
+      <Filter>2DFramework\txtData</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>2DFramework\Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="timeManager.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="animation.h">
+      <Filter>2DFramework\animation</Filter>
+    </ClInclude>
+    <ClInclude Include="effect.h">
+      <Filter>2DFramework\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="effectManager.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="iniDataManager.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="soundManager.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="sceneManager.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="gameNode.h">
+      <Filter>2DFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>2DFramework\button</Filter>
+    </ClInclude>
+    <ClInclude Include="action.h">
+      <Filter>2DFramework\action</Filter>
+    </ClInclude>
+    <ClInclude Include="keyAniManager.h">
+      <Filter>2DFramework\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="loadingScene.h">
+      <Filter>2DFramework\loading</Filter>
+    </ClInclude>
+    <ClInclude Include="inGameScene.h">
+      <Filter>2DFramework\loading</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="windowsAPI.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="gameNode.cpp">
+      <Filter>2DFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="playGround.cpp">
+      <Filter>PlayGround</Filter>
+    </ClCompile>
+    <ClCompile Include="keyManager.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="image.cpp">
+      <Filter>2DFramework\image</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="imageManager.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="progressBar.cpp">
+      <Filter>2DFramework\progressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="txtData.cpp">
+      <Filter>2DFramework\txtData</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>2DFramework\Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="timeManager.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="animation.cpp">
+      <Filter>2DFramework\animation</Filter>
+    </ClCompile>
+    <ClCompile Include="effect.cpp">
+      <Filter>2DFramework\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="effectManager.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="iniDataManager.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="soundManager.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="sceneManager.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="button.cpp">
+      <Filter>2DFramework\button</Filter>
+    </ClCompile>
+    <ClCompile Include="action.cpp">
+      <Filter>2DFramework\action</Filter>
+    </ClCompile>
+    <ClCompile Include="keyAniManager.cpp">
+      <Filter>2DFramework\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="loadingScene.cpp">
+      <Filter>2DFramework\loading</Filter>
+    </ClCompile>
+    <ClCompile Include="inGameScene.cpp">
+      <Filter>2DFramework\loading</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="windowsAPI.rc">
+      <Filter>리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="windowsAPI.ico">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
