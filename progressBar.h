@@ -1,6 +1,6 @@
 #pragma once
 #include "gameNode.h"
-#pragma warning(disable:4996)
+
 class progressBar : public gameNode
 {
 private:
