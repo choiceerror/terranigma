@@ -1,10 +1,11 @@
 #pragma once
 #include "gameNode.h"
-
+#include "tileMap.h"
 class mapTool : public gameNode
 {
 private:
 
+	tileMap* _MapT;
 
 public:
 	mapTool();
