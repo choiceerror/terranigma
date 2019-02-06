@@ -4,6 +4,8 @@
 //백버퍼 전역 선언
 static image* _backBuffer = IMAGEMANAGER->addImage("backBuffer", WINSIZEX, WINSIZEY);
 
+static	image* _backBuffer1 = IMAGEMANAGER->addImage("background", 800, WINSIZEY);
+
 class gameNode
 {
 private:
