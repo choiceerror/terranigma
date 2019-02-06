@@ -43,12 +43,6 @@ void playGround::release()
 
 	SCENEMANAGER->release();
 
-	SAFE_DELETE(_worldMap);
-	SAFE_DELETE(_ui);
-	SAFE_DELETE(_town);
-	SAFE_DELETE(_menu);
-	SAFE_DELETE(_mapTool);
-	SAFE_DELETE(_dungeon);
 }
 
 
