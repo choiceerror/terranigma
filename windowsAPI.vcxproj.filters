@@ -213,6 +213,21 @@
     <ClInclude Include="npc.h">
       <Filter>PlayGround\npc</Filter>
     </ClInclude>
+    <ClInclude Include="enemy.h">
+      <Filter>PlayGround\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ballMonster.h">
+      <Filter>PlayGround\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="fireMonster.h">
+      <Filter>PlayGround\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="knightMonster.h">
+      <Filter>PlayGround\enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="boss.h">
+      <Filter>PlayGround\enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -319,6 +334,21 @@
     </ClCompile>
     <ClCompile Include="npc.cpp">
       <Filter>PlayGround\npc</Filter>
+    </ClCompile>
+    <ClCompile Include="enemy.cpp">
+      <Filter>PlayGround\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="ballMonster.cpp">
+      <Filter>PlayGround\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="fireMonster.cpp">
+      <Filter>PlayGround\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="knightMonster.cpp">
+      <Filter>PlayGround\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="boss.cpp">
+      <Filter>PlayGround\enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
