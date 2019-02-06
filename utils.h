@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning(disable:4996)
 
 #define PI 3.141592f
 #define PI2 2 * PI
