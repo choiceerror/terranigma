@@ -228,9 +228,6 @@
     <ClInclude Include="boss.h">
       <Filter>PlayGround\enemy</Filter>
     </ClInclude>
-    <ClInclude Include="MapNode.h">
-      <Filter>PlayGround\tileMap</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
