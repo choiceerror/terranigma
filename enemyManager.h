@@ -7,12 +7,15 @@
 class enemyManager : public gameNode
 {
 private:
+	//볼몬스터 벡터
 	vector<ballMonster*> _vBallMonster;
 	vector<ballMonster*>::iterator _viBallMonster;
 
+	//파이어 몬스터 벡터
 	vector<fireMonster*> _vFireMonster;
 	vector<fireMonster*>::iterator _viFireMonster;
 
+	//나이트 몬스터 벡터
 	vector<knightMonster*> _vKnightMonster;
 	vector<knightMonster*>::iterator _viKnightMonster;
 public:

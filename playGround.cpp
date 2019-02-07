@@ -30,7 +30,7 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("mapTool", _mapTool);
 	SCENEMANAGER->addScene("dungeon", _dungeon);
 
-	SCENEMANAGER->changeScene("mapTool");
+	SCENEMANAGER->changeScene("dungeon");
 
 
 	return S_OK;
@@ -64,6 +64,6 @@ void playGround::render()
 
 	TIMEMANAGER->render(getMemDC());
 	//===========================================================
-	IMAGEMANAGER->findImage("backBuffer")->render(getHDC(), 0, 0);
+	this->getBackBuffer()->render(getHDC(), 0, 0);
 }
 
