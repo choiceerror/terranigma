@@ -6,8 +6,6 @@ static image* _backBuffer = IMAGEMANAGER->addImage("backBuffer", WINSIZEX, WINSI
 
 static	image* _backBuffer1 = IMAGEMANAGER->addImage("background", 800, WINSIZEY);
 
-#define MAGENTA 0xff00ff
-
 class gameNode
 {
 private:

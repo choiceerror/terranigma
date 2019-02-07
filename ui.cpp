@@ -13,6 +13,11 @@ ui::~ui()
 
 HRESULT ui::init()
 {
+
+
+
+
+
 	return S_OK;
 }
 
