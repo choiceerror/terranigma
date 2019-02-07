@@ -19,22 +19,22 @@ HRESULT ballMonster::init(string enemyName, const char * imageName, float x, flo
 	_enemy.direction = BALLMONSTER_RIGHT_MOVE;
 
 	int upIdle[] = { 0 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upIdle", imageName, upIdle, 1, 3, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upIdle", imageName, upIdle, 1, 5, true);
 
 	int upMove[] = { 1, 2, 3 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upMove", imageName, upMove, 3, 3, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upMove", imageName, upMove, 3, 5, true);
 
 	int downIdle[] = { 4 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downIdle", imageName, downIdle, 1, 3, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downIdle", imageName, downIdle, 1, 5, true);
 
 	int downMove[] = { 5, 6, 7 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downMove", imageName, downMove, 3, 3, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downMove", imageName, downMove, 3, 5, true);
 
 	int rightIdle[] = { 8 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "rightIdle", imageName, rightIdle, 1, 3, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "rightIdle", imageName, rightIdle, 1, 5, true);
 
 	int rightMove[] = { 9, 10, 11 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "rightMove", imageName, rightMove, 3, 3, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "rightMove", imageName, rightMove, 3, 5, true);
 
 	int leftIdle[] = { 12 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "leftIdle", imageName, leftIdle, 1, 3, true);
@@ -62,9 +62,9 @@ void ballMonster::update(float cameraX, float cameraY)
 
 void ballMonster::render(float viewX, float viewY)
 {
-	//_enemy.image->aniRender(getMemDC(), viewX, viewY, _enemy.motion);
-	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 5.f , 5.f);
-	//Rectangle(getMemDC(), _enemy.rc);
+	Rectangle(getMemDC(), _enemy.rangeRc);
+	Rectangle(getMemDC(), _enemy.rc);
+	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f , 2.f);
 }
 
 void ballMonster::move()

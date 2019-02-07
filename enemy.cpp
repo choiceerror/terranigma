@@ -23,7 +23,8 @@ HRESULT enemy::init(string enemyName, const char* imageName, float x, float y, i
 	_enemy.image = IMAGEMANAGER->findImage(imageName);
 	_enemy.speed = 1;
 
-	_enemy.rc = RectMake(x, y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+	_enemy.rc = RectMakeCenter(x, y, _enemy.image->getFrameWidth() * 2, _enemy.image->getFrameHeight() * 2);
+	_enemy.rangeRc = RectMakeCenter(x, y, _enemy.image->getFrameWidth() * 10, _enemy.image->getFrameHeight() * 10);
 
 	return S_OK;
 }
@@ -46,5 +47,6 @@ void enemy::enemyMove(float cameraX, float cameraY)
 {
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
-	_enemy.rc = RectMake(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+	_enemy.rc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 2, _enemy.image->getFrameHeight() * 2);
+	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 10, _enemy.image->getFrameHeight() * 10);
 }

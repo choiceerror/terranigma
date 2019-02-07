@@ -13,6 +13,11 @@ enemyManager::~enemyManager()
 
 HRESULT enemyManager::init()
 {
+	_x = WINSIZEX / 2;
+	_y = WINSIZEY / 2;
+	_radius = 50;
+	_playerRc = RectMake(_x, _y, 100, 100);
+
 	_fireMonsterBullet = new fireMonsterBullet;
 	_fireMonsterBullet->init("fireMonster", WINSIZEX, 10);
 
@@ -21,6 +26,19 @@ HRESULT enemyManager::init()
 
 void enemyManager::release()
 {
+	SAFE_DELETE(_fireMonsterBullet);
+	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
+	{
+		SAFE_DELETE((*_viBallMonster));
+	}
+	for (_viFireMonster = _vFireMonster.begin(); _viFireMonster != _vFireMonster.end(); _viFireMonster++)
+	{
+		SAFE_DELETE((*_viFireMonster));
+	}
+	for (_viKnightMonster = _vKnightMonster.begin(); _viKnightMonster != _vKnightMonster.end(); _viKnightMonster++)
+	{
+		SAFE_DELETE((*_viKnightMonster));
+	}
 }
 
 void enemyManager::update()
@@ -30,29 +48,84 @@ void enemyManager::update()
 	//불총알 발사함수
 	fireMonsterBulletFire();
 
+	if (KEYMANAGER->isStayKeyDown(VK_LEFT))
+	{
+		_x -= 3;
+	}
+	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
+	{
+		_x += 3;
+	}
+	if (KEYMANAGER->isStayKeyDown(VK_UP))
+	{
+		_y -= 3;
+	}
+	if (KEYMANAGER->isStayKeyDown(VK_DOWN))
+	{
+		_y += 3;
+	}
+	_playerRc = RectMake(_x, _y, 100, 100);
+
+
+	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
+	{
+		RECT temp;
+		if (IntersectRect(&temp, &(*_viBallMonster)->getRangeRect(), &_playerRc))
+		{
+			switch ((*_viBallMonster)->getDirection())
+			{
+			case BALLMONSTER_LEFT_IDLE:
+			case BALLMONSTER_LEFT_MOVE:
+			case BALLMONSTER_RIGHT_IDLE:
+			case BALLMONSTER_RIGHT_MOVE:
+			case BALLMONSTER_UP_IDLE:
+			case BALLMONSTER_UP_MOVE:
+			case BALLMONSTER_DOWN_IDLE:
+			case BALLMONSTER_DOWN_MOVE:
+				
+				//if (getDistance(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()) < _x + (*_viBallMonster)->getX())
+				//{
+		
+				//	(*_viBallMonster)->setY(getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()));
+				//	(*_viBallMonster)->setX(getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()));
+				//	
+				//}
+				//(*_viBallMonster)->setX((*_viBallMonster)->getX() - 3);
+				//getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY());
+				break;
+			}
+		}
+
+	}
+
 }
 
 void enemyManager::render()
 {
+
+
+	//볼몬스터 렌더링
 	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
 	{
 		(*_viBallMonster)->render((*_viBallMonster)->getViewX(), (*_viBallMonster)->getViewY());
 	}
+	//파이어몬스터 렌더링
+	for (_viFireMonster = _vFireMonster.begin(); _viFireMonster != _vFireMonster.end(); _viFireMonster++)
+	{
+		(*_viFireMonster)->render((*_viFireMonster)->getViewX(), (*_viFireMonster)->getViewY());
+	}
+	//나이트몬스터 렌더링
 	for (_viKnightMonster = _vKnightMonster.begin(); _viKnightMonster != _vKnightMonster.end(); _viKnightMonster++)
 	{
 		(*_viKnightMonster)->render((*_viKnightMonster)->getViewX(), (*_viKnightMonster)->getViewY());
 	}
 
-	for (_viFireMonster = _vFireMonster.begin(); _viFireMonster != _vFireMonster.end(); _viFireMonster++)
-	{
-		(*_viFireMonster)->render((*_viFireMonster)->getViewX(), (*_viFireMonster)->getViewY());
-	}
-
 	//불몬스터 총알 렌더
 	for (int i = 0; i < _fireMonsterBullet->getVFireBullet().size(); i++)
 	{
-		_fireMonsterBullet->render((*_fireMonsterBullet->setVFireBullet())[i].x, (*_fireMonsterBullet->setVFireBullet())[i].y);
+		_fireMonsterBullet->render(_fireMonsterBullet->getVFireBullet()[i].viewX, _fireMonsterBullet->getVFireBullet()[i].viewY);
 	}
+	Rectangle(getMemDC(), _playerRc);
 }
 
 //업데이트 모음
@@ -71,7 +144,7 @@ void enemyManager::updateCollection()
 		(*_viFireMonster)->update(0, 0);
 	}
 
-	_fireMonsterBullet->update();
+	_fireMonsterBullet->update(0, 0);
 }
 
 //에너미 셋팅
@@ -96,7 +169,7 @@ void enemyManager::setEnemy()
 			fireMonster* fm;
 			fm = new fireMonster;
 
-			fm->init("fire", "fireMonster", 100 + j * 100, 300 + i * 100, j, i);
+			fm->init("fire", "fireMonster", 100 + j * 100, 500 + i * 100, j, i);
 			_vFireMonster.push_back(fm);
 		}
 	}
@@ -113,7 +186,7 @@ void enemyManager::fireMonsterBulletFire()
 			RECT fireRc; //불몬스터 렉트
 			fireRc = (*_viFireMonster)->getRect();
 			//불몬스터로부터 불총알 발사
-			_fireMonsterBullet->fire(fireRc.left + (fireRc.right - fireRc.left) / 2, fireRc.top + (fireRc.bottom - fireRc.top) / 2, PI2, 1);
+			_fireMonsterBullet->fire(fireRc.left + (fireRc.right - fireRc.left) / 2, fireRc.top + (fireRc.bottom - fireRc.top) / 2, getAngle(fireRc.left, fireRc.top, _playerRc.left, _playerRc.top), 3);
 		}
 	}
 }

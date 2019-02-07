@@ -51,6 +51,7 @@ enum ENEMYDIRECTION
 struct tagEnemy
 {
 	RECT rc;
+	RECT rangeRc; //플레이어가 범위안에 들어올시 공격을할 판별해줄 렉트
 	float x, y;
 	float viewX, viewY;
 	int idX, idY;

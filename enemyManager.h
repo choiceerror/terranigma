@@ -22,6 +22,10 @@ private:
 
 	//파이어몬스터 총알
 	fireMonsterBullet* _fireMonsterBullet;
+
+	RECT _playerRc;
+	float _x, _y;
+	float _radius;
 public:
 	enemyManager();
 	~enemyManager();

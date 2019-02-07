@@ -35,5 +35,5 @@ void boss::update(float cameraX, float cameraY)
 
 void boss::render(float viewX, float viewY)
 {
-	_enemy.image->aniRender(getMemDC(), viewX, viewY, _enemy.motion);
+	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion);
 }

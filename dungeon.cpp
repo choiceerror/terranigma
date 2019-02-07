@@ -21,11 +21,13 @@ HRESULT dungeon::init()
 	_enemyManager = new enemyManager;
 	_enemyManager->init();
 	_enemyManager->setEnemy();
+
 	return S_OK;
 }
 
 void dungeon::release()
 {
+	SAFE_DELETE(_enemyManager);
 }
 
 void dungeon::update()

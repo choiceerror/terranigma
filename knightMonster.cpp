@@ -71,12 +71,11 @@ void knightMonster::update(float cameraX, float cameraY)
 
 void knightMonster::render(float viewX, float viewY)
 {
-	_enemy.image->aniRender(getMemDC(), viewX, viewY, _enemy.motion);
+	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f, 2.f);
 }
 
 void knightMonster::move()
 {
-
 	if (KEYMANAGER->isOnceKeyDown('F'))
 	{
 		_enemy.direction = KNIGHTMONSTER_DOWN_ATTACK;
