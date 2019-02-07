@@ -8,7 +8,7 @@
 
 #define basicTileX 30  //鸥老 x绵 唱传 肮荐
 #define basicTileY 16  //鸥老 y绵 唱传 肮荐
- 
+
 #define ATTR_UNMOVE		0x00000001
 #define ATTR_ENEMY		0x00000002
 #define ATTR_START		0x00000004
