@@ -1,6 +1,7 @@
 #pragma once
 #include "MapNode.h"
 #include "gameNode.h"
+#include "camera.h"
 #include <vector>
 
 class tileMap : public gameNode
@@ -19,9 +20,14 @@ private:
 	RECT box[5];
 	RECT tileBox[5];
 
+
+	camera* _camera;
+
 	int num;
 	int tilenum;
 	
+
+	POINTFLOAT view;
 
 public:
 	tileMap();
@@ -37,7 +43,7 @@ public:
 	void ClickBox();
 	void save();
 	void load();
-
+	void viewMove();
 	TERRAIN terrainSelect(int frameX, int frameY);
 
 	OBJECT objSelect(int frameX, int frameY);

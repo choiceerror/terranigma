@@ -22,7 +22,8 @@ HRESULT tileMap::init()
 	IMAGEMANAGER->addImage("object", "tileimage\\object.bmp", 120, 50, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("eraser", "tileimage\\eraser.bmp", 120, 50, true, RGB(255, 0, 255));
 
-
+	_camera = new camera;
+	_camera->init(800,800, tileX * TileSIZE, tileY * TileSIZE);
 
 	setUp();
 
@@ -51,8 +52,13 @@ void tileMap::update()
 {
 	ClickBox();
 
-	ptMouse2.x = _ptMouse.x;
-	ptMouse2.y = _ptMouse.y;
+	ptMouse2.x = _ptMouse.x + _camera->getCameraX();
+	ptMouse2.y = _ptMouse.y + _camera->getCameraY();
+	
+	
+	_camera->update(view.x,view.y);
+	viewMove();
+
 }
 
 void tileMap::render()
@@ -75,28 +81,28 @@ void tileMap::render()
 	//ÁöÇü
 	for (int i = 0; i < tileX * tileY; ++i)
 	{
-		if (_tiles[i].rc.left + 32 < 0) continue;
-		if (_tiles[i].rc.left > 800) continue;
-		if (_tiles[i].rc.top + 32 < 0) continue;
-		if (_tiles[i].rc.top > 800) continue;
+		if (_tiles[i].rc.left - _camera->getCameraX() +  32 < 0) continue;
+		if (_tiles[i].rc.left - _camera->getCameraX() > 800) continue;
+		if (_tiles[i].rc.top - _camera->getCameraY() +  32 < 0) continue;
+		if (_tiles[i].rc.top - _camera->getCameraY()  > 800) continue;
 
 
 		if (_tiles[i].a == 0)
 		{
 			IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê4", IMAGEMANAGER->findImage("background")->getMemDC(),
-				_tiles[i].rc.left, _tiles[i].rc.top,
+				_tiles[i].rc.left - _camera->getCameraX(), _tiles[i].rc.top - _camera->getCameraY(),
 				_tiles[i].FrameX, _tiles[i].FrameY);
 		}
 		else if ((_tiles[i].a == 1))
 		{
 			IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê", IMAGEMANAGER->findImage("background")->getMemDC(),
-				_tiles[i].rc.left, _tiles[i].rc.top,
+				_tiles[i].rc.left - _camera->getCameraX(), _tiles[i].rc.top - _camera->getCameraY(),
 				_tiles[i].FrameX, _tiles[i].FrameY);
 		}
 		else if ((_tiles[i].a == 2))
 		{
 			IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê2", IMAGEMANAGER->findImage("background")->getMemDC(),
-				_tiles[i].rc.left, _tiles[i].rc.top,
+				_tiles[i].rc.left - _camera->getCameraX(), _tiles[i].rc.top - _camera->getCameraY(),
 				_tiles[i].FrameX, _tiles[i].FrameY);
 		}
 	}
@@ -107,27 +113,27 @@ void tileMap::render()
 		
 		if (_tiles[i].obj == OBJ_NONE) continue;
 		
-		if (_tiles[i].rc.left + 32 < 0) continue;
-		if (_tiles[i].rc.left > 800) continue;
-		if (_tiles[i].rc.top  + 32 < 0) continue;
-		if (_tiles[i].rc.top  > 800) continue;
+		if (_tiles[i].rc.left - _camera->getCameraX() + 32 < 0) continue;
+		if (_tiles[i].rc.left - _camera->getCameraX() > 800) continue;
+		if (_tiles[i].rc.top - _camera->getCameraY() + 32 < 0) continue;
+		if (_tiles[i].rc.top - _camera->getCameraY() > 800) continue;
 
 		if (_tiles[i].a == 0)
 		{
 			IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê4", IMAGEMANAGER->findImage("background")->getMemDC(),
-				_tiles[i].rc.left, _tiles[i].rc.top,
+				_tiles[i].rc.left - _camera->getCameraX(), _tiles[i].rc.top - _camera->getCameraY(),
 				_tiles[i].objFrameX, _tiles[i].objFrameY);
 		}
 		else if (_tiles[i].a == 1)
 		{
 			IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê", IMAGEMANAGER->findImage("background")->getMemDC(),
-				_tiles[i].rc.left, _tiles[i].rc.top,
+				_tiles[i].rc.left - _camera->getCameraX(), _tiles[i].rc.top - _camera->getCameraY(),
 				_tiles[i].objFrameX, _tiles[i].objFrameY);
 		}
 		else if (_tiles[i].a == 2)
 		{
 			IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê2", IMAGEMANAGER->findImage("background")->getMemDC(),
-				_tiles[i].rc.left, _tiles[i].rc.top,
+				_tiles[i].rc.left - _camera->getCameraX(), _tiles[i].rc.top - _camera->getCameraY(),
 				_tiles[i].objFrameX, _tiles[i].objFrameY);
 		}
 	}
@@ -174,6 +180,11 @@ void tileMap::render()
 		sprintf_s(str, "Áö¿ì±â");
 		TextOut(getMemDC(), 1300, 650, str, strlen(str));
 	}
+
+
+	sprintf_s(str, "Ä«¸Þ¶ó x : %f   Ä«¸Þ¶ó y : %f" , view.x,view.y );
+	TextOut(getMemDC(), 300, 250, str, strlen(str));
+
 }
 
 void tileMap::setUp()
@@ -231,33 +242,33 @@ void tileMap::setMap()
 	for (int i = 0; i < tileX * tileY; ++i)
 	{
 		{   if (_ptMouse.x <= 800)
-		{
-			if (PtInRect(&_tiles[i].rc, ptMouse2))
 			{
-				if (Click == CTRL_TERRAINDRAW)
+				if (PtInRect(&_tiles[i].rc, ptMouse2))
 				{
-					_tiles[i].FrameX = _tileBox.x;
-					_tiles[i].FrameY = _tileBox.y;
-					_tiles[i].a = tilenum;
-					_tiles[i].terrain = terrainSelect(_tileBox.x, _tileBox.y);
+					if (Click == CTRL_TERRAINDRAW)
+					{
+						_tiles[i].FrameX = _tileBox.x;
+						_tiles[i].FrameY = _tileBox.y;
+						_tiles[i].a = tilenum;
+						_tiles[i].terrain = terrainSelect(_tileBox.x, _tileBox.y);
+					}
+					else if (Click == CTRL_OBJDRAW)
+					{
+						_tiles[i].objFrameX = _tileBox.x;
+						_tiles[i].objFrameY = _tileBox.y;
+						_tiles[i].a = tilenum;
+						_tiles[i].obj = objSelect(_tileBox.x, _tileBox.y);
+					}
+					else  if (Click == CTRL_ERASER)
+					{
+						_tiles[i].objFrameX = NULL;
+						_tiles[i].objFrameX = NULL;
+						_tiles[i].obj = OBJ_NONE;
+					}
+					InvalidateRect(_hWnd, NULL, false);
+					break;
 				}
-				else if (Click == CTRL_OBJDRAW)
-				{
-					_tiles[i].objFrameX = _tileBox.x;
-					_tiles[i].objFrameY = _tileBox.y;
-					_tiles[i].a = tilenum;
-					_tiles[i].obj = objSelect(_tileBox.x, _tileBox.y);
-				}
-				else  if (Click == CTRL_ERASER)
-				{
-					_tiles[i].objFrameX = NULL;
-					_tiles[i].objFrameX = NULL;
-					_tiles[i].obj = OBJ_NONE;
-				}
-				InvalidateRect(_hWnd, NULL, false);
-				break;
 			}
-		}
 		}
 	}
 }
@@ -338,6 +349,37 @@ void tileMap::load()
 
 
 	CloseHandle(file);
+}
+
+void tileMap::viewMove()
+{
+	if (KEYMANAGER->isStayKeyDown(VK_UP))
+	{
+		if (view.y > 0)
+		{
+			view.y -= 5;
+		}
+	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_DOWN))
+	{
+		
+			view.y += 5;
+		
+	}
+	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
+	{
+		
+			view.x += 5;
+	
+	}
+	if (KEYMANAGER->isStayKeyDown(VK_LEFT))
+	{
+		if (view.x > 0)
+		{
+			view.x -= 5;
+		}
+	}
 }
 
 TERRAIN tileMap::terrainSelect(int frameX, int frameY)
