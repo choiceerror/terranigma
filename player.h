@@ -79,7 +79,7 @@ struct tagPlayer
 
 };
 
-class player
+class player : public gameNode
 {
 private:
 	tagPlayer _player;
