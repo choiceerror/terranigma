@@ -114,7 +114,11 @@ void ballMonster::move()
 	case BALLMONSTER_UP_MOVE:
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
 		_enemy.motion->start();
-		_enemy.y -= _enemy.speed;
+
+		_moveAngle = PI / 2;
+
+		_enemy.x += cosf(_moveAngle) * _enemy.speed;
+		_enemy.y += -sinf(_moveAngle) * _enemy.speed;
 		break;
 	case BALLMONSTER_DOWN_IDLE:
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downIdle");
@@ -123,7 +127,11 @@ void ballMonster::move()
 	case BALLMONSTER_DOWN_MOVE:
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
 		_enemy.motion->start();
-		_enemy.y += _enemy.speed;
+
+		_moveAngle = PI / 180 * 270;
+
+		_enemy.x += cosf(_moveAngle) * _enemy.speed;
+		_enemy.y += -sinf(_moveAngle) * _enemy.speed;
 		break;
 	case BALLMONSTER_RIGHT_IDLE:
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightIdle");
@@ -132,7 +140,11 @@ void ballMonster::move()
 	case BALLMONSTER_RIGHT_MOVE:
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
 		_enemy.motion->start();
-		_enemy.x += _enemy.speed;
+
+		_moveAngle = PI2;
+
+		_enemy.x += cosf(_moveAngle) * _enemy.speed;
+		_enemy.y += -sinf(_moveAngle) * _enemy.speed;
 		break;
 	case BALLMONSTER_LEFT_IDLE:
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftIdle");
@@ -141,7 +153,11 @@ void ballMonster::move()
 	case BALLMONSTER_LEFT_MOVE:
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
 		_enemy.motion->start();
-		_enemy.x -= _enemy.speed;
+
+		_moveAngle = PI;
+
+		_enemy.x += cosf(_moveAngle) * _enemy.speed;
+		_enemy.y += -sinf(_moveAngle) * _enemy.speed;
 		break;
 	
 	}

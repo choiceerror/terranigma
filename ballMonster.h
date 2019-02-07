@@ -1,10 +1,18 @@
 #pragma once
 #include "enemy.h"
+enum MOVETYPE
+{
+	BASIC_MOVE_TYPE, //기본 움직임상태
+	FOLLOW_MOVE_TYPE, //따라가는 움직임 상태
+};
+
 class ballMonster : public enemy
 {
 private:
 	int _rndDirection; //랜덤으로 방향전환
 	float _directionTime, _directionWorldTime;
+	float _moveAngle;
+	int _moveType;
 public:
 	ballMonster();
 	~ballMonster();
@@ -31,5 +39,6 @@ public:
 	RECT getRangeRect() { return _enemy.rangeRc; }
 	ENEMYDIRECTION getDirection() { return _enemy.direction; }
 	void setDirection(ENEMYDIRECTION direction) { _enemy.direction = direction; }
+	float getMoveAngle() {return _moveAngle;}
 };
 

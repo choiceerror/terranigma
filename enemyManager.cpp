@@ -16,7 +16,7 @@ HRESULT enemyManager::init()
 	_x = WINSIZEX / 2;
 	_y = WINSIZEY / 2;
 	_radius = 50;
-	_playerRc = RectMake(_x, _y, 100, 100);
+	_playerRc = RectMakeCenter(_x, _y, 100, 100);
 
 	_fireMonsterBullet = new fireMonsterBullet;
 	_fireMonsterBullet->init("fireMonster", WINSIZEX, 10);
@@ -64,7 +64,7 @@ void enemyManager::update()
 	{
 		_y += 3;
 	}
-	_playerRc = RectMake(_x, _y, 100, 100);
+	_playerRc = RectMakeCenter(_x, _y, 100, 100);
 
 
 	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
@@ -83,15 +83,23 @@ void enemyManager::update()
 			case BALLMONSTER_DOWN_IDLE:
 			case BALLMONSTER_DOWN_MOVE:
 				
-				if (getDistance(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()) < _x + (*_viBallMonster)->getX())
+				if ((*_viBallMonster)->getRangeRect().left <= _playerRc.right)
+				{
+					(*_viBallMonster)->setX((*_viBallMonster)->getX() + cosf(getAngle((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _x, _y)));
+					(*_viBallMonster)->setY((*_viBallMonster)->getY() + -sinf(getAngle((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _x, _y)));
+				}
+				//if (getDistance(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()) < _x + (*_viBallMonster)->getX())
 				{
 		
-					(*_viBallMonster)->setY(getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()));
-					(*_viBallMonster)->setX(getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()));
+					//(*_viBallMonster)->setX(getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()));
+					//(*_viBallMonster)->setY(getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()));
+
+					//(*_viBallMonster)->setX((*_viBallMonster)->getX() + getAngle((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _playerRc.left, _playerRc.top));
+					//(*_viBallMonster)->setY((*_viBallMonster)->getY() + getAngle((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _playerRc.left, _playerRc.top));
 					
 				}
-				//(*_viBallMonster)->setX((*_viBallMonster)->getX() - 3);
-				//getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY());
+			//	getAngle((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _playerRc.left, _playerRc.top);
+				
 				break;
 			}
 		}
@@ -102,8 +110,6 @@ void enemyManager::update()
 
 void enemyManager::render()
 {
-
-
 	//볼몬스터 렌더링
 	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
 	{
