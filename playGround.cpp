@@ -47,6 +47,7 @@ void playGround::release()
 void playGround::update()
 {
 	gameNode::update();
+	if (KEYMANAGER->isOnceKeyDown(VK_ESCAPE)) PostQuitMessage(0);
 
 	SCENEMANAGER->update();
 	KEYANIMANAGER->update();

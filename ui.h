@@ -5,6 +5,10 @@ class ui : public gameNode
 {
 private:
 
+	int _frameX;
+
+
+
 
 public:
 	ui();
