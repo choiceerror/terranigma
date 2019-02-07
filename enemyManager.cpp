@@ -83,13 +83,13 @@ void enemyManager::update()
 			case BALLMONSTER_DOWN_IDLE:
 			case BALLMONSTER_DOWN_MOVE:
 				
-				//if (getDistance(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()) < _x + (*_viBallMonster)->getX())
-				//{
+				if (getDistance(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()) < _x + (*_viBallMonster)->getX())
+				{
 		
-				//	(*_viBallMonster)->setY(getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()));
-				//	(*_viBallMonster)->setX(getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()));
-				//	
-				//}
+					(*_viBallMonster)->setY(getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()));
+					(*_viBallMonster)->setX(getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY()));
+					
+				}
 				//(*_viBallMonster)->setX((*_viBallMonster)->getX() - 3);
 				//getAngle(_playerRc.left, _playerRc.top, (*_viBallMonster)->getX(), (*_viBallMonster)->getY());
 				break;
