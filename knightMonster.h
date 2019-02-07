@@ -13,7 +13,7 @@ public:
 
 	void move();
 
-	static void cbAttack(void* obj);
+	static void cbAttack(void* obj); //공격후 다른모션으로 돌아가기 위한 콜백함수
 
 public:
 	//접근자 설정자 모음

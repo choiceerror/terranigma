@@ -1,15 +1,11 @@
 #pragma once
 #include "gameNode.h"
-#include "ballMonster.h"
-#include "fireMonster.h"
-#include "knightMonster.h"
+#include "enemyManager.h"
 
 class dungeon : public gameNode
 {
 private:
-	ballMonster* _ballMonster;
-	fireMonster* _fireMonster;
-	knightMonster* _knightMonster;
+	enemyManager* _enemyManager;
 
 public:
 	dungeon();

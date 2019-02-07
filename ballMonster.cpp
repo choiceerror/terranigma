@@ -43,6 +43,9 @@ HRESULT ballMonster::init(string enemyName, const char * imageName, float x, flo
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "leftMove", imageName, leftMove, 3, 3, true);
 
 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
+
+	_directionTime = 3.0f;
+	_directionWorldTime = TIMEMANAGER->getWorldTime();
 	return S_OK;
 }
 
@@ -65,18 +68,79 @@ void ballMonster::render(float viewX, float viewY)
 
 void ballMonster::move()
 {
+	if (_directionTime + _directionWorldTime <= TIMEMANAGER->getWorldTime())
+	{
+		_rndDirection = RND->getInt(7);
+
+		if (_rndDirection == 0)
+		{
+			_enemy.direction = BALLMONSTER_UP_IDLE;
+		}
+		else if (_rndDirection == 1)
+		{
+			_enemy.direction = BALLMONSTER_UP_MOVE;
+		}
+		else if (_rndDirection == 2)
+		{
+			_enemy.direction = BALLMONSTER_DOWN_IDLE;
+		}
+		else if (_rndDirection == 3)
+		{
+			_enemy.direction = BALLMONSTER_DOWN_MOVE;
+		}
+		else if (_rndDirection == 4)
+		{
+			_enemy.direction = BALLMONSTER_RIGHT_MOVE;
+		}
+		else if (_rndDirection == 5)
+		{
+			_enemy.direction = BALLMONSTER_LEFT_IDLE;
+		}
+		else if (_rndDirection == 6)
+		{
+			_enemy.direction = BALLMONSTER_LEFT_MOVE;
+		}
+		_directionWorldTime = TIMEMANAGER->getWorldTime();
+	}
+
+	//방향에따라 프레임 동작
 	switch (_enemy.direction)
 	{
+	case BALLMONSTER_UP_IDLE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upIdle");
+		_enemy.motion->start();
+		break;
+	case BALLMONSTER_UP_MOVE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
+		_enemy.motion->start();
+		_enemy.y -= _enemy.speed;
+		break;
 	case BALLMONSTER_DOWN_IDLE:
-		_enemy.direction = BALLMONSTER_DOWN_IDLE;
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downIdle");
 		_enemy.motion->start();
 		break;
+	case BALLMONSTER_DOWN_MOVE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
+		_enemy.motion->start();
+		_enemy.y += _enemy.speed;
+		break;
+	case BALLMONSTER_RIGHT_IDLE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightIdle");
+		_enemy.motion->start();
+		break;
 	case BALLMONSTER_RIGHT_MOVE:
-		_enemy.direction = BALLMONSTER_RIGHT_MOVE;
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
 		_enemy.motion->start();
-		_enemy.x += 1;
+		_enemy.x += _enemy.speed;
+		break;
+	case BALLMONSTER_LEFT_IDLE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftIdle");
+		_enemy.motion->start();
+		break;
+	case BALLMONSTER_LEFT_MOVE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
+		_enemy.motion->start();
+		_enemy.x -= _enemy.speed;
 		break;
 	
 	}

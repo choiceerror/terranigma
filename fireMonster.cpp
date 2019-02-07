@@ -18,16 +18,13 @@ HRESULT fireMonster::init(string enemyName, const char * imageName, float x, flo
 
 	_enemy.direction = FIREMONSTER_IDLE;
 
-	int idle[] = { 0, 1, 2, 3 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "idle", imageName, idle, 4, 3, true);
-
-	int move[] = { 0, 1, 2, 3 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "move", imageName, move, 4, 3, true);
+	int idleORmove[] = { 0, 1, 2, 3 };
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "idleORmove", imageName, idleORmove, 4, 3, true);
 
 	int dead[] = { 5, 6, 7, 8, 9, 4 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "dead", imageName, dead, 6, 4, false);
 
-	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "idle");
+	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "idleORmove");
 	return S_OK;
 }
 
@@ -60,25 +57,18 @@ void fireMonster::move()
 	switch (_enemy.direction)
 	{
 	case FIREMONSTER_IDLE:
-
-		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "idle");
-		_enemy.motion->start();
-
-		break;
 	case FIREMONSTER_LEFT_MOVE:
 	case FIREMONSTER_RIGHT_MOVE:
-
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "move");
 		_enemy.motion->start();
 
-		_enemy.x += 2;
+		if(_enemy.direction == FIREMONSTER_RIGHT_MOVE)	   _enemy.x += _enemy.speed;
+		else if(_enemy.direction == FIREMONSTER_LEFT_MOVE) _enemy.x -= _enemy.speed;
 
 		break;
 	case FIREMONSTER_DEAD:
-
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "dead");
 		_enemy.motion->start();
-		
 		
 		break;
 	}

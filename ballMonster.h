@@ -2,6 +2,9 @@
 #include "enemy.h"
 class ballMonster : public enemy
 {
+private:
+	int _rndDirection; //랜덤으로 방향전환
+	float _directionTime, _directionWorldTime;
 public:
 	ballMonster();
 	~ballMonster();

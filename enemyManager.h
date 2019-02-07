@@ -7,17 +7,14 @@
 class enemyManager : public gameNode
 {
 private:
-	typedef vector<enemy*> vEnemy;
-	typedef vector<enemy*>::iterator viEnemy;
-private:
-	vEnemy _vBallMonster;
-	viEnemy _viBallMonster;
+	vector<ballMonster*> _vBallMonster;
+	vector<ballMonster*>::iterator _viBallMonster;
 
-	vEnemy _vFireMonster;
-	viEnemy _viFireMonster;
+	vector<fireMonster*> _vFireMonster;
+	vector<fireMonster*>::iterator _viFireMonster;
 
-	vEnemy _vKnightMonster;
-	viEnemy _viKnightMonster;
+	vector<knightMonster*> _vKnightMonster;
+	vector<knightMonster*>::iterator _viKnightMonster;
 public:
 	enemyManager();
 	~enemyManager();
@@ -28,5 +25,16 @@ public:
 	void render();
 
 	void setEnemy();
+
+public:
+	//접근자 설정자 모음
+	vector<ballMonster*> getVBallMonster() {return _vBallMonster;}
+	vector<ballMonster*>* setVBallMonster() {return &_vBallMonster;}
+
+	vector<fireMonster*> getVFireMonster() {return _vFireMonster;}
+	vector<fireMonster*>* setVFireMonster() {return &_vFireMonster;}
+
+	vector<knightMonster*> getVKnightMonster() {return _vKnightMonster;}
+	vector<knightMonster*>* setVKnightMonster() {return &_vKnightMonster;}
 };
 

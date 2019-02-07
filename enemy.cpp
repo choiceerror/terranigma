@@ -21,6 +21,7 @@ HRESULT enemy::init(string enemyName, const char* imageName, float x, float y, i
 	_enemy.idX = idX;
 	_enemy.idY = idY;
 	_enemy.image = IMAGEMANAGER->findImage(imageName);
+	_enemy.speed = 1;
 
 	_enemy.rc = RectMake(x, y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 

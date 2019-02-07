@@ -16,7 +16,19 @@ HRESULT knightMonster::init(string enemyName, const char * imageName, float x, f
 	enemy::init(enemyName, imageName, x, y, idX, idY);
 	_enemy.name = enemyName;
 
-	_enemy.direction = KNIGHTMONSTER_DOWN_MOVE;
+	_enemy.direction = KNIGHTMONSTER_LEFT_MOVE;
+
+	int downIdle[] = { 3 };
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downIdle", imageName, downIdle, 1, 3, true);
+
+	int upIdle[] = { 9 };
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upIdle", imageName, upIdle, 1, 3, true);
+
+	int leftIdle[] = { 15 };
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "leftIdle", imageName, leftIdle, 1, 3, true);
+
+	int rightIdle[] = { 22 };
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "rightIdle", imageName, rightIdle, 1, 3, true);
 
 	int downMove[] = { 0, 1, 2, 3, 4 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downMove", imageName, downMove, 5, 4, true);
@@ -42,7 +54,7 @@ HRESULT knightMonster::init(string enemyName, const char * imageName, float x, f
 	int rightAttack[] = { 49, 50, 51, 52, 53, 54, 55 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "rightAttack", imageName, rightAttack, 7, 3, false, cbAttack, this);
 
-	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
+	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
 
 	return S_OK;
 }
@@ -73,36 +85,56 @@ void knightMonster::move()
 	{
 		_enemy.direction = KNIGHTMONSTER_LEFT_ATTACK;
 	}
+
+	//방향에따라 프레임 동작
 	switch (_enemy.direction)
 	{
+	case KNIGHTMONSTER_DOWN_IDLE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downIdle");
+		_enemy.motion->start();
+		break;
+	case KNIGHTMONSTER_UP_IDLE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upIdle");
+		_enemy.motion->start();
+		break;
+	case KNIGHTMONSTER_LEFT_IDLE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftIdle");
+		_enemy.motion->start();
+		break;
+	case KNIGHTMONSTER_RIGHT_IDLE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightIdle");
+		_enemy.motion->start();
+		break;
 	case KNIGHTMONSTER_DOWN_MOVE:
-		_enemy.direction = KNIGHTMONSTER_DOWN_MOVE;
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
 		_enemy.motion->start();
 		break;
 	case KNIGHTMONSTER_UP_MOVE:
-		_enemy.direction = KNIGHTMONSTER_UP_MOVE;
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
 		_enemy.motion->start();
 		break;
 	case KNIGHTMONSTER_RIGHT_MOVE:
-		_enemy.direction = KNIGHTMONSTER_RIGHT_MOVE;
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
 		_enemy.motion->start();
 		break;
 	case KNIGHTMONSTER_LEFT_MOVE:
-		_enemy.direction = KNIGHTMONSTER_LEFT_MOVE;
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
 		_enemy.motion->start();
 		break;
 	case KNIGHTMONSTER_DOWN_ATTACK:
-		_enemy.direction = KNIGHTMONSTER_DOWN_ATTACK;
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downAttack");
 		_enemy.motion->start();
 		break;
+	case KNIGHTMONSTER_UP_ATTACK:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upAttack");
+		_enemy.motion->start();
+		break;
 	case KNIGHTMONSTER_LEFT_ATTACK:
-		_enemy.direction = KNIGHTMONSTER_LEFT_ATTACK;
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftAttack");
+		_enemy.motion->start();
+		break;
+	case KNIGHTMONSTER_RIGHT_ATTACK:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightAttack");
 		_enemy.motion->start();
 		break;
 	}
@@ -117,7 +149,7 @@ void knightMonster::cbAttack(void * obj)
 		k->setDirection(KNIGHTMONSTER_DOWN_MOVE);
 		k->setMotion(KEYANIMANAGER->findAnimation(k->getName(), "downMove"));
 		k->getMotion()->start();
-	
+
 	}
 	else if (k->getDirection() == KNIGHTMONSTER_UP_ATTACK)
 	{
