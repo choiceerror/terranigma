@@ -231,6 +231,9 @@
     <ClInclude Include="MapNode.h">
       <Filter>PlayGround\tileMap</Filter>
     </ClInclude>
+    <ClInclude Include="fireMonsterBullet.h">
+      <Filter>PlayGround\enemyManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -352,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="boss.cpp">
       <Filter>PlayGround\enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="fireMonsterBullet.cpp">
+      <Filter>PlayGround\enemyManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -86,7 +86,7 @@ void knightMonster::move()
 		_enemy.direction = KNIGHTMONSTER_LEFT_ATTACK;
 	}
 
-	//방향에따라 프레임 동작
+	//방향에 따라 프레임 동작
 	switch (_enemy.direction)
 	{
 	case KNIGHTMONSTER_DOWN_IDLE:

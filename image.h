@@ -129,6 +129,8 @@ public:
 	//사이즈랜더(sizeX,Y는 배율! 1.0f이면 이미지가 1배(기본),2.0f하면 2배로 커진다.)
 	void expandRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float sizeX = 1.0f, float sizeY = 1.0f);
 	void expandRenderCenter(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float sizeX = 1.0f, float sizeY = 1.0f);
+	void expandAniRender(HDC hdc, int destX, int destY, animation* ani, float sizeX = 1.0f, float sizeY = 1.0f);
+	void expandAniRenderCenter(HDC hdc, int destX, int destY, animation* ani, float sizeX = 1.0f, float sizeY = 1.0f);
 
 	inline HDC getMemDC() { return _imageInfo->hMemDC; }
 

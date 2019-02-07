@@ -3,6 +3,7 @@
 #include "ballMonster.h"
 #include "fireMonster.h"
 #include "knightMonster.h"
+#include "fireMonsterBullet.h"
 
 class enemyManager : public gameNode
 {
@@ -18,6 +19,9 @@ private:
 	//나이트 몬스터 벡터
 	vector<knightMonster*> _vKnightMonster;
 	vector<knightMonster*>::iterator _viKnightMonster;
+
+	//파이어몬스터 총알
+	fireMonsterBullet* _fireMonsterBullet;
 public:
 	enemyManager();
 	~enemyManager();
@@ -27,7 +31,9 @@ public:
 	void update();
 	void render();
 
-	void setEnemy();
+	void updateCollection(); //업데이트 모음 함수
+	void setEnemy(); //에너미 셋팅
+	void fireMonsterBulletFire(); //파이어몬스터 총알 발사할 함수
 
 public:
 	//접근자 설정자 모음

@@ -54,12 +54,14 @@ void fireMonster::move()
 	{
 		_enemy.direction = FIREMONSTER_RIGHT_MOVE;
 	}
+	
+	//방향에 따라 프레임 동작
 	switch (_enemy.direction)
 	{
 	case FIREMONSTER_IDLE:
 	case FIREMONSTER_LEFT_MOVE:
 	case FIREMONSTER_RIGHT_MOVE:
-		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "move");
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "idleORmove");
 		_enemy.motion->start();
 
 		if(_enemy.direction == FIREMONSTER_RIGHT_MOVE)	   _enemy.x += _enemy.speed;
@@ -72,4 +74,16 @@ void fireMonster::move()
 		
 		break;
 	}
+}
+
+bool fireMonster::fireBulletCountFire()
+{
+	_fireCount++;
+
+	if (_fireCount % 30 == 0)
+	{
+		_fireCount = 0;
+		return true;
+	}
+	return false;
 }

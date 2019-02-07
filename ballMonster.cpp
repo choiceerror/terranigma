@@ -62,7 +62,8 @@ void ballMonster::update(float cameraX, float cameraY)
 
 void ballMonster::render(float viewX, float viewY)
 {
-	_enemy.image->aniRender(getMemDC(), viewX, viewY, _enemy.motion);
+	//_enemy.image->aniRender(getMemDC(), viewX, viewY, _enemy.motion);
+	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 5.f , 5.f);
 	//Rectangle(getMemDC(), _enemy.rc);
 }
 
@@ -103,7 +104,7 @@ void ballMonster::move()
 		_directionWorldTime = TIMEMANAGER->getWorldTime();
 	}
 
-	//방향에따라 프레임 동작
+	//방향에 따라 프레임 동작
 	switch (_enemy.direction)
 	{
 	case BALLMONSTER_UP_IDLE:

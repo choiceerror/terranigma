@@ -19,6 +19,7 @@ HRESULT dungeon::init()
 	IMAGEMANAGER->addFrameImage("boss", "image/º¸½º.bmp", 1048, 239, 4, 1, true, RGB(255, 0, 255));
 
 	_enemyManager = new enemyManager;
+	_enemyManager->init();
 	_enemyManager->setEnemy();
 	return S_OK;
 }

@@ -822,3 +822,40 @@ void image::expandRenderCenter(HDC hdc, int destX, int destY, int currentFrameX,
 		_transColor
 	);
 }
+
+void image::expandAniRender(HDC hdc, int destX, int destY, animation* ani, float sizeX, float sizeY)
+{
+	SetStretchBltMode(hdc, COLORONCOLOR);
+
+	TransparentBlt(hdc,
+		destX,
+		destY,
+		ani->getFrameWidth() * sizeX,
+		ani->getFrameHeight() * sizeY,
+		_imageInfo->hMemDC,
+		ani->getFramePos().x,
+		ani->getFramePos().y,
+		ani->getFrameWidth(),
+		ani->getFrameHeight(),
+		_transColor
+	);
+	
+}
+
+void image::expandAniRenderCenter(HDC hdc, int destX, int destY, animation* ani, float sizeX, float sizeY)
+{
+	SetStretchBltMode(hdc, COLORONCOLOR);
+
+	TransparentBlt(hdc,
+		destX - (sizeX * ani->getFrameWidth()) / 2,
+		destY - (sizeY * ani->getFrameHeight()) / 2,
+		ani->getFrameWidth() * sizeX,
+		ani->getFrameHeight() * sizeY,
+		_imageInfo->hMemDC,
+		ani->getFramePos().x,
+		ani->getFramePos().y,
+		ani->getFrameWidth(),
+		ani->getFrameHeight(),
+		_transColor
+	);
+}
