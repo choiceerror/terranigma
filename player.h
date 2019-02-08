@@ -1,5 +1,6 @@
 #pragma once
 #include "gameNode.h"
+#define PLAYERFPS 4
 
 enum PLAYERDIRECTION
 {

@@ -83,6 +83,27 @@ HRESULT player::init()
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackDown", "player", jumpAttackDown, 8, PLAYERFPS, false);
 	int dashJumpAttackLeft[] = {288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299};
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackLeft", "player", dashJumpAttackLeft, 12, PLAYERFPS, false);
+	int dashJumpAttackRight[] = { 276,277,278,279,280,281,282,283,284,285,286,287 };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackRight", "player", dashJumpAttackRight, 12, PLAYERFPS, false);
+	int dashJumpAttackUp[] = {300, 301, 302, 303, 304, 305, 306, 307 };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackUp", "player", dashJumpAttackUp, 8, PLAYERFPS, false);
+	int dashJumpAttackDown[] = { 312, 313, 314, 315, 316, 317, 318, 319 };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackDown", "player", dashJumpAttackDown, 8, PLAYERFPS, false);
+	int death[] = {324,325,326,327,328,329};
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "death", "player", death, 6, PLAYERFPS, false);
+	int fall[] = {330, 331, 332};
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "fall", "player", fall, 3, PLAYERFPS, false);
+	int dashAttackLeft[] = {340, 341, 342, 343};
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackLeft","player", dashAttackLeft, 4, PLAYERFPS, false);
+	int dashAttackRight[] = { 336, 337, 338, };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackLeft", "player", dashAttackLeft, 4, PLAYERFPS, false);
+	int dashAttackUp[] = { 340, 341, 342, 343 };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackLeft", "player", dashAttackLeft, 4, PLAYERFPS, false);
+	int dashAttackDown[] = { 340, 341, 342, 343 };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackLeft", "player", dashAttackLeft, 4, PLAYERFPS, false);
+	
+	
+
 
 
 	
