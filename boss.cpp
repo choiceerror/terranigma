@@ -11,10 +11,11 @@ boss::~boss()
 {
 }
 
-HRESULT boss::init(string enemyName, const char * imageName, float x, float y, int idX, int idY)
+HRESULT boss::init(string enemyName, const char * imageName, float x, float y, int idX, int idY, int hp)
 {
-	enemy::init(enemyName, imageName, x, y, idX, idY);
+	enemy::init(enemyName, imageName, x, y, idX, idY, hp);
 	_enemy.name = enemyName;
+	_enemy.currentHP = _enemy.maxHP = hp;
 
 	int move[] = {0, 1, 2, 3};
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "move", imageName, move, 4, 4, true);

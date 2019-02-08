@@ -36,7 +36,7 @@ void fireMonsterBullet::render(float viewX, float viewY)
 	for (_viFireBullet = _vFireBullet.begin(); _viFireBullet != _vFireBullet.end(); _viFireBullet++)
 	{
 		_viFireBullet->image->expandAniRenderCenter(getMemDC(), viewX, viewY, _viFireBullet->fireBulletAni, 3.f, 3.f);
-	//	Rectangle(getMemDC(), _viFireBullet->rc);
+		//Rectangle(getMemDC(), _viFireBullet->rc);
 	}
 }
 
@@ -52,7 +52,8 @@ void fireMonsterBullet::fire(float x, float y, float angle, float speed)
 	fireBullet.angle = angle;
 	fireBullet.speed = speed;
 	fireBullet.radius = fireBullet.image->getFrameWidth() / 2;
-	fireBullet.rc = RectMake(fireBullet.x, fireBullet.y, fireBullet.image->getFrameWidth(), fireBullet.image->getFrameHeight());
+	fireBullet.rc = RectMakeCenter(fireBullet.x, fireBullet.y, fireBullet.image->getFrameWidth(), fireBullet.image->getFrameHeight());
+	fireBullet.isCollision = false;
 
 	_vFireBullet.push_back(fireBullet);
 }
@@ -69,10 +70,10 @@ void fireMonsterBullet::move(float cameraX, float cameraY)
 		_viFireBullet->viewX = _viFireBullet->x - cameraX;
 		_viFireBullet->viewY = _viFireBullet->y - cameraY;
 
-		_viFireBullet->rc = RectMake(_viFireBullet->x, _viFireBullet->y, _viFireBullet->image->getFrameWidth(), _viFireBullet->image->getFrameHeight());
+		_viFireBullet->rc = RectMakeCenter(_viFireBullet->x, _viFireBullet->y, _viFireBullet->image->getFrameWidth(), _viFireBullet->image->getFrameHeight());
 		_viFireBullet->fireBulletAni->start();
 
-		if (_range < getDistance(_viFireBullet->x, _viFireBullet->y, _viFireBullet->fireX, _viFireBullet->fireY))
+		if ((_range < getDistance(_viFireBullet->x, _viFireBullet->y, _viFireBullet->fireX, _viFireBullet->fireY)) || (*_viFireBullet).isCollision == true)
 		{
 			_viFireBullet = _vFireBullet.erase(_viFireBullet);
 		}

@@ -11,7 +11,7 @@ struct tagFireBullet
 	float speed;
 	float fireX, fireY;
 	float viewX, viewY;
-	bool isFire;
+	bool isCollision;
 	animation* fireBulletAni;
 };
 
@@ -41,5 +41,7 @@ public:
 	//접근자 설정자
 	vector<tagFireBullet> getVFireBullet() {return _vFireBullet;}
 	vector<tagFireBullet>* setVFireBullet() {return &_vFireBullet;}
+
+	
 };
 

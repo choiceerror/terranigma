@@ -98,6 +98,7 @@ public:
 	void release();
 
 	void setTransColor(BOOL trans, COLORREF transColor);
+	void setAlpahBlend(BOOL alpha, BYTE alphaValue = 255);
 
 	void render(HDC hdc);
 	//이미지 렌더함수(뿌려줄DC, 
@@ -125,6 +126,7 @@ public:
 	void alphaFrameRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, BYTE alpha);
 
 	void aniRender(HDC hdc, int destX, int destY, animation* ani);
+	void alphaAniRender(HDC hdc, int destX, int destY, animation* ani, BYTE alpha);
 
 	//사이즈랜더(sizeX,Y는 배율! 1.0f이면 이미지가 1배(기본),2.0f하면 2배로 커진다.)
 	void expandRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float sizeX = 1.0f, float sizeY = 1.0f);
