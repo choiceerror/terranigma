@@ -1,80 +1,50 @@
 #pragma once
 #include "gameNode.h"
-#define PLAYERFPS 4
+#define PLAYERFPS 6
+
+enum PLAYERSTATE
+{
+	PLAYER_IDLE,
+	PLAYER_IDLE_ACTION,
+	PLAYER_WALK,
+	PLAYER_RUN,
+	PLAYER_TR_PUSH_UP,
+	PLAYER_JUMP,
+	PLAYER_LEVELUP,
+	PLAYER_ATTACK,
+	PLAYER_COMBINATION,
+	PLAYER_JUMP_ATTACK,
+	PLAYER_DASH_JUMP_ATTACK,
+	PLAYER_DEATH,
+	PLAYER_DASH_ATTACK,
+	PLAYER_WORLDMAP,
+	PLAYER_FALL,
+	PLAYER_OBJ_PICKUP,
+	PLAYER_OBJ_WALK,
+	PLAYER_OBJ_THROW
+};
 
 enum PLAYERDIRECTION
 {
-	PLAYER_IDLE_LEFT,
-	PLAYER_IDLE_RIGHT,
-	PLAYER_IDLE_UP,
-	PLAYER_IDLE_DOWN,
-	PLAYER_IDLE_ACTION,
-	PLAYER_WALK_LEFT,
-	PLAYER_WALK_RIGHT,
-	PLAYER_WALK_UP,
-	PLAYER_WALK_DOWN,
-	PLAYER_RUN_LEFT,
-	PLAYER_RUN_RIGHT,
-	PLAYER_RUN_UP,
-	PLAYER_RUN_DOWN,
-	PLAYER_TR_PUSH_UP,
-	PLAYER_JUMP_LEFT,
-	PLAYER_JUMP_RIGHT,
-	PLAYER_JUMP_UP,
-	PLAYER_JUMP_DOWN,
-	PLAYER_LEVELUP,
-	PLAYER_ATTACK_LEFT,
-	PLAYER_ATTACK_RIGHT,
-	PLAYER_ATTACK_UP,
-	PLAYER_ATTACK_DOWN,
-	PLAYER_COMBINATION_LEFT,
-	PLAYER_COMBINATION_RIGHT,
-	PLAYER_COMBINATION_UP,
-	PLAYER_COMBINATION_DOWN,
-	PLAYER_JUMP_ATTACK_LEFT,
-	PLAYER_JUMP_ATTACK_RIGHT,
-	PLAYER_JUMP_ATTACK_UP,
-	PLAYER_JUMP_ATTACK_DOWN,
-	PLAYER_DASH_JUMP_ATTACK_LEFT,
-	PLAYER_DASH_JUMP_ATTACK_RIGHT,
-	PLAYER_DASH_JUMP_ATTACK_UP,
-	PLAYER_DASH_JUMP_ATTACK_DOWN,
-	PLAYER_DEATH,
-	PLAYER_DASH_ATTACK_LEFT,
-	PLAYER_DASH_ATTACK_RIGHT,
-	PLAYER_DASH_ATTACK_UP,
-	PLAYER_DASH_ATTACK_DOWN,
-	PLAYER_WORLDMAP_LEFT,
-	PLAYER_WORLDMAP_RIGHT,
-	PLAYER_WORLDMAP_UP,
-	PLAYER_WORLDMAP_DOWN,
-	PLAYER_FALL,
-	PLAYER_OBJ_PICKUP_LEFT,
-	PLAYER_OBJ_PICKUP_RIGHT,
-	PLAYER_OBJ_PICKUP_UP,
-	PLAYER_OBJ_PICKUP_DOWN,
-	PLAYER_OBJ_WALK_LEFT,
-	PLAYER_OBJ_WALK_RIGHT,
-	PLAYER_OBJ_WALK_UP,
-	PLAYER_OBJ_WALK_DOWN,
-	PLAYER_OBJ_THROW_LEFT,
-	PLAYER_OBJ_THROW_RIGHT,
-	PLAYER_OBJ_THROW_UP,
-	PLAYER_OBJ_THROW_DOWN
-
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN
 };
 
 struct tagPlayer
 {
 	RECT rc;
+	image* image_obj;
 	image* image;
 	animation* ani;
+	PLAYERSTATE state;
 	PLAYERDIRECTION direction;
 	float x, y;
 	float speed;
 	int idX, idY;
 	int HP;
-	int power;
+	int str;
 	int def;
 	int money;
 
@@ -84,7 +54,13 @@ class player : public gameNode
 {
 private:
 	tagPlayer _player;
+	image* _image;
+
+	int _doubleKey[4];
+	int _curTime[4], _oldTime[4];
 	
+	bool _run, _jump;
+
 public:
 	player();
 	~player();
@@ -93,5 +69,23 @@ public:
 	void release();
 	void update();
 	void render();
+
+	void keyFrameInit();
+	void keyInput();
+	void playerState();
+	void DoubleKeyIntVoid();
+	void playerAniName(string targetName, string aniName);
+
+
+	PLAYERSTATE getPlayerState() { return _player.state; }
+	PLAYERDIRECTION getPlayerDirection() { return _player.direction; }
+	float getPlayerX() { return _player.x; }
+	float getPlayerY() { return _player.y; }
+	int getPlayerMoney() { return _player.money; }
+	int getPlayerHP() { return _player.HP; }
+	int getPlayerStr() { return _player.str; }
+	int getPlayerDef() { return _player.def; }
+	RECT getPlayerRc() { return _player.rc;  }
+
 };
 
