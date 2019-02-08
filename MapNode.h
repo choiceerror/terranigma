@@ -66,11 +66,3 @@ struct tilebox
 	int x;
 	int y;
 };
-
-struct tagPlayer
-{
-	float x;
-	float y;
-	RECT rc;
-
-};
