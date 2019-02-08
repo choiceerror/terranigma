@@ -18,7 +18,8 @@ HRESULT ui::init()
 	IMAGEMANAGER->addFrameImage("yomi", "image/NPC_yomi.bmp", 275, 112, 11, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("UI", "image/UI.bmp", 4096, 768, 4, 1, true, MAGENTA);
 
-	_placeFrameX = 0;
+	_placeFrameX = MAIN_ROOM;
+	_yomiFrameX = _yomiFrameY = 0;
 
 	_x = 537;
 	_y = 339;
@@ -26,9 +27,16 @@ HRESULT ui::init()
 	_goalY = _y;
 	_yomiAngle = 0;
 	_yomiDistance = 0;
-	_yomiSpeed = 11.f;
+	_yomiSpeed = 14.f;
 
-	_yomiPlace = 4;
+	_yomiIndex = 4;
+
+	_count = 0;
+	_worldTime = 0;
+
+	_isRoomChanging = false;
+	_move = true;
+	_onceTime = false;
 
 	return S_OK;
 }
@@ -45,8 +53,8 @@ void ui::update()
 	yomiFrame();
 	//요미 이동
 	yomiMove();
-
-
+	//방이동
+	placeChange();
 
 
 
@@ -68,13 +76,14 @@ void ui::render()
 {
 	IMAGEMANAGER->frameRender("UI", getMemDC(), 0, 0, _placeFrameX, 0);
 	IMAGEMANAGER->expandRender("yomi", getMemDC(), _x - 30, _y - 36 * 3, _yomiFrameX, _yomiFrameY, 3.f, 3.f);
-	
 
 	char str[100];
 	sprintf_s(str, "_좌표 : %d  %d", _x,_y);
 	TextOut(getMemDC(), 30, 100, str, strlen(str));
 	sprintf_s(str, "골 좌표 : %d  %d", _goalX, _goalY);
 	TextOut(getMemDC(), 30, 120, str, strlen(str));
+	sprintf_s(str, "%d", _placeFrameX);
+	TextOut(getMemDC(), 30, 140, str, strlen(str));
 
 	//Rectangle(getMemDC(), _goal);
 }
@@ -126,283 +135,286 @@ void ui::yomiMove()
 	}
 
 	//목표점은 인덱스(int _yomiPlace)로 바뀜
-	_goalX = _pt[_yomiPlace].x;
-	_goalY = _pt[_yomiPlace].y;
+	_goalX = _pt[_yomiIndex].x;
+	_goalY = _pt[_yomiIndex].y;
 	
 	//각도와 거리는 계속 갱신
 	_yomiAngle = getAngle(_x, _y, _goalX, _goalY);
 	_yomiDistance = getDistance(_x, _y, _goalX, _goalY);
 
 	//요미 이동
-	if (_placeFrameX == MAIN_ROOM)
+	if (_move)
 	{
-		if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
+		if (_placeFrameX == MAIN_ROOM)
 		{
-			if (_yomiPlace % 3 == 1 || _yomiPlace % 3 == 2)
+			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
-				_yomiPlace -= 1;
+				if (_yomiIndex % 3 == 1 || _yomiIndex % 3 == 2)
+				{
+					_yomiIndex -= 1;
+				}
+			}
+			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
+			{
+				if (_yomiIndex % 3 == 0 || _yomiIndex % 3 == 1)
+				{
+					_yomiIndex += 1;
+				}
+			}
+			if (KEYMANAGER->isOnceKeyDown(VK_UP))
+			{
+				if (_yomiIndex / 3 == 1 || _yomiIndex / 3 == 2)
+				{
+					_yomiIndex -= 3;
+				}
+			}
+			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
+			{
+				if (_yomiIndex / 3 == 0 || _yomiIndex / 3 == 1)
+				{
+					_yomiIndex += 3;
+				}
 			}
 		}
-		if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
+		else if (_placeFrameX == WEAPON_ROOM)
 		{
-			if (_yomiPlace % 3 == 0 || _yomiPlace % 3 == 1)
+			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
-				_yomiPlace += 1;
+				if (_yomiIndex == 3)
+				{
+					_yomiIndex = 5;
+				}
+				else if (_yomiIndex % 4 == 1 || _yomiIndex % 4 == 2 || _yomiIndex % 4 == 3)
+				{
+					_yomiIndex -= 1;
+				}
+			}
+			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
+			{
+				if (_yomiIndex == 3)
+				{
+					_yomiIndex = 6;
+				}
+				else if (_yomiIndex % 4 == 0 || _yomiIndex % 4 == 1 || _yomiIndex % 4 == 2)
+				{
+					_yomiIndex += 1;
+				}
+			}
+			if (KEYMANAGER->isOnceKeyDown(VK_UP))
+			{
+				if (_yomiIndex == 5 || _yomiIndex == 6)
+				{
+					_yomiIndex = 3;
+				}
+				else if (_yomiIndex == 3)
+				{
+					_yomiIndex = 1;
+				}
+				else if (_yomiIndex == 4)
+				{
+					_yomiIndex = 0;
+				}
+				else if (_yomiIndex == 7)
+				{
+					_yomiIndex = 2;
+				}
+				else if (_yomiIndex / 4 == 1 || _yomiIndex / 4 == 2 || _yomiIndex / 4 == 3 || _yomiIndex / 4 == 4)
+				{
+					_yomiIndex -= 4;
+				}
+			}
+			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
+			{
+				if (_yomiIndex == 3)
+				{
+					_yomiIndex = 5;
+				}
+				else if (_yomiIndex == 1)
+				{
+					_yomiIndex = 3;
+				}
+				else if (_yomiIndex == 2)
+				{
+					_yomiIndex = 7;
+				}
+				else if (_yomiIndex / 4 == 0 || _yomiIndex / 4 == 1 || _yomiIndex / 4 == 2 || _yomiIndex / 4 == 3)
+				{
+					_yomiIndex += 4;
+				}
 			}
 		}
-		if (KEYMANAGER->isOnceKeyDown(VK_UP))
+		else if (_placeFrameX == ACCESSERY_ROOM)
 		{
-			if (_yomiPlace / 3 == 1 || _yomiPlace / 3 == 2)
+			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
-				_yomiPlace -= 3;
+				if (_yomiIndex == 3)
+				{
+					_yomiIndex = 7;
+				}
+				else if (_yomiIndex != 0 && _yomiIndex % 9 != 4)
+				{
+					_yomiIndex -= 1;
+				}
+			}
+			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
+			{
+				if (_yomiIndex == 3)
+				{
+					_yomiIndex = 9;
+				}
+				else if (_yomiIndex != 2 && _yomiIndex != 35 && _yomiIndex % 9 != 3)
+				{
+					_yomiIndex += 1;
+				}
+			}
+			if (KEYMANAGER->isOnceKeyDown(VK_UP))
+			{
+				if (_yomiIndex == 3)
+				{
+					_yomiIndex = 1;
+				}
+				else if (_yomiIndex == 4 || _yomiIndex == 5 || _yomiIndex == 6)
+				{
+					_yomiIndex = 0;
+				}
+				else if (_yomiIndex == 7 || _yomiIndex == 8 || _yomiIndex == 9)
+				{
+					_yomiIndex = 3;
+				}
+				else if (_yomiIndex == 10 || _yomiIndex == 11 || _yomiIndex == 12)
+				{
+					_yomiIndex = 2;
+				}
+				else if (_yomiIndex == 32)
+				{
+					_yomiIndex = 24;
+				}
+				else if (_yomiIndex == 33)
+				{
+					_yomiIndex = 26;
+				}
+				else if (_yomiIndex == 34)
+				{
+					_yomiIndex = 28;
+				}
+				else if (_yomiIndex == 35)
+				{
+					_yomiIndex = 30;
+				}
+				else if (_yomiIndex != 0 && _yomiIndex != 1 && _yomiIndex != 2)
+				{
+					_yomiIndex -= 9;
+				}
+			}
+			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
+			{
+				if (_yomiIndex == 3)
+				{
+					_yomiIndex = 8;
+				}
+				else if (_yomiIndex == 0)
+				{
+					_yomiIndex = 4;
+				}
+				else if (_yomiIndex == 2)
+				{
+					_yomiIndex = 12;
+				}
+				else if (_yomiIndex == 1)
+				{
+					_yomiIndex = 3;
+				}
+				else if (_yomiIndex == 22 || _yomiIndex == 23)
+				{
+					_yomiIndex = 31;
+				}
+				else if (_yomiIndex == 24 || _yomiIndex == 25)
+				{
+					_yomiIndex = 32;
+				}
+				else if (_yomiIndex == 26 || _yomiIndex == 27)
+				{
+					_yomiIndex = 33;
+				}
+				else if (_yomiIndex == 28 || _yomiIndex == 29)
+				{
+					_yomiIndex = 34;
+				}
+				else if (_yomiIndex == 30)
+				{
+					_yomiIndex = 35;
+				}
+				else if (_yomiIndex < 31)
+				{
+					_yomiIndex += 9;
+				}
 			}
 		}
-		if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
+		else if (_placeFrameX == ARMOR_ROOM)
 		{
-			if (_yomiPlace / 3 == 0 || _yomiPlace / 3 == 1)
+			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
-				_yomiPlace += 3;
+				if (_yomiIndex == 3)
+				{
+					_yomiIndex = 5;
+				}
+				else if (_yomiIndex % 4 == 1 || _yomiIndex % 4 == 2 || _yomiIndex % 4 == 3)
+				{
+					_yomiIndex -= 1;
+				}
 			}
-		}
-	}
-	else if (_placeFrameX == WEAPON_ROOM)
-	{
-		if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
-		{
-			if (_yomiPlace == 3)
+			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
 			{
-				_yomiPlace = 5;
+				if (_yomiIndex == 3)
+				{
+					_yomiIndex = 6;
+				}
+				else if (_yomiIndex % 4 == 0 || _yomiIndex % 4 == 1 || _yomiIndex % 4 == 2)
+				{
+					_yomiIndex += 1;
+				}
 			}
-			else if (_yomiPlace % 4 == 1 || _yomiPlace % 4 == 2 || _yomiPlace % 4 == 3)
+			if (KEYMANAGER->isOnceKeyDown(VK_UP))
 			{
-				_yomiPlace -= 1;
+				if (_yomiIndex == 5 || _yomiIndex == 6)
+				{
+					_yomiIndex = 3;
+				}
+				else if (_yomiIndex == 3)
+				{
+					_yomiIndex = 1;
+				}
+				else if (_yomiIndex == 4)
+				{
+					_yomiIndex = 0;
+				}
+				else if (_yomiIndex == 7)
+				{
+					_yomiIndex = 2;
+				}
+				else if (_yomiIndex / 4 == 1 || _yomiIndex / 4 == 2 || _yomiIndex / 4 == 3 || _yomiIndex / 4 == 4)
+				{
+					_yomiIndex -= 4;
+				}
 			}
-		}
-		if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
-		{
-			if (_yomiPlace == 3)
+			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
 			{
-				_yomiPlace = 6;
-			}
-			else if (_yomiPlace % 4 == 0 || _yomiPlace % 4 == 1 || _yomiPlace % 4 == 2)
-			{
-				_yomiPlace += 1;
-			}
-		}
-		if (KEYMANAGER->isOnceKeyDown(VK_UP))
-		{
-			if (_yomiPlace == 5 || _yomiPlace == 6)
-			{
-				_yomiPlace = 3;
-			}
-			else if (_yomiPlace == 3)
-			{
-				_yomiPlace = 1;
-			}
-			else if (_yomiPlace == 4)
-			{
-				_yomiPlace = 0;
-			}
-			else if (_yomiPlace == 7)
-			{
-				_yomiPlace = 2;
-			}
-			else if (_yomiPlace / 4 == 1 || _yomiPlace / 4 == 2 || _yomiPlace / 4 == 3 || _yomiPlace / 4 == 4)
-			{
-				_yomiPlace -= 4;
-			}
-		}
-		if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
-		{
-			if (_yomiPlace == 3)
-			{
-				_yomiPlace = 5;
-			}
-			else if (_yomiPlace == 1)
-			{
-				_yomiPlace = 3;
-			}
-			else if (_yomiPlace == 2)
-			{
-				_yomiPlace = 7;
-			}
-			else if (_yomiPlace / 4 == 0 || _yomiPlace / 4 == 1 || _yomiPlace / 4 == 2 || _yomiPlace / 4 == 3)
-			{
-				_yomiPlace += 4;
-			}	
-		}
-	}
-	else if (_placeFrameX == ACCESSERY_ROOM)
-	{
-		if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
-		{
-			if (_yomiPlace == 3)
-			{
-				_yomiPlace = 7;
-			}
-			else if (_yomiPlace != 0 && _yomiPlace % 9 != 4)
-			{
-				_yomiPlace -= 1;
-			}
-		}
-		if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
-		{
-			if (_yomiPlace == 3)
-			{
-				_yomiPlace = 9;
-			}
-			else if (_yomiPlace != 2 && _yomiPlace != 35 &&_yomiPlace % 9 != 3)
-			{
-				_yomiPlace += 1;
-			}
-		}
-		if (KEYMANAGER->isOnceKeyDown(VK_UP))
-		{
-			if (_yomiPlace == 3)
-			{
-				_yomiPlace = 1;
-			}
-			else if (_yomiPlace == 4 || _yomiPlace == 5 || _yomiPlace == 6)
-			{
-				_yomiPlace = 0;
-			}
-			else if (_yomiPlace == 7 || _yomiPlace == 8 || _yomiPlace == 9)
-			{
-				_yomiPlace = 3;
-			}
-			else if (_yomiPlace == 10 || _yomiPlace == 11 || _yomiPlace == 12)
-			{
-				_yomiPlace = 2;
-			}
-			else if (_yomiPlace == 32)
-			{
-				_yomiPlace = 24;
-			}
-			else if (_yomiPlace == 33)
-			{
-				_yomiPlace = 26;
-			}
-			else if (_yomiPlace == 34)
-			{
-				_yomiPlace = 28;
-			}
-			else if (_yomiPlace == 35)
-			{
-				_yomiPlace = 30;
-			}
-			else if (_yomiPlace != 0 && _yomiPlace != 1 && _yomiPlace != 2)
-			{
-				_yomiPlace -= 9;
-			}
-		}
-		if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
-		{
-			if (_yomiPlace == 3)
-			{
-				_yomiPlace = 8;
-			}
-			else if (_yomiPlace == 0)
-			{
-				_yomiPlace = 4;
-			}
-			else if (_yomiPlace == 2)
-			{
-				_yomiPlace = 12;
-			}
-			else if (_yomiPlace == 1)
-			{
-				_yomiPlace = 3;
-			}
-			else if (_yomiPlace == 22 || _yomiPlace == 23)
-			{
-				_yomiPlace = 31;
-			}
-			else if (_yomiPlace == 24 || _yomiPlace == 25)
-			{
-				_yomiPlace = 32;
-			}
-			else if (_yomiPlace == 26 || _yomiPlace == 27)
-			{
-				_yomiPlace = 33;
-			}
-			else if (_yomiPlace == 28 || _yomiPlace == 29)
-			{
-				_yomiPlace = 34;
-			}
-			else if (_yomiPlace == 30)
-			{
-				_yomiPlace = 35;
-			}
-			else if (_yomiPlace < 31 )
-			{
-				_yomiPlace += 9;
-			}
-		}
-	}
-	else if (_placeFrameX == ARMOR_ROOM)
-	{
-		if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
-		{
-			if (_yomiPlace == 3)
-			{
-				_yomiPlace = 5;
-			}
-			else if (_yomiPlace % 4 == 1 || _yomiPlace % 4 == 2 || _yomiPlace % 4 == 3)
-			{
-				_yomiPlace -= 1;
-			}
-		}
-		if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
-		{
-			if (_yomiPlace == 3)
-			{
-				_yomiPlace = 6;
-			}
-			else if (_yomiPlace % 4 == 0 || _yomiPlace % 4 == 1 || _yomiPlace % 4 == 2)
-			{
-				_yomiPlace += 1;
-			}
-		}
-		if (KEYMANAGER->isOnceKeyDown(VK_UP))
-		{
-			if (_yomiPlace == 5 || _yomiPlace == 6)
-			{
-				_yomiPlace = 3;
-			}
-			else if (_yomiPlace == 3)
-			{
-				_yomiPlace = 1;
-			}
-			else if (_yomiPlace == 4)
-			{
-				_yomiPlace = 0;
-			}
-			else if (_yomiPlace == 7)
-			{
-				_yomiPlace = 2;
-			}
-			else if (_yomiPlace / 4 == 1 || _yomiPlace / 4 == 2 || _yomiPlace / 4 == 3 || _yomiPlace / 4 == 4)
-			{
-				_yomiPlace -= 4;
-			}
-		}
-		if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
-		{
-			if (_yomiPlace == 3)
-			{
-				_yomiPlace = 5;
-			}
-			else if (_yomiPlace == 1)
-			{
-				_yomiPlace = 3;
-			}
-			else if (_yomiPlace == 2)
-			{
-				_yomiPlace = 7;
-			}
-			else if (_yomiPlace / 4 == 0 || _yomiPlace / 4 == 1 || _yomiPlace / 4 == 2 || _yomiPlace / 4 == 3)
-			{
-				_yomiPlace += 4;
+				if (_yomiIndex == 3)
+				{
+					_yomiIndex = 5;
+				}
+				else if (_yomiIndex == 1)
+				{
+					_yomiIndex = 3;
+				}
+				else if (_yomiIndex == 2)
+				{
+					_yomiIndex = 7;
+				}
+				else if (_yomiIndex / 4 == 0 || _yomiIndex / 4 == 1 || _yomiIndex / 4 == 2 || _yomiIndex / 4 == 3)
+				{
+					_yomiIndex += 4;
+				}
 			}
 		}
 	}
@@ -597,5 +609,109 @@ void ui::movePoint()
 	_pt[17].y = 570;
 	_pt[18].y = 570;
 	_pt[19].y = 570;
+	}
+}
+
+void ui::placeChange()
+{
+	//요미가 각방 앞에 있을때 X를 눌렀을때 불변수 트루로변경
+	if (_x == _goalX && _y == _goalY)
+	{
+		if (_yomiIndex >= 0 && _yomiIndex <= 2)
+		{
+			if (KEYMANAGER->isOnceKeyDown('X'))
+			{
+				_isRoomChanging = true;
+				_worldTime = TIMEMANAGER->getWorldTime();
+			}
+		}
+	}
+
+	if (_isRoomChanging)
+	{
+		_move = false;
+
+		//1.5초후 방이 변경
+		if (1.5f + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			if (!_onceTime)
+			{
+				_onceTime = true;
+
+				//중앙방일때
+				if (_placeFrameX == MAIN_ROOM)
+				{
+					if (_yomiIndex == 0)
+					{
+						_placeFrameX = WEAPON_ROOM;
+					}
+					else if (_yomiIndex == 1)
+					{
+						_placeFrameX = ACCESSERY_ROOM;
+					}
+					else if (_yomiIndex == 2)
+					{
+						_placeFrameX = ARMOR_ROOM;
+					}
+				}
+				//무기방일떄
+				else if (_placeFrameX == WEAPON_ROOM)
+				{
+					if (_yomiIndex == 0)
+					{
+						_placeFrameX = MAIN_ROOM;
+					}
+					else if (_yomiIndex == 1)
+					{
+						_placeFrameX = ACCESSERY_ROOM;
+					}
+					else if (_yomiIndex == 2)
+					{
+						_placeFrameX = ARMOR_ROOM;
+					}
+				}
+				//악세서리방일떄
+				else if (_placeFrameX == ACCESSERY_ROOM)
+				{
+					if (_yomiIndex == 0)
+					{
+						_placeFrameX = WEAPON_ROOM;
+					}
+					else if (_yomiIndex == 1)
+					{
+						_placeFrameX = MAIN_ROOM;
+					}
+					else if (_yomiIndex == 2)
+					{
+						_placeFrameX = ARMOR_ROOM;
+					}
+				}
+				//방어구방일때
+				else if (_placeFrameX == ARMOR_ROOM)
+				{
+					if (_yomiIndex == 0)
+					{
+						_placeFrameX = WEAPON_ROOM;
+					}
+					else if (_yomiIndex == 1)
+					{
+						_placeFrameX = ACCESSERY_ROOM;
+					}
+					else if (_yomiIndex == 2)
+					{
+						_placeFrameX = MAIN_ROOM;
+					}
+				}
+			}
+		}
+
+		//3초후 요미이동 가능
+		if (3.0f + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_move = true;
+			_isRoomChanging = false;
+			_onceTime = false;
+			_worldTime = 0;
+		}
 	}
 }
