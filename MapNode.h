@@ -1,7 +1,7 @@
 #pragma once
 
-#define tileX 40
-#define tileY 40
+#define tileX 60
+#define tileY 60
 #define TileMainSIZE 32
 
 #define TileSIZE 32
