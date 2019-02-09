@@ -1,6 +1,8 @@
 #pragma once
 #include "gameNode.h"
-#define PLAYERFPS 6		//캐릭터 프레임 
+#define PLAYERFPS 6			//캐릭터 프레임 
+#define PLAYERJUMP 12		//점프 프레임
+#define PLAYERATTACKFPS 12	//공격 프레임
 
 enum PLAYERSTATE
 {
@@ -43,6 +45,7 @@ struct tagPlayer
 	float x, y;
 	float speed;
 	int idX, idY;
+	int maxHP;
 	int HP;
 	int str;
 	int def;
@@ -55,9 +58,12 @@ private:
 	tagPlayer _player;
 	image* _image;
 
-	int _doubleKey[4];
-	int _curTime[4], _oldTime[4];
+	int _doubleKey[4];					// 키를 2번 눌렀을때 달리게 해주기위한 인트형 변수
+	int _curTime[4], _oldTime[4];		
 	
+	int _attackComboKey;				// 키를 2번 눌렀을때 공격 콤보 (원리는 위와 동일)
+	int _oldAttackTime;					
+
 	bool _run, _jump;
 
 public:
@@ -75,10 +81,19 @@ public:
 	void DoubleKeyIntVoid();
 	void playerAniName(string targetName, string aniName);
 
-	static void jumpL(void* obj);
-	static void jumpR(void* obj);
-	static void jumpU(void* obj);
-	static void jumpD(void* obj);
+	static void attack(void* obj);				
+
+	static void jump(void* obj);
+
+	static void jumpAttack(void* obj);
+
+	static void dashAttack(void* obj);
+
+	static void dashJumpAttack(void* obj);
+
+	static void objThrow(void* obj);
+	
+	
 
 	//===================== 접근자 설정자 =======================
 
@@ -89,8 +104,10 @@ public:
 	void setPlayerState(PLAYERSTATE state) { _player.state = state; }
 	void setPlayerDirection(PLAYERDIRECTION direction) { _player.direction = direction; }
 	void setPlayerAni(animation* animation) { _player.ani = animation; }
+
 	float getPlayerX() { return _player.x; }
 	float getPlayerY() { return _player.y; }
+
 	int getPlayerMoney() { return _player.money; }
 	int getPlayerHP() { return _player.HP; }
 	int getPlayerStr() { return _player.str; }
