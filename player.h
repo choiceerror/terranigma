@@ -1,6 +1,6 @@
 #pragma once
 #include "gameNode.h"
-#define PLAYERFPS 6
+#define PLAYERFPS 6		//캐릭터 프레임 
 
 enum PLAYERSTATE
 {
@@ -47,7 +47,6 @@ struct tagPlayer
 	int str;
 	int def;
 	int money;
-
 };
 
 class player : public gameNode
@@ -76,9 +75,20 @@ public:
 	void DoubleKeyIntVoid();
 	void playerAniName(string targetName, string aniName);
 
+	static void jumpL(void* obj);
+	static void jumpR(void* obj);
+	static void jumpU(void* obj);
+	static void jumpD(void* obj);
+
+	//===================== 접근자 설정자 =======================
 
 	PLAYERSTATE getPlayerState() { return _player.state; }
 	PLAYERDIRECTION getPlayerDirection() { return _player.direction; }
+	animation* getPlayerAni() { return _player.ani;  }
+
+	void setPlayerState(PLAYERSTATE state) { _player.state = state; }
+	void setPlayerDirection(PLAYERDIRECTION direction) { _player.direction = direction; }
+	void setPlayerAni(animation* animation) { _player.ani = animation; }
 	float getPlayerX() { return _player.x; }
 	float getPlayerY() { return _player.y; }
 	int getPlayerMoney() { return _player.money; }

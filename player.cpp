@@ -68,6 +68,10 @@ void player::render()
 		SetTextColor(getMemDC(), RGB(0, 0, 0));
 		TextOut(getMemDC(), 100 + i * 30, 100, str, strlen(str));
 	}
+
+	sprintf_s(str, "%d", _player.direction);
+	SetTextColor(getMemDC(), RGB(0, 0, 0));
+	TextOut(getMemDC(), 100, 120, str, strlen(str));
 }
 // 캐릭터 프레임 초기값
 void player::keyFrameInit()
@@ -103,7 +107,7 @@ void player::keyFrameInit()
 	int push[] = { 84, 85 , 86, 87 , 88 , 89 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "push", "player", push, 6, PLAYERFPS, true);
 	int jumpLeft[] = { 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpLeft", "player", jumpLeft, 11, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpLeft", "player", jumpLeft, 11, PLAYERFPS, true);
 	int jumpRight[] = { 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpRight", "player", jumpRight, 11, PLAYERFPS, false);
 	int jumpUp[] = { 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130 };
@@ -113,7 +117,7 @@ void player::keyFrameInit()
 	int levelUp[] = { 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "levelUp", "player", levelUp, 11, PLAYERFPS, true);
 	int attackLeft[] = { 160, 161, 162, 163 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "attackLeft", "player", attackLeft, 4, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "attackLeft", "player", attackLeft, 4, PLAYERFPS, false, jumpL, this);
 	int attackRight[] = { 156, 157, 158, 159 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "attackRight", "player", attackRight, 4, PLAYERFPS, false);
 	int attackUp[] = { 168, 169, 170, 171 };
@@ -192,16 +196,12 @@ void player::keyFrameInit()
 // 키 입력
 void player::keyInput()
 {
-	DoubleKeyIntVoid();
+	
 	
 	if (KEYMANAGER->isStayKeyDown(VK_LEFT))
 	{
-		
-		if (!_run && !(_player.direction == LEFT))
-		{
-			_player.direction = LEFT;
-			_player.state = PLAYER_WALK;
-		}
+		_player.direction = LEFT;
+		if (!_run ) _player.state = PLAYER_WALK;
 		if (_doubleKey[LEFT] == 1)
 		{
 			_player.state = PLAYER_RUN;
@@ -226,11 +226,8 @@ void player::keyInput()
 
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
 	{
-		if (!_run && !(_player.direction == RIGHT))
-		{
-			_player.direction = RIGHT;
-			_player.state = PLAYER_WALK;
-		}
+		_player.direction = RIGHT;
+		if (!_run )  _player.state = PLAYER_WALK;
 		if (_doubleKey[RIGHT] == 1)
 		{
 			_player.state = PLAYER_RUN;
@@ -248,18 +245,15 @@ void player::keyInput()
 		
 		
 		if (_doubleKey[RIGHT] == 0) _doubleKey[RIGHT]++;
-		_curTime[1] = GetTickCount();
-		_oldTime[1] = _curTime[1];
+		_curTime[RIGHT] = GetTickCount();
+		_oldTime[RIGHT] = _curTime[RIGHT];
 		
 	}
 
 	if (KEYMANAGER->isStayKeyDown(VK_UP))
 	{
-		if (!_run && !(_player.direction == UP))
-		{
-			_player.direction = UP;
-			_player.state = PLAYER_WALK;
-		}
+		_player.direction = UP;
+		if (!_run) _player.state = PLAYER_WALK;
 		if (_doubleKey[UP] == 1)
 		{
 			_player.state = PLAYER_RUN;
@@ -267,7 +261,7 @@ void player::keyInput()
 		}
 		_player.y -= _player.speed;
 	}
-	if (KEYMANAGER->isOnceKeyUp(VK_UP))
+	if (KEYMANAGER->isOnceKeyUp(VK_UP))     
 	{
 		if ((!(_player.state == PLAYER_RUN) || _player.direction == UP))
 		{
@@ -281,11 +275,8 @@ void player::keyInput()
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_DOWN))
 	{
-		if (!_run && !(_player.direction == UP))
-		{
-			_player.direction = DOWN;
-			_player.state = PLAYER_WALK;
-		}
+		_player.direction = DOWN;
+		if (!_run) _player.state = PLAYER_WALK;
 		if (_doubleKey[DOWN] == 1)
 		{
 			_player.state = PLAYER_RUN;
@@ -308,8 +299,9 @@ void player::keyInput()
 
 	if (KEYMANAGER->isOnceKeyDown('C'))
 	{
-		_player.state = PLAYER_JUMP;
+		_player.state = PLAYER_ATTACK;
 	}
+	DoubleKeyIntVoid();
 }
 // 캐릭터 상태
 void player::playerState()
@@ -391,12 +383,16 @@ void player::playerState()
 		switch (_player.direction)
 		{
 		case LEFT:
+			playerAniName("ark", "attackLeft");
 			break;
 		case RIGHT:
+			playerAniName("ark", "attackRight");
 			break;
 		case UP:
+			playerAniName("ark", "attackUp");
 			break;
 		case DOWN:
+			playerAniName("ark", "attackDown");
 			break;
 		}
 		break;
@@ -529,7 +525,7 @@ void player::DoubleKeyIntVoid()
 
 	for(int i = 0; i < 4; i++) _curTime[i] = GetTickCount();
 
-	//doubleKey를 0.5초가 지나면 0으로 초기화하게 
+	//doubleKey를 0.2초가 지나면 0으로 초기화하게 
 	if ((_curTime[LEFT] - _oldTime[LEFT] >= 1 * 200 && _doubleKey[LEFT] == 1) && !(_player.state == PLAYER_RUN && _player.direction == LEFT))		
 	{
 		_doubleKey[LEFT]--;
@@ -556,4 +552,32 @@ void player::playerAniName(string targetName, string aniName)
 {
 	_player.ani = KEYANIMANAGER->findAnimation(targetName, aniName);
 	_player.ani->start();
+}
+
+
+
+void player::jumpL(void * obj)
+{
+	player* playerJump = (player*)obj;
+
+	//if(playerJump->getPlayerDirection() == PLAYER_ATTACK && playerJump->getPlayerDirection() == LEFT)
+	playerJump->setPlayerState(PLAYER_IDLE);
+	playerJump->setPlayerDirection(LEFT);
+	playerJump->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleLeft"));
+	playerJump->getPlayerAni()->start();
+}
+
+void player::jumpR(void * obj)
+{
+	//k->setDirection(KNIGHTMONSTER_LEFT_MOVE);
+	//k->setMotion(KEYANIMANAGER->findAnimation(k->getName(), "leftMove"));
+	//k->getMotion()->start();
+}
+
+void player::jumpU(void * obj)
+{
+}
+
+void player::jumpD(void * obj)
+{
 }
