@@ -88,6 +88,28 @@ image* imageManager::addImage(string strKey, const char * fileName, float x, flo
 	return img;
 }
 
+image * imageManager::addRotateImage(string strKey, const char * fileName, int width, int height, bool trans, COLORREF transColor)
+{
+	image* img = findImage(strKey);
+
+	//만약에 찾으려던 그 이미지가 있으면 그냥 그 이미지를 반환
+	if (img) return img;
+
+	//없단 얘기!
+	img = new image;
+
+	if (FAILED(img->rotateInit(fileName, width, height, trans, transColor)))
+	{
+		SAFE_DELETE(img);
+
+		return nullptr;
+	}
+	//map.insert(pair<first자료형, second자료형>(변수명1, 변수명2))
+	_mImageList.insert(make_pair(strKey, img));
+
+	return img;
+}
+
 image* imageManager::addFrameImage(string strKey, const char * fileName, float x, float y, int width, int height, int frameX, int frameY, bool trans, COLORREF transColor)
 {
 	image* img = findImage(strKey);
@@ -121,6 +143,28 @@ image* imageManager::addFrameImage(string strKey, const char * fileName, int wid
 	img = new image;
 
 	if (FAILED(img->init(fileName, width, height, frameX, frameY, trans, transColor)))
+	{
+		SAFE_DELETE(img);
+
+		return nullptr;
+	}
+	//map.insert(pair<first자료형, second자료형>(변수명1, 변수명2))
+	_mImageList.insert(make_pair(strKey, img));
+
+	return img;
+}
+
+image * imageManager::addRotateFrameImage(string strKey, const char * fileName, int width, int height, int frameX, int frameY, bool trans, COLORREF transColor)
+{
+	image* img = findImage(strKey);
+
+	//만약에 찾으려던 그 이미지가 있으면 그냥 그 이미지를 반환
+	if (img) return img;
+
+	//없단 얘기!
+	img = new image;
+
+	if (FAILED(img->rotateInit(fileName, width, height, frameX, frameY, trans, transColor)))
 	{
 		SAFE_DELETE(img);
 
@@ -237,4 +281,18 @@ void imageManager::loopRender(string strKey, HDC hdc, const LPRECT drawArea, int
 	image* img = findImage(strKey);
 
 	if (img) img->loopRender(hdc, drawArea, offSetX, offSetY);
+}
+
+void imageManager::rotateRender(string strKey, HDC hdc, float centerX, float centerY, float angle)
+{
+	image* img = findImage(strKey);
+
+	if (img) img->rotateRender(hdc, centerX, centerY, angle);
+}
+
+void imageManager::rotateFrameRender(string strKey, HDC hdc, float centerX, float centerY, int currentFrameX, int currentFrameY, float angle)
+{
+	image* img = findImage(strKey);
+
+	if (img) img->rotateFrameRender(hdc, centerX, centerY, currentFrameX, currentFrameY, angle);
 }

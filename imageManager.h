@@ -25,9 +25,11 @@ public:
 	image* addImage(string strKey, int width, int height);
 	image* addImage(string strKey, const char* fileName, int width, int height, bool trans, COLORREF transColor);
 	image* addImage(string strKey, const char* fileName, float x, float y, int width, int height, bool trans, COLORREF transColor);
+	image* addRotateImage(string strKey, const char* fileName, int width, int height, bool trans, COLORREF transColor);
 
 	image* addFrameImage(string strKey, const char* fileName, float x, float y, int width, int height, int frameX, int frameY, bool trans, COLORREF transColor);
 	image* addFrameImage(string strKey, const char* fileName, int width, int height, int frameX, int frameY, bool trans, COLORREF transColor);
+	image* addRotateFrameImage(string strKey, const char* fileName, int width, int height, int frameX, int frameY, bool trans, COLORREF transColor);
 
 	//이미지를 찾는 함수
 	image* findImage(string strKey);
@@ -49,5 +51,8 @@ public:
 	void expandRenderCenter(string strKey, HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float sizeX = 1.0f, float sizeY = 1.0f);
 
 	void loopRender(string strKey, HDC hdc, const LPRECT drawArea, int offSetX, int offSetY);
+
+	void rotateRender(string strKey, HDC hdc, float centerX, float centerY, float angle);
+	void rotateFrameRender(string strKey, HDC hdc, float centerX, float centerY, int currentFrameX, int currentFrameY, float angle);
 };
 

@@ -59,6 +59,7 @@ public:
 
 private:
 	LPIMAGE_INFO		_imageInfo;		//이미지 정보를 담은 구조체
+	LPIMAGE_INFO		_rotateImage;	//rotate 이미지 
 	CHAR*				_fileName;		//파일이름에 사용할 캐릭터포인터
 	BOOL				_trans;			//특정 칼라를 뺄꺼냐?
 	COLORREF			_transColor;	//제외할 칼라의 RGB 값은?
@@ -94,6 +95,13 @@ public:
 	//파일로부터 이미지 읽어들이는 함수 (프레임이미지 용)
 	HRESULT init(const char* fileName, int width, int height, int frameX, int frameY,
 		BOOL trans = FALSE, COLORREF transColor = FALSE);
+
+	//회전 이미지
+	HRESULT rotateInit(const char* fileName, int width, int height,
+		BOOL trans = FALSE, COLORREF transColor = RGB(0, 0, 0));
+
+	HRESULT rotateInit(const char* fileName, int width, int height,
+		int frameX, int frameY, BOOL trans = FALSE, COLORREF transColor = RGB(0, 0, 0));
 
 	void release();
 
@@ -133,6 +141,10 @@ public:
 	void expandRenderCenter(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float sizeX = 1.0f, float sizeY = 1.0f);
 	void expandAniRender(HDC hdc, int destX, int destY, animation* ani, float sizeX = 1.0f, float sizeY = 1.0f);
 	void expandAniRenderCenter(HDC hdc, int destX, int destY, animation* ani, float sizeX = 1.0f, float sizeY = 1.0f);
+
+	//회전 이미지
+	void rotateRender(HDC hdc, float centerX, float centerY, float angle);
+	void rotateFrameRender(HDC hdc, float centerX, float centerY, int currentFrameX, int currentFrameY, float angle);
 
 	inline HDC getMemDC() { return _imageInfo->hMemDC; }
 
