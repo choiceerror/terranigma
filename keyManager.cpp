@@ -2,59 +2,60 @@
 #include "keyManager.h"
 
 
-keyManager::keyManager()
-{
-}
+keyManager::keyManager() {}
+keyManager::~keyManager() {}
 
-
-keyManager::~keyManager()
-{
-}
 
 HRESULT keyManager::init()
 {
-	for (int i = 0; i < KEYMAX; i++)
-	{
-		//모든 키는 현재 안눌려진 상태이다.
-		this->getKeyUp().set(i, false);
-	}
+	//처음엔 모든 키를 눌려있지 않은 상태로 초기화
+	_keyCurrent.reset();
+	_keyPast.reset();
 
 	return S_OK;
 }
-
 void keyManager::release()
 {
+
 }
+void keyManager::update()    //gameNode의 update에 추가
+{
+	//계속 과거키를 현재키로 갱신해준다
+	_keyPast = _keyCurrent;
+}
+
 
 bool keyManager::isOnceKeyDown(int key)
 {
-	//GetASyncKeyState		키보드 상태를 체크하는데 비동기화
-	//GetKeyState			키보드 상태를 체크하는데 동기화
-
+	//해당 키를 누른 상태
 	if (GetAsyncKeyState(key) & 0x8000)
 	{
-		if (!this->getKeyDown()[key])
+		//그 키가 눌려있지 않았다면
+		if (!_keyPast[key])
 		{
-			this->setKeyDown(key, true);
+			//현재키를 눌린 상태로 바꾸고 return true
+			_keyCurrent.set(key, true);
 			return true;
 		}
 	}
-	else this->setKeyDown(key, false);
+	//해당 키를 누르지 않은 상태
+	else _keyCurrent.set(key, false);   //현재키를 누르지 않은 상태로 바꿈
 
 	return false;
 }
 
 bool keyManager::isOnceKeyUp(int key)
 {
-	if (GetAsyncKeyState(key) & 0x8000)
-	{
-		this->setKeyUp(key, true);
-	}
+	//해당 키를 누른 상태					현재키를 눌린 상태로 바꿈
+	if (GetAsyncKeyState(key) & 0x8000) _keyCurrent.set(key, true);
+	//해당 키를 누르지 않은 상태
 	else
 	{
-		if (this->getKeyUp()[key])
+		//그 키가 눌려있었다면
+		if (_keyPast[key])
 		{
-			this->setKeyUp(key, false);
+			//현재키를 누르지 않은 상태로 바꾸고 return true
+			_keyCurrent.set(key, false);
 			return true;
 		}
 	}
