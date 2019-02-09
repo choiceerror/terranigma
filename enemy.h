@@ -83,6 +83,8 @@ struct tagEnemy
 	int damage; //데미지
 	int currentHP, maxHP; //현재, 최대 체력
 	float moveAngle; //움직임 각도
+	float targetAngle;
+	float targetDistance;
 };
 
 class enemy : public gameNode
@@ -133,6 +135,14 @@ public:
 
 	int getIdX() {return _enemy.idX;}
 	int getIdY() {return _enemy.idY;}
+
+	float getTargetAngle() {return _enemy.targetAngle;}
+	void setTargetAngle(float angle) {_enemy.targetAngle = angle;}
+
+	float getTargetDistance() {return _enemy.targetDistance;}
+	void setTargetDistance(float distance) {_enemy.targetDistance = distance;}
+
+	float getSpeed() {return _enemy.speed;}
 	
 };
 

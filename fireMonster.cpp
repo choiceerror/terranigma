@@ -53,7 +53,8 @@ void fireMonster::move()
 {
 	if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
 	{
-		_enemy.state = FIREMONSTER_STATE_DEAD;
+		_enemy.state = FIREMONSTER_STATE_MOVE;
+		_enemy.direction = FIREMONSTER_DIRECTION_RIGHT;
 	}
 
 	//방향에 따라 프레임 동작

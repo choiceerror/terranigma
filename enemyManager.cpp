@@ -81,6 +81,12 @@ void enemyManager::render()
 	{
 		_fireMonsterBullet->render(_fireMonsterBullet->getVFireBullet()[i].viewX, _fireMonsterBullet->getVFireBullet()[i].viewY);
 	}
+	char str[128];
+
+	
+	sprintf_s(str, "angle : %f", (_vBallMonster.back()->getTargetDistance()));
+	TextOut(getMemDC(), 300, 100, str, strlen(str));
+
 	Rectangle(getMemDC(), _playerRc);
 }
 
@@ -136,7 +142,7 @@ void enemyManager::setEnemy()
 			ballMonster* bm;
 			bm = new ballMonster;
 
-			bm->init("ball", "ballMonster", 100 + j * 100, 100 + i * 100, j, i, 100);
+			bm->init("ball", "ballMonster", 500 + j * 100, 100 + i * 100, j, i, 100);
 			_vBallMonster.push_back(bm);
 
 			fireMonster* fm;
@@ -186,62 +192,79 @@ void enemyManager::enemyAttackPlayerCollision()
 	}
 
 	//플레이어 렉트 임시용으로 만들어 충돌 실험용
-	//for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
-	//{
-	//	RECT temp;
-	//	if (IntersectRect(&temp, &(*_viBallMonster)->getRangeRect(), &_playerRc))
-	//	{
-	//		(*_viBallMonster)->setMoveType(FOLLOW_MOVE_TYPE); //충돌하면 따라가는 타입으로
-	//		switch ((*_viBallMonster)->getDirection())
-	//		{
-	//		case BALLMONSTER_LEFT_IDLE:
-	//		case BALLMONSTER_LEFT_MOVE:
-	//		case BALLMONSTER_RIGHT_IDLE:
-	//		case BALLMONSTER_RIGHT_MOVE:
-	//		case BALLMONSTER_UP_IDLE:
-	//		case BALLMONSTER_UP_MOVE:
-	//		case BALLMONSTER_DOWN_IDLE:
-	//		case BALLMONSTER_DOWN_MOVE:
+	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
+	{
+		(*_viBallMonster)->setTargetDistance(getDistance((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _x, _y));
+		RECT temp;
+		if (IntersectRect(&temp, &(*_viBallMonster)->getRangeRect(), &_playerRc))
+		{
+			(*_viBallMonster)->setMoveType(FOLLOW_MOVE_TYPE); //충돌하면 따라가는 타입으로
+			//(*_viBallMonster)->setState(BALLMONSTER_STATE_MOVE);
 
-	//			if ((*_viBallMonster)->getRangeRect().left <= _playerRc.right)
-	//			{
+			switch ((*_viBallMonster)->getState())
+			{
+			case BALLMONSTER_STATE_IDLE:
+			case BALLMONSTER_STATE_MOVE:
 
-	//				(*_viBallMonster)->setX((*_viBallMonster)->getX() + cosf(getAngle((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _x, _y)));
-	//				(*_viBallMonster)->setY((*_viBallMonster)->getY() + -sinf(getAngle((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _x, _y)));
-	//			}
+				(*_viBallMonster)->setTargetAngle(getAngle((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _x, _y));
 
-	//			break;
-	//		}
-	//	}
-	//	else
-	//	{
-	//		(*_viBallMonster)->setMoveType(BASIC_MOVE_TYPE);
-	//	}
+				
+				
+				if ((*_viBallMonster)->getTargetDistance() > 5)
+				{
+					if (((*_viBallMonster)->getTargetAngle() < (PI / 180) * 25 && (*_viBallMonster)->getTargetAngle() >= 0) ||
+						((*_viBallMonster)->getTargetAngle() > (PI / 180) * 335 && (*_viBallMonster)->getTargetAngle() <= (PI / 180) * 360))
+					{
+						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_RIGHT);
+					}
+					else if ((*_viBallMonster)->getTargetAngle() < (PI / 180) * 115 && (*_viBallMonster)->getTargetAngle() > (PI / 180) * 65)
+					{
+						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_UP);
+					}
+					else if ((*_viBallMonster)->getTargetAngle() > (PI / 180) * 155 && (*_viBallMonster)->getTargetAngle() < (PI / 180) * 205)
+					{
+						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_LEFT);
+					}
+					else if ((*_viBallMonster)->getTargetAngle() > (PI / 180) * 245 && (*_viBallMonster)->getTargetAngle() < (PI / 180) * 295)
+					{
+						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_DOWN);
+					}
+				}
+				else
+				{
+					(*_viBallMonster)->setState(BALLMONSTER_STATE_IDLE);
+				}
+				
 
-	//}
+				break;
+			}
+		}
+	
+		else if((*_viBallMonster)->getTargetDistance() < 160)
+		{
+			(*_viBallMonster)->setMoveType(BASIC_MOVE_TYPE);
+		}
+
+	}
 
 	//for (int i = 0; i < _vKnightMonster.size(); i++)
 	//{
 	//	RECT temp;
 	//	if (IntersectRect(&temp, &_vKnightMonster[i]->getRangeRect(), &_playerRc))
 	//	{
-	//		switch (_vKnightMonster[i]->getDirection())
+	//		switch (_vKnightMonster[i]->getState())
 	//		{
-	//		case KNIGHTMONSTER_DOWN_IDLE:
-	//		case KNIGHTMONSTER_DOWN_MOVE:
+	//		case KNIGHTMONSTER_STATE_ATTACK:
 	//			_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DOWN_ATTACK);
 	//			break;
-	//		case KNIGHTMONSTER_UP_IDLE:
-	//		case KNIGHTMONSTER_UP_MOVE:
+
 	//			_vKnightMonster[i]->setDirection(KNIGHTMONSTER_UP_ATTACK);
 	//			break;
-	//		case KNIGHTMONSTER_LEFT_IDLE:
-	//		case KNIGHTMONSTER_LEFT_MOVE:
+
 	//			if (_vKnightMonster[i]->getRangeRect().left <= _playerRc.right && _vKnightMonster[i]->getRangeRect().right > _playerRc.left)
 	//			_vKnightMonster[i]->setDirection(KNIGHTMONSTER_LEFT_ATTACK);
 	//			break;
-	//		case KNIGHTMONSTER_RIGHT_IDLE:
-	//		case KNIGHTMONSTER_RIGHT_MOVE:
+
 	//			if (_vKnightMonster[i]->getRangeRect().right >= _playerRc.left && _vKnightMonster[i]->getRangeRect().left < _playerRc.right)
 	//			_vKnightMonster[i]->setDirection(KNIGHTMONSTER_RIGHT_ATTACK);
 	//			break;

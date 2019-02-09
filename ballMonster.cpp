@@ -147,5 +147,39 @@ void ballMonster::move()
 			break;
 		}
 	}
+	else if (_enemy.moveType == FOLLOW_MOVE_TYPE)
+	{
+		if (_enemy.direction == BALLMONSTER_DIRECTION_UP)
+		{
+			_enemy.moveAngle = PI / 2;
+			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
+		}
+		else if (_enemy.direction == BALLMONSTER_DIRECTION_DOWN)
+		{
+			_enemy.moveAngle = (PI / 180) * 270;
+			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
+		}
+		else if (_enemy.direction == BALLMONSTER_DIRECTION_RIGHT)
+		{
+			_enemy.moveAngle = PI2;
+			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
+		}
+		else if (_enemy.direction == BALLMONSTER_DIRECTION_LEFT)
+		{
+			_enemy.moveAngle = PI;
+			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
+		}
+		_enemy.motion->start();
+
+
+
+
+		//if (_enemy.state == BALLMONSTER_STATE_MOVE)
+		{
+			_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
+			_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;
+		}
+	
+	}
 
 }
