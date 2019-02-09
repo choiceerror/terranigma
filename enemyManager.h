@@ -23,6 +23,8 @@ private:
 	//파이어몬스터 총알
 	fireMonsterBullet* _fireMonsterBullet;
 
+	int _fireBulletSpeed;
+
 	RECT _playerRc;
 	float _x, _y;
 	
@@ -38,8 +40,8 @@ public:
 	void updateCollection(); //업데이트 모음 함수
 	void enemyDraw(); //에너미들 랜더링 모음함수
 	void setEnemy(); //에너미 셋팅
-	void fireMonsterBulletFire(); //파이어몬스터 총알 발사할 함수
 	void enemyAttackPlayerCollision(); //에너미들의 공격이 플레이어랑 충돌할 함수
+	void fireMonsterBulletFire(int i); //파이어몬스터 총알 발사할 함수
 	void enemyDead(); //에너미들이 죽을 함수
 	void enemyRespon(); //에너미들이 죽은다음 리스폰할 함수
 

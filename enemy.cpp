@@ -24,6 +24,8 @@ HRESULT enemy::init(string enemyName, const char* imageName, float x, float y, i
 	_enemy.speed = 1;
 	_enemy.moveType = BASIC_MOVE_TYPE; //처음엔 기본움직임상태로
 	_enemy.currentHP = _enemy.maxHP = hp;
+	_directionTime = 2.0f;
+	_directionWorldTime = TIMEMANAGER->getWorldTime();
 
 	_enemy.rc = RectMakeCenter(x, y, _enemy.image->getFrameWidth() * 2, _enemy.image->getFrameHeight() * 2);
 

@@ -69,78 +69,157 @@ void knightMonster::update(float cameraX, float cameraY)
 {
 	enemy::update(cameraX, cameraY);
 	move();
+	attack();
 
 	//나이트몬스터는 렉트가 너무크기때문에 여기서 재조정
 	_enemy.rc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
-	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 2, _enemy.image->getFrameHeight() * 2); //범위는 2배로만
+	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 4, _enemy.image->getFrameHeight() * 4); 
 }
 
 void knightMonster::render(float viewX, float viewY)
 {
-	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f, 2.f);
 	//_enemy.image->alphaAniRender(getMemDC(), viewX, viewY, _enemy.motion, 100);
 
 	//Rectangle(getMemDC(), _enemy.rc);
 	//Rectangle(getMemDC(), _enemy.rangeRc);
 	Rectangle(getMemDC(), _enemy.attackRc);
+	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f, 2.f);
+
 }
 
 void knightMonster::move()
 {
-	if (KEYMANAGER->isOnceKeyDown('S'))
+	//상태에 따라 프레임 동작
+	if (_enemy.moveType == BASIC_MOVE_TYPE)
 	{
-		_enemy.state = KNIGHTMONSTER_STATE_ATTACK;
-		_enemy.direction = KNIGHTMONSTER_DIRECTION_DOWN;
-	}
-	else if (KEYMANAGER->isOnceKeyDown('D'))
-	{
-		_enemy.state = KNIGHTMONSTER_STATE_ATTACK;
-		_enemy.direction = KNIGHTMONSTER_DIRECTION_UP;
-	}
-	else if (KEYMANAGER->isOnceKeyDown('F'))
-	{
-		_enemy.state = KNIGHTMONSTER_STATE_ATTACK;
-		_enemy.direction = KNIGHTMONSTER_DIRECTION_LEFT;
-	}
-	else if (KEYMANAGER->isOnceKeyDown('G'))
-	{
-		_enemy.state = KNIGHTMONSTER_STATE_ATTACK;
-		_enemy.direction = KNIGHTMONSTER_DIRECTION_RIGHT;
-	}
+		switch (_enemy.state)
+		{
+		case KNIGHTMONSTER_STATE_IDLE:
+			if (_enemy.direction == KNIGHTMONSTER_DIRECTION_DOWN)	    _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downIdle");
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_UP)	    _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upIdle");
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_LEFT)   _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftIdle");
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_RIGHT)  _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightIdle");
+			_enemy.motion->start();
+			break;
+		case KNIGHTMONSTER_STATE_MOVE:
+			if (_enemy.direction == KNIGHTMONSTER_DIRECTION_DOWN)
+			{
+				_enemy.moveAngle = (PI / 180 * 270);
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
+			}
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_UP)
+			{
+				_enemy.moveAngle = PI / 2;
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
+			}
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_LEFT)
+			{
+				_enemy.moveAngle = PI;
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
+			}
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_RIGHT)
+			{
+				_enemy.moveAngle = PI2;
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
+			}
+			_enemy.motion->start();
+			_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
+			_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;
+			break;
+		case KNIGHTMONSTER_STATE_ATTACK:
+			if (_enemy.direction == KNIGHTMONSTER_DIRECTION_DOWN)		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downAttack");
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_UP)	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upAttack");
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_LEFT) 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftAttack");
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_RIGHT) _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightAttack");
+			_enemy.motion->start();
+			break;
+		}
+		//랜덤으로 움직임.
+		if (_directionTime + _directionWorldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_rndDirection = RND->getInt(4);
+			_rndState = RND->getInt(2);
 
+			if (_rndDirection == 0)
+			{
+				_enemy.direction = KNIGHTMONSTER_DIRECTION_DOWN;
 
+				if (_rndState == 0)	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
+				else _enemy.state = KNIGHTMONSTER_STATE_MOVE;
+			}
+			else if (_rndDirection == 1)
+			{
+				_enemy.direction = KNIGHTMONSTER_DIRECTION_UP;
+
+				if (_rndState == 0)	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
+				else _enemy.state = KNIGHTMONSTER_STATE_MOVE;
+			}
+			else if (_rndDirection == 2)
+			{
+				_enemy.direction = KNIGHTMONSTER_DIRECTION_RIGHT;
+
+				if (_rndState == 0)	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
+				else _enemy.state = KNIGHTMONSTER_STATE_MOVE;
+			}
+			else if (_rndDirection == 3)
+			{
+				_enemy.direction = KNIGHTMONSTER_DIRECTION_LEFT;
+
+				if (_rndState == 0)	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
+				else _enemy.state = KNIGHTMONSTER_STATE_MOVE;
+			}
+			_directionWorldTime = TIMEMANAGER->getWorldTime();
+		}
+	}
+	//플레이어 따라가는타입
+	else if (_enemy.moveType == FOLLOW_MOVE_TYPE)
+	{
+		switch (_enemy.state)
+		{
+		case KNIGHTMONSTER_STATE_MOVE:
+			if (_enemy.direction == KNIGHTMONSTER_DIRECTION_DOWN)
+			{
+				_enemy.moveAngle = (PI / 180 * 270);
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
+			}
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_UP)
+			{
+				_enemy.moveAngle = PI / 2;
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
+			}
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_LEFT)
+			{
+				_enemy.moveAngle = PI;
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
+			}
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_RIGHT)
+			{
+				_enemy.moveAngle = PI2;
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
+			}
+			_enemy.motion->start();
+			_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
+			_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;
+			break;
+		case KNIGHTMONSTER_STATE_ATTACK:
+			if (_enemy.direction == KNIGHTMONSTER_DIRECTION_DOWN)		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downAttack");
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_UP)	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upAttack");
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_LEFT) 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftAttack");
+			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_RIGHT) _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightAttack");
+			_enemy.motion->start();
+			break;
+		}
+	}
+}
+
+void knightMonster::attack()
+{
 	//나이트 찌르기공격
 	if (_enemy.motion->getFramePos().x >= 650 && _enemy.motion->getFramePos().y == 400) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y + 70, 30, 100); //아래공격
 	else if (_enemy.motion->getFramePos().x >= 390 && _enemy.motion->getFramePos().y == 500) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y - 70, 30, 100); //위공격
 	else if (_enemy.motion->getFramePos().x >= 650 && _enemy.motion->getFramePos().y == 600) _enemy.attackRc = RectMakeCenter(_enemy.x - 70, _enemy.y, 100, 30); //왼쪽공격
 	else if (_enemy.motion->getFramePos().x >= 650 && _enemy.motion->getFramePos().y == 700) _enemy.attackRc = RectMakeCenter(_enemy.x + 70, _enemy.y, 100, 30); //오른쪽공격
 	else _enemy.attackRc = RectMakeCenter(0, 0, 0, 0); //공격끝나면 렉트 갱신
-
-	//방향에 따라 프레임 동작
-	switch (_enemy.state)
-	{
-	case KNIGHTMONSTER_STATE_IDLE:
-		if(_enemy.direction == KNIGHTMONSTER_DIRECTION_DOWN)	    _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downIdle");
-		else if(_enemy.direction == KNIGHTMONSTER_DIRECTION_UP)	    _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upIdle");
-		else if(_enemy.direction == KNIGHTMONSTER_DIRECTION_LEFT)   _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftIdle");
-		else if(_enemy.direction == KNIGHTMONSTER_DIRECTION_RIGHT)  _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightIdle");
-		_enemy.motion->start();
-		break;
-	case KNIGHTMONSTER_STATE_MOVE:
-		if (_enemy.direction == KNIGHTMONSTER_DIRECTION_DOWN)		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
-		else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_UP)	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
-		else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_LEFT) 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
-		else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_RIGHT) _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
-		_enemy.motion->start();
-		break;
-	case KNIGHTMONSTER_STATE_ATTACK:
-		if (_enemy.direction == KNIGHTMONSTER_DIRECTION_DOWN)		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downAttack");
-		else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_UP)	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upAttack");
-		else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_LEFT) 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftAttack");
-		else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_RIGHT) _enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightAttack");
-		_enemy.motion->start();
-		break;
-	}
 }
 
 //공격끝난후 다른모션 취하기위한 콜백함수
@@ -148,32 +227,29 @@ void knightMonster::cbAttack(void * obj)
 {
 	knightMonster* k = (knightMonster*)obj;
 
-
-	if (k->getState() == KNIGHTMONSTER_STATE_ATTACK)
+	k->setState(KNIGHTMONSTER_STATE_MOVE);
+	switch (k->getDirection())
 	{
-		k->setState(KNIGHTMONSTER_STATE_MOVE);
-		switch (k->getDirection())
-		{
-		case KNIGHTMONSTER_DIRECTION_DOWN:
-			k->setDirection(KNIGHTMONSTER_DIRECTION_DOWN);
-			k->setMotion(KEYANIMANAGER->findAnimation(k->getName(), "downMove"));
-			k->getMotion()->start();
-			break;
-		case KNIGHTMONSTER_DIRECTION_UP:
-			k->setDirection(KNIGHTMONSTER_DIRECTION_UP);
-			k->setMotion(KEYANIMANAGER->findAnimation(k->getName(), "upMove"));
-			k->getMotion()->start();
-			break;
-		case KNIGHTMONSTER_DIRECTION_LEFT:
-			k->setDirection(KNIGHTMONSTER_DIRECTION_LEFT);
-			k->setMotion(KEYANIMANAGER->findAnimation(k->getName(), "leftMove"));
-			k->getMotion()->start();
-			break;
-		case KNIGHTMONSTER_DIRECTION_RIGHT:
-			k->setDirection(KNIGHTMONSTER_DIRECTION_RIGHT);
-			k->setMotion(KEYANIMANAGER->findAnimation(k->getName(), "rightMove"));
-			k->getMotion()->start();
-			break;
-		}
+	case KNIGHTMONSTER_DIRECTION_DOWN:
+		k->setDirection(KNIGHTMONSTER_DIRECTION_DOWN);
+		k->setMotion(KEYANIMANAGER->findAnimation(k->getName(), "downMove"));
+		k->getMotion()->start();
+		break;
+	case KNIGHTMONSTER_DIRECTION_UP:
+		k->setDirection(KNIGHTMONSTER_DIRECTION_UP);
+		k->setMotion(KEYANIMANAGER->findAnimation(k->getName(), "upMove"));
+		k->getMotion()->start();
+		break;
+	case KNIGHTMONSTER_DIRECTION_LEFT:
+		k->setDirection(KNIGHTMONSTER_DIRECTION_LEFT);
+		k->setMotion(KEYANIMANAGER->findAnimation(k->getName(), "leftMove"));
+		k->getMotion()->start();
+		break;
+	case KNIGHTMONSTER_DIRECTION_RIGHT:
+		k->setDirection(KNIGHTMONSTER_DIRECTION_RIGHT);
+		k->setMotion(KEYANIMANAGER->findAnimation(k->getName(), "rightMove"));
+		k->getMotion()->start();
+		break;
 	}
+	
 }

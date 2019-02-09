@@ -81,6 +81,7 @@ struct tagEnemy
 	string name;
 	animation* motion;
 	int damage; //데미지
+	int def; //방어력
 	int currentHP, maxHP; //현재, 최대 체력
 	float moveAngle; //움직임 각도
 	float targetAngle;
@@ -91,6 +92,9 @@ class enemy : public gameNode
 {
 protected:
 	tagEnemy _enemy;
+	int _rndDirection; //랜덤으로 방향전환
+	int _rndState; //랜덤으로 상태전환
+	float _directionTime, _directionWorldTime;
 
 public:
 	enemy();
@@ -115,8 +119,12 @@ public:
 	void setViewX(float viewX) { _enemy.viewX = viewX; }
 	void setViewY(float viewY) { _enemy.viewY = viewY; }
 
+	int getIdX() { return _enemy.idX; }
+	int getIdY() { return _enemy.idY; }
+
 	RECT getRect() { return _enemy.rc; }
 	RECT getRangeRect() { return _enemy.rangeRc; }
+	RECT getAttackRect() { return _enemy.attackRc; }
 
 	ENEMYDIRECTION getDirection() { return _enemy.direction; }
 	void setDirection(ENEMYDIRECTION direction) { _enemy.direction = direction; }
@@ -133,9 +141,6 @@ public:
 	void setCurrentHP(int hp) {_enemy.currentHP = hp;}
 	void setMaxHP(int maxHp) {_enemy.maxHP = maxHp;}
 
-	int getIdX() {return _enemy.idX;}
-	int getIdY() {return _enemy.idY;}
-
 	float getTargetAngle() {return _enemy.targetAngle;}
 	void setTargetAngle(float angle) {_enemy.targetAngle = angle;}
 
@@ -143,6 +148,7 @@ public:
 	void setTargetDistance(float distance) {_enemy.targetDistance = distance;}
 
 	float getSpeed() {return _enemy.speed;}
+	float setSpeed(float speed) { _enemy.speed = speed; }
 	
 };
 

@@ -19,7 +19,8 @@ HRESULT enemyManager::init()
 	_playerRc = RectMakeCenter(_x, _y, 100, 100);
 
 	_fireMonsterBullet = new fireMonsterBullet;
-	_fireMonsterBullet->init("fireMonster", WINSIZEX, 10);
+	_fireMonsterBullet->init("fireMonster", WINSIZEX / 2, 10);
+	_fireBulletSpeed = 5;
 
 	return S_OK;
 }
@@ -45,9 +46,6 @@ void enemyManager::update()
 {
 	//업데이트 모음 함수
 	updateCollection();
-
-	//불총알 발사함수
-	fireMonsterBulletFire();
 
 	//에너미 공격 플레이어 충돌함수
 	enemyAttackPlayerCollision();
@@ -76,15 +74,9 @@ void enemyManager::render()
 {
 	//렌더링 모음 함수
 	enemyDraw();
-	//불몬스터 총알 렌더링
-	for (int i = 0; i < _fireMonsterBullet->getVFireBullet().size(); i++)
-	{
-		_fireMonsterBullet->render(_fireMonsterBullet->getVFireBullet()[i].viewX, _fireMonsterBullet->getVFireBullet()[i].viewY);
-	}
 	char str[128];
 
-	
-	sprintf_s(str, "angle : %f", (_vBallMonster.back()->getTargetDistance()));
+	sprintf_s(str, "targetDistance : %f", (_vKnightMonster.front()->getTargetDistance()));
 	TextOut(getMemDC(), 300, 100, str, strlen(str));
 
 	Rectangle(getMemDC(), _playerRc);
@@ -130,6 +122,11 @@ void enemyManager::enemyDraw()
 	{
 		(*_viKnightMonster)->render((*_viKnightMonster)->getViewX(), (*_viKnightMonster)->getViewY());
 	}
+	//불몬스터 총알 렌더링
+	for (int i = 0; i < _fireMonsterBullet->getVFireBullet().size(); i++)
+	{
+		_fireMonsterBullet->render(_fireMonsterBullet->getVFireBullet()[i].viewX, _fireMonsterBullet->getVFireBullet()[i].viewY);
+	}
 }
 
 //에너미 셋팅
@@ -161,26 +158,178 @@ void enemyManager::setEnemy()
 	_vKnightMonster.push_back(km);
 }
 
-//불총알 발사
-void enemyManager::fireMonsterBulletFire()
+//에너미 공격들이 플레이어 충돌할 함수
+void enemyManager::enemyAttackPlayerCollision()
 {
-	for (_viFireMonster = _vFireMonster.begin(); _viFireMonster != _vFireMonster.end(); _viFireMonster++)
+	//플레이어 렉트 임시용으로 만들어 충돌 실험용 공몬스터
+	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
 	{
-		//파이어 몬스터가 쏜 총알의 카운트 발사가 true라면
-		if ((*_viFireMonster)->fireBulletCountFire() == true)
+		//몬스터와 플레이어간의 거리를 구해줌.
+		(*_viBallMonster)->setTargetDistance(getDistance((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _x, _y));
+		RECT temp;
+		if (IntersectRect(&temp, &(*_viBallMonster)->getRangeRect(), &_playerRc))
 		{
-			RECT fireRc; //불몬스터 렉트
-			fireRc = (*_viFireMonster)->getRect();
+			(*_viBallMonster)->setMoveType(FOLLOW_MOVE_TYPE); //충돌하면 따라가는 타입으로
+			(*_viBallMonster)->setState(BALLMONSTER_STATE_MOVE); //그리고 계속움직임.
+			(*_viBallMonster)->setTargetAngle(getAngle((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _x, _y)); //몬스터와 플레이어간의 각도 구해줌.
+			switch ((*_viBallMonster)->getState())
+			{
+			case BALLMONSTER_STATE_IDLE:
+			case BALLMONSTER_STATE_MOVE:
 
-			//불몬스터로부터 불총알 발사
-			_fireMonsterBullet->fire(fireRc.left + (fireRc.right - fireRc.left) / 2, fireRc.top + (fireRc.bottom - fireRc.top) / 2, getAngle(fireRc.left, fireRc.top, _playerRc.left, _playerRc.top), 3);
+				//거리가 10보다 클때만 쫓아옴.
+				if ((*_viBallMonster)->getTargetDistance() > 10)
+				{
+					//오른쪽각도 충돌범위일때만 오른쪽으로 쫓아오게
+					if (((*_viBallMonster)->getTargetAngle() < (PI / 180) * 25 && (*_viBallMonster)->getTargetAngle() > 0) ||
+						((*_viBallMonster)->getTargetAngle() > (PI / 180) * 335 && (*_viBallMonster)->getTargetAngle() < PI2))
+					{
+						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_RIGHT);
+					}
+					//위에각도 충돌범위일때만 위에 쫓아오게
+					else if ((*_viBallMonster)->getTargetAngle() > (PI / 180) * 65 && (*_viBallMonster)->getTargetAngle() < (PI / 180) * 115)
+					{
+						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_UP);
+					}
+					//왼쪽각도
+					else if ((*_viBallMonster)->getTargetAngle() > (PI / 180) * 155 && (*_viBallMonster)->getTargetAngle() < (PI / 180) * 205)
+					{
+						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_LEFT);
+					}
+					//아래각도
+					else if ((*_viBallMonster)->getTargetAngle() > (PI / 180) * 245 && (*_viBallMonster)->getTargetAngle() < (PI / 180) * 295)
+					{
+						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_DOWN);
+					}
+				}
+				break;
+			}
+		}
+		//거리가 멀어지면 다시 기본움직임타입으로
+		else if((*_viBallMonster)->getTargetDistance() < 320)
+		{
+			(*_viBallMonster)->setMoveType(BASIC_MOVE_TYPE);
+		}
+	}
+
+	//불몬스터
+	for (int i = 0; i < _vFireMonster.size(); i++)
+	{
+		RECT temp;
+		//거리 구해주고
+		_vFireMonster[i]->setTargetDistance(getDistance(_vFireMonster[i]->getX(), _vFireMonster[i]->getY(), _x, _y));
+
+		if (IntersectRect(&temp, &_vFireMonster[i]->getRangeRect(), &_playerRc))
+		{
+			//각도 구해줌
+			_vFireMonster[i]->setTargetAngle(getAngle(_vFireMonster[i]->getX(), _vFireMonster[i]->getY(), _x, _y));
+			_vFireMonster[i]->setMoveType(FOLLOW_MOVE_TYPE);
+			_vFireMonster[i]->setState(FIREMONSTER_STATE_MOVE);
+			switch (_vFireMonster[i]->getState())
+			{
+			case FIREMONSTER_STATE_IDLE:
+			case FIREMONSTER_STATE_MOVE:
+				if ((_vFireMonster[i]->getTargetAngle() < (PI / 180) * 25 && _vFireMonster[i]->getTargetAngle() > 0) ||
+					(_vFireMonster[i]->getTargetAngle() > (PI / 180) * 335 && _vFireMonster[i]->getTargetAngle() < PI2))
+				{
+					_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_RIGHT);
+				}
+				else if (_vFireMonster[i]->getTargetAngle() > (PI / 180) * 65 && _vFireMonster[i]->getTargetAngle() < (PI / 180) * 115)
+				{
+					_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_UP);
+				}
+				else if (_vFireMonster[i]->getTargetAngle() > (PI / 180) * 155 && _vFireMonster[i]->getTargetAngle() < (PI / 180) * 205)
+				{
+					_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_LEFT);
+				}
+				else if (_vFireMonster[i]->getTargetAngle() > (PI / 180) * 245 && _vFireMonster[i]->getTargetAngle() < (PI / 180) * 295)
+				{
+					_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_DOWN);
+				}
+				//거리가 가까워지면 공격
+				if (_vFireMonster[i]->getTargetDistance() < 500)
+				{
+					fireMonsterBulletFire(i); //불총알 발사
+				}
+				break;
+			}
+		}
+		else if (_vFireMonster[i]->getTargetDistance() < 700)
+		{
+			_vFireMonster[i]->setMoveType(BASIC_MOVE_TYPE);
+		}
+
+	}
+
+	//기사 몬스터
+	for (int i = 0; i < _vKnightMonster.size(); i++)
+	{
+		RECT temp;
+		//기사와 플레이어간의 거리 구해줌.
+		_vKnightMonster[i]->setTargetDistance(getDistance(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _x, _y));
+		//판정렉트와 충돌하면
+		if (IntersectRect(&temp, &_vKnightMonster[i]->getRangeRect(), &_playerRc))
+		{
+			//기사와 플레이어간의 각도 구해줌.
+			_vKnightMonster[i]->setTargetAngle(getAngle(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _x, _y));
+			_vKnightMonster[i]->setMoveType(FOLLOW_MOVE_TYPE); //따라가는 타입으로.
+			switch (_vKnightMonster[i]->getState())
+			{
+			case KNIGHTMONSTER_STATE_IDLE:
+			case KNIGHTMONSTER_STATE_MOVE:
+
+				if ((_vKnightMonster[i]->getTargetAngle() < (PI / 180) * 25 && _vKnightMonster[i]->getTargetAngle() > 0) ||
+					(_vKnightMonster[i]->getTargetAngle() > (PI / 180) * 335 && _vKnightMonster[i]->getTargetAngle() < PI2))
+				{
+					_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_RIGHT);
+				}
+				else if (_vKnightMonster[i]->getTargetAngle() > (PI / 180) * 65 && _vKnightMonster[i]->getTargetAngle() < (PI / 180) * 115)
+				{
+					_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_UP);
+				}
+				else if (_vKnightMonster[i]->getTargetAngle() > (PI / 180) * 155 && _vKnightMonster[i]->getTargetAngle() < (PI / 180) * 205)
+				{
+					_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_LEFT);
+				}
+				else if (_vKnightMonster[i]->getTargetAngle() > (PI / 180) * 245 && _vKnightMonster[i]->getTargetAngle() < (PI / 180) * 295)
+				{
+					_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_DOWN);
+				}
+
+				//거리가 가까워지면 공격
+				if (_vKnightMonster[i]->getTargetDistance() < 150)
+				{
+					_vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_ATTACK);
+				}
+				else _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_MOVE); //거리가 좀멀어지면 움직여라.
+
+				break;
+			}
+		}
+		//일정거리 지나면 다시 기본움직임 타입으로
+		else if (_vKnightMonster[i]->getTargetDistance() < 500)
+		{
+			_vKnightMonster[i]->setMoveType(BASIC_MOVE_TYPE);
 		}
 	}
 }
 
-//에너미 공격들이 플레이어 충돌할 함수
-void enemyManager::enemyAttackPlayerCollision()
+//불총알 발사
+void enemyManager::fireMonsterBulletFire(int i)
 {
+	//파이어 몬스터가 쏜 총알의 카운트 발사가 true라면
+	if (_vFireMonster[i]->fireBulletCountFire() == true)
+	{
+		RECT fireRc; //불몬스터 렉트
+		fireRc = _vFireMonster[i]->getRect();
+
+		//불몬스터가 총알을 방향별로 쏘게함.
+		for (int i = 0; i < 4; i++)
+		{
+			_fireMonsterBullet->fire(fireRc.left + (fireRc.right - fireRc.left) / 2, fireRc.top + (fireRc.bottom - fireRc.top) / 2, PI + i * (PI / 2), _fireBulletSpeed);
+		}
+	}
+	
 	//파이어몬스터 총알 충돌
 	for (int i = 0; i < _fireMonsterBullet->getVFireBullet().size(); i++)
 	{
@@ -190,88 +339,6 @@ void enemyManager::enemyAttackPlayerCollision()
 			(*_fireMonsterBullet->setVFireBullet())[i].isCollision = true;
 		}
 	}
-
-	//플레이어 렉트 임시용으로 만들어 충돌 실험용
-	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
-	{
-		(*_viBallMonster)->setTargetDistance(getDistance((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _x, _y));
-		RECT temp;
-		if (IntersectRect(&temp, &(*_viBallMonster)->getRangeRect(), &_playerRc))
-		{
-			(*_viBallMonster)->setMoveType(FOLLOW_MOVE_TYPE); //충돌하면 따라가는 타입으로
-			//(*_viBallMonster)->setState(BALLMONSTER_STATE_MOVE);
-
-			switch ((*_viBallMonster)->getState())
-			{
-			case BALLMONSTER_STATE_IDLE:
-			case BALLMONSTER_STATE_MOVE:
-
-				(*_viBallMonster)->setTargetAngle(getAngle((*_viBallMonster)->getX(), (*_viBallMonster)->getY(), _x, _y));
-
-				
-				
-				if ((*_viBallMonster)->getTargetDistance() > 5)
-				{
-					if (((*_viBallMonster)->getTargetAngle() < (PI / 180) * 25 && (*_viBallMonster)->getTargetAngle() >= 0) ||
-						((*_viBallMonster)->getTargetAngle() > (PI / 180) * 335 && (*_viBallMonster)->getTargetAngle() <= (PI / 180) * 360))
-					{
-						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_RIGHT);
-					}
-					else if ((*_viBallMonster)->getTargetAngle() < (PI / 180) * 115 && (*_viBallMonster)->getTargetAngle() > (PI / 180) * 65)
-					{
-						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_UP);
-					}
-					else if ((*_viBallMonster)->getTargetAngle() > (PI / 180) * 155 && (*_viBallMonster)->getTargetAngle() < (PI / 180) * 205)
-					{
-						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_LEFT);
-					}
-					else if ((*_viBallMonster)->getTargetAngle() > (PI / 180) * 245 && (*_viBallMonster)->getTargetAngle() < (PI / 180) * 295)
-					{
-						(*_viBallMonster)->setDirection(BALLMONSTER_DIRECTION_DOWN);
-					}
-				}
-				else
-				{
-					(*_viBallMonster)->setState(BALLMONSTER_STATE_IDLE);
-				}
-				
-
-				break;
-			}
-		}
-	
-		else if((*_viBallMonster)->getTargetDistance() < 160)
-		{
-			(*_viBallMonster)->setMoveType(BASIC_MOVE_TYPE);
-		}
-
-	}
-
-	//for (int i = 0; i < _vKnightMonster.size(); i++)
-	//{
-	//	RECT temp;
-	//	if (IntersectRect(&temp, &_vKnightMonster[i]->getRangeRect(), &_playerRc))
-	//	{
-	//		switch (_vKnightMonster[i]->getState())
-	//		{
-	//		case KNIGHTMONSTER_STATE_ATTACK:
-	//			_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DOWN_ATTACK);
-	//			break;
-
-	//			_vKnightMonster[i]->setDirection(KNIGHTMONSTER_UP_ATTACK);
-	//			break;
-
-	//			if (_vKnightMonster[i]->getRangeRect().left <= _playerRc.right && _vKnightMonster[i]->getRangeRect().right > _playerRc.left)
-	//			_vKnightMonster[i]->setDirection(KNIGHTMONSTER_LEFT_ATTACK);
-	//			break;
-
-	//			if (_vKnightMonster[i]->getRangeRect().right >= _playerRc.left && _vKnightMonster[i]->getRangeRect().left < _playerRc.right)
-	//			_vKnightMonster[i]->setDirection(KNIGHTMONSTER_RIGHT_ATTACK);
-	//			break;
-	//		
-	//		}
-	//	}
-	//}
 }
 
 //에너미들이 죽을함수

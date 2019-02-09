@@ -46,9 +46,6 @@ HRESULT ballMonster::init(string enemyName, const char * imageName, float x, flo
 
 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
 
-	_directionTime = 3.0f;
-	_directionWorldTime = TIMEMANAGER->getWorldTime();
-	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 10, _enemy.image->getFrameHeight() * 10);
 	return S_OK;
 }
 
@@ -60,52 +57,18 @@ void ballMonster::update(float cameraX, float cameraY)
 {
 	enemy::update(cameraX, cameraY);
 	move();
-	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 10, _enemy.image->getFrameHeight() * 10);
+	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 20, _enemy.image->getFrameHeight() * 20);
 }
 
 void ballMonster::render(float viewX, float viewY)
 {
-	Rectangle(getMemDC(), _enemy.rangeRc);
-	Rectangle(getMemDC(), _enemy.rc);
+	//Rectangle(getMemDC(), _enemy.rangeRc);
+	//Rectangle(getMemDC(), _enemy.rc);
 	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f , 2.f);
 }
 
 void ballMonster::move()
 {
-	if (_directionTime + _directionWorldTime <= TIMEMANAGER->getWorldTime())
-	{
-		_rndDirection = RND->getInt(7);
-
-		//if (_rndDirection == 0)
-		//{
-		//	_enemy.direction = BALLMONSTER_UP_IDLE;
-		//}
-		//else if (_rndDirection == 1)
-		//{
-		//	_enemy.direction = BALLMONSTER_UP_MOVE;
-		//}
-		//else if (_rndDirection == 2)
-		//{
-		//	_enemy.direction = BALLMONSTER_DOWN_IDLE;
-		//}
-		//else if (_rndDirection == 3)
-		//{
-		//	_enemy.direction = BALLMONSTER_DOWN_MOVE;
-		//}
-		//else if (_rndDirection == 4)
-		//{
-		//	_enemy.direction = BALLMONSTER_RIGHT_MOVE;
-		//}
-		//else if (_rndDirection == 5)
-		//{
-		//	_enemy.direction = BALLMONSTER_LEFT_IDLE;
-		//}
-		//else if (_rndDirection == 6)
-		//{
-		//	_enemy.direction = BALLMONSTER_LEFT_MOVE;
-		//}
-		_directionWorldTime = TIMEMANAGER->getWorldTime();
-	}
 
 	if (_enemy.moveType == BASIC_MOVE_TYPE)
 	{
@@ -146,40 +109,74 @@ void ballMonster::move()
 			_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;
 			break;
 		}
+		//몬스터들은 랜덤으로 움직인다.
+		if (_directionTime + _directionWorldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_rndDirection = RND->getInt(4);
+			_rndState = RND->getInt(2);
+
+			if (_rndDirection == 0)
+			{
+				_enemy.direction = BALLMONSTER_DIRECTION_DOWN;
+
+				if (_rndState == 0)	_enemy.state = BALLMONSTER_STATE_IDLE;
+				else _enemy.state = BALLMONSTER_STATE_MOVE;
+			}
+			else if (_rndDirection == 1)
+			{
+				_enemy.direction = BALLMONSTER_DIRECTION_UP;
+
+				if (_rndState == 0)	_enemy.state = BALLMONSTER_STATE_IDLE;
+				else _enemy.state = BALLMONSTER_STATE_MOVE;
+			}
+			else if (_rndDirection == 2)
+			{
+				_enemy.direction = BALLMONSTER_DIRECTION_RIGHT;
+
+				if (_rndState == 0)	_enemy.state = BALLMONSTER_STATE_IDLE;
+				else _enemy.state = BALLMONSTER_STATE_MOVE;
+			}
+			else if (_rndDirection == 3)
+			{
+				_enemy.direction = BALLMONSTER_DIRECTION_LEFT;
+
+				if (_rndState == 0)	_enemy.state = BALLMONSTER_STATE_IDLE;
+				else _enemy.state = BALLMONSTER_STATE_MOVE;
+			}
+			_directionWorldTime = TIMEMANAGER->getWorldTime();
+		}
 	}
 	else if (_enemy.moveType == FOLLOW_MOVE_TYPE)
 	{
-		if (_enemy.direction == BALLMONSTER_DIRECTION_UP)
+		switch (_enemy.state)
 		{
-			_enemy.moveAngle = PI / 2;
-			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
-		}
-		else if (_enemy.direction == BALLMONSTER_DIRECTION_DOWN)
-		{
-			_enemy.moveAngle = (PI / 180) * 270;
-			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
-		}
-		else if (_enemy.direction == BALLMONSTER_DIRECTION_RIGHT)
-		{
-			_enemy.moveAngle = PI2;
-			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
-		}
-		else if (_enemy.direction == BALLMONSTER_DIRECTION_LEFT)
-		{
-			_enemy.moveAngle = PI;
-			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
-		}
-		_enemy.motion->start();
+		case BALLMONSTER_STATE_MOVE:
+			if (_enemy.direction == BALLMONSTER_DIRECTION_UP)
+			{
+				_enemy.moveAngle = PI / 2;
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
+			}
+			else if (_enemy.direction == BALLMONSTER_DIRECTION_DOWN)
+			{
+				_enemy.moveAngle = (PI / 180) * 270;
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
+			}
+			else if (_enemy.direction == BALLMONSTER_DIRECTION_RIGHT)
+			{
+				_enemy.moveAngle = PI2;
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
+			}
+			else if (_enemy.direction == BALLMONSTER_DIRECTION_LEFT)
+			{
+				_enemy.moveAngle = PI;
+				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
+			}
+			_enemy.motion->start();
 
-
-
-
-		//if (_enemy.state == BALLMONSTER_STATE_MOVE)
-		{
 			_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
 			_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;
+			break;
 		}
-	
 	}
 
 }

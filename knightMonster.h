@@ -13,6 +13,7 @@ public:
 	virtual void render(float viewX, float viewY);
 
 	void move();
+	void attack();
 
 	static void cbAttack(void* obj); //공격후 다른모션으로 돌아가기 위한 콜백함수
 

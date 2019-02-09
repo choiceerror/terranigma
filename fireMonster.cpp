@@ -27,7 +27,7 @@ HRESULT fireMonster::init(string enemyName, const char * imageName, float x, flo
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "dead", imageName, dead, 6, 4, false);
 
 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "idleORmove");
-	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 6, _enemy.image->getFrameHeight() * 6);
+	
 	return S_OK;
 }
 
@@ -40,46 +40,100 @@ void fireMonster::update(float cameraX, float cameraY)
 	enemy::update(cameraX, cameraY);
 
 	move();
-	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 10, _enemy.image->getFrameHeight() * 6);
+	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 20, _enemy.image->getFrameHeight() * 12);
 }
 
 void fireMonster::render(float viewX, float viewY)
 {
-	Rectangle(getMemDC(), _enemy.rangeRc);
+	//Rectangle(getMemDC(), _enemy.rangeRc);
 	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f, 2.f);
 }
 
 void fireMonster::move()
 {
-	if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+	//상태에 따라 프레임 동작
+	if (_enemy.moveType == BASIC_MOVE_TYPE)
 	{
-		_enemy.state = FIREMONSTER_STATE_MOVE;
-		_enemy.direction = FIREMONSTER_DIRECTION_RIGHT;
-	}
-
-	//방향에 따라 프레임 동작
-	switch (_enemy.state)
-	{
-	case FIREMONSTER_STATE_IDLE:
-	case FIREMONSTER_STATE_MOVE:
-
-		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "idleORmove");
-		_enemy.motion->start();
-
-		if (_enemy.state == FIREMONSTER_STATE_MOVE)
+		switch (_enemy.state)
 		{
-			if (_enemy.direction == FIREMONSTER_DIRECTION_RIGHT)	   _enemy.x += _enemy.speed;
-			else if (_enemy.direction == FIREMONSTER_DIRECTION_LEFT) _enemy.x -= _enemy.speed;
-			else if (_enemy.direction == FIREMONSTER_DIRECTION_UP) _enemy.y -= _enemy.speed;
-			else if (_enemy.direction == FIREMONSTER_DIRECTION_DOWN) _enemy.y += _enemy.speed;
+		case FIREMONSTER_STATE_IDLE:
+		case FIREMONSTER_STATE_MOVE:
+
+			if (_enemy.state == FIREMONSTER_STATE_MOVE)
+			{
+				if (_enemy.direction == FIREMONSTER_DIRECTION_RIGHT)	  _enemy.moveAngle = PI2;
+				else if (_enemy.direction == FIREMONSTER_DIRECTION_LEFT)  _enemy.moveAngle = PI;
+				else if (_enemy.direction == FIREMONSTER_DIRECTION_UP)	  _enemy.moveAngle = PI / 2;
+				else if (_enemy.direction == FIREMONSTER_DIRECTION_DOWN)  _enemy.moveAngle = (PI / 180) * 270;
+
+				_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
+				_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;
+			}
+			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "idleORmove");
+			_enemy.motion->start();
+			break;
 		}
 
-		break;
-	case FIREMONSTER_STATE_DEAD:
-		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "dead");
-		_enemy.motion->start();
-		
-		break;
+		//몬스터들은 랜덤으로 움직인다.
+		if (_directionTime + _directionWorldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_rndDirection = RND->getInt(4);
+			_rndState = RND->getInt(2);
+
+			if (_rndDirection == 0)
+			{
+				_enemy.direction = FIREMONSTER_DIRECTION_DOWN;
+
+				if (_rndState == 0)	_enemy.state = FIREMONSTER_STATE_IDLE;
+				else _enemy.state = FIREMONSTER_STATE_MOVE;
+			}
+			else if (_rndDirection == 1)
+			{
+				_enemy.direction = FIREMONSTER_DIRECTION_UP;
+
+				if (_rndState == 0)	_enemy.state = FIREMONSTER_STATE_IDLE;
+				else _enemy.state = FIREMONSTER_STATE_MOVE;
+			}
+			else if (_rndDirection == 2)
+			{
+				_enemy.direction = FIREMONSTER_DIRECTION_RIGHT;
+
+				if (_rndState == 0)	_enemy.state = FIREMONSTER_STATE_IDLE;
+				else _enemy.state = FIREMONSTER_STATE_MOVE;
+			}
+			else if (_rndDirection == 3)
+			{
+				_enemy.direction = FIREMONSTER_DIRECTION_LEFT;
+
+				if (_rndState == 0)	_enemy.state = FIREMONSTER_STATE_IDLE;
+				else _enemy.state = FIREMONSTER_STATE_MOVE;
+			}
+			_directionWorldTime = TIMEMANAGER->getWorldTime(); //시간갱신
+		}
+	}
+	else if (_enemy.moveType == FOLLOW_MOVE_TYPE)
+	{
+		switch (_enemy.state)
+		{
+		case FIREMONSTER_STATE_MOVE:
+
+			if (_enemy.direction == FIREMONSTER_DIRECTION_RIGHT)	  _enemy.moveAngle = PI2;
+			else if (_enemy.direction == FIREMONSTER_DIRECTION_LEFT)  _enemy.moveAngle = PI;
+			else if (_enemy.direction == FIREMONSTER_DIRECTION_UP)	  _enemy.moveAngle = PI / 2;
+			else if (_enemy.direction == FIREMONSTER_DIRECTION_DOWN)  _enemy.moveAngle = (PI / 180) * 270;
+
+			_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
+			_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;
+			
+			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "idleORmove");
+			_enemy.motion->start();
+
+			break;
+		case FIREMONSTER_STATE_DEAD:
+			_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "dead");
+			_enemy.motion->start();
+			break;
+		}
 	}
 }
 
@@ -88,7 +142,7 @@ bool fireMonster::fireBulletCountFire()
 {
 	_fireCount++;
 
-	if (_fireCount % 30 == 0)
+	if (_fireCount % 100 == 0)
 	{
 		_fireCount = 0;
 		return true;
