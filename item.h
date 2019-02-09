@@ -6,8 +6,7 @@ struct tagItem
 {
 	const char* imageName;
 	float _x, _y;
-	int str;
-	int def;
+
 
 
 };
