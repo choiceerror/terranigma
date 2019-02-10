@@ -94,6 +94,9 @@
     <Filter Include="PlayGround\enemy">
       <UniqueIdentifier>{bc01b447-9401-4074-a3e8-81da2b6c98b4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayGround\effect">
+      <UniqueIdentifier>{c89162af-b43b-45ca-a053-6d397af381ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -234,6 +237,12 @@
     <ClInclude Include="fireMonsterBullet.h">
       <Filter>PlayGround\enemyManager</Filter>
     </ClInclude>
+    <ClInclude Include="blackFadeOut.h">
+      <Filter>PlayGround\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="mode7.h">
+      <Filter>PlayGround\effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -358,6 +367,12 @@
     </ClCompile>
     <ClCompile Include="fireMonsterBullet.cpp">
       <Filter>PlayGround\enemyManager</Filter>
+    </ClCompile>
+    <ClCompile Include="blackFadeOut.cpp">
+      <Filter>PlayGround\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="mode7.cpp">
+      <Filter>PlayGround\effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

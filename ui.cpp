@@ -17,6 +17,7 @@ HRESULT ui::init()
 
 	IMAGEMANAGER->addFrameImage("yomi", "image/NPC_yomi.bmp", 275, 112, 11, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("UI", "image/UI.bmp", 4096, 768, 4, 1, true, MAGENTA);
+	IMAGEMANAGER->addImage("blackRect", GAMESIZEX, GAMESIZEY);
 
 	_placeFrameX = MAIN_ROOM;
 	_yomiFrameX = _yomiFrameY = 0;
@@ -66,7 +67,6 @@ void ui::update()
 		if (_placeFrameX > 2) _placeFrameX = -1;
 		_placeFrameX++;
 	}
-
 
 
 	//====================================

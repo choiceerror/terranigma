@@ -150,6 +150,7 @@
     <ClInclude Include="action.h" />
     <ClInclude Include="animation.h" />
     <ClInclude Include="ballMonster.h" />
+    <ClInclude Include="blackFadeOut.h" />
     <ClInclude Include="boss.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="camera.h" />
@@ -173,6 +174,7 @@
     <ClInclude Include="MapNode.h" />
     <ClInclude Include="mapTool.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="mode7.h" />
     <ClInclude Include="npc.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="playGround.h" />
@@ -198,6 +200,7 @@
     <ClCompile Include="action.cpp" />
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="ballMonster.cpp" />
+    <ClCompile Include="blackFadeOut.cpp" />
     <ClCompile Include="boss.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -220,6 +223,7 @@
     <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="mapTool.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="mode7.cpp" />
     <ClCompile Include="npc.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playGround.cpp" />

@@ -13,7 +13,8 @@ item::~item()
 
 HRESULT item::init()
 {
-	return E_NOTIMPL;
+
+	return S_OK;
 }
 
 void item::release()
@@ -30,4 +31,9 @@ void item::render()
 
 void item::dropItem(const char * imageName, float x, float y)
 {
+	tagItem* item;
+
+
+
+
 }
