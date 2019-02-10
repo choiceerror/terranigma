@@ -100,9 +100,9 @@ void blackFadeOut::render()
 		IMAGEMANAGER->render("blackBox", getMemDC());
 	}
 
-	char str[100];
-	sprintf_s(str, "%f", _diagonalLength);
-	TextOut(getMemDC(), 500, 500, str, strlen(str));
+	//char str[100];
+	//sprintf_s(str, "%f", _diagonalLength);
+	//TextOut(getMemDC(), 500, 500, str, strlen(str));
 	//
 	//sprintf_s(str, "%f", _pt[3].y);
 	//TextOut(getMemDC(), 500, 520, str, strlen(str));
