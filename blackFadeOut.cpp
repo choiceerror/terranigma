@@ -29,6 +29,9 @@ HRESULT blackFadeOut::init()
 	_centerX = GAMESIZEX / 2.f;
 	_centerY = GAMESIZEY / 2.f;
 
+	_goal.x = 0;
+	_goal.y = 0;
+
 	_diagonalLength = sqrtf((512.f)*(512) + (384.f)*(384));
 	_diagonalMaxLength = _diagonalLength;
 
@@ -46,6 +49,7 @@ void blackFadeOut::update()
 {
 	pointSetting();
 	diagonalLengthSize();
+	linearInterPolation();
 	POINT pt[] = { {_pt[0].x,_pt[0].y},{_pt[1].x,_pt[1].y} ,{_pt[2].x,_pt[2].y} ,{_pt[3].x,_pt[3].y} };
 	createColorObject("blackBox", pt, MAGENTA);
 
@@ -79,17 +83,17 @@ void blackFadeOut::update()
 	//	_centerY += 10;
 	//}
 
-	if (KEYMANAGER->isOnceKeyDown(VK_RETURN))
-	{
-		if (_isfadeOut)
-		{
-			_isfadeOut = false;
-		}
-		else
-		{
-			_isfadeOut = true;
-		}
-	}
+	//if (KEYMANAGER->isOnceKeyDown(VK_RETURN))
+	//{
+	//	if (_isfadeOut)
+	//	{
+	//		_isfadeOut = false;
+	//	}
+	//	else
+	//	{
+	//		_isfadeOut = true;
+	//	}
+	//}
 }
 
 void blackFadeOut::render()
@@ -195,5 +199,27 @@ void blackFadeOut::diagonalLengthSize()
 		_once = false;
 		_centerX = GAMESIZEX / 2.f;
 		_centerY = GAMESIZEY / 2.f;
+	}
+}
+
+void blackFadeOut::linearInterPolation()
+{
+	if (_isfadeOut)
+	{
+		float distance = getDistance(GAMESIZEX / 2.f, GAMESIZEY / 2.f, _goal.x + 5, _goal.y);
+		float angle = getAngle(GAMESIZEX / 2.f, GAMESIZEY / 2.f, _goal.x + 5, _goal.y);
+
+		float speed = distance * (TIMEMANAGER->getElapsedTime() / 1.0f);
+
+		if (1.0f + _worldTime >= TIMEMANAGER->getWorldTime())
+		{
+			_centerX += cosf(angle) * speed;
+			_centerY += -sinf(angle) * speed;
+		}
+	}
+	else
+	{
+		_goal.x = GAMESIZEX / 2.f;
+		_goal.y = GAMESIZEY / 2.f;
 	}
 }

@@ -378,7 +378,7 @@ void ui::yomiMove()
 				{
 					_yomiIndex = 6;
 				}
-				else if (_yomiIndex % 4 == 0 || _yomiIndex % 4 == 1 || _yomiIndex % 4 == 2)
+				else if ((_yomiIndex % 4 == 0 || _yomiIndex % 4 == 1 || _yomiIndex % 4 == 2) && _yomiIndex != 2)
 				{
 					_yomiIndex += 1;
 				}
@@ -634,6 +634,7 @@ void ui::placeChange()
 				{
 					_isRoomChanging = true;
 					_worldTime = TIMEMANAGER->getWorldTime();
+					_blackFade->setGoal(_x, _y);
 					_blackFade->setIsFadeOut(true);
 				}
 			}

@@ -9,6 +9,7 @@ private:
 	bool _isfadeOut;
 
 	POINTFLOAT _pt[4];
+	POINTFLOAT _goal;
 
 	float _angle;
 
@@ -19,6 +20,7 @@ private:
 
 	float _worldTime;
 	bool _once;
+
 
 public:
 	blackFadeOut();
@@ -32,6 +34,8 @@ public:
 	void createColorObject(const char* hdcName,POINT* point,COLORREF color);
 	void pointSetting();
 	void diagonalLengthSize();
+	void linearInterPolation();
+
 
 
 	//================접근자 설정자===================
@@ -39,5 +43,7 @@ public:
 	bool getIsFadeOut() { return _isfadeOut; }
 	void setIsFadeOut(bool _bool) { _isfadeOut = _bool; }
 
+	
+	void setGoal(float x, float y) { _goal.x = x, _goal.y = y; }
 };
 
