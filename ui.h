@@ -1,5 +1,6 @@
 #pragma once
 #include "gameNode.h"
+#include "blackFadeOut.h"
 
 enum UIROOM
 {
@@ -13,6 +14,10 @@ enum UIROOM
 class ui : public gameNode
 {
 private:
+	blackFadeOut* _blackFade;
+
+
+
 	RECT _goal;
 	POINT _pt[36];
 
@@ -45,10 +50,10 @@ public:
 	ui();
 	~ui();
 
-	HRESULT init();
-	void release();
-	void update();
-	void render();
+	virtual HRESULT init();
+	virtual void release();
+	virtual void update();
+	virtual void render();
 
 	void setWindowsSize(int x, int y, int width, int height);
 	void yomiFrame();

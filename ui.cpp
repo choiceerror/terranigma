@@ -15,6 +15,9 @@ HRESULT ui::init()
 {
 	setWindowsSize(WINSTARTX, WINSTARTY,GAMESIZEX,GAMESIZEY);
 
+	_blackFade = new blackFadeOut;
+	_blackFade->init();
+
 	IMAGEMANAGER->addFrameImage("yomi", "image/NPC_yomi.bmp", 275, 112, 11, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("UI", "image/UI.bmp", 4096, 768, 4, 1, true, MAGENTA);
 	IMAGEMANAGER->addImage("blackRect", GAMESIZEX, GAMESIZEY);
@@ -44,10 +47,14 @@ HRESULT ui::init()
 
 void ui::release()
 {
+	SAFE_DELETE(_blackFade);
 }
 
 void ui::update()
 {
+
+	_blackFade->update();
+
 	//¿ä¹ÌÀÌµ¿ ¸ñÇ¥Á¡ ¼³Á¤
 	movePoint();
 	//¿ä¹Ì ÇÁ·¹ÀÓµ¿ÀÛ
@@ -77,13 +84,15 @@ void ui::render()
 	IMAGEMANAGER->frameRender("UI", getMemDC(), 0, 0, _placeFrameX, 0);
 	IMAGEMANAGER->expandRender("yomi", getMemDC(), _x - 30, _y - 36 * 3, _yomiFrameX, _yomiFrameY, 3.f, 3.f);
 
-	char str[100];
-	sprintf_s(str, "_ÁÂÇ¥ : %d  %d", _x,_y);
-	TextOut(getMemDC(), 30, 100, str, strlen(str));
-	sprintf_s(str, "°ñ ÁÂÇ¥ : %d  %d", _goalX, _goalY);
-	TextOut(getMemDC(), 30, 120, str, strlen(str));
-	sprintf_s(str, "%d", _placeFrameX);
-	TextOut(getMemDC(), 30, 140, str, strlen(str));
+	_blackFade->render();
+
+	//char str[100];
+	//sprintf_s(str, "_ÁÂÇ¥ : %d  %d", _x,_y);
+	//TextOut(getMemDC(), 30, 100, str, strlen(str));
+	//sprintf_s(str, "°ñ ÁÂÇ¥ : %d  %d", _goalX, _goalY);
+	//TextOut(getMemDC(), 30, 120, str, strlen(str));
+	//sprintf_s(str, "%d", _placeFrameX);
+	//TextOut(getMemDC(), 30, 140, str, strlen(str));
 
 	//Rectangle(getMemDC(), _goal);
 }
@@ -619,10 +628,14 @@ void ui::placeChange()
 	{
 		if (_yomiIndex >= 0 && _yomiIndex <= 2)
 		{
-			if (KEYMANAGER->isOnceKeyDown('X'))
+			if (!_isRoomChanging)
 			{
-				_isRoomChanging = true;
-				_worldTime = TIMEMANAGER->getWorldTime();
+				if (KEYMANAGER->isOnceKeyDown('X'))
+				{
+					_isRoomChanging = true;
+					_worldTime = TIMEMANAGER->getWorldTime();
+					_blackFade->setIsFadeOut(true);
+				}
 			}
 		}
 	}
