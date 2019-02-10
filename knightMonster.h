@@ -19,9 +19,6 @@ public:
 
 public:
 	//접근자 설정자 모음
-	animation* getMotion() { return _enemy.motion; }
-	void setMotion(animation* motion) { _enemy.motion = motion; }
 
-	string getName() { return _enemy.name; }
 };
 

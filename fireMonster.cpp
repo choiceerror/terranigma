@@ -21,7 +21,7 @@ HRESULT fireMonster::init(string enemyName, const char * imageName, float x, flo
 	_enemy.direction = FIREMONSTER_DIRECTION_DOWN;
 
 	int idleORmove[] = { 0, 1, 2, 3 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "idleORmove", imageName, idleORmove, 4, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "idleORmove", imageName, idleORmove, 4, MOVEFPS, true);
 
 	int dead[] = { 5, 6, 7, 8, 9, 4 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "dead", imageName, dead, 6, 4, false);

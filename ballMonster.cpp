@@ -21,28 +21,28 @@ HRESULT ballMonster::init(string enemyName, const char * imageName, float x, flo
 	_enemy.direction = BALLMONSTER_DIRECTION_DOWN;
 
 	int upIdle[] = { 0 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upIdle", imageName, upIdle, 1, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upIdle", imageName, upIdle, 1, MOVEFPS, true);
 
 	int upMove[] = { 1, 2, 3 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upMove", imageName, upMove, 3, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upMove", imageName, upMove, 3, MOVEFPS, true);
 
 	int downIdle[] = { 4 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downIdle", imageName, downIdle, 1, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downIdle", imageName, downIdle, 1, MOVEFPS, true);
 
 	int downMove[] = { 5, 6, 7 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downMove", imageName, downMove, 3, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downMove", imageName, downMove, 3, MOVEFPS, true);
 
 	int rightIdle[] = { 8 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "rightIdle", imageName, rightIdle, 1, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "rightIdle", imageName, rightIdle, 1, MOVEFPS, true);
 
 	int rightMove[] = { 9, 10, 11 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "rightMove", imageName, rightMove, 3, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "rightMove", imageName, rightMove, 3, MOVEFPS, true);
 
 	int leftIdle[] = { 12 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "leftIdle", imageName, leftIdle, 1, 3, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "leftIdle", imageName, leftIdle, 1, MOVEFPS, true);
 
 	int leftMove[] = { 13,14,15 };
-	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "leftMove", imageName, leftMove, 3, 3, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "leftMove", imageName, leftMove, 3, MOVEFPS, true);
 
 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
 
@@ -57,6 +57,16 @@ void ballMonster::update(float cameraX, float cameraY)
 {
 	enemy::update(cameraX, cameraY);
 	move();
+	if (_enemy.isAttack == true && _isOne == false)
+	{
+		_enemy.attackWorldTime = TIMEMANAGER->getWorldTime();
+		_isOne = true;
+	}
+
+	if (!_enemy.isAttack)
+	{
+		_isOne = false;
+	}
 	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 20, _enemy.image->getFrameHeight() * 20);
 }
 
@@ -110,7 +120,7 @@ void ballMonster::move()
 			break;
 		}
 		//몬스터들은 랜덤으로 움직인다.
-		if (_directionTime + _directionWorldTime <= TIMEMANAGER->getWorldTime())
+		if (_directionTime + _directionWorldTime <= TIMEMANAGER->getWorldTime() && _enemy.isAttack == false)
 		{
 			_rndDirection = RND->getInt(4);
 			_rndState = RND->getInt(2);
@@ -151,6 +161,7 @@ void ballMonster::move()
 		switch (_enemy.state)
 		{
 		case BALLMONSTER_STATE_MOVE:
+		case BALLMONSTER_STATE_ATTACK:
 			if (_enemy.direction == BALLMONSTER_DIRECTION_UP)
 			{
 				_enemy.moveAngle = PI / 2;
@@ -175,6 +186,7 @@ void ballMonster::move()
 
 			_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
 			_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;
+			
 			break;
 		}
 	}

@@ -86,6 +86,12 @@ struct tagEnemy
 	float moveAngle; //움직임 각도
 	float targetAngle;
 	float targetDistance;
+	bool isAttack;
+	float attackAngle;
+	float attackTime;
+	float attackWorldTime;
+	float time;
+	float worldTime;
 };
 
 class enemy : public gameNode
@@ -148,7 +154,26 @@ public:
 	void setTargetDistance(float distance) {_enemy.targetDistance = distance;}
 
 	float getSpeed() {return _enemy.speed;}
-	float setSpeed(float speed) { _enemy.speed = speed; }
+	void setSpeed(float speed) { _enemy.speed = speed; }
+
+	bool getIsAttack() { return _enemy.isAttack; }
+	void setIsAttack(bool attack) { _enemy.isAttack = attack; }
+
+	float getAttackAngle() { return _enemy.attackAngle; }
+	void setAttackAngle(float angle) { _enemy.attackAngle = angle; }
+	animation* getMotion() { return _enemy.motion; }
+	void setMotion(animation* motion) { _enemy.motion = motion; }
+
+	string getName() { return _enemy.name; }
+
+	float getTime() { return _enemy.time; }
+	float getAttackTime() { return _enemy.attackTime; }
+
+	float getWorldTime() { return _enemy.worldTime; }
+	float getAttackWorldTime() { return _enemy.attackWorldTime; }
+
+	void setWorldTime(float worldTime) { _enemy.worldTime = worldTime; }
+	void setAttackWorldTime(float attackWorldTime) { _enemy.attackWorldTime = attackWorldTime; }
 	
 };
 

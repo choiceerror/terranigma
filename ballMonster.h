@@ -3,6 +3,8 @@
 
 class ballMonster : public enemy
 {
+private:
+	bool _isOne;
 public:
 	ballMonster();
 	~ballMonster();
@@ -16,5 +18,6 @@ public:
 
 public:
 	//접근자 설정자 모음
+
 };
 

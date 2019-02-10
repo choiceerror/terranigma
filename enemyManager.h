@@ -24,7 +24,8 @@ private:
 	fireMonsterBullet* _fireMonsterBullet;
 
 	int _fireBulletSpeed;
-
+	
+	float _worldTime;
 	RECT _playerRc;
 	float _x, _y;
 	

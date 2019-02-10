@@ -21,9 +21,14 @@ HRESULT enemy::init(string enemyName, const char* imageName, float x, float y, i
 	_enemy.idX = idX;
 	_enemy.idY = idY;
 	_enemy.image = IMAGEMANAGER->findImage(imageName);
-	_enemy.speed = 1;
+	_enemy.speed = 1.0f;
 	_enemy.moveType = BASIC_MOVE_TYPE; //처음엔 기본움직임상태로
 	_enemy.currentHP = _enemy.maxHP = hp;
+	_enemy.isAttack = false; //처음엔 비공격상태
+	_enemy.attackTime = 1.0f;
+	_enemy.time = 2.0f;
+	_enemy.worldTime = TIMEMANAGER->getWorldTime();
+	_enemy.attackWorldTime = TIMEMANAGER->getWorldTime();
 	_directionTime = 2.0f;
 	_directionWorldTime = TIMEMANAGER->getWorldTime();
 
