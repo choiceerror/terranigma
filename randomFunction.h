@@ -1,6 +1,7 @@
 #pragma once
 #include "singletonBase.h"
 #include <time.h>
+#include <random>
 
 class randomFunction : public singletonBase<randomFunction>
 {
@@ -33,5 +34,22 @@ public:
 		float rnd = (float)rand() / (float)RAND_MAX;
 
 		return (rnd * (toFloat - fromFloat) + fromFloat);
+	}
+
+	//메르센 난수 정수 배출 (min ~ max) 두 숫자 포함
+	int getRandomInt(int min, int max)
+	{
+		random_device rd;
+		mt19937 rEngine(rd());
+		uniform_int_distribution<> dist(min, max);
+		return static_cast<int>(dist(rEngine));
+	}
+	//메르센 난수 실수 배출 (min ~ max) 두 숫자 포함
+	float getRandomFloat(float min, float max)
+	{
+		random_device rd;
+		mt19937 rEngine(rd());
+		uniform_real_distribution<> dist(min, max);
+		return static_cast<float>(dist(rEngine));
 	}
 };

@@ -8,10 +8,9 @@ struct tagItem
 	float viewX, viewY;
 	int frameX, frameY;
 	int itemType;
+
+	bool isLive;
 };
-
-
-
 
 class item : public gameNode
 {
@@ -28,5 +27,7 @@ public:
 	virtual void release();
 	virtual void update();
 	virtual void render();
+
+	tagItem* getTagItem() { return _item; }
 };
 
