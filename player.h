@@ -125,6 +125,8 @@ public:
 	void setPlayerState(PLAYERSTATE state) { _player.state = state; }
 	void setPlayerDirection(PLAYERDIRECTION direction) { _player.direction = direction; }
 	void setPlayerAni(animation* animation) { _player.ani = animation; }
+	void setPlayerPosX(float playerX) { _player.x = playerX;  }
+	void setPlayerPosY(float playerY) { _player.x = playerY; }
 
 	RECT getPlayerRc() { return _player.rc; }
 	float getPlayerX() { return _player.x; }

@@ -44,7 +44,7 @@ HRESULT player::init()
 
 	_jump = new jump;
 	_jump->init();
-	_oldJumpTime = GetTickCount();
+	_oldJumpTime = -100;
 
 	return S_OK;
 }
@@ -273,18 +273,18 @@ void player::keyInput()
 	{
 		if (_attackComboKey == 0) _attackComboKey++;
 	}
-	if (GetTickCount() - _oldJumpTime >= 3 * 1000)
+	
+	if (KEYMANAGER->isOnceKeyDown('X'))
 	{
-		if (KEYMANAGER->isOnceKeyDown('X'))
+		if (GetTickCount() - _oldJumpTime >= 1 * 1000)
 		{
 			_startX = _player.x;
 			_startY = _player.y;
 			_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
 			_player.state = PLAYER_JUMP;
+			_oldJumpTime = GetTickCount();
 		}
-		_oldJumpTime = GetTickCount();
 	}
-
 	DoubleKeyIntVoid();
 }
 void player::keyDownInput(PLAYERDIRECTION direction)
