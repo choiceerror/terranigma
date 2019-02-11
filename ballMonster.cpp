@@ -79,10 +79,7 @@ void ballMonster::render(float viewX, float viewY)
 	//Rectangle(getMemDC(), _enemy.rangeRc);
 	//Rectangle(getMemDC(), _enemy.rc);
 	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f , 2.f);
-	char str[128];
 
-	sprintf_s(str, "one : %d", _enemy.isOneTime);
-	TextOut(getMemDC(), 100, 100, str, strlen(str));
 }
 
 void ballMonster::move()

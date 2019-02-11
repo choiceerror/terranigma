@@ -1,13 +1,14 @@
 #pragma once
 #include "gameNode.h"
 #include "enemyManager.h"
+#include "player.h"
 #include "MapNode.h"
 
 class dungeon : public gameNode
 {
 private:
 	enemyManager* _enemyManager;
-
+	player* _player;
 
 	vector<vector<tagTile*>> _vvMap;
 	unsigned int TILEX;
@@ -24,6 +25,7 @@ public:
 	void update();
 	void render();
 	void load();
+	void tileDraw();
 
 	void setWindowsSize(int x, int y, int width, int height);
 

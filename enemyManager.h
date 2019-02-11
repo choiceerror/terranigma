@@ -37,10 +37,7 @@ private:
 
 	DUNGEON_FLOOR _dungeonFloor; //´øÀü Ãþ¼ö
 	int _fireBulletSpeed;
-	
-	RECT _playerRc;
-	float _x, _y;
-	
+
 public:
 	enemyManager();
 	~enemyManager();

@@ -15,7 +15,7 @@ HRESULT dungeon::init()
 {
 	setWindowsSize(WINSTARTX, WINSTARTY, GAMESIZEX, GAMESIZEY);
 
-	load();
+	//load();
 
 	IMAGEMANAGER->addFrameImage("ballMonster", "image/enemy1.bmp", 64, 64, 4, 4, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("fireMonster", "image/enemy2.bmp", 90, 87, 5, 3, true, MAGENTA);
@@ -23,8 +23,16 @@ HRESULT dungeon::init()
 	IMAGEMANAGER->addFrameImage("boss", "image/∫∏Ω∫.bmp", 1048, 239, 4, 1, true, MAGENTA);
 
 	_enemyManager = new enemyManager;
+	_player = new player;
+
+	_enemyManager->setPlayerMemoryAddressLink(_player);
+	_player->setEnemyManagerAddressLink(_enemyManager);
+
+	_player->init();
 	_enemyManager->init();
 	_enemyManager->setEnemy();
+
+	
 
 	return S_OK;
 }
@@ -32,69 +40,21 @@ HRESULT dungeon::init()
 void dungeon::release()
 {
 	SAFE_DELETE(_enemyManager);
+	SAFE_DELETE(_player);
 }
 
 void dungeon::update()
 {
 	_enemyManager->update();
+	_player->update();
 }
 
 void dungeon::render()
 {
-	for (int i = 0; i < TILEY; ++i)
-	{
-		for (int j = 0; j < TILEX; ++j)
-		{
-			if (_vvMap[i][j]->a == 0)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ 4", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-			else if (_vvMap[i][j]->a == 1)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ ", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-			else if (_vvMap[i][j]->a == 2)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ 2", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-		}
-	}
-
-	////ø¿∫Í¡ß∆Æ
-	for (int i = 0; i < TILEY; ++i)
-	{
-		for (int j = 0; j < TILEX; ++j)
-		{
-			if (_vvMap[i][j]->obj == OBJ_NONE) continue;
-
-			if (_vvMap[i][j]->a == 0)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ 4", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-			else if (_vvMap[i][j]->a == 1)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ ", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-			else if (_vvMap[i][j]->a == 2)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ 2", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-		}
-	}
+	tileDraw();
 
 	_enemyManager->render();
+	_player->render();
 }
 
 void dungeon::load()
@@ -165,6 +125,63 @@ void dungeon::load()
 			}
 		}
 	}
+}
+
+void dungeon::tileDraw()
+{
+	for (int i = 0; i < TILEY; ++i)
+	{
+		for (int j = 0; j < TILEX; ++j)
+		{
+			if (_vvMap[i][j]->a == 0)
+			{
+				IMAGEMANAGER->frameRender("≈∏¿œ∏ 4", getMemDC(),
+					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
+					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+			}
+			else if (_vvMap[i][j]->a == 1)
+			{
+				IMAGEMANAGER->frameRender("≈∏¿œ∏ ", getMemDC(),
+					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
+					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+			}
+			else if (_vvMap[i][j]->a == 2)
+			{
+				IMAGEMANAGER->frameRender("≈∏¿œ∏ 2", getMemDC(),
+					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
+					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+			}
+		}
+	}
+
+	//ø¿∫Í¡ß∆Æ
+	for (int i = 0; i < TILEY; ++i)
+	{
+		for (int j = 0; j < TILEX; ++j)
+		{
+			if (_vvMap[i][j]->obj == OBJ_NONE) continue;
+
+			if (_vvMap[i][j]->a == 0)
+			{
+				IMAGEMANAGER->frameRender("≈∏¿œ∏ 4", getMemDC(),
+					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
+					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+			}
+			else if (_vvMap[i][j]->a == 1)
+			{
+				IMAGEMANAGER->frameRender("≈∏¿œ∏ ", getMemDC(),
+					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
+					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+			}
+			else if (_vvMap[i][j]->a == 2)
+			{
+				IMAGEMANAGER->frameRender("≈∏¿œ∏ 2", getMemDC(),
+					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
+					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+			}
+		}
+	}
+
 }
 
 void dungeon::setWindowsSize(int x, int y, int width, int height)

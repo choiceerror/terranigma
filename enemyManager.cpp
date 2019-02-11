@@ -14,11 +14,6 @@ enemyManager::~enemyManager()
 
 HRESULT enemyManager::init()
 {
-	_x = WINSIZEX / 2;
-	_y = WINSIZEY / 2;
-
-	_playerRc = RectMakeCenter(_x, _y, 100, 100);
-
 	_fireMonsterBullet = new fireMonsterBullet;
 	_fireMonsterBullet->init("fireMonster", WINSIZEX / 2, 10);
 	_fireBulletSpeed = 5;
@@ -51,29 +46,10 @@ void enemyManager::update()
 	//에너미 공격 플레이어 충돌함수
 	enemyAttackPlayerCollision();
 
-	if (KEYMANAGER->isStayKeyDown(VK_LEFT))
-	{
-		_x -= 3;
-	}
-	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
-	{
-		_x += 3;
-	}
-	if (KEYMANAGER->isStayKeyDown(VK_UP))
-	{
-		_y -= 3;
-	}
-	if (KEYMANAGER->isStayKeyDown(VK_DOWN))
-	{
-		_y += 3;
-	}
-	_playerRc = RectMakeCenter(_x, _y, 100, 100);
-
 }
 
 void enemyManager::render()
 {
-	Rectangle(getMemDC(), _playerRc);
 	//렌더링 모음 함수
 	enemyDraw();
 }
@@ -161,13 +137,13 @@ void enemyManager::enemyAttackPlayerCollision()
 	for (int i = 0; i < _vBallMonster.size(); i++)
 	{
 		//몬스터와 플레이어간의 거리를 구해줌.
-		_vBallMonster[i]->setTargetDistance(getDistance(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _x, _y));
+		_vBallMonster[i]->setTargetDistance(getDistance(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
 		RECT temp;
-		if (IntersectRect(&temp, &_vBallMonster[i]->getRangeRect(), &_playerRc))
+		if (IntersectRect(&temp, &_vBallMonster[i]->getRangeRect(), &_player->getPlayerRc()))
 		{
 			_vBallMonster[i]->setMoveType(FOLLOW_MOVE_TYPE); //충돌하면 따라가는 타입으로
 			_vBallMonster[i]->setState(BALLMONSTER_STATE_MOVE); //그리고 계속움직임.
-			_vBallMonster[i]->setTargetAngle(getAngle(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _x, _y)); //몬스터와 플레이어간의 각도 구해줌.
+			_vBallMonster[i]->setTargetAngle(getAngle(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY())); //몬스터와 플레이어간의 각도 구해줌.
 			switch (_vBallMonster[i]->getState())
 			{
 			case BALLMONSTER_STATE_IDLE:
@@ -218,7 +194,7 @@ void enemyManager::enemyAttackPlayerCollision()
 			// 0.5초전에 공격각도 잡기위함
 			if (0.5f + _vBallMonster[i]->getAttackWorldTime() >= TIMEMANAGER->getWorldTime())
 			{
-				_vBallMonster[i]->setAttackAngle(getAngle(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _x, _y));
+				_vBallMonster[i]->setAttackAngle(getAngle(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
 				//여기는 처음에 스피드 0이랑 프레임속도 빠르게 해서 공격을 준비함.
 				_vBallMonster[i]->getMotion()->setFPS(30);
 				_vBallMonster[i]->setSpeed(0);
@@ -249,7 +225,7 @@ void enemyManager::enemyAttackPlayerCollision()
 		}
 
 		//부딪혀도 다꺼줌.
-		if (IntersectRect(&temp, &_vBallMonster[i]->getRect(), &_playerRc))
+		if (IntersectRect(&temp, &_vBallMonster[i]->getRect(), &_player->getPlayerRc()))
 		{
 			_vBallMonster[i]->getMotion()->setFPS(5);
 			_vBallMonster[i]->setWorldTime(TIMEMANAGER->getWorldTime());
@@ -265,12 +241,12 @@ void enemyManager::enemyAttackPlayerCollision()
 	{
 		RECT temp;
 		//거리 구해주고
-		_vFireMonster[i]->setTargetDistance(getDistance(_vFireMonster[i]->getX(), _vFireMonster[i]->getY(), _x, _y));
+		_vFireMonster[i]->setTargetDistance(getDistance(_vFireMonster[i]->getX(), _vFireMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
 
-		if (IntersectRect(&temp, &_vFireMonster[i]->getRangeRect(), &_playerRc))
+		if (IntersectRect(&temp, &_vFireMonster[i]->getRangeRect(), &_player->getPlayerRc()))
 		{
 			//각도 구해줌
-			_vFireMonster[i]->setTargetAngle(getAngle(_vFireMonster[i]->getX(), _vFireMonster[i]->getY(), _x, _y));
+			_vFireMonster[i]->setTargetAngle(getAngle(_vFireMonster[i]->getX(), _vFireMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
 			_vFireMonster[i]->setMoveType(FOLLOW_MOVE_TYPE);
 			_vFireMonster[i]->setState(FIREMONSTER_STATE_MOVE);
 			switch (_vFireMonster[i]->getState())
@@ -314,12 +290,12 @@ void enemyManager::enemyAttackPlayerCollision()
 	{
 		RECT temp;
 		//기사와 플레이어간의 거리 구해줌.
-		_vKnightMonster[i]->setTargetDistance(getDistance(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _x, _y));
+		_vKnightMonster[i]->setTargetDistance(getDistance(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
 		//판정렉트와 충돌하면
-		if (IntersectRect(&temp, &_vKnightMonster[i]->getRangeRect(), &_playerRc))
+		if (IntersectRect(&temp, &_vKnightMonster[i]->getRangeRect(), &_player->getPlayerRc()))
 		{
 			//기사와 플레이어간의 각도 구해줌.
-			_vKnightMonster[i]->setTargetAngle(getAngle(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _x, _y));
+			_vKnightMonster[i]->setTargetAngle(getAngle(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
 			_vKnightMonster[i]->setMoveType(FOLLOW_MOVE_TYPE); //따라가는 타입으로.
 			switch (_vKnightMonster[i]->getState())
 			{
@@ -382,7 +358,7 @@ void enemyManager::fireMonsterBulletFire(int i)
 	for (int i = 0; i < _fireMonsterBullet->getVFireBullet().size(); i++)
 	{
 		RECT temp;
-		if (IntersectRect(&temp, &_fireMonsterBullet->getVFireBullet()[i].rc, &_playerRc))
+		if (IntersectRect(&temp, &_fireMonsterBullet->getVFireBullet()[i].rc, &_player->getPlayerRc()))
 		{
 			(*_fireMonsterBullet->setVFireBullet())[i].isCollision = true;
 		}
