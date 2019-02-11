@@ -3,7 +3,7 @@
 #include "jump.h"
 
 #define PLAYERFPS 6			//캐릭터 프레임 
-#define PLAYERJUMP 12		//점프 프레임
+#define PLAYERJUMP 14		//점프 프레임
 #define PLAYERATTACKFPS 12	//공격 프레임
 
 //클래스 첫번째 명은 대문자로
@@ -80,6 +80,7 @@ private:
 
 	bool _isRun;
 	bool _isAttack;
+	bool _isJump;
 
 	enemyManager* _enemyManager;
 public:
@@ -89,7 +90,7 @@ public:
 	HRESULT init();
 	void release();
 	void update();
-	void render();
+	void render(float cameraX , float cameraY);
 
 	//각 상태 프레임 입력 초기값 
 	void keyFrameInit();		
@@ -110,10 +111,11 @@ public:
 
 	//===================== 콜백 함수 =======================
 
+	//콜백 공격함수
 	static void callBackAttack(void* obj);
-
+	//콜백 대쉬공격
 	static void callBackDashAttack(void* obj);
-
+	//콜백 점프
 	static void callBackJump(void* obj);
 
 	//===================== 접근자 설정자 =======================
@@ -127,17 +129,23 @@ public:
 	void setPlayerAni(animation* animation) { _player.ani = animation; }
 	void setPlayerPosX(float playerX) { _player.x = playerX; }
 	void setPlayerPosY(float playerY) { _player.x = playerY; }
+	void setPlayerSpeed(float speed) { _player.speed = speed; }
 
 	RECT getPlayerRc() { return _player.rc; }
+
 	float getPlayerX() { return _player.x; }
 	float getPlayerY() { return _player.y; }
+	float getPlayerSpeed() { return _player.speed; }
 	float getPlayerJumpPower() { return _player.jumpPower; }
 	float getPlayergravity() { return _player.gravity; }
+
 	int getPlayerMoney() { return _player.money; }
 	int getPlayerMaxHP() { return _player.maxHP; }
 	int getPlayerHP() { return _player.HP; }
 	int getPlayerStr() { return _player.str; }
 	int getPlayerDef() { return _player.def; }
+
+	bool getPlayerJump() { return _isJump; }
 
 
 };

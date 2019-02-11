@@ -39,8 +39,7 @@ HRESULT player::init()
 
 	_attackComboKey = 0;
 
-	_isRun = false;
-	_isAttack = false;
+	 _isRun = _isAttack  = _isJump = false;
 
 	_jump = new jump;
 	_jump->init();
@@ -69,18 +68,23 @@ void player::update()
 	}
 	else _isAttack = false;
 
+	if (_player.state == PLAYER_JUMP || _player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK)
+	{
+		_isJump = true;
+	}
+	else  _isJump = false;
+
 	keyInput();
 	playerState();
 	_jump->update();
 
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 50, 60);
-
 }
 
-void player::render()
+void player::render(float cameraX, float cameraY)
 {
 	//_player.image->aniRender(getMemDC(),_player.x, _player.y, _player.ani);
-	_player.image->expandAniRenderCenter(getMemDC(), _player.x, _player.y, _player.ani, 2, 2);
+	_player.image->expandAniRenderCenter(getMemDC(), _player.x - cameraX, _player.y - cameraY, _player.ani, 2, 2);
 	//Rectangle(getMemDC(), _player.rc);
 	char str[128];
 	for (int i = 0; i < 4; i++)
@@ -224,7 +228,6 @@ void player::keyInput()
 	{
 		keyUpInput(LEFT);
 	}
-
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
 	{
 		keyDownInput(RIGHT);
@@ -238,6 +241,11 @@ void player::keyInput()
 	{
 		keyDownInput(UP);
 		_player.y -= _player.speed;
+
+		if (_isJump)
+		{
+			_startY -= _player.speed;
+		}
 	}
 	if (KEYMANAGER->isOnceKeyUp(VK_UP))
 	{
@@ -247,6 +255,11 @@ void player::keyInput()
 	{
 		keyDownInput(DOWN);
 		_player.y += _player.speed;
+
+		if (_isJump)
+		{
+			_startY += _player.speed;
+		}
 	}
 	if (KEYMANAGER->isOnceKeyUp(VK_DOWN))
 	{
@@ -276,7 +289,7 @@ void player::keyInput()
 	
 	if (KEYMANAGER->isOnceKeyDown('X'))
 	{
-		if (GetTickCount() - _oldJumpTime >= 1 * 1000)
+		if (GetTickCount() - _oldJumpTime >= 1 * 900)
 		{
 			_startX = _player.x;
 			_startY = _player.y;
@@ -289,28 +302,38 @@ void player::keyInput()
 }
 void player::keyDownInput(PLAYERDIRECTION direction)
 {
-	if (!_isAttack) _player.direction = direction;
-	if (!(_player.state == PLAYER_DASH_ATTACK))
+	if (!(_player.state == PLAYER_JUMP))
 	{
-		if (!_isRun) _player.state = PLAYER_WALK;
-		if (_doubleKey[direction] == 1)
+		if (!_isAttack) _player.direction = direction;
+		if (!(_player.state == PLAYER_DASH_ATTACK))
 		{
-			_player.state = PLAYER_RUN;
-			_player.speed = 5;
+			if (!_isRun) _player.state = PLAYER_WALK;
+			if (_doubleKey[direction] == 1)
+			{
+				_player.state = PLAYER_RUN;
+				_player.speed = 5;
+			}
 		}
 	}
 }
 void player::keyUpInput(PLAYERDIRECTION direction)
 {
-	if ((!(_player.state == PLAYER_RUN) || _player.direction == direction))
+	if (!(_player.state == PLAYER_JUMP))
 	{
-		_player.state = PLAYER_IDLE;
-		_player.speed = 3;
-	}
+		if ((!(_player.state == PLAYER_RUN) || _player.direction == direction))
+		{
+			_player.state = PLAYER_IDLE;
+			_player.speed = 3;
+		}
 
-	if (_doubleKey[direction] == 0) _doubleKey[direction]++;
-	_curTime[direction] = GetTickCount();
-	_oldTime[direction] = _curTime[direction];
+		if (_doubleKey[direction] == 0) _doubleKey[direction]++;
+		_curTime[direction] = GetTickCount();
+		_oldTime[direction] = _curTime[direction];
+	}
+	else
+	{
+		_isJump = false;
+	}
 }
 // 캐릭터 상태
 
@@ -343,30 +366,29 @@ void player::DoubleKeyIntVoid()
 		_doubleKey[LEFT]--;
 		_oldTime[LEFT] = GetTickCount();
 	}
-	if ((_curTime[RIGHT] - _oldTime[RIGHT] >= 1 * 150 && _doubleKey[RIGHT] == 1) && !(_player.state == PLAYER_RUN))
+	else if ((_curTime[RIGHT] - _oldTime[RIGHT] >= 1 * 150 && _doubleKey[RIGHT] == 1) && !(_player.state == PLAYER_RUN))
 	{
 		_doubleKey[RIGHT]--;
 		_oldTime[RIGHT] = GetTickCount();
 	}
-	if ((_curTime[UP] - _oldTime[UP] >= 1 * 150 && _doubleKey[UP] == 1) && !(_player.state == PLAYER_RUN))
+	else if ((_curTime[UP] - _oldTime[UP] >= 1 * 150 && _doubleKey[UP] == 1) && !(_player.state == PLAYER_RUN))
 	{
 		_doubleKey[UP]--;
 		_oldTime[UP] = GetTickCount();
 	}
-	if ((_curTime[DOWN] - _oldTime[DOWN] >= 1 * 150 && _doubleKey[DOWN] == 1) && !(_player.state == PLAYER_RUN))
+	else if ((_curTime[DOWN] - _oldTime[DOWN] >= 1 * 150 && _doubleKey[DOWN] == 1) && !(_player.state == PLAYER_RUN))
 	{
 		_doubleKey[DOWN]--;
 		_oldTime[DOWN] = GetTickCount();
 	}
 
-	if (GetTickCount() - _oldAttackTime >= 1 * 400 && _attackComboKey == 1) //더블키 공격 
+	else if (GetTickCount() - _oldAttackTime >= 1 * 400 && _attackComboKey == 1) //더블키 공격 
 	{
 		_attackComboKey--;
 		_oldAttackTime = GetTickCount();
 	}
 }
 //중복되는 코드 줄일라고 만든 함수
-
 
 void player::callBackAttack(void * obj)
 {
@@ -428,26 +450,31 @@ void player::callBackJump(void * obj)
 {
 	player* playerAttack = (player*)obj;
 
-	playerAttack->setPlayerState(PLAYER_IDLE);
+	if (playerAttack->getPlayerJump())
+	{
+		playerAttack->setPlayerState(PLAYER_IDLE);
+		playerAttack->setPlayerSpeed(3);
+	}
 	if (playerAttack->getPlayerDirection() == LEFT)
 	{
 		playerAttack->setPlayerDirection(LEFT);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleLeft"));
+		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runLeft"));
 	}
 	else if (playerAttack->getPlayerDirection() == RIGHT)
 	{
 		playerAttack->setPlayerDirection(RIGHT);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleRight"));
+		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runRight"));
 	}
 	else if (playerAttack->getPlayerDirection() == UP)
 	{
 		playerAttack->setPlayerDirection(UP);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleUp"));
+		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runUp"));
 	}
 	else if (playerAttack->getPlayerDirection() == DOWN)
 	{
 		playerAttack->setPlayerDirection(DOWN);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleDown"));
+		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runDown"));
 	}
 	playerAttack->getPlayerAni()->start();
+	
 }
