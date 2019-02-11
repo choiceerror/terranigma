@@ -1,8 +1,15 @@
 #pragma once
 #include "gameNode.h"
+#include "jump.h"
+
 #define PLAYERFPS 6			//캐릭터 프레임 
 #define PLAYERJUMP 12		//점프 프레임
 #define PLAYERATTACKFPS 12	//공격 프레임
+
+//클래스 첫번째 명은 대문자로
+//메소드는 맨앞에 하는일(뭐하는놈인가) 그 뒤로 어떤일을 하는녀석인가 3. 이유 
+
+class enemyManager;
 
 enum PLAYERSTATE
 {
@@ -44,6 +51,8 @@ struct tagPlayer
 	PLAYERDIRECTION direction;
 	float x, y;
 	float speed;
+	float jumpPower;
+	float gravity;
 	int idX, idY;
 	int maxHP;
 	int HP;
@@ -57,15 +66,18 @@ class player : public gameNode
 private:
 	tagPlayer _player;
 	image* _image;
+	jump* _jump;
 
 	int _doubleKey[4];					// 키를 2번 눌렀을때 달리게 해주기위한 인트형 변수
-	int _curTime[4], _oldTime[4];		
-	
+	int _curTime[4], _oldTime[4];
+
 	int _attackComboKey;				// 키를 2번 눌렀을때 공격 콤보 (원리는 위와 동일)
-	int _oldAttackTime;					
+	int _oldAttackTime;
 
-	bool _run, _jump;
+	bool _isRun;
+	bool _isAttack;
 
+	enemyManager* _enemyManager;
 public:
 	player();
 	~player();
@@ -75,24 +87,31 @@ public:
 	void update();
 	void render();
 
-	void keyFrameInit();
-	void keyInput();
+	//각 상태 프레임 입력 초기값 
+	void keyFrameInit();		
+	//키 입력 
+	void keyInput();							
+	//키다운 입력 중복된 코드 함수로 만들어서 사용
+	void keyDownInput(PLAYERDIRECTION direction);
+	//키업 입력 중복된 코드 함수로 만들어서 사용
+	void keyUpInput(PLAYERDIRECTION direction);	
+	//플레이어 상태 애니메이션 재생 함수
 	void playerState();
+	//더블키(공격 , 달리기)
 	void DoubleKeyIntVoid();
+	//재생에 중복되는 코드 함수화
 	void playerAniName(string targetName, string aniName);
 
-	static void attack(void* obj);				
+	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 
-	static void jump(void* obj);
+	//===================== 콜백 함수 =======================
 
-	static void jumpAttack(void* obj);
+	static void callBackAttack(void* obj);
 
-	static void dashAttack(void* obj);
+	static void callBackDashAttack(void* obj);
 
-	static void dashJumpAttack(void* obj);
+	static void callBackJump(void* obj);
 
-	static void objThrow(void* obj);
-	
 	//===================== 접근자 설정자 =======================
 
 	PLAYERSTATE getPlayerState() { return _player.state; }
@@ -103,14 +122,17 @@ public:
 	void setPlayerDirection(PLAYERDIRECTION direction) { _player.direction = direction; }
 	void setPlayerAni(animation* animation) { _player.ani = animation; }
 
+	RECT getPlayerRc() { return _player.rc; }
 	float getPlayerX() { return _player.x; }
 	float getPlayerY() { return _player.y; }
-
+	float getPlayerJumpPower() { return _player.jumpPower; }
+	float getPlayergravity() { return _player.gravity; }
 	int getPlayerMoney() { return _player.money; }
+	int getPlayerMaxHP() { return _player.maxHP; }
 	int getPlayerHP() { return _player.HP; }
 	int getPlayerStr() { return _player.str; }
 	int getPlayerDef() { return _player.def; }
-	RECT getPlayerRc() { return _player.rc;  }
+
 
 };
 
