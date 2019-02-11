@@ -31,7 +31,7 @@ public:
 	virtual void update();
 	virtual void render();
 
-	void createColorObject(const char* hdcName,POINT* point,COLORREF color);
+	void createColorObject(const char* hdcName,POINT* point, COLORREF color);
 	void pointSetting();
 	void diagonalLengthSize();
 	void linearInterPolation();

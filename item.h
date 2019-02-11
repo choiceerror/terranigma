@@ -5,10 +5,18 @@
 struct tagItem
 {
 	const char* imageName;
-	float _x, _y;
+	float x, y;
+	int frameX, frameY;
+	int itemType;
+};
 
-
-
+enum ITEMTYPE
+{
+	NONE,
+	ARMOR,
+	WEAPON,
+	GOLD,
+	POTION
 };
 
 
@@ -28,6 +36,6 @@ public:
 	void update();
 	void render();
 
-	void dropItem(const char* imageName, float x, float y);
+	void dropItem(const char* imageName, float x, float y,int frameX,int frameY);
 };
 

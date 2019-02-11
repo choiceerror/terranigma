@@ -47,9 +47,31 @@ void blackFadeOut::release()
 
 void blackFadeOut::update()
 {
-	pointSetting();
-	diagonalLengthSize();
-	linearInterPolation();
+	if (_isfadeOut)
+	{
+		pointSetting();
+		diagonalLengthSize();
+		linearInterPolation();
+	}
+	else
+	{
+		_angle = 0;
+		_pt[0] = { _centerX + cosf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,0,0) + _angle) * _diagonalLength ,
+				_centerY + -sinf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,0,0) + _angle) * _diagonalLength };
+		_pt[1] = { _centerX + cosf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,1024,0) + _angle) * _diagonalLength,
+					_centerY + -sinf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,1024,0) + _angle) * _diagonalLength };
+		_pt[2] = { _centerX + cosf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,1024,768) + _angle) * _diagonalLength ,
+					_centerY + -sinf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,1024,768) + _angle) * _diagonalLength };
+		_pt[3] = { _centerX + cosf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,0,768) + _angle) * _diagonalLength ,
+					_centerY + -sinf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,0,768) + _angle) * _diagonalLength };
+		_diagonalLength = sqrtf((512.f)*(512) + (384.f)*(384));
+		_worldTime = 0.f;
+		_once = false;
+		_centerX = GAMESIZEX / 2.f;
+		_centerY = GAMESIZEY / 2.f;
+		_goal.x = GAMESIZEX / 2.f;
+		_goal.y = GAMESIZEY / 2.f;
+	}
 	POINT pt[] = { {_pt[0].x,_pt[0].y},{_pt[1].x,_pt[1].y} ,{_pt[2].x,_pt[2].y} ,{_pt[3].x,_pt[3].y} };
 	createColorObject("blackBox", pt, MAGENTA);
 
@@ -183,23 +205,6 @@ void blackFadeOut::diagonalLengthSize()
 			_isfadeOut = false;
 		}
 	}
-	else
-	{
-		_angle = 0;
-		_pt[0] = { _centerX + cosf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,0,0) + _angle) * _diagonalLength ,
-				_centerY + -sinf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,0,0) + _angle) * _diagonalLength };
-		_pt[1] = { _centerX + cosf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,1024,0) + _angle) * _diagonalLength,
-					_centerY + -sinf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,1024,0) + _angle) * _diagonalLength };
-		_pt[2] = { _centerX + cosf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,1024,768) + _angle) * _diagonalLength ,
-					_centerY + -sinf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,1024,768) + _angle) * _diagonalLength };
-		_pt[3] = { _centerX + cosf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,0,768) + _angle) * _diagonalLength ,
-					_centerY + -sinf(getAngle(GAMESIZEX / 2.f,GAMESIZEY / 2.f,0,768) + _angle) * _diagonalLength };
-		_diagonalLength = sqrtf((512.f)*(512) + (384.f)*(384));
-		_worldTime = 0.f;
-		_once = false;
-		_centerX = GAMESIZEX / 2.f;
-		_centerY = GAMESIZEY / 2.f;
-	}
 }
 
 void blackFadeOut::linearInterPolation()
@@ -216,10 +221,5 @@ void blackFadeOut::linearInterPolation()
 			_centerX += cosf(angle) * speed;
 			_centerY += -sinf(angle) * speed;
 		}
-	}
-	else
-	{
-		_goal.x = GAMESIZEX / 2.f;
-		_goal.y = GAMESIZEY / 2.f;
 	}
 }

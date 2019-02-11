@@ -44,7 +44,8 @@ private:
 
 	float _worldTime;
 
-
+	//디버그용
+	bool _isIndexMode;
 
 public:
 	ui();
@@ -61,6 +62,6 @@ public:
 	void movePoint();
 	void placeChange();
 
-
+	void dataLode();
 };
 

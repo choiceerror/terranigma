@@ -680,3 +680,15 @@ void animation::resume()
 {
 	_play = TRUE;
 }
+
+inline POINT animation::getFramePosArr()
+{
+	POINT pt;
+
+	pt = _frameList[_playList[_nowPlayIndex]];
+
+	pt.x = pt.x / _frameWidth;
+	pt.y = pt.y / _frameHeight;
+
+	return pt;
+}

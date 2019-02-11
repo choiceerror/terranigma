@@ -18,13 +18,17 @@ HRESULT ui::init()
 	_blackFade = new blackFadeOut;
 	_blackFade->init();
 
+	dataLode();
+
 	IMAGEMANAGER->addFrameImage("yomi", "image/NPC_yomi.bmp", 275, 112, 11, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("UI", "image/UI.bmp", 4096, 768, 4, 1, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("UIIndex", "image/UIIndex.bmp", 4096, 768, 4, 1, true, MAGENTA);
 	IMAGEMANAGER->addImage("blackRect", GAMESIZEX, GAMESIZEY);
 
+
+	//변수 초기화
 	_placeFrameX = MAIN_ROOM;
 	_yomiFrameX = _yomiFrameY = 0;
-
 	_x = 537;
 	_y = 339;
 	_goalX = _x;
@@ -32,16 +36,14 @@ HRESULT ui::init()
 	_yomiAngle = 0;
 	_yomiDistance = 0;
 	_yomiSpeed = 14.f;
-
 	_yomiIndex = 4;
-
 	_count = 0;
 	_worldTime = 0;
 
 	_isRoomChanging = false;
 	_move = true;
 	_onceTime = false;
-
+	_isIndexMode = false;
 	return S_OK;
 }
 
@@ -52,7 +54,6 @@ void ui::release()
 
 void ui::update()
 {
-
 	_blackFade->update();
 
 	//요미이동 목표점 설정
@@ -67,12 +68,24 @@ void ui::update()
 
 
 	//===============지울것================
-	_goal = RectMake(_goalX, _goalY, 10, 10);
+	//_goal = RectMake(_goalX, _goalY, 10, 10);
+	//
+	//if (KEYMANAGER->isOnceKeyDown('0'))
+	//{
+	//	if (_placeFrameX > 2) _placeFrameX = -1;
+	//	_placeFrameX++;
+	//}
 
-	if (KEYMANAGER->isOnceKeyDown('0'))
+	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD9))
 	{
-		if (_placeFrameX > 2) _placeFrameX = -1;
-		_placeFrameX++;
+		if (_isIndexMode)
+		{
+			_isIndexMode = false;
+		}
+		else
+		{
+			_isIndexMode = true;
+		}
 	}
 
 
@@ -81,7 +94,14 @@ void ui::update()
 
 void ui::render()
 {
-	IMAGEMANAGER->frameRender("UI", getMemDC(), 0, 0, _placeFrameX, 0);
+	if (!_isIndexMode)
+	{
+		IMAGEMANAGER->frameRender("UI", getMemDC(), 0, 0, _placeFrameX, 0);
+	}
+	else
+	{
+		IMAGEMANAGER->frameRender("UIIndex", getMemDC(), 0, 0, _placeFrameX, 0);
+	}
 	IMAGEMANAGER->expandRender("yomi", getMemDC(), _x - 30, _y - 36 * 3, _yomiFrameX, _yomiFrameY, 3.f, 3.f);
 
 	_blackFade->render();
@@ -203,6 +223,10 @@ void ui::yomiMove()
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 6;
+				}
+				else if (_yomiIndex == 2)
+				{
+
 				}
 				else if (_yomiIndex % 4 == 0 || _yomiIndex % 4 == 1 || _yomiIndex % 4 == 2)
 				{
@@ -728,4 +752,17 @@ void ui::placeChange()
 			_worldTime = 0;
 		}
 	}
+}
+
+void ui::dataLode()
+{
+	//HANDLE file;
+	//DWORD lode;
+	//
+	//file = CreateFile("", GENERIC_WRITE, NULL, NULL,
+	//	CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	//
+	//ReadFile(file, "", sizeof(""), &lode, NULL);
+	//
+	//CloseHandle(file);
 }
