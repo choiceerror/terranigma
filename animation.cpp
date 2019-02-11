@@ -10,7 +10,7 @@ animation::animation()
 	_elapsedSec(0),
 	_nowPlayIndex(0),
 	_play(FALSE)
-	
+
 {
 }
 
@@ -41,6 +41,9 @@ HRESULT animation::init(int totalW, int totalH, int frameW, int frameH)
 		}
 	}
 
+	_currentArr.x = 0;
+	_currentArr.y = 0;
+
 	return S_OK;
 }
 
@@ -67,7 +70,7 @@ void animation::setDefPlayFrame(BOOL reverse, BOOL loop)
 				_playList.push_back(i);
 			}
 
-			for (int i = _frameNum - 1; i >= 0 ; --i)
+			for (int i = _frameNum - 1; i >= 0; --i)
 			{
 				_playList.push_back(i);
 			}
@@ -655,6 +658,8 @@ void animation::frameUpdate(float elapsedTime)
 		}
 	}
 
+	_currentArr.x = _frameList[_playList[_nowPlayIndex]].x / _frameWidth;
+	_currentArr.y = _frameList[_playList[_nowPlayIndex]].y / _frameHeight;
 }
 
 void animation::start()
@@ -673,22 +678,10 @@ void animation::stop()
 void animation::pause()
 {
 	_play = FALSE;
-	
+
 }
 
 void animation::resume()
 {
 	_play = TRUE;
-}
-
-inline POINT animation::getFramePosArr()
-{
-	POINT pt;
-
-	pt = _frameList[_playList[_nowPlayIndex]];
-
-	pt.x = pt.x / _frameWidth;
-	pt.y = pt.y / _frameHeight;
-
-	return pt;
 }

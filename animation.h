@@ -29,6 +29,8 @@ private:
 	DWORD _nowPlayIndex;		//현재 플레이 인덱스
 	BOOL _play;					//애니메이션 재생여부
 
+	POINT _currentArr;
+
 	void*						_obj;
 	CALLBACK_FUNCTION			_callbackFunction;
 	CALLBACK_FUNCTION_PARAMETER _callbackFunctionParameter;
@@ -71,7 +73,7 @@ public:
 
 	inline BOOL isPlay() { return _play; }
 	inline POINT getFramePos() { return _frameList[_playList[_nowPlayIndex]]; }
-	inline POINT getFramePosArr();
+	inline POINT getFramePosArr() { return _currentArr; }
 	inline int getFrameWidth() { return _frameWidth; }
 	inline int getFrameHeight() { return _frameHeight; }
 

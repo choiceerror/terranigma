@@ -215,10 +215,15 @@ void knightMonster::move()
 void knightMonster::attack()
 {
 	//나이트 찌르기공격
-	if (_enemy.motion->getFramePos().x >= 650 && _enemy.motion->getFramePos().y == 400) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y + 70, 30, 100); //아래공격
-	else if (_enemy.motion->getFramePos().x >= 390 && _enemy.motion->getFramePos().y == 500) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y - 70, 30, 100); //위공격
-	else if (_enemy.motion->getFramePos().x >= 650 && _enemy.motion->getFramePos().y == 600) _enemy.attackRc = RectMakeCenter(_enemy.x - 70, _enemy.y, 100, 30); //왼쪽공격
-	else if (_enemy.motion->getFramePos().x >= 650 && _enemy.motion->getFramePos().y == 700) _enemy.attackRc = RectMakeCenter(_enemy.x + 70, _enemy.y, 100, 30); //오른쪽공격
+	//if (_enemy.motion->getFramePos().x >= 650 && _enemy.motion->getFramePos().y == 400) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y + 70, 30, 100); //아래공격
+	//else if (_enemy.motion->getFramePos().x >= 390 && _enemy.motion->getFramePos().y == 500) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y - 70, 30, 100); //위공격
+	//else if (_enemy.motion->getFramePos().x >= 650 && _enemy.motion->getFramePos().y == 600) _enemy.attackRc = RectMakeCenter(_enemy.x - 70, _enemy.y, 100, 30); //왼쪽공격
+	//else if (_enemy.motion->getFramePos().x >= 650 && _enemy.motion->getFramePos().y == 700) _enemy.attackRc = RectMakeCenter(_enemy.x + 70, _enemy.y, 100, 30); //오른쪽공격
+	//else _enemy.attackRc = RectMakeCenter(0, 0, 0, 0); //공격끝나면 렉트 갱신
+	if(_enemy.motion->getFramePosArr().x == 5 && _enemy.motion->getFramePosArr().y == 4) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y + 70, 30, 100); //아래공격
+	else if (_enemy.motion->getFramePosArr().x == 3 && _enemy.motion->getFramePosArr().y == 5) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y - 70, 30, 100); //위공격
+	else if (_enemy.motion->getFramePosArr().x == 5 && _enemy.motion->getFramePosArr().y == 6) _enemy.attackRc = RectMakeCenter(_enemy.x - 70, _enemy.y, 100, 30); //왼쪽공격
+	else if (_enemy.motion->getFramePosArr().x == 5 && _enemy.motion->getFramePosArr().y == 7) _enemy.attackRc = RectMakeCenter(_enemy.x + 70, _enemy.y, 100, 30); //오른쪽공격
 	else _enemy.attackRc = RectMakeCenter(0, 0, 0, 0); //공격끝나면 렉트 갱신
 }
 

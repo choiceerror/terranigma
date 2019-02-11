@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "enemyManager.h"
+#include "player.h"
 
 
 enemyManager::enemyManager()
@@ -72,11 +73,6 @@ void enemyManager::update()
 
 void enemyManager::render()
 {
-	char str[128];
-
-	sprintf_s(str, "isAttack : %d", _vBallMonster.back()->getIsAttack());
-	TextOut(getMemDC(), 300, 120, str, strlen(str));
-
 	Rectangle(getMemDC(), _playerRc);
 	//렌더링 모음 함수
 	enemyDraw();

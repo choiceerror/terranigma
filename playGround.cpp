@@ -30,7 +30,7 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("mapTool", _mapTool);
 	SCENEMANAGER->addScene("dungeon", _dungeon);
 
-	SCENEMANAGER->changeScene("mapTool");
+	SCENEMANAGER->changeScene("dungeon");
 
 
 	return S_OK;

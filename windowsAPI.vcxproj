@@ -167,6 +167,7 @@
     <ClInclude Include="inGameScene.h" />
     <ClInclude Include="iniDataManager.h" />
     <ClInclude Include="item.h" />
+    <ClInclude Include="jump.h" />
     <ClInclude Include="keyAniManager.h" />
     <ClInclude Include="keyManager.h" />
     <ClInclude Include="knightMonster.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="inGameScene.cpp" />
     <ClCompile Include="iniDataManager.cpp" />
     <ClCompile Include="item.cpp" />
+    <ClCompile Include="jump.cpp" />
     <ClCompile Include="keyAniManager.cpp" />
     <ClCompile Include="keyManager.cpp" />
     <ClCompile Include="knightMonster.cpp" />
@@ -226,6 +228,7 @@
     <ClCompile Include="mode7.cpp" />
     <ClCompile Include="npc.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="playerState.cpp" />
     <ClCompile Include="playGround.cpp" />
     <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="sceneManager.cpp" />

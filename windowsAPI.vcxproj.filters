@@ -243,6 +243,9 @@
     <ClInclude Include="mode7.h">
       <Filter>PlayGround\effect</Filter>
     </ClInclude>
+    <ClInclude Include="jump.h">
+      <Filter>PlayGround\player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -373,6 +376,12 @@
     </ClCompile>
     <ClCompile Include="mode7.cpp">
       <Filter>PlayGround\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="jump.cpp">
+      <Filter>PlayGround\player</Filter>
+    </ClCompile>
+    <ClCompile Include="playerState.cpp">
+      <Filter>PlayGround\player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,8 @@ enum DUNGEON_FLOOR
 	THIRD_FLOOR, //3Ãþ
 };
 
+class player;
+
 class enemyManager : public gameNode
 {
 private:
@@ -30,6 +32,8 @@ private:
 
 	//ÆÄÀÌ¾î¸ó½ºÅÍ ÃÑ¾Ë
 	fireMonsterBullet* _fireMonsterBullet;
+
+	player* _player;
 
 	DUNGEON_FLOOR _dungeonFloor; //´øÀü Ãþ¼ö
 	int _fireBulletSpeed;
@@ -64,6 +68,8 @@ public:
 
 	vector<knightMonster*> getVKnightMonster() {return _vKnightMonster;}
 	vector<knightMonster*>* setVKnightMonster() {return &_vKnightMonster;}
+
+	void setPlayerMemoryAddressLink(player* player) {_player = player;}
 
 };
 

@@ -8,6 +8,7 @@ class dungeon : public gameNode
 private:
 	enemyManager* _enemyManager;
 
+
 	vector<vector<tagTile*>> _vvMap;
 	unsigned int TILEX;
 	unsigned int TILEY;
