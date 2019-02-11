@@ -193,7 +193,6 @@ void ballMonster::move()
 
 			_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
 			_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;
-			
 			break;
 		}
 	}

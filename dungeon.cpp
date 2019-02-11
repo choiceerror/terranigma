@@ -15,7 +15,6 @@ HRESULT dungeon::init()
 {
 	setWindowsSize(WINSTARTX, WINSTARTY, GAMESIZEX, GAMESIZEY);
 
-	//load();
 
 	IMAGEMANAGER->addFrameImage("ballMonster", "image/enemy1.bmp", 64, 64, 4, 4, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("fireMonster", "image/enemy2.bmp", 90, 87, 5, 3, true, MAGENTA);
@@ -25,16 +24,20 @@ HRESULT dungeon::init()
 	_enemyManager = new enemyManager;
 	_player = new player;
 	_camera = new camera;
+	_dungeon = new dungeonMap;
 
 	_enemyManager->setPlayerMemoryAddressLink(_player);
 	_player->setEnemyManagerAddressLink(_enemyManager);
+	//_player->setMapManagetAddressLink(_dungeon);
 
+	_dungeon->init();
 	_player->init();
 	_enemyManager->init();
-	_enemyManager->setEnemy();
-	_camera->init(WINSIZEX, WINSIZEY, 3200, 3200);
 
-	
+	_enemyManager->setEnemy();
+	_camera->init(GAMESIZEX, GAMESIZEY, 3200, 3200);
+
+
 
 	return S_OK;
 }
@@ -43,6 +46,7 @@ void dungeon::release()
 {
 	SAFE_DELETE(_enemyManager);
 	SAFE_DELETE(_player);
+	SAFE_DELETE(_dungeon);
 }
 
 void dungeon::update()
@@ -54,141 +58,17 @@ void dungeon::update()
 
 void dungeon::render()
 {
-	tileDraw();
+
+	_dungeon->render(_camera->getCameraX(), _camera->getCameraY());
 
 	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
-	_player->render();
-}
-
-void dungeon::load()
-{
-	HANDLE file2;
-	DWORD read2;
-	char mapSize[128];
-
-	file2 = CreateFile("saveFile\\mapSize.map", GENERIC_READ, NULL, NULL,
-		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	ReadFile(file2, mapSize, 128, &read2, NULL);
-	CloseHandle(file2);
-
-	string sizeX, sizeY;
-	bool x = true;
-	for (int i = 0; i < strlen(mapSize); i++)
-	{
-		if (mapSize[i] == ',')
-		{
-			x = false;
-			continue;
-		}
-		if (mapSize[i] == NULL) break;
-		if (x)
-		{
-			sizeX += mapSize[i];
-		}
-		else
-		{
-			sizeY += mapSize[i];
-		}
-	}
-
-
-	TILEX = stoi(sizeX);
-	TILEY = stoi(sizeY);
-	_vvMap.resize(TILEY);
-
-
-	for (int i = 0; i < TILEY; i++)
-	{
-		_vvMap[i].resize(TILEX);
-	}
-
-	tagTile* _tiles = new tagTile[TILEX * TILEY];
-	HANDLE file;
-	DWORD read;
-
-	file = CreateFile("saveFile\\mapSave.map", GENERIC_READ, NULL, NULL,
-		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
-
-
-	CloseHandle(file);
-	_attribute = new DWORD[TILEX * TILEY];
-
-	for (int i = 0; i < TILEY; i++)
-	{
-		for (int j = 0; j < TILEX; j++)
-		{
-			_attribute[j + i * TILEX] = NULL;
-			_vvMap[i][j] = &_tiles[j + i * TILEX];
-
-			if (_vvMap[i][j]->obj == OBJ_WALL)
-			{
-				_attribute[j + i * TILEX] |= ATTR_UNMOVE;
-			}
-		}
-	}
-}
-
-void dungeon::tileDraw()
-{
-	for (int i = 0; i < TILEY; ++i)
-	{
-		for (int j = 0; j < TILEX; ++j)
-		{
-			if (_vvMap[i][j]->a == 0)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ 4", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-			else if (_vvMap[i][j]->a == 1)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ ", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-			else if (_vvMap[i][j]->a == 2)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ 2", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-		}
-	}
-
-	//ø¿∫Í¡ß∆Æ
-	for (int i = 0; i < TILEY; ++i)
-	{
-		for (int j = 0; j < TILEX; ++j)
-		{
-			if (_vvMap[i][j]->obj == OBJ_NONE) continue;
-
-			if (_vvMap[i][j]->a == 0)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ 4", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-			else if (_vvMap[i][j]->a == 1)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ ", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-			else if (_vvMap[i][j]->a == 2)
-			{
-				IMAGEMANAGER->frameRender("≈∏¿œ∏ 2", getMemDC(),
-					_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-		}
-	}
+	_player->render(_camera->getCameraX(), _camera->getCameraY());
 
 }
 
 void dungeon::setWindowsSize(int x, int y, int width, int height)
 {
+
 	RECT winRect;
 
 	winRect.left = 0;
@@ -203,5 +83,7 @@ void dungeon::setWindowsSize(int x, int y, int width, int height)
 		(winRect.right - winRect.left),
 		(winRect.bottom - winRect.top),
 		SWP_NOZORDER | SWP_NOMOVE);
-}
 
+
+
+}

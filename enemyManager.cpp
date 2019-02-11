@@ -83,6 +83,14 @@ void enemyManager::updateCollection()
 	{
 		(*_viKnightMonster)->update();
 	}
+
+	for (int i = 0; i < _vBallMonster.size(); i++)
+	{
+		_vBallMonster[i]->getEnemy().tileIndex[0];
+		_vBallMonster[i]->getEnemy().tileIndex[1];
+	}
+
+
 	//파이어몬스터 총알 업데이트
 	_fireMonsterBullet->update();
 }

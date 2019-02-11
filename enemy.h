@@ -91,6 +91,7 @@ struct tagEnemy
 	float attackWorldTime;
 	float worldTime;
 	bool isOneTime;
+	int tileIndex[2];
 };
 
 class enemy : public gameNode
@@ -170,6 +171,8 @@ public:
 
 	void setWorldTime(float worldTime) { _enemy.worldTime = worldTime; }
 	void setAttackWorldTime(float attackWorldTime) { _enemy.attackWorldTime = attackWorldTime; }
+
+	tagEnemy getEnemy() {return _enemy;}
 
 
 	

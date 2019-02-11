@@ -2,7 +2,7 @@
 #include "gameNode.h"
 #include "enemyManager.h"
 #include "player.h"
-#include "MapNode.h"
+#include "dungeonMap.h"
 #include "camera.h"
 
 class dungeon : public gameNode
@@ -10,12 +10,10 @@ class dungeon : public gameNode
 private:
 	enemyManager* _enemyManager;
 	player* _player;
-
-	vector<vector<tagTile*>> _vvMap;
-	unsigned int TILEX;
-	unsigned int TILEY;
-
 	camera* _camera;
+
+	dungeonMap* _dungeon;
+
 	DWORD* _attribute;
 
 public:
@@ -31,10 +29,6 @@ public:
 
 	void setWindowsSize(int x, int y, int width, int height);
 
-	unsigned int getTileX() { return TILEX; }
-	unsigned int getTileY() { return TILEY; }
 
-	tagTile* getTile(int x, int y) { return _vvMap[y][x]; }
-	DWORD getAttr(int x, int y) { return _attribute[x + y * TILEX]; }
 };
 
