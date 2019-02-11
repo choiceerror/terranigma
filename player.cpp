@@ -35,7 +35,6 @@ HRESULT player::init()
 		_curTime[i] = GetTickCount();
 		_oldTime[i] = _curTime[i];
 		_doubleKey[i] = 0;
-
 	}
 
 	_attackComboKey = 0;
@@ -45,6 +44,7 @@ HRESULT player::init()
 
 	_jump = new jump;
 	_jump->init();
+	_oldJumpTime = GetTickCount();
 
 	return S_OK;
 }
@@ -71,6 +71,7 @@ void player::update()
 
 	keyInput();
 	playerState();
+	_jump->update();
 
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 50, 60);
 
@@ -80,7 +81,7 @@ void player::render()
 {
 	//_player.image->aniRender(getMemDC(),_player.x, _player.y, _player.ani);
 	_player.image->expandAniRenderCenter(getMemDC(), _player.x, _player.y, _player.ani, 2, 2);
-	Rectangle(getMemDC(), _player.rc);
+	//Rectangle(getMemDC(), _player.rc);
 	char str[128];
 	for (int i = 0; i < 4; i++)
 	{
@@ -226,9 +227,7 @@ void player::keyInput()
 
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
 	{
-		
-			keyDownInput(RIGHT);
-		
+		keyDownInput(RIGHT);
 		_player.x += _player.speed;
 	}
 	if (KEYMANAGER->isOnceKeyUp(VK_RIGHT))
@@ -237,10 +236,7 @@ void player::keyInput()
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_UP))
 	{
-		if (!(_player.direction == LEFT))
-		{
-			keyDownInput(UP);
-		}
+		keyDownInput(UP);
 		_player.y -= _player.speed;
 	}
 	if (KEYMANAGER->isOnceKeyUp(VK_UP))
@@ -277,18 +273,22 @@ void player::keyInput()
 	{
 		if (_attackComboKey == 0) _attackComboKey++;
 	}
-
-	if (KEYMANAGER->isOnceKeyDown('X'))
+	if (GetTickCount() - _oldJumpTime >= 3 * 1000)
 	{
-		//_jump->jumping(&_player.x, &_player.y, _player.jumpPower, _player.gravity);
-		_player.state = PLAYER_JUMP;
+		if (KEYMANAGER->isOnceKeyDown('X'))
+		{
+			_startX = _player.x;
+			_startY = _player.y;
+			_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
+			_player.state = PLAYER_JUMP;
+		}
+		_oldJumpTime = GetTickCount();
 	}
 
 	DoubleKeyIntVoid();
 }
 void player::keyDownInput(PLAYERDIRECTION direction)
 {
-	//if(KEYANIMANAGER->findAnimation("ark")->getFramePos())
 	if (!_isAttack) _player.direction = direction;
 	if (!(_player.state == PLAYER_DASH_ATTACK))
 	{
@@ -338,22 +338,22 @@ void player::DoubleKeyIntVoid()
 	for (int i = 0; i < 4; i++) _curTime[i] = GetTickCount();
 
 	//doubleKey를 0.2초가 지나면 0으로 초기화하게 
-	if ((_curTime[LEFT] - _oldTime[LEFT] >= 1 * 200 && _doubleKey[LEFT] == 1) && !(_player.state == PLAYER_RUN && _player.direction == LEFT))
+	if ((_curTime[LEFT] - _oldTime[LEFT] >= 1 * 150 && _doubleKey[LEFT] == 1) && !(_player.state == PLAYER_RUN && _player.direction == LEFT))
 	{
 		_doubleKey[LEFT]--;
 		_oldTime[LEFT] = GetTickCount();
 	}
-	if ((_curTime[RIGHT] - _oldTime[RIGHT] >= 1 * 200 && _doubleKey[RIGHT] == 1) && !(_player.state == PLAYER_RUN))
+	if ((_curTime[RIGHT] - _oldTime[RIGHT] >= 1 * 150 && _doubleKey[RIGHT] == 1) && !(_player.state == PLAYER_RUN))
 	{
 		_doubleKey[RIGHT]--;
 		_oldTime[RIGHT] = GetTickCount();
 	}
-	if ((_curTime[UP] - _oldTime[UP] >= 1 * 200 && _doubleKey[UP] == 1) && !(_player.state == PLAYER_RUN))
+	if ((_curTime[UP] - _oldTime[UP] >= 1 * 150 && _doubleKey[UP] == 1) && !(_player.state == PLAYER_RUN))
 	{
 		_doubleKey[UP]--;
 		_oldTime[UP] = GetTickCount();
 	}
-	if ((_curTime[DOWN] - _oldTime[DOWN] >= 1 * 200 && _doubleKey[DOWN] == 1) && !(_player.state == PLAYER_RUN))
+	if ((_curTime[DOWN] - _oldTime[DOWN] >= 1 * 150 && _doubleKey[DOWN] == 1) && !(_player.state == PLAYER_RUN))
 	{
 		_doubleKey[DOWN]--;
 		_oldTime[DOWN] = GetTickCount();

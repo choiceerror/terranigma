@@ -72,7 +72,11 @@ private:
 	int _curTime[4], _oldTime[4];
 
 	int _attackComboKey;				// 키를 2번 눌렀을때 공격 콤보 (원리는 위와 동일)
-	int _oldAttackTime;
+	int _oldAttackTime;					// 공격쿨타임
+	int _oldJumpTime;					// 점프쿨타임
+
+	float _startX;						// 점프 시작 위치
+	float _startY;						// 점프 시작 위치
 
 	bool _isRun;
 	bool _isAttack;
