@@ -88,10 +88,9 @@ struct tagEnemy
 	float targetDistance;
 	bool isAttack;
 	float attackAngle;
-	float attackTime;
 	float attackWorldTime;
-	float time;
 	float worldTime;
+	bool isOneTime;
 };
 
 class enemy : public gameNode
@@ -166,14 +165,13 @@ public:
 
 	string getName() { return _enemy.name; }
 
-	float getTime() { return _enemy.time; }
-	float getAttackTime() { return _enemy.attackTime; }
-
 	float getWorldTime() { return _enemy.worldTime; }
 	float getAttackWorldTime() { return _enemy.attackWorldTime; }
 
 	void setWorldTime(float worldTime) { _enemy.worldTime = worldTime; }
 	void setAttackWorldTime(float attackWorldTime) { _enemy.attackWorldTime = attackWorldTime; }
+
+
 	
 };
 

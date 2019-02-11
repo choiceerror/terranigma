@@ -5,6 +5,14 @@
 #include "knightMonster.h"
 #include "fireMonsterBullet.h"
 
+//湍瞪 類熱
+enum DUNGEON_FLOOR
+{
+	FIRST_FLOOR, //1類
+	SECOND_FLOOR, //2類
+	THIRD_FLOOR, //3類
+};
+
 class enemyManager : public gameNode
 {
 private:
@@ -23,9 +31,9 @@ private:
 	//だ檜橫跨蝶攪 識憲
 	fireMonsterBullet* _fireMonsterBullet;
 
+	DUNGEON_FLOOR _dungeonFloor; //湍瞪 類熱
 	int _fireBulletSpeed;
 	
-	float _worldTime;
 	RECT _playerRc;
 	float _x, _y;
 	

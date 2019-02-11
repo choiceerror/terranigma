@@ -45,6 +45,7 @@ HRESULT ballMonster::init(string enemyName, const char * imageName, float x, flo
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "leftMove", imageName, leftMove, 3, MOVEFPS, true);
 
 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
+	_isOne = false;
 
 	return S_OK;
 }
@@ -57,15 +58,18 @@ void ballMonster::update(float cameraX, float cameraY)
 {
 	enemy::update(cameraX, cameraY);
 	move();
-	if (_enemy.isAttack == true && _isOne == false)
+	//한번만 공격하기위함.
+	if (_enemy.isAttack == true && _enemy.isOneTime == false)
 	{
+		//공격시간 갱신
 		_enemy.attackWorldTime = TIMEMANAGER->getWorldTime();
-		_isOne = true;
+		_enemy.isOneTime = true;  //한번만 시간갱신을 받기위함.
 	}
 
+	//공격상태가 아니라면
 	if (!_enemy.isAttack)
 	{
-		_isOne = false;
+		_enemy.isOneTime = false; 
 	}
 	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 20, _enemy.image->getFrameHeight() * 20);
 }
@@ -75,6 +79,10 @@ void ballMonster::render(float viewX, float viewY)
 	//Rectangle(getMemDC(), _enemy.rangeRc);
 	//Rectangle(getMemDC(), _enemy.rc);
 	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f , 2.f);
+	char str[128];
+
+	sprintf_s(str, "one : %d", _enemy.isOneTime);
+	TextOut(getMemDC(), 100, 100, str, strlen(str));
 }
 
 void ballMonster::move()

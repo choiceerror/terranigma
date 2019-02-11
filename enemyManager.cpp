@@ -21,7 +21,7 @@ HRESULT enemyManager::init()
 	_fireMonsterBullet = new fireMonsterBullet;
 	_fireMonsterBullet->init("fireMonster", WINSIZEX / 2, 10);
 	_fireBulletSpeed = 5;
-	_worldTime = TIMEMANAGER->getWorldTime();
+
 	return S_OK;
 }
 
@@ -72,9 +72,7 @@ void enemyManager::update()
 
 void enemyManager::render()
 {
-
 	char str[128];
-
 
 	sprintf_s(str, "isAttack : %d", _vBallMonster.back()->getIsAttack());
 	TextOut(getMemDC(), 300, 120, str, strlen(str));
@@ -163,7 +161,6 @@ void enemyManager::setEnemy()
 //에너미 공격들이 플레이어 충돌할 함수
 void enemyManager::enemyAttackPlayerCollision()
 {
-
 	//플레이어 렉트 임시용으로 만들어 충돌 실험용 공몬스터
 	for (int i = 0; i < _vBallMonster.size(); i++)
 	{
@@ -180,75 +177,82 @@ void enemyManager::enemyAttackPlayerCollision()
 			case BALLMONSTER_STATE_IDLE:
 			case BALLMONSTER_STATE_MOVE:
 
-				//오른쪽각도 충돌범위일때만 오른쪽으로 쫓아오게
-				if ((_vBallMonster[i]->getTargetAngle() < (PI / 180) * 25 && _vBallMonster[i]->getTargetAngle() > 0) ||
-					(_vBallMonster[i]->getTargetAngle() > (PI / 180) * 335 && _vBallMonster[i]->getTargetAngle() < PI2))
+				if (_vBallMonster[i]->getIsAttack() == false)
 				{
-					_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_RIGHT);
-				}
-				//위에각도 충돌범위일때만 위에 쫓아오게
-				else if (_vBallMonster[i]->getTargetAngle() > (PI / 180) * 65 && _vBallMonster[i]->getTargetAngle() < (PI / 180) * 115)
-				{
-					_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_UP);
-				}
-				//왼쪽각도
-				else if (_vBallMonster[i]->getTargetAngle() > (PI / 180) * 155 && _vBallMonster[i]->getTargetAngle() < (PI / 180) * 205)
-				{
-					_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_LEFT);
-				}
-				//아래각도
-				else if (_vBallMonster[i]->getTargetAngle() > (PI / 180) * 245 && _vBallMonster[i]->getTargetAngle() < (PI / 180) * 295)
-				{
-					_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_DOWN);
+					//오른쪽각도 충돌범위일때만 오른쪽으로 쫓아오게
+					if ((_vBallMonster[i]->getTargetAngle() < (PI / 180) * 25 && _vBallMonster[i]->getTargetAngle() > 0) ||
+						(_vBallMonster[i]->getTargetAngle() > (PI / 180) * 335 && _vBallMonster[i]->getTargetAngle() < PI2))
+					{
+						_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_RIGHT);
+					}
+					//위에각도 충돌범위일때만 위에 쫓아오게
+					else if (_vBallMonster[i]->getTargetAngle() > (PI / 180) * 65 && _vBallMonster[i]->getTargetAngle() < (PI / 180) * 115)
+					{
+						_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_UP);
+					}
+					//왼쪽각도
+					else if (_vBallMonster[i]->getTargetAngle() > (PI / 180) * 155 && _vBallMonster[i]->getTargetAngle() < (PI / 180) * 205)
+					{
+						_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_LEFT);
+					}
+					//아래각도
+					else if (_vBallMonster[i]->getTargetAngle() > (PI / 180) * 245 && _vBallMonster[i]->getTargetAngle() < (PI / 180) * 295)
+					{
+						_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_DOWN);
+					}
 				}
 				break;
 			}
 		}
 		//거리가 멀어지면 다시 기본움직임타입으로
-		else if (_vBallMonster[i]->getTargetDistance() > 480)
+		else if (_vBallMonster[i]->getTargetDistance() > 480 && _vBallMonster[i]->getIsAttack() == false)
 		{
 			_vBallMonster[i]->setMoveType(BASIC_MOVE_TYPE);
 		}
 
-		//거리가 가까워지면 공격하게끔
-		if (_vBallMonster[i]->getTargetDistance() < 200 && _vBallMonster[i]->getTime() + _vBallMonster[i]->getWorldTime() <= TIMEMANAGER->getWorldTime())
+		//거리가 가까워지면 공격하고 시간텀마다 공격하기 위함.
+		if (_vBallMonster[i]->getTargetDistance() < 300 && 1.5f + _vBallMonster[i]->getWorldTime() <= TIMEMANAGER->getWorldTime())
 		{
 			_vBallMonster[i]->setIsAttack(true);
 		}
+
+		//공격상태라면
 		if (_vBallMonster[i]->getIsAttack() == true)
 		{
-			if (_vBallMonster[i]->getAttackTime() - 0.5f + _vBallMonster[i]->getAttackWorldTime() >= TIMEMANAGER->getWorldTime())
+			// 0.5초전에 공격각도 잡기위함
+			if (0.5f + _vBallMonster[i]->getAttackWorldTime() >= TIMEMANAGER->getWorldTime())
 			{
 				_vBallMonster[i]->setAttackAngle(getAngle(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _x, _y));
-			}
-			if (_vBallMonster[i]->getAttackTime() + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
-			{
-				_vBallMonster[i]->setSpeed(_vBallMonster[i]->getSpeed() + 0.35f);
-				_vBallMonster[i]->setX(_vBallMonster[i]->getX() + cosf(_vBallMonster[i]->getAttackAngle()) * _vBallMonster[i]->getSpeed());
-				_vBallMonster[i]->setY(_vBallMonster[i]->getY() + -sinf(_vBallMonster[i]->getAttackAngle()) * _vBallMonster[i]->getSpeed());
-			}
-			else
-			{
+				//여기는 처음에 스피드 0이랑 프레임속도 빠르게 해서 공격을 준비함.
 				_vBallMonster[i]->getMotion()->setFPS(30);
 				_vBallMonster[i]->setSpeed(0);
 			}
-
-			if (_vBallMonster[i]->getAttackTime() + 2.0f + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
+			// 1초에서 1.5초 사이에 가속도주면서 공격각도로 공격
+			else if (1.0f + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime() && 1.5f + _vBallMonster[i]->getAttackWorldTime() > TIMEMANAGER->getWorldTime())
 			{
-				_vBallMonster[i]->getMotion()->setFPS(5);
-				_vBallMonster[i]->setWorldTime(TIMEMANAGER->getWorldTime());
-				_vBallMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
-				_vBallMonster[i]->setIsAttack(false);
+				_vBallMonster[i]->setSpeed(_vBallMonster[i]->getSpeed() + 0.3f);
+				_vBallMonster[i]->setX(_vBallMonster[i]->getX() + cosf(_vBallMonster[i]->getAttackAngle()) * _vBallMonster[i]->getSpeed());
+				_vBallMonster[i]->setY(_vBallMonster[i]->getY() + -sinf(_vBallMonster[i]->getAttackAngle()) * _vBallMonster[i]->getSpeed());
+			}
+
+			//1.5초에서 2초사이엔 스피드와 프레임 원래대로 돌려줌.
+			else if (1.5f + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime() && 2.0f + _vBallMonster[i]->getAttackWorldTime() > TIMEMANAGER->getWorldTime())
+			{
 				_vBallMonster[i]->setSpeed(1.0f);
-				_vBallMonster[i]->setState(BALLMONSTER_STATE_MOVE); //그리고 계속움직임.
+				_vBallMonster[i]->getMotion()->setFPS(5);
+			}
+
+			//2초가 지나면 공격끔.
+			else if (2.0f + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
+			{
 				_vBallMonster[i]->setMoveType(BASIC_MOVE_TYPE);
-				
-				//_vBallMonster[i]->setX(_vBallMonster[i]->getX() + cosf(_vBallMonster[i]->getMoveAngle()) * _vBallMonster[i]->getSpeed());
-				//_vBallMonster[i]->setY(_vBallMonster[i]->getY() + -sinf(_vBallMonster[i]->getMoveAngle()) * _vBallMonster[i]->getSpeed());
+				_vBallMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
+				_vBallMonster[i]->setWorldTime(TIMEMANAGER->getWorldTime());
+				_vBallMonster[i]->setIsAttack(false);
 			}
 		}
 
-		//부딪히면 일정시간뒤에 공격하게끔
+		//부딪혀도 다꺼줌.
 		if (IntersectRect(&temp, &_vBallMonster[i]->getRect(), &_playerRc))
 		{
 			_vBallMonster[i]->getMotion()->setFPS(5);
@@ -256,11 +260,8 @@ void enemyManager::enemyAttackPlayerCollision()
 			_vBallMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
 			_vBallMonster[i]->setIsAttack(false);
 			_vBallMonster[i]->setSpeed(1.0f);
-			_vBallMonster[i]->setX(_vBallMonster[i]->getX() + cosf(_vBallMonster[i]->getMoveAngle()) * _vBallMonster[i]->getSpeed());
-			_vBallMonster[i]->setY(_vBallMonster[i]->getY() + -sinf(_vBallMonster[i]->getMoveAngle()) * _vBallMonster[i]->getSpeed());
+			_vBallMonster[i]->setMoveType(BASIC_MOVE_TYPE);
 		}
-
-
 	}
 
 	//불몬스터
