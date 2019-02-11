@@ -1,7 +1,7 @@
 #pragma once
 
 #define tileX 60
-#define tileY 60
+#define tileY 60 
 #define TileMainSIZE 32
 
 #define TileSIZE 32
@@ -63,6 +63,15 @@ struct TileSetting
 // 클릭한 타일 담기
 struct tilebox
 {
+	//첫타일 변수
 	int x;
 	int y;
+	//마지막 변수
+	int lastX;
+	int lastY;
+
+	// 마지막 - 첫타일 뺀 변수
+	int q;
+	int w;
 };
+

@@ -27,7 +27,7 @@ HRESULT tileMap::init()
 	setUp();
 
 	_camera = new camera;
-	_camera->init(800, 800, 1920, 1920);
+	_camera->init(800, 800, 3200, 3200);
 
 	ptMouse2.x = 0;
 	ptMouse2.y = 0;
@@ -49,6 +49,10 @@ HRESULT tileMap::init()
 	{
 		tileBox[i] = RectMakeCenter(1400 + (i * 70), 650, 50, 50);
 	}
+
+	check = false;
+
+
 	return S_OK;
 }
 
@@ -68,9 +72,10 @@ void tileMap::update()
 	_camera->update(view.x, view.y);
 	viewMove();
 	mapSize();
+	tileDrag();
+
 
 	viewRc = RectMake(view.x - _camera->getCameraX(), view.y - _camera->getCameraY(), 20, 20);
-
 
 }
 
@@ -188,43 +193,58 @@ void tileMap::render()
 	if (num == 0)
 	{
 		sprintf_s(str, "저장");
-		TextOut(IMAGEMANAGER->findImage("background")->getMemDC(), 300, 650, str, strlen(str));
+		TextOut(getMemDC(), 1300, 650, str, strlen(str));
 	}
 	else if (num == 1)
 	{
 		sprintf_s(str, "로드");
-		TextOut(IMAGEMANAGER->findImage("background")->getMemDC(), 300, 650, str, strlen(str));
+		TextOut(getMemDC(), 1300, 650, str, strlen(str));
 	}
 	else if (num == 2)
 	{
 		sprintf_s(str, "지형");
-		TextOut(IMAGEMANAGER->findImage("background")->getMemDC(), 300, 650, str, strlen(str));
+		TextOut(getMemDC(), 1300, 650, str, strlen(str));
 	}
 	else if (num == 3)
 	{
 		sprintf_s(str, "오브젝트");
-		TextOut(IMAGEMANAGER->findImage("background")->getMemDC(), 300, 650, str, strlen(str));
+		TextOut(getMemDC(), 1300, 650, str, strlen(str));
 	}
 	else if (num == 4)
 	{
 		sprintf_s(str, "지우기");
-		TextOut(IMAGEMANAGER->findImage("background")->getMemDC(), 300, 650, str, strlen(str));
+		TextOut(getMemDC(), 1300, 650, str, strlen(str));
 	}
 
-	//sprintf_s(str, "렉트 x : %f   렉트 y : %f", view.x, view.y);
-	//TextOut(getMemDC(), 1300, 550, str, strlen(str));
-	//
-	//sprintf_s(str, "카메라 x : %f   카메라 y : %f", _camera->getCameraX(), _camera->getCameraY());
-	//TextOut(getMemDC(), 1300, 580, str, strlen(str));
+
+	sprintf_s(str, "첫타일  x : %d   첫타일 y : %d", _tileBox.x, _tileBox.y);
+	TextOut(getMemDC(), 1300, 520, str, strlen(str));
+
+	sprintf_s(str, "마지막타일 x : %d   마지막타일 y : %d", _tileBox.lastX, _tileBox.lastY);
+	TextOut(getMemDC(), 1300, 550, str, strlen(str));
+
+	sprintf_s(str, "뺀 타일 x : %d   뺀 타일 y : %d", abs(_tileBox.q), abs(_tileBox.w));
+	TextOut(getMemDC(), 1300, 580, str, strlen(str));
 
 	sprintf_s(str, "타일X개수 : %d", TILEX);
-	TextOut(IMAGEMANAGER->findImage("background")->getMemDC(), 100, 530, str, strlen(str));
+	TextOut(getMemDC(), 1100, 530, str, strlen(str));
 	sprintf_s(str, "타일Y개수 : %d", TILEY);
-	TextOut(IMAGEMANAGER->findImage("background")->getMemDC(), 100, 550, str, strlen(str));
+	TextOut(getMemDC(), 1100, 550, str, strlen(str));
 
-
-
+	//if (_tileBox.x != _tileBox.y && _tileBox.q != _tileBox.w)
+	//{
+	//	rc = RectMakeCenter(_tilesetting[_tileBox.x + basicTileX * _tileBox.y].tilerc.left, _tilesetting[_tileBox.x + basicTileX * _tileBox.y].tilerc.top, 100, 100);
+	//	HBRUSH brush = CreateSolidBrush(RGB(255, 0, 255));
+	//	FrameRect(getMemDC(), &rc, brush);
+	//}
+	if (_tileBox.x == _tileBox.y && _tileBox.q == _tileBox.w)
+	{
+		EllipseMakeCenter(getMemDC(), _tilesetting[_tileBox.x + basicTileX * _tileBox.y].tilerc.left, _tilesetting[_tileBox.x + basicTileX * _tileBox.y].tilerc.top, 6, 6);
+	}
 	Rectangle(IMAGEMANAGER->findImage("background")->getMemDC(), viewRc);
+
+
+
 
 	IMAGEMANAGER->render("background", getMemDC(), 0, 0, 0, 0, 800, WINSIZEY);
 }
@@ -234,8 +254,8 @@ void tileMap::setUp()
 {
 	Click = CTRL_TERRAINDRAW;
 
-	TILEX = 60;
-	TILEY = 60;
+	TILEX = 40;
+	TILEY = 40;
 	_tilePosX = 0;
 	_TilePosY = 0;
 
@@ -261,11 +281,11 @@ void tileMap::setUp()
 	{
 		for (int j = 0; j < basicTileX; ++j)
 		{
-			_tilesteeing[i * basicTileX + j].tilex = j;
-			_tilesteeing[i * basicTileX + j].tiley = i;
+			_tilesetting[i * basicTileX + j].tilex = j;
+			_tilesetting[i * basicTileX + j].tiley = i;
 
 
-			SetRect(&_tilesteeing[i * basicTileX + j].tilerc,
+			SetRect(&_tilesetting[i * basicTileX + j].tilerc,
 				(WINSIZEX - IMAGEMANAGER->findImage("타일맵4")->GetWidth()) + j * TileSIZE,
 				i * TileSIZE,
 				(WINSIZEX - IMAGEMANAGER->findImage("타일맵4")->GetWidth()) + j * TileSIZE + TileSIZE,
@@ -288,15 +308,6 @@ void tileMap::setUp()
 
 void tileMap::setMap()
 {
-	for (int i = 0; i < basicTileX * basicTileY; ++i)
-	{
-		if (PtInRect(&_tilesteeing[i].tilerc, _ptMouse))
-		{
-			_tileBox.x = _tilesteeing[i].tilex;
-			_tileBox.y = _tilesteeing[i].tiley;
-		}
-	}
-
 
 	for (int i = 0; i < TILEY; ++i)
 	{
@@ -304,9 +315,9 @@ void tileMap::setMap()
 		{
 			tagTile* pTile = _vvMap[i][j];
 
-			if (_ptMouse.x <= 800)
+			if (PtInRect(&_vvMap[i][j]->rc, ptMouse2) && _ptMouse.x <= 800)
 			{
-				if (PtInRect(&_vvMap[i][j]->rc, ptMouse2))
+				if (check == false)
 				{
 					if (Click == CTRL_TERRAINDRAW)
 					{
@@ -322,19 +333,49 @@ void tileMap::setMap()
 						pTile->a = tilenum;
 						pTile->obj = objSelect(_tileBox.x, _tileBox.y);
 					}
-					else  if (Click == CTRL_ERASER)
-					{
-						pTile->objFrameX = NULL;
-						pTile->objFrameY = NULL;
-						pTile->obj = OBJ_NONE;
-					}
-					InvalidateRect(_hWnd, NULL, false);
-					break;
 				}
+				//드래그 했을때
+				else if (check == true)
+				{
+					if (Click == CTRL_TERRAINDRAW)
+					{
+						for (int k = 0; k < abs(_tileBox.q) + 1; ++k)
+						{
+							for (int l = 0; l < abs(_tileBox.w) + 1; ++l)
+							{
+								_vvMap[i + l][j + k]->FrameX = _tileBox.x + k;
+								_vvMap[i + l][j + k]->FrameY = _tileBox.y + l;
+								_vvMap[i + l][j + k]->a = tilenum;
+								_vvMap[i + l][j + k]->terrain = terrainSelect(_tileBox.x + k, _tileBox.y + l);
+							}
+						}
+					}
+					else if (Click == CTRL_OBJDRAW)
+					{
+						for (int k = 0; k < abs(_tileBox.q) + 1; ++k)
+						{
+							for (int l = 0; l < abs(_tileBox.w) + 1; ++l)
+							{
+								_vvMap[i + l][j + k]->objFrameX = _tileBox.x + k;
+								_vvMap[i + l][j + k]->objFrameY = _tileBox.y + l;
+								_vvMap[i + l][j + k]->a = tilenum;
+								_vvMap[i + l][j + k]->obj = objSelect(_tileBox.x + k, _tileBox.y + l);
+							}
+						}
+					}
+				}
+				if (Click == CTRL_ERASER)
+				{
+					pTile->objFrameX = NULL;
+					pTile->objFrameY = NULL;
+					pTile->obj = OBJ_NONE;
+				}
+				InvalidateRect(_hWnd, NULL, false);
+				break;
 			}
-
 		}
 	}
+
 }
 
 void tileMap::ClickBox()
@@ -384,8 +425,10 @@ void tileMap::ClickBox()
 		{
 			tilenum = 3;
 		}
+
 		setMap();
 	}
+
 }
 
 void tileMap::save()
@@ -501,28 +544,71 @@ void tileMap::viewMove()
 	{
 		if (view.y > 0)
 		{
-			view.y -= 10;
+			view.y -= 20;
 		}
 	}
 
 	if (KEYMANAGER->isStayKeyDown(VK_DOWN))
 	{
 
-		view.y += 10;
+		view.y += 20;
 
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
 	{
 
-		view.x += 10;
+		view.x += 20;
 
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_LEFT))
 	{
 		if (view.x > 0)
 		{
-			view.x -= 10;
+			view.x -= 20;
 		}
+	}
+}
+
+void tileMap::tileDrag()
+{
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	{
+		for (int i = 0; i < basicTileX * basicTileY; ++i)
+		{
+			if (PtInRect(&_tilesetting[i].tilerc, _ptMouse))
+			{
+				_tileBox.x = _tilesetting[i].tilex;
+				_tileBox.y = _tilesetting[i].tiley;
+			}
+		}
+	}
+
+	if (KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
+	{
+		for (int i = 0; i < basicTileX * basicTileY; ++i)
+		{
+			if (PtInRect(&_tilesetting[i].tilerc, _ptMouse))
+			{
+				_tileBox.lastX = _tilesetting[i].tilex;
+				_tileBox.lastY = _tilesetting[i].tiley;
+			}
+		}
+	}
+	_tileBox.q = abs(_tileBox.lastX) - abs(_tileBox.x);
+	_tileBox.w = abs(_tileBox.lastY) - abs(_tileBox.y);
+
+	abs(_tileBox.q);
+	abs(_tileBox.w);
+
+
+	if (_tileBox.x == _tileBox.lastX)
+	{
+		check = false;
+	}
+
+	else if (_tileBox.x != _tileBox.lastX)
+	{
+		check = true;
 	}
 }
 
@@ -536,16 +622,24 @@ TERRAIN tileMap::terrainSelect(int frameX, int frameY)
 
 OBJECT tileMap::objSelect(int frameX, int frameY)
 {
-	if (frameX == 1 && frameY == 4)
+	for (int i = 0; i < basicTileY; ++i)
+	{
+		for (int j = 0; j < basicTileX; ++j)
+		{
+			if (frameX == i && frameY == j)
 
-		return OBJ_WALL;
+				return OBJ_WALL;
+		}
+	}
+
+
 
 }
 
 void tileMap::mapSize()
 {
 	//사이즈 줄이기  
-	if (KEYMANAGER->isOnceKeyDown('1') && TILEX > 1)
+	if (KEYMANAGER->isStayKeyDown('1') && TILEX > 1)
 	{
 		for (int i = 0; i < TILEY; i++)
 		{
@@ -556,7 +650,7 @@ void tileMap::mapSize()
 		TILEX--;
 	}
 	//사이즈 늘이기
-	if (KEYMANAGER->isOnceKeyDown('2') && TILEX < 60)
+	if (KEYMANAGER->isStayKeyDown('2') && TILEX < 100)
 	{
 		for (int i = 0; i < TILEY; ++i)
 		{
@@ -576,7 +670,7 @@ void tileMap::mapSize()
 	}
 
 	// 사이즈 줄이기
-	if (KEYMANAGER->isOnceKeyDown('3') && TILEY > 1)
+	if (KEYMANAGER->isStayKeyDown('3') && TILEY > 1)
 	{
 		for (int i = 0; i < TILEX; i++)
 		{
@@ -587,7 +681,7 @@ void tileMap::mapSize()
 		TILEY--;
 	}
 	// 사이즈 늘리기
-	if (KEYMANAGER->isOnceKeyDown('4') && TILEY < 60)
+	if (KEYMANAGER->isStayKeyDown('4') && TILEY < 100)
 	{
 		vector<tagTile*> vTile;
 		for (int i = 0; i < TILEX; i++)

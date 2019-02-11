@@ -30,7 +30,7 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("mapTool", _mapTool);
 	SCENEMANAGER->addScene("dungeon", _dungeon);
 
-	SCENEMANAGER->changeScene("dungeon");
+	SCENEMANAGER->changeScene("mapTool");
 
 
 	return S_OK;
@@ -48,6 +48,11 @@ void playGround::update()
 {
 	gameNode::update();
 	if (KEYMANAGER->isOnceKeyDown(VK_ESCAPE)) PostQuitMessage(0);
+
+	if (KEYMANAGER->isOnceKeyDown(VK_F1))
+	{
+		SCENEMANAGER->changeScene("dungeon");
+	}
 
 	SCENEMANAGER->update();
 	KEYANIMANAGER->update();

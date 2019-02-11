@@ -10,11 +10,10 @@ private:
 
 	vector<vector<tagTile*>>	_vvMap;//¸Ê
 
-	TileSetting _tilesteeing[basicTileX * basicTileY];
+	TileSetting _tilesetting[basicTileX * basicTileY];
 	tilebox _tileBox;
 	//	tagTile _tiles[tileX * tileY];
 	//	DWORD _attribute[tileX * tileY];
-	
 	CTRL Click;
 
 	POINT ptMouse2;
@@ -23,6 +22,7 @@ private:
 	RECT tileBox[5];
 
 	RECT viewRc;
+	RECT rc;
 
 	camera* _camera;
 
@@ -36,7 +36,9 @@ private:
 	int num;
 	int tilenum;
 
+	bool check;
 
+	int b, c;
 	POINTFLOAT view;
 
 public:
@@ -56,6 +58,7 @@ public:
 	void save();
 	void load();
 	void viewMove();
+	void tileDrag();
 	TERRAIN terrainSelect(int frameX, int frameY);
 
 	OBJECT objSelect(int frameX, int frameY);
