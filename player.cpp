@@ -13,7 +13,6 @@ player::~player()
 
 HRESULT player::init()
 {
-
 	IMAGEMANAGER->addFrameImage("player", "image/player_test.bmp", 0, 0, 1008, 2821, 12, 31, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("player_obj", "image/player_obj.bmp", 0, 0, 1540, 800, 10, 10, true, RGB(255, 0, 255));
 
@@ -46,6 +45,7 @@ HRESULT player::init()
 
 void player::release()
 {
+
 }
 
 void player::update()
@@ -89,8 +89,8 @@ void player::keyFrameInit()
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "idleDown", "player", idleDown, 1, PLAYERFPS, true);
 	int idleAction[] = { 4, 5, 6, 7, 6, 7, 5, 4 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "idleAction", "player", idleAction, 8, PLAYERFPS, true);
-	int moveLeft[] = { 24, 25, 26, 27, 28, 29 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "moveLeft", "player", moveLeft, 6, PLAYERFPS, true);
+	int moveLeft[] = { 24, 25, 26,  };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "moveLeft", "player", moveLeft, 3, PLAYERFPS, true);
 	int moveRight[] = { 12, 13, 14, 15, 16, 17 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "moveRight", "player", moveRight, 6, PLAYERFPS, true);
 	int moveUp[] = { 36, 37, 38, 40, 41, 40, 37};
@@ -522,8 +522,6 @@ void player::playerState()
 // 키 연속으로 눌렀을때 예외처리 모음
 void player::DoubleKeyIntVoid()
 {
-
-
 	//예외처리 key - LEFT->UP->LEFT 뛰는거 방지
 	if (_doubleKey[LEFT] == 1 && (_player.state == PLAYER_WALK && !(_player.direction == LEFT)))			
 	{
@@ -579,8 +577,6 @@ void player::playerAniName(string targetName, string aniName)
 	_player.ani->start();
 }
 
-
-
 void player::attack(void * obj)
 {
 	player* playerAttack = (player*)obj;
@@ -613,25 +609,23 @@ void player::jump(void * obj)
 {
 	player* playerAttack = (player*)obj;
 
-
 	playerAttack->setPlayerState(PLAYER_IDLE);
-
 	if (playerAttack->getPlayerDirection() == LEFT)
 	{
 		playerAttack->setPlayerDirection(LEFT);
 		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleLeft"));
 	}
-	if (playerAttack->getPlayerDirection() == RIGHT)
+	else if (playerAttack->getPlayerDirection() == RIGHT)
 	{
 		playerAttack->setPlayerDirection(RIGHT);
 		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleRight"));
 	}
-	if (playerAttack->getPlayerDirection() == UP)
+	else if (playerAttack->getPlayerDirection() == UP)
 	{
 		playerAttack->setPlayerDirection(UP);
 		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleUp"));
 	}
-	if (playerAttack->getPlayerDirection() == DOWN)
+	else if (playerAttack->getPlayerDirection() == DOWN)
 	{
 		playerAttack->setPlayerDirection(DOWN);
 		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleDown"));

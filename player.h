@@ -93,13 +93,11 @@ public:
 
 	static void objThrow(void* obj);
 	
-	
-
 	//===================== 접근자 설정자 =======================
 
 	PLAYERSTATE getPlayerState() { return _player.state; }
 	PLAYERDIRECTION getPlayerDirection() { return _player.direction; }
-	animation* getPlayerAni() { return _player.ani;  }
+	animation* getPlayerAni() { return _player.ani; }
 
 	void setPlayerState(PLAYERSTATE state) { _player.state = state; }
 	void setPlayerDirection(PLAYERDIRECTION direction) { _player.direction = direction; }
