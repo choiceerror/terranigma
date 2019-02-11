@@ -29,12 +29,14 @@ void boss::release()
 {
 }
 
-void boss::update(float cameraX, float cameraY)
+void boss::update()
 {
-	enemy::update(cameraX, cameraY);
+	enemy::update();
 }
 
-void boss::render(float viewX, float viewY)
+void boss::render(float viewX, float viewY, float cameraX, float cameraY)
 {
+	viewX = _enemy.x - cameraX;
+	viewY = _enemy.y - cameraY;
 	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion);
 }

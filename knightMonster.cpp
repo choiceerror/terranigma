@@ -65,9 +65,9 @@ void knightMonster::release()
 {
 }
 
-void knightMonster::update(float cameraX, float cameraY)
+void knightMonster::update()
 {
-	enemy::update(cameraX, cameraY);
+	enemy::update();
 	move();
 	attack();
 
@@ -76,10 +76,12 @@ void knightMonster::update(float cameraX, float cameraY)
 	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 4, _enemy.image->getFrameHeight() * 4); 
 }
 
-void knightMonster::render(float viewX, float viewY)
+void knightMonster::render(float viewX, float viewY, float cameraX, float cameraY)
 {
-	//_enemy.image->alphaAniRender(getMemDC(), viewX, viewY, _enemy.motion, 100);
+	viewX = _enemy.x - cameraX;
+	viewY = _enemy.y - cameraY;
 
+	//_enemy.image->alphaAniRender(getMemDC(), viewX, viewY, _enemy.motion, 100);
 	//Rectangle(getMemDC(), _enemy.rc);
 	//Rectangle(getMemDC(), _enemy.rangeRc);
 	Rectangle(getMemDC(), _enemy.attackRc);

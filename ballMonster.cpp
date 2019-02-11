@@ -54,9 +54,9 @@ void ballMonster::release()
 {
 }
 
-void ballMonster::update(float cameraX, float cameraY)
+void ballMonster::update()
 {
-	enemy::update(cameraX, cameraY);
+	enemy::update();
 	move();
 	//한번만 공격하기위함.
 	if (_enemy.isAttack == true && _enemy.isOneTime == false)
@@ -74,10 +74,12 @@ void ballMonster::update(float cameraX, float cameraY)
 	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 20, _enemy.image->getFrameHeight() * 20);
 }
 
-void ballMonster::render(float viewX, float viewY)
+void ballMonster::render(float viewX, float viewY, float cameraX, float cameraY)
 {
 	//Rectangle(getMemDC(), _enemy.rangeRc);
 	//Rectangle(getMemDC(), _enemy.rc);
+	viewX = _enemy.x - cameraX;
+	viewY = _enemy.y - cameraY;
 	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f , 2.f);
 
 }

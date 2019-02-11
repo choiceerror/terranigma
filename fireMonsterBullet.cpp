@@ -26,15 +26,18 @@ void fireMonsterBullet::release()
 {
 }
 
-void fireMonsterBullet::update(float cameraX, float cameraY)
+void fireMonsterBullet::update()
 {
-	move(cameraX, cameraY);
+	move();
 }
 
-void fireMonsterBullet::render(float viewX, float viewY)
+void fireMonsterBullet::render(float viewX, float viewY, float cameraX, float cameraY)
 {
 	for (_viFireBullet = _vFireBullet.begin(); _viFireBullet != _vFireBullet.end(); _viFireBullet++)
 	{
+		//Ä«¸Ş¶ó ÁÂÇ¥¿¡µû¶ó °¡»óÁÂÇ¥ °è»ê
+		viewX = _viFireBullet->x - cameraX;
+		viewY = _viFireBullet->y - cameraY;
 		_viFireBullet->image->expandAniRenderCenter(getMemDC(), viewX, viewY, _viFireBullet->fireBulletAni, 3.f, 3.f);
 		//Rectangle(getMemDC(), _viFireBullet->rc);
 	}
@@ -58,17 +61,13 @@ void fireMonsterBullet::fire(float x, float y, float angle, float speed)
 	_vFireBullet.push_back(fireBullet);
 }
 
-void fireMonsterBullet::move(float cameraX, float cameraY)
+void fireMonsterBullet::move()
 {
 	for (_viFireBullet = _vFireBullet.begin(); _viFireBullet != _vFireBullet.end();)
 	{
 		//ÃÑ¾Ë ÀÌµ¿
 		_viFireBullet->x += cosf(_viFireBullet->angle) * _viFireBullet->speed;
 		_viFireBullet->y += -sinf(_viFireBullet->angle) * _viFireBullet->speed;
-
-		//Ä«¸Ş¶ó ÁÂÇ¥¿¡µû¶ó °¡»óÁÂÇ¥ °è»ê
-		_viFireBullet->viewX = _viFireBullet->x - cameraX;
-		_viFireBullet->viewY = _viFireBullet->y - cameraY;
 
 		_viFireBullet->rc = RectMakeCenter(_viFireBullet->x, _viFireBullet->y, _viFireBullet->image->getFrameWidth(), _viFireBullet->image->getFrameHeight());
 		_viFireBullet->fireBulletAni->start();

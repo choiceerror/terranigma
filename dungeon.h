@@ -3,6 +3,7 @@
 #include "enemyManager.h"
 #include "player.h"
 #include "MapNode.h"
+#include "camera.h"
 
 class dungeon : public gameNode
 {
@@ -14,6 +15,7 @@ private:
 	unsigned int TILEX;
 	unsigned int TILEY;
 
+	camera* _camera;
 	DWORD* _attribute;
 
 public:

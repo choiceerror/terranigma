@@ -38,6 +38,9 @@ private:
 	DUNGEON_FLOOR _dungeonFloor; //던전 층수
 	int _fireBulletSpeed;
 
+	RECT _attackRect; //임의의 공격렉트
+	float _x, _y;
+
 public:
 	enemyManager();
 	~enemyManager();
@@ -45,12 +48,13 @@ public:
 	HRESULT init();
 	void release();
 	void update();
-	void render();
+	void render(float cameraX, float cameraY);
 
 	void updateCollection(); //업데이트 모음 함수
-	void enemyDraw(); //에너미들 랜더링 모음함수
+	void enemyDraw(float cameraX, float cameraY); //에너미들 랜더링 모음함수
 	void setEnemy(); //에너미 셋팅
-	void enemyAttackPlayerCollision(); //에너미들의 공격이 플레이어랑 충돌할 함수
+	void enemyAI(); //에너미들의 AI
+	void playerAttackEnemyCollision(); //플레이어 공격에 에너미들이 맞을함수
 	void fireMonsterBulletFire(int i); //파이어몬스터 총알 발사할 함수
 	void enemyDead(); //에너미들이 죽을 함수
 	void enemyRespon(); //에너미들이 죽은다음 리스폰할 함수

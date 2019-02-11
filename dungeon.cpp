@@ -24,6 +24,7 @@ HRESULT dungeon::init()
 
 	_enemyManager = new enemyManager;
 	_player = new player;
+	_camera = new camera;
 
 	_enemyManager->setPlayerMemoryAddressLink(_player);
 	_player->setEnemyManagerAddressLink(_enemyManager);
@@ -31,6 +32,7 @@ HRESULT dungeon::init()
 	_player->init();
 	_enemyManager->init();
 	_enemyManager->setEnemy();
+	_camera->init(WINSIZEX, WINSIZEY, 3200, 3200);
 
 	
 
@@ -47,13 +49,14 @@ void dungeon::update()
 {
 	_enemyManager->update();
 	_player->update();
+	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 }
 
 void dungeon::render()
 {
 	tileDraw();
 
-	_enemyManager->render();
+	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render();
 }
 

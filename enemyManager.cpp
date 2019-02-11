@@ -18,6 +18,7 @@ HRESULT enemyManager::init()
 	_fireMonsterBullet->init("fireMonster", WINSIZEX / 2, 10);
 	_fireBulletSpeed = 5;
 
+
 	return S_OK;
 }
 
@@ -40,18 +41,28 @@ void enemyManager::release()
 
 void enemyManager::update()
 {
+
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	{
+		_x = _ptMouse.x;
+		_y = _ptMouse.y;
+		_attackRect = RectMakeCenter(_x, _y, 100, 100);
+	}
+	else _attackRect = RectMakeCenter(_x, _y, 0, 0);
+
 	//업데이트 모음 함수
 	updateCollection();
 
-	//에너미 공격 플레이어 충돌함수
-	enemyAttackPlayerCollision();
+	//에너미 AI 함수
+	enemyAI();
 
 }
 
-void enemyManager::render()
+void enemyManager::render(float cameraX, float cameraY)
 {
+	Rectangle(getMemDC(), _attackRect);
 	//렌더링 모음 함수
-	enemyDraw();
+	enemyDraw(cameraX, cameraY);
 }
 
 //업데이트 모음
@@ -60,44 +71,44 @@ void enemyManager::updateCollection()
 	//불몬스터 업데이트
 	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
 	{
-		(*_viBallMonster)->update(0, 0);
+		(*_viBallMonster)->update();
 	}
 	//파이어몬스터 업데이트
 	for (_viFireMonster = _vFireMonster.begin(); _viFireMonster != _vFireMonster.end(); _viFireMonster++)
 	{
-		(*_viFireMonster)->update(0, 0);
+		(*_viFireMonster)->update();
 	}
 	//나이트몬스터 업데이트
 	for (_viKnightMonster = _vKnightMonster.begin(); _viKnightMonster != _vKnightMonster.end(); _viKnightMonster++)
 	{
-		(*_viKnightMonster)->update(0, 0);
+		(*_viKnightMonster)->update();
 	}
 	//파이어몬스터 총알 업데이트
-	_fireMonsterBullet->update(0, 0);
+	_fireMonsterBullet->update();
 }
 
 //렌더링 모음
-void enemyManager::enemyDraw()
+void enemyManager::enemyDraw(float cameraX, float cameraY)
 {
 	//볼몬스터 렌더링
 	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
 	{
-		(*_viBallMonster)->render((*_viBallMonster)->getViewX(), (*_viBallMonster)->getViewY());
+		(*_viBallMonster)->render((*_viBallMonster)->getViewX(), (*_viBallMonster)->getViewY(), cameraX, cameraY);
 	}
 	//파이어몬스터 렌더링
 	for (_viFireMonster = _vFireMonster.begin(); _viFireMonster != _vFireMonster.end(); _viFireMonster++)
 	{
-		(*_viFireMonster)->render((*_viFireMonster)->getViewX(), (*_viFireMonster)->getViewY());
+		(*_viFireMonster)->render((*_viFireMonster)->getViewX(), (*_viFireMonster)->getViewY(), cameraX, cameraY);
 	}
 	//나이트몬스터 렌더링
 	for (_viKnightMonster = _vKnightMonster.begin(); _viKnightMonster != _vKnightMonster.end(); _viKnightMonster++)
 	{
-		(*_viKnightMonster)->render((*_viKnightMonster)->getViewX(), (*_viKnightMonster)->getViewY());
+		(*_viKnightMonster)->render((*_viKnightMonster)->getViewX(), (*_viKnightMonster)->getViewY(), cameraX, cameraY);
 	}
 	//불몬스터 총알 렌더링
 	for (int i = 0; i < _fireMonsterBullet->getVFireBullet().size(); i++)
 	{
-		_fireMonsterBullet->render(_fireMonsterBullet->getVFireBullet()[i].viewX, _fireMonsterBullet->getVFireBullet()[i].viewY);
+		_fireMonsterBullet->render(_fireMonsterBullet->getVFireBullet()[i].viewX, _fireMonsterBullet->getVFireBullet()[i].viewY, cameraX, cameraY);
 	}
 }
 
@@ -130,10 +141,10 @@ void enemyManager::setEnemy()
 	_vKnightMonster.push_back(km);
 }
 
-//에너미 공격들이 플레이어 충돌할 함수
-void enemyManager::enemyAttackPlayerCollision()
+//에너미들의 AI
+void enemyManager::enemyAI()
 {
-	//플레이어 렉트 임시용으로 만들어 충돌 실험용 공몬스터
+	//공몬스터
 	for (int i = 0; i < _vBallMonster.size(); i++)
 	{
 		//몬스터와 플레이어간의 거리를 구해줌.
@@ -324,6 +335,7 @@ void enemyManager::enemyAttackPlayerCollision()
 				if (_vKnightMonster[i]->getTargetDistance() < 150)
 				{
 					_vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_ATTACK);
+
 				}
 				else _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_MOVE); //거리가 좀멀어지면 움직여라.
 
@@ -335,6 +347,16 @@ void enemyManager::enemyAttackPlayerCollision()
 		{
 			_vKnightMonster[i]->setMoveType(BASIC_MOVE_TYPE);
 		}
+	}
+}
+
+//플레이어 공격에 에너미들이 맞을 함수
+void enemyManager::playerAttackEnemyCollision()
+{
+	//기사 몬스터
+	for (int i = 0; i < _vKnightMonster.size(); i++)
+	{
+		
 	}
 }
 

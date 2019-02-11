@@ -39,19 +39,19 @@ void enemy::release()
 {
 }
 
-void enemy::update(float cameraX, float cameraY)
+void enemy::update()
 {
-	enemyMove(cameraX, cameraY);
+	enemyMove();
 }
 
-void enemy::render(float viewX, float viewY)
+void enemy::render(float viewX, float viewY, float cameraX, float cameraY)
 {
 	
 }
 
-void enemy::enemyMove(float cameraX, float cameraY)
+void enemy::enemyMove()
 {
-	_enemy.viewX = _enemy.x - cameraX;
-	_enemy.viewY = _enemy.y - cameraY;
+	_enemy.viewX = _enemy.x;
+	_enemy.viewY = _enemy.y;
 	_enemy.rc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 2, _enemy.image->getFrameHeight() * 2);
 }
