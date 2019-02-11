@@ -1,29 +1,22 @@
 #pragma once
 #include "gameNode.h"
-#include <vector>
 
 struct tagItem
 {
 	const char* imageName;
 	float x, y;
+	float viewX, viewY;
 	int frameX, frameY;
 	int itemType;
 };
 
-enum ITEMTYPE
-{
-	NONE,
-	ARMOR,
-	WEAPON,
-	GOLD,
-	POTION
-};
+
 
 
 class item : public gameNode
 {
-	vector<tagItem*>		_vItem;
-	vector<tagItem*>::iterator	_viItem;
+protected:
+	tagItem* _item;
 
 
 
@@ -31,11 +24,9 @@ public:
 	item();
 	~item();
 
-	HRESULT init();
-	void release();
-	void update();
-	void render();
-
-	void dropItem(const char* imageName, float x, float y,int frameX,int frameY);
+	virtual HRESULT init(const char* imageName, float x, float y, int frameX, int frameY);
+	virtual void release();
+	virtual void update();
+	virtual void render();
 };
 
