@@ -154,6 +154,8 @@
     <ClInclude Include="boss.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="DashAttack.h" />
+    <ClInclude Include="DashJumpAttack.h" />
     <ClInclude Include="dungeon.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="effectManager.h" />
@@ -168,6 +170,7 @@
     <ClInclude Include="iniDataManager.h" />
     <ClInclude Include="item.h" />
     <ClInclude Include="jump.h" />
+    <ClInclude Include="JumpAttack.h" />
     <ClInclude Include="keyAniManager.h" />
     <ClInclude Include="keyManager.h" />
     <ClInclude Include="knightMonster.h" />
@@ -178,6 +181,7 @@
     <ClInclude Include="mode7.h" />
     <ClInclude Include="npc.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="PlayerWorldMap.h" />
     <ClInclude Include="playGround.h" />
     <ClInclude Include="progressBar.h" />
     <ClInclude Include="randomFunction.h" />
@@ -205,6 +209,8 @@
     <ClCompile Include="boss.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="DashAttack.cpp" />
+    <ClCompile Include="DashJumpAttack.cpp" />
     <ClCompile Include="dungeon.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="effectManager.cpp" />
@@ -219,6 +225,7 @@
     <ClCompile Include="iniDataManager.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="jump.cpp" />
+    <ClCompile Include="JumpAttack.cpp" />
     <ClCompile Include="keyAniManager.cpp" />
     <ClCompile Include="keyManager.cpp" />
     <ClCompile Include="knightMonster.cpp" />
@@ -229,6 +236,7 @@
     <ClCompile Include="npc.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerState.cpp" />
+    <ClCompile Include="PlayerWorldMap.cpp" />
     <ClCompile Include="playGround.cpp" />
     <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="sceneManager.cpp" />
