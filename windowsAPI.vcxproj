@@ -147,8 +147,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Accessory.h" />
     <ClInclude Include="action.h" />
     <ClInclude Include="animation.h" />
+    <ClInclude Include="Armor.h" />
     <ClInclude Include="ballMonster.h" />
     <ClInclude Include="blackFadeOut.h" />
     <ClInclude Include="boss.h" />
@@ -164,11 +166,14 @@
     <ClInclude Include="fireMonster.h" />
     <ClInclude Include="fireMonsterBullet.h" />
     <ClInclude Include="gameNode.h" />
+    <ClInclude Include="Gold.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="imageManager.h" />
     <ClInclude Include="inGameScene.h" />
     <ClInclude Include="iniDataManager.h" />
+    <ClInclude Include="Inventory.h" />
     <ClInclude Include="item.h" />
+    <ClInclude Include="ItemManager.h" />
     <ClInclude Include="jump.h" />
     <ClInclude Include="JumpAttack.h" />
     <ClInclude Include="keyAniManager.h" />
@@ -183,6 +188,7 @@
     <ClInclude Include="player.h" />
     <ClInclude Include="PlayerWorldMap.h" />
     <ClInclude Include="playGround.h" />
+    <ClInclude Include="Potion.h" />
     <ClInclude Include="progressBar.h" />
     <ClInclude Include="randomFunction.h" />
     <ClInclude Include="Resource.h" />
@@ -199,11 +205,14 @@
     <ClInclude Include="txtData.h" />
     <ClInclude Include="ui.h" />
     <ClInclude Include="utils.h" />
+    <ClInclude Include="Weapon.h" />
     <ClInclude Include="worldMap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Accessory.cpp" />
     <ClCompile Include="action.cpp" />
     <ClCompile Include="animation.cpp" />
+    <ClCompile Include="Armor.cpp" />
     <ClCompile Include="ballMonster.cpp" />
     <ClCompile Include="blackFadeOut.cpp" />
     <ClCompile Include="boss.cpp" />
@@ -219,11 +228,14 @@
     <ClCompile Include="fireMonster.cpp" />
     <ClCompile Include="fireMonsterBullet.cpp" />
     <ClCompile Include="gameNode.cpp" />
+    <ClCompile Include="Gold.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="imageManager.cpp" />
     <ClCompile Include="inGameScene.cpp" />
     <ClCompile Include="iniDataManager.cpp" />
+    <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="item.cpp" />
+    <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="jump.cpp" />
     <ClCompile Include="JumpAttack.cpp" />
     <ClCompile Include="keyAniManager.cpp" />
@@ -238,6 +250,7 @@
     <ClCompile Include="playerState.cpp" />
     <ClCompile Include="PlayerWorldMap.cpp" />
     <ClCompile Include="playGround.cpp" />
+    <ClCompile Include="Potion.cpp" />
     <ClCompile Include="progressBar.cpp" />
     <ClCompile Include="sceneManager.cpp" />
     <ClCompile Include="soundManager.cpp" />
@@ -254,6 +267,7 @@
     <ClCompile Include="txtData.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="utils.cpp" />
+    <ClCompile Include="Weapon.cpp" />
     <ClCompile Include="windowsAPI.cpp" />
     <ClCompile Include="worldMap.cpp" />
   </ItemGroup>

@@ -100,6 +100,21 @@
     <Filter Include="PlayGround\player\state">
       <UniqueIdentifier>{6ff57a3f-5ebf-49c8-af55-4a4753678398}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayGround\item\Armor">
+      <UniqueIdentifier>{763407c2-e5e2-4b03-97bc-78e72108aed7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\item\Potion">
+      <UniqueIdentifier>{183fcc10-aeeb-4129-96be-87bc4dc95aef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\item\Weapon">
+      <UniqueIdentifier>{3e10b06a-9488-4b31-82ea-0871db53bf98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\item\Accessory">
+      <UniqueIdentifier>{acc46a43-31a0-4400-b10c-aa961a49989e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\item\Gold">
+      <UniqueIdentifier>{6f16ec98-48bd-479d-876a-ea8b87d71771}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -261,6 +276,27 @@
     <ClInclude Include="JumpAttack.h">
       <Filter>PlayGround\player\state</Filter>
     </ClInclude>
+    <ClInclude Include="Armor.h">
+      <Filter>PlayGround\item\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="Inventory.h">
+      <Filter>PlayGround\item</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemManager.h">
+      <Filter>PlayGround\item</Filter>
+    </ClInclude>
+    <ClInclude Include="Potion.h">
+      <Filter>PlayGround\item\Potion</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>PlayGround\item\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Accessory.h">
+      <Filter>PlayGround\item\Accessory</Filter>
+    </ClInclude>
+    <ClInclude Include="Gold.h">
+      <Filter>PlayGround\item\Gold</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -409,6 +445,27 @@
     </ClCompile>
     <ClCompile Include="playerState.cpp">
       <Filter>PlayGround\player\state</Filter>
+    </ClCompile>
+    <ClCompile Include="Armor.cpp">
+      <Filter>PlayGround\item\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="Inventory.cpp">
+      <Filter>PlayGround\item</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemManager.cpp">
+      <Filter>PlayGround\item</Filter>
+    </ClCompile>
+    <ClCompile Include="Potion.cpp">
+      <Filter>PlayGround\item\Potion</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>PlayGround\item\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Accessory.cpp">
+      <Filter>PlayGround\item\Accessory</Filter>
+    </ClCompile>
+    <ClCompile Include="Gold.cpp">
+      <Filter>PlayGround\item\Gold</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
