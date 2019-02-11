@@ -45,6 +45,9 @@ HRESULT player::init()
 	_jump->init();
 	_oldJumpTime = -100;
 
+	_dashAttack = new DashAttack;
+	_dashAttack->init();
+
 	return S_OK;
 }
 
@@ -62,7 +65,7 @@ void player::update()
 	}
 	else _isRun = false;
 
-	if (_player.state == PLAYER_DASH_ATTACK || _player.state == PLAYER_ATTACK)
+	if (_player.state == PLAYER_DASH_ATTACK || _player.state == PLAYER_ATTACK || _player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK)
 	{
 		_isAttack = true;
 	}
@@ -77,6 +80,7 @@ void player::update()
 	keyInput();
 	playerState();
 	_jump->update();
+	_dashAttack->update(&_player.x, &_player.y);
 
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 50, 60);
 }
@@ -94,9 +98,13 @@ void player::render(float cameraX, float cameraY)
 		TextOut(getMemDC(), 100 + i * 30, 100, str, strlen(str));
 	}
 
-	sprintf_s(str, "%d", _player.direction);
+	sprintf_s(str, "%d", _player.state);
 	//SetTextColor(getMemDC(), RGB(0, 0, 0));
 	TextOut(getMemDC(), 100, 120, str, strlen(str));
+
+	sprintf_s(str, "%d", _player.direction);
+	TextOut(getMemDC(), 120, 120, str, strlen(str));
+
 }
 // 캐릭터 프레임 초기값
 void player::keyFrameInit()
@@ -156,21 +164,21 @@ void player::keyFrameInit()
 	int combinationDown[] = { 216, 217, 218, 219, 220, 221, 222 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "combinationDown", "player", combinationDown, 7, PLAYERATTACKFPS, false, callBackAttack, this);
 	int jumpAttackLeft[] = { 240, 241, 242, 243, 244, 245,246, 247 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackLeft", "player", jumpAttackLeft, 8, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackLeft", "player", jumpAttackLeft, 8, PLAYERJUMP, false, callBackJump, this);
 	int jumpAttackRight[] = { 228, 229, 230, 231, 232, 233, 234, 235 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackRight", "player", jumpAttackRight, 8, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackRight", "player", jumpAttackRight, 8, PLAYERJUMP, false, callBackJump , this);
 	int jumpAttackUp[] = { 252, 253, 254, 255, 256, 257, 258, 259 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackUp", "player", jumpAttackUp, 8, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackUp", "player", jumpAttackUp, 8, PLAYERJUMP, false, callBackJump, this);
 	int jumpAttackDown[] = { 264, 265, 266, 267, 268, 269, 270, 271 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackDown", "player", jumpAttackDown, 8, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackDown", "player", jumpAttackDown, 8, PLAYERJUMP, false, callBackJump, this);
 	int dashJumpAttackLeft[] = { 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackLeft", "player", dashJumpAttackLeft, 12, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackLeft", "player", dashJumpAttackLeft, 12, PLAYERJUMP, false, callBackJump, this);
 	int dashJumpAttackRight[] = { 276,277,278,279,280,281,282,283,284,285,286,287 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackRight", "player", dashJumpAttackRight, 12, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackRight", "player", dashJumpAttackRight, 12, PLAYERJUMP, false, callBackJump , this);
 	int dashJumpAttackUp[] = { 300, 301, 302, 303, 304, 305, 306, 307 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackUp", "player", dashJumpAttackUp, 8, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackUp", "player", dashJumpAttackUp, 8, PLAYERJUMP, false, callBackJump , this);
 	int dashJumpAttackDown[] = { 312, 313, 314, 315, 316, 317, 318, 319 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackDown", "player", dashJumpAttackDown, 8, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackDown", "player", dashJumpAttackDown, 8, PLAYERJUMP, false, callBackJump , this);
 	int death[] = { 324,325,326,327,328,329 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "death", "player", death, 6, PLAYERFPS, false);
 	int fall[] = { 330, 331, 332 };
@@ -253,7 +261,7 @@ void player::keyInput()
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_DOWN))
 	{
-		keyDownInput(DOWN);
+		 keyDownInput(DOWN);
 		_player.y += _player.speed;
 
 		if (_isJump)
@@ -268,7 +276,7 @@ void player::keyInput()
 
 	if (KEYMANAGER->isOnceKeyDown('C'))
 	{
-		if (!_isRun)
+		if (!_isRun && !_isJump)
 		{
 			_player.state = PLAYER_ATTACK;
 			if (_attackComboKey == 1)
@@ -276,11 +284,21 @@ void player::keyInput()
 				_player.state = PLAYER_COMBINATION;
 			}
 		}
-		else if (_isRun)
+		else if (_isRun && !_isJump)
 		{
 			_player.state = PLAYER_DASH_ATTACK;
+			//_dashAttack->dashAttacking(&_player.x, &_player.y, &_startX, &_startY, _player.direction, 5);
 		}
-
+		if (_isJump && !(_player.speed == 5))
+		{
+			_player.state = PLAYER_JUMP_ATTACK;
+			_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
+		}
+		else if (_isJump && _player.speed == 5)
+		{
+			_player.state = PLAYER_DASH_JUMP_ATTACK;
+			_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
+		}
 	}
 	if (KEYMANAGER->isOnceKeyUp('C'))
 	{
@@ -302,9 +320,12 @@ void player::keyInput()
 }
 void player::keyDownInput(PLAYERDIRECTION direction)
 {
-	if (!(_player.state == PLAYER_JUMP))
+	if (!(_player.state == PLAYER_JUMP || _player.state == PLAYER_DASH_ATTACK || _player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK))
 	{
-		if (!_isAttack) _player.direction = direction;
+		if (!_isAttack)
+		{
+			if(!(_player.state == PLAYER_JUMP_ATTACK)) _player.direction = direction;
+		}
 		if (!(_player.state == PLAYER_DASH_ATTACK))
 		{
 			if (!_isRun) _player.state = PLAYER_WALK;
@@ -322,8 +343,11 @@ void player::keyUpInput(PLAYERDIRECTION direction)
 	{
 		if ((!(_player.state == PLAYER_RUN) || _player.direction == direction))
 		{
+			if(!(_player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK))
+			{ 
 			_player.state = PLAYER_IDLE;
 			_player.speed = 3;
+			}
 		}
 
 		if (_doubleKey[direction] == 0) _doubleKey[direction]++;
@@ -333,6 +357,7 @@ void player::keyUpInput(PLAYERDIRECTION direction)
 	else
 	{
 		_isJump = false;
+		//_player.speed = 0;
 	}
 }
 // 캐릭터 상태
@@ -422,7 +447,8 @@ void player::callBackDashAttack(void * obj)
 {
 	player* playerAttack = (player*)obj;
 
-	playerAttack->setPlayerState(PLAYER_RUN);
+	if(playerAttack->getPlayerState() == PLAYER_IDLE)  playerAttack->setPlayerState(PLAYER_IDLE);
+	//else  playerAttack->setPlayerState(PLAYER_RUN);
 	if (playerAttack->getPlayerDirection() == LEFT)
 	{
 		playerAttack->setPlayerDirection(LEFT);
@@ -453,7 +479,15 @@ void player::callBackJump(void * obj)
 	if (playerAttack->getPlayerJump())
 	{
 		playerAttack->setPlayerState(PLAYER_IDLE);
-		playerAttack->setPlayerSpeed(3);
+	}
+
+	if (playerAttack->getPlayerSpeed() == 0)
+	{
+		playerAttack->setPlayerState(PLAYER_IDLE);
+	}
+	else if (playerAttack->getPlayerSpeed() == 5)
+	{
+		playerAttack->setPlayerState(PLAYER_RUN);
 	}
 	if (playerAttack->getPlayerDirection() == LEFT)
 	{

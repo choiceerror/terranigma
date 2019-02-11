@@ -120,6 +120,7 @@ void player::playerState()
 			break;
 		}
 		break;
+
 	case PLAYER_JUMP_ATTACK:
 		switch (_player.direction)
 		{

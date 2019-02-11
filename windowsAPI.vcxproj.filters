@@ -440,9 +440,6 @@
     <ClCompile Include="JumpAttack.cpp">
       <Filter>PlayGround\player\state</Filter>
     </ClCompile>
-    <ClCompile Include="playerState.cpp">
-      <Filter>PlayGround\player\state</Filter>
-    </ClCompile>
     <ClCompile Include="Armor.cpp">
       <Filter>PlayGround\item\Armor</Filter>
     </ClCompile>
@@ -466,6 +463,9 @@
     </ClCompile>
     <ClCompile Include="dungeonMap.cpp">
       <Filter>PlayGround\tileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="playerState.cpp">
+      <Filter>PlayGround\player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

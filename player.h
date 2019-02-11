@@ -1,6 +1,7 @@
 #pragma once
 #include "gameNode.h"
 #include "jump.h"
+#include "DashAttack.h"
 
 #define PLAYERFPS 6			//캐릭터 프레임 
 #define PLAYERJUMP 14		//점프 프레임
@@ -13,29 +14,29 @@ class enemyManager;
 
 enum PLAYERSTATE
 {
-	PLAYER_IDLE,
-	PLAYER_IDLE_ACTION,
-	PLAYER_WALK,
-	PLAYER_RUN,
-	PLAYER_TR_PUSH_UP,
-	PLAYER_JUMP,
-	PLAYER_LEVELUP,
-	PLAYER_ATTACK,
-	PLAYER_COMBINATION,
-	PLAYER_JUMP_ATTACK,
-	PLAYER_DASH_JUMP_ATTACK,
-	PLAYER_DEATH,
-	PLAYER_DASH_ATTACK,
-	PLAYER_WORLDMAP,
-	PLAYER_FALL,
-	PLAYER_OBJ_PICKUP,
-	PLAYER_OBJ_WALK,
-	PLAYER_OBJ_THROW
+	PLAYER_IDLE = 0,			//캐릭터 아이들 상태
+	PLAYER_IDLE_ACTION,		//캐릭터 아이들 액션
+	PLAYER_WALK,			//캐릭터 걷는 상태
+	PLAYER_RUN,				//뛸 때
+	PLAYER_TR_PUSH_UP,		//벽 밀때
+	PLAYER_JUMP,			//점프
+	PLAYER_LEVELUP,			//레벨업
+	PLAYER_ATTACK,			//공격
+	PLAYER_COMBINATION,		//연속공격
+	PLAYER_JUMP_ATTACK,		//점프공격
+	PLAYER_DASH_JUMP_ATTACK,//대쉬점프공격
+	PLAYER_DEATH,			//주금
+	PLAYER_DASH_ATTACK,		//대쉬공격
+	PLAYER_WORLDMAP,		//월드맵상태
+	PLAYER_FALL,			//떨어질때
+	PLAYER_OBJ_PICKUP,		//오브젝트 들때
+	PLAYER_OBJ_WALK,		//오브젝트들고 걸을때
+	PLAYER_OBJ_THROW		//오브젝트 던질때
 };
 
 enum PLAYERDIRECTION
 {
-	LEFT,
+	LEFT = 0,
 	RIGHT,
 	UP,
 	DOWN
@@ -43,22 +44,22 @@ enum PLAYERDIRECTION
 
 struct tagPlayer
 {
-	RECT rc;
-	image* image_obj;
-	image* image;
-	animation* ani;
-	PLAYERSTATE state;
-	PLAYERDIRECTION direction;
-	float x, y;
-	float speed;
-	float jumpPower;
-	float gravity;
-	int idX, idY;
-	int maxHP;
-	int HP;
-	int str;
-	int def;
-	int money;
+	RECT rc;						//캐릭터 렉트
+	image* image_obj;				//캐릭터 오브젝트 들때 이미지
+	image* image;					//캐릭터 이미지
+	animation* ani;					//캐릭터 애니메이션
+	PLAYERSTATE state;				//캐릭터 상태
+	PLAYERDIRECTION direction;		//캐릭터 상하좌우 상태
+	float x, y;						//캐릭터 좌표
+	float speed;					//스피드
+	float jumpPower;				//점프 파워
+	float gravity;					//중력값
+	int idX, idY;					//타일 인덱스값
+	int maxHP;						//최대체력
+	int HP;							//현재체력
+	int str;						//공격력
+	int def;						//방어력
+	int money;						//돈
 };
 
 class player : public gameNode
@@ -67,6 +68,7 @@ private:
 	tagPlayer _player;
 	image* _image;
 	jump* _jump;
+	DashAttack* _dashAttack;
 
 	int _doubleKey[4];					// 키를 2번 눌렀을때 달리게 해주기위한 인트형 변수
 	int _curTime[4], _oldTime[4];
@@ -107,6 +109,8 @@ public:
 	//재생에 중복되는 코드 함수화
 	void playerAniName(string targetName, string aniName);
 
+	//void playerWorldMap();
+
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 
 	//===================== 콜백 함수 =======================
@@ -146,6 +150,7 @@ public:
 	int getPlayerDef() { return _player.def; }
 
 	bool getPlayerJump() { return _isJump; }
+	bool getPlayerRun() { return _isRun; }
 
 
 };

@@ -24,5 +24,4 @@ public:
 	void render();
 
 	void jumping(float* x, float* y, float* startX, float* startY, float jumpPower, float gravity);
-
 };
