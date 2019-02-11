@@ -1,5 +1,7 @@
 #pragma once
-class jump
+#include "gameNode.h"
+
+class jump : public gameNode
 {
 public:
 	jump();

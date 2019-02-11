@@ -1,9 +1,6 @@
 #include "stdafx.h"
 #include "player.h"
 
-#include "stdafx.h"
-#include "player.h"
-
 //애니메이션 넣을때 중복되는 코드들 정리
 void player::playerAniName(string targetName, string aniName)
 {
