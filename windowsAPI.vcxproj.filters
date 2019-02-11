@@ -222,9 +222,6 @@
     <ClInclude Include="player.h">
       <Filter>PlayGround\player</Filter>
     </ClInclude>
-    <ClInclude Include="tileMap.h">
-      <Filter>PlayGround\tileMap</Filter>
-    </ClInclude>
     <ClInclude Include="enemyManager.h">
       <Filter>PlayGround\enemyManager</Filter>
     </ClInclude>
@@ -296,6 +293,9 @@
     </ClInclude>
     <ClInclude Include="Gold.h">
       <Filter>PlayGround\item\Gold</Filter>
+    </ClInclude>
+    <ClInclude Include="dungeonMap.h">
+      <Filter>PlayGround\tileMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -392,9 +392,6 @@
     <ClCompile Include="player.cpp">
       <Filter>PlayGround\player</Filter>
     </ClCompile>
-    <ClCompile Include="tileMap.cpp">
-      <Filter>PlayGround\tileMap</Filter>
-    </ClCompile>
     <ClCompile Include="enemyManager.cpp">
       <Filter>PlayGround\enemyManager</Filter>
     </ClCompile>
@@ -466,6 +463,9 @@
     </ClCompile>
     <ClCompile Include="Gold.cpp">
       <Filter>PlayGround\item\Gold</Filter>
+    </ClCompile>
+    <ClCompile Include="dungeonMap.cpp">
+      <Filter>PlayGround\tileMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
