@@ -29,7 +29,10 @@ private:
 	DWORD _nowPlayIndex;		//현재 플레이 인덱스
 	BOOL _play;					//애니메이션 재생여부
 
-	POINT _currentArr;
+	POINT _currentArr;			//현재 플레이 2차배열 인덱스
+	int _currentArrOnce;		//현재 플레이 1차배열 인덱스
+	int _totalFrameX;			//이미지 가로 프레임	갯수
+	int _totalFrameY;			//이미지 세로 프레임 갯수
 
 	void*						_obj;
 	CALLBACK_FUNCTION			_callbackFunction;
@@ -74,6 +77,7 @@ public:
 	inline BOOL isPlay() { return _play; }
 	inline POINT getFramePos() { return _frameList[_playList[_nowPlayIndex]]; }
 	inline POINT getFramePosArr() { return _currentArr; }
+	inline int getFramePosArrOnce() { return _currentArrOnce; }
 	inline int getFrameWidth() { return _frameWidth; }
 	inline int getFrameHeight() { return _frameHeight; }
 

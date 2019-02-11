@@ -26,6 +26,9 @@ HRESULT animation::init(int totalW, int totalH, int frameW, int frameH)
 	_frameHeight = frameH;
 	int _frameNumHeight = totalH / _frameHeight;
 
+	_totalFrameX = _frameNumWidth;
+	_totalFrameY = _frameNumHeight;
+
 	_frameNum = _frameNumWidth * _frameNumHeight;
 
 	for (int i = 0; i < _frameNumHeight; ++i)
@@ -43,6 +46,7 @@ HRESULT animation::init(int totalW, int totalH, int frameW, int frameH)
 
 	_currentArr.x = 0;
 	_currentArr.y = 0;
+	_currentArrOnce = 0;
 
 	return S_OK;
 }
@@ -660,6 +664,7 @@ void animation::frameUpdate(float elapsedTime)
 
 	_currentArr.x = _frameList[_playList[_nowPlayIndex]].x / _frameWidth;
 	_currentArr.y = _frameList[_playList[_nowPlayIndex]].y / _frameHeight;
+	_currentArrOnce = _currentArr.x + _currentArr.y * _totalFrameX;
 }
 
 void animation::start()
