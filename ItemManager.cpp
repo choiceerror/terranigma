@@ -28,7 +28,8 @@ void ItemManager::release()
 
 void ItemManager::update()
 {
-
+	//아이템 조건 제거
+	itemRemove();
 
 
 
@@ -41,8 +42,10 @@ void ItemManager::render(float cameraX, float cameraY)
 
 }
 
+//릴리즈용 제거함수
 void ItemManager::deleteAll()
 {
+	//릴리즈때 벡터 다 제거
 	for (_viArmor = _vArmor.begin(); _viArmor != _vArmor.end(); )
 	{
 		if (_viArmor != _vArmor.end())
@@ -163,4 +166,75 @@ void ItemManager::dropAccessory(float x, float y, ACCESSORYTYPE accessoryType)
 	accessory = new Accessory;
 	accessory->init("item", x, y, accessoryType);
 	_vAccessery.push_back(accessory);
+}
+
+void ItemManager::itemRemove()
+{
+	//아이템 isLive 불값이 False가 되면 사라지는 함수
+
+	//무기
+	for (int i = 0; i < _vWeapon.size();)
+	{
+		if (_vWeapon[i]->getItemIsLive() == false)
+		{
+			_vWeapon.erase(_vWeapon.begin() + i);
+		}
+		else
+		{
+			i++;
+		}
+	}
+
+	//방어구
+	for (int i = 0; i < _vArmor.size();)
+	{
+		if (_vArmor[i]->getItemIsLive() == false)
+		{
+			_vArmor.erase(_vArmor.begin() + i);
+		}
+		else
+		{
+			i++;
+		}
+	}
+
+	//악세서리
+	for (int i = 0; i < _vAccessery.size();)
+	{
+		if (_vAccessery[i]->getItemIsLive() == false)
+		{
+			_vAccessery.erase(_vAccessery.begin() + i);
+		}
+		else
+		{
+			i++;
+		}
+	}
+
+	//물약
+	for (int i = 0; i < _vPotion.size();)
+	{
+		if (_vPotion[i]->getItemIsLive() == false)
+		{
+			_vPotion.erase(_vPotion.begin() + i);
+		}
+		else
+		{
+			i++;
+		}
+	}
+
+	//골드
+	for (int i = 0; i < _vGold.size();)
+	{
+		if (_vGold[i]->getItemIsLive() == false)
+		{
+			_vGold.erase(_vGold.begin() + i);
+		}
+		else
+		{
+			i++;
+		}
+	}
+
 }

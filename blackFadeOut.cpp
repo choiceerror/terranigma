@@ -122,20 +122,14 @@ void blackFadeOut::render()
 {
 	if (_isfadeOut)
 	{
+		//색 지우기
 		IMAGEMANAGER->findImage("blackBox")->setTransColor(true, MAGENTA);
+		//백버퍼
 		IMAGEMANAGER->render("blackBox", getMemDC());
 	}
 
-	//char str[100];
-	//sprintf_s(str, "%f", _diagonalLength);
-	//TextOut(getMemDC(), 500, 500, str, strlen(str));
-	//
-	//sprintf_s(str, "%f", _pt[3].y);
-	//TextOut(getMemDC(), 500, 520, str, strlen(str));
-
-
+	//백버퍼 초기화
 	PatBlt(IMAGEMANAGER->findImage("blackBox")->getMemDC(), 0, 0, WINSIZEX, WINSIZEY, BLACKNESS);
-
 }
 
 void blackFadeOut::createColorObject(const char* hdcName, POINT* point, COLORREF color)

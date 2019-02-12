@@ -1,15 +1,6 @@
 #pragma once
 #include "gameNode.h"
-
-enum class ITEMTYPE
-{
-	NONE,
-	WEAPON,
-	ARMOR,
-	ACCESSORY,
-	GOLD,
-	POTION
-};
+#include "ItemType.h"
 
 struct tagItem
 {
@@ -61,6 +52,9 @@ public:
 	float getItemFrameY() { return _item.frameY; }
 	void setItemFrameY(float frameY) { _item.frameY = frameY; }
 
+	bool getItemIsLive() { return _item.isLive; }
+	void setItemIsLive(bool torf) { _item.isLive = torf; }
 
+	RECT getItemRect() { return _item.rc; }
 };
 

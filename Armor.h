@@ -1,14 +1,6 @@
 #pragma once
 #include "item.h"
 
-enum class ARMORTYPE
-{
-	NONE,
-	ICE_ARMOR,
-	HOOD,
-	IRON_ARMOR
-};
-
 class Armor : public item
 {
 private:

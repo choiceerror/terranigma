@@ -297,6 +297,9 @@
     <ClInclude Include="dungeonMap.h">
       <Filter>PlayGround\tileMap</Filter>
     </ClInclude>
+    <ClInclude Include="ItemType.h">
+      <Filter>PlayGround\item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

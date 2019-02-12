@@ -44,7 +44,7 @@ public:
 	void dropGold(float x, float y);
 	void dropAccessory(float x, float y, ACCESSORYTYPE accessoryType);
 
-
+	void itemRemove();
 
 	//=================접근자 설정자=================
 	vector<Potion*> getVPotion() { return _vPotion; }

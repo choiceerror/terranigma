@@ -23,6 +23,7 @@ HRESULT ui::init()
 
 	dataLode();
 
+	_iMgr->dropArmor(370, 200, ARMORTYPE::ICE_ARMOR);
 
 	IMAGEMANAGER->addFrameImage("yomi", "image/NPC_yomi.bmp", 275, 112, 11, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("UI", "image/UI.bmp", 4096, 768, 4, 1, true, MAGENTA);
@@ -104,15 +105,19 @@ void ui::render()
 {
 	if (!_isIndexMode)
 	{
+		//배경 이미지
 		IMAGEMANAGER->frameRender("UI", getMemDC(), 0, 0, _placeFrameX, 0);
 	}
 	else
 	{
+		//배경 인덱스 이미지
 		IMAGEMANAGER->frameRender("UIIndex", getMemDC(), 0, 0, _placeFrameX, 0);
 	}
+	//아이템
 	_iMgr->render();
+	//요미
 	IMAGEMANAGER->expandRender("yomi", getMemDC(), _x - 30, _y - 36 * 3, _yomiFrameX, _yomiFrameY, 3.f, 3.f);
-
+	//페이드아웃
 	_blackFade->render();
 
 

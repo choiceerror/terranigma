@@ -1,14 +1,6 @@
 #pragma once
 #include "item.h"
 
-enum class ACCESSORYTYPE
-{
-	NONE,
-	RED_SCARF,
-	TALISMAN,
-	LEEF
-};
-
 class Accessory : public item
 {
 private:

@@ -1,14 +1,6 @@
 #pragma once
 #include "item.h"
 
-enum class POTIONTYPE
-{
-	NONE,
-	SMALL,
-	MIDDLE,
-	BIG
-};
-
 class Potion : public item
 {
 private:
