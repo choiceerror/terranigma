@@ -209,19 +209,19 @@ void mapTool::render()
 	//왼쪽
 	if (_ptMouse.x < 800)
 	{
-		_mouseIndex.x = _ptMouse.x / 32;
-		_mouseIndex.y = _ptMouse.y / 32;
+		_mouseIndex.x = (_ptMouse.x + _camera->getCameraX())/ 32;
+		_mouseIndex.y = (_ptMouse.y + _camera->getCameraY()) / 32;
 
 		HPEN pen = CreatePen(PS_SOLID, 2, RGB(0, 240, 255));
 		HPEN oldPen = (HPEN)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), pen);
 		HBRUSH brush = CreateSolidBrush(MAGENTA);
 		HBRUSH oldBrush = (HBRUSH)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), brush);
 
-		MoveToEx(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left, _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top, NULL);
-		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right, _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top);
-		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right, _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom);
-		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left, _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom);
-		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left, _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top);
+		MoveToEx(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left - _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top - _camera->getCameraY(), NULL);
+		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right- _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top - _camera->getCameraY());
+		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right- _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom - _camera->getCameraY());
+		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left- _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom - _camera->getCameraY());
+		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left- _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top - _camera->getCameraY());
 
 		SelectObject(getMemDC(), oldBrush);
 		DeleteObject(brush);
@@ -261,7 +261,7 @@ void mapTool::render()
 	}
 
 
-	sprintf_s(str, "첫타일  x : %d   첫타일 y : %d", _tileBox.x, _tileBox.y);
+	sprintf_s(str, "첫타일  x : %d   첫타일 y : %d", _mouseIndex.x, _mouseIndex.y);
 	TextOut(getMemDC(), 1300, 520, str, strlen(str));
 
 	sprintf_s(str, "마지막타일 x : %d   마지막타일 y : %d", _tileBox.lastX, _tileBox.lastY);
