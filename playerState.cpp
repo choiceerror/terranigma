@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "player.h"
-
 //애니메이션 넣을때 중복되는 코드들 정리
 void player::playerAniName(string targetName, string aniName)
 {
@@ -169,23 +168,6 @@ void player::playerState()
 			break;
 		case DOWN:
 			playerAniName("ark", "dashAttackDown");
-			break;
-		}
-		break;
-	case PLAYER_WORLDMAP:
-		switch (_player.direction)
-		{
-		case LEFT:
-			playerAniName("ark", "worldMapLeft");
-			break;
-		case RIGHT:
-			playerAniName("ark", "worldMapRight");
-			break;
-		case UP:
-			playerAniName("ark", "worldMapUp");
-			break;
-		case DOWN:
-			playerAniName("ark", "worldMapDown");
 			break;
 		}
 		break;

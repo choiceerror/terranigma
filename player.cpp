@@ -24,7 +24,7 @@ HRESULT player::init()
 	_player.x = WINSIZEX / 2;
 	_player.y = WINSIZEY / 2;
 	_player.speed = 3;
-	_player.rc = RectMakeCenter(_player.x , _player.y + 10, 40, 60);
+	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 60);
 	_player.state = PLAYER_IDLE;
 	_player.direction = DOWN;
 	_player.jumpPower = 8.0f;
@@ -39,7 +39,9 @@ HRESULT player::init()
 
 	_attackComboKey = 0;
 
-	 _isRun = _isAttack  = _isJump = false;
+	_isRun = _isAttack = _isJump = _isWalk = false;
+
+	_attackMoveStop = false;
 
 	_jump = new jump;
 	_jump->init();
@@ -61,7 +63,6 @@ void player::update()
 	if (_player.state == PLAYER_RUN)
 	{
 		_isRun = true;
-		//_jump->update();
 	}
 	else _isRun = false;
 
@@ -76,6 +77,15 @@ void player::update()
 		_isJump = true;
 	}
 	else  _isJump = false;
+	if (_player.state == PLAYER_WALK) _isWalk = true;
+	else _isWalk = false;
+
+	if (!_attackMoveStop) _attackMoveStopTime = GetTickCount();
+	if (GetTickCount() - _attackMoveStopTime >= 1 * 200)
+	{
+		_attackMoveStop = false;
+	}
+
 
 	keyInput();
 	playerState();
@@ -104,6 +114,9 @@ void player::render(float cameraX, float cameraY)
 
 	sprintf_s(str, "%d", _player.direction);
 	TextOut(getMemDC(), 120, 120, str, strlen(str));
+
+	sprintf_s(str, "%d", _attackMoveStop);
+	TextOut(getMemDC(), 140, 120, str, strlen(str));
 
 }
 // 캐릭터 프레임 초기값
@@ -166,7 +179,7 @@ void player::keyFrameInit()
 	int jumpAttackLeft[] = { 240, 241, 242, 243, 244, 245,246, 247 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackLeft", "player", jumpAttackLeft, 8, PLAYERJUMP, false, callBackJump, this);
 	int jumpAttackRight[] = { 228, 229, 230, 231, 232, 233, 234, 235 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackRight", "player", jumpAttackRight, 8, PLAYERJUMP, false, callBackJump , this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackRight", "player", jumpAttackRight, 8, PLAYERJUMP, false, callBackJump, this);
 	int jumpAttackUp[] = { 252, 253, 254, 255, 256, 257, 258, 259 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackUp", "player", jumpAttackUp, 8, PLAYERJUMP, false, callBackJump, this);
 	int jumpAttackDown[] = { 264, 265, 266, 267, 268, 269, 270, 271 };
@@ -174,11 +187,11 @@ void player::keyFrameInit()
 	int dashJumpAttackLeft[] = { 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackLeft", "player", dashJumpAttackLeft, 12, PLAYERJUMP, false, callBackJump, this);
 	int dashJumpAttackRight[] = { 276,277,278,279,280,281,282,283,284,285,286,287 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackRight", "player", dashJumpAttackRight, 12, PLAYERJUMP, false, callBackJump , this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackRight", "player", dashJumpAttackRight, 12, PLAYERJUMP, false, callBackJump, this);
 	int dashJumpAttackUp[] = { 300, 301, 302, 303, 304, 305, 306, 307 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackUp", "player", dashJumpAttackUp, 8, PLAYERJUMP, false, callBackJump , this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackUp", "player", dashJumpAttackUp, 8, PLAYERJUMP, false, callBackJump, this);
 	int dashJumpAttackDown[] = { 312, 313, 314, 315, 316, 317, 318, 319 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackDown", "player", dashJumpAttackDown, 8, PLAYERJUMP, false, callBackJump , this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackDown", "player", dashJumpAttackDown, 8, PLAYERJUMP, false, callBackJump, this);
 	int death[] = { 324,325,326,327,328,329 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "death", "player", death, 6, PLAYERFPS, false);
 	int fall[] = { 330, 331, 332 };
@@ -191,14 +204,6 @@ void player::keyFrameInit()
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackUp", "player", dashAttackUp, 4, PLAYERFPS, false, callBackDashAttack, this);
 	int dashAttackDown[] = { 352, 353, 354, 355 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackDown", "player", dashAttackDown, 4, PLAYERFPS, false, callBackDashAttack, this);
-	int worldMapLeft[] = { 363, 364, 365 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "worldMapLeft", "player", worldMapLeft, 3, PLAYERFPS, true);
-	int worldMapRight[] = { 360, 361, 362 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "worldMapRight", "player", worldMapRight, 3, PLAYERFPS, true);
-	int worldMapUp[] = { 366, 367, 368 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "worldMapUp", "player", worldMapUp, 3, PLAYERFPS, true);
-	int worldMapDown[] = { 369, 370, 371 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "worldMapDown", "player", worldMapDown, 3, PLAYERFPS, true);
 	int pickupLeft[] = { 0, 1, 2, 3 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark_obj", "pickupLeft", "player_obj", pickupLeft, 4, PLAYERFPS, false);
 	int pickupRight[] = { 4, 5, 6, 7 };
@@ -229,8 +234,13 @@ void player::keyInput()
 {
 	if (KEYMANAGER->isStayKeyDown(VK_LEFT))
 	{
-		keyDownInput(LEFT);
-		_player.x -= _player.speed;
+		if (!_attackMoveStop && !(_player.state == PLAYER_DASH_ATTACK))						// 공격 후 다른방향으로 전환 방지
+		{
+			keyDownInput(LEFT);
+			_player.x -= _player.speed;
+		}
+		else if (!(_player.state == PLAYER_COMBINATION) && !(_player.state == PLAYER_DASH_ATTACK))  _player.x -= 0.5f;
+		else if (_player.state == PLAYER_DASH_ATTACK) _player.x -= _player.speed;
 	}
 	if (KEYMANAGER->isOnceKeyUp(VK_LEFT))
 	{
@@ -238,8 +248,13 @@ void player::keyInput()
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT))
 	{
-		keyDownInput(RIGHT);
-		_player.x += _player.speed;
+		if (!_attackMoveStop && !(_player.state == PLAYER_DASH_ATTACK))
+		{
+			keyDownInput(RIGHT);
+			_player.x += _player.speed;
+		}
+		else if (!(_player.state == PLAYER_COMBINATION) && !(_player.state == PLAYER_DASH_ATTACK)) _player.x += 0.5f;
+		else if (_player.state == PLAYER_DASH_ATTACK) _player.x += _player.speed;
 	}
 	if (KEYMANAGER->isOnceKeyUp(VK_RIGHT))
 	{
@@ -247,13 +262,18 @@ void player::keyInput()
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_UP))
 	{
-		keyDownInput(UP);
-		_player.y -= _player.speed;
 
-		if (_isJump)
+		if ((!_attackMoveStop) && !(_player.state == PLAYER_DASH_ATTACK))
 		{
-			_startY -= _player.speed;
+			keyDownInput(UP);
+			_player.y -= _player.speed;
+			if (_isJump)
+			{
+				_startY -= _player.speed;
+			}
 		}
+		else if (!(_player.state == PLAYER_COMBINATION) && !(_player.state == PLAYER_DASH_ATTACK))  _player.y -= 0.5f;
+		else if (_player.state == PLAYER_DASH_ATTACK) _player.y -= _player.speed;
 	}
 	if (KEYMANAGER->isOnceKeyUp(VK_UP))
 	{
@@ -261,13 +281,18 @@ void player::keyInput()
 	}
 	if (KEYMANAGER->isStayKeyDown(VK_DOWN))
 	{
-		 keyDownInput(DOWN);
-		_player.y += _player.speed;
 
-		if (_isJump)
+		if (!_attackMoveStop && !(_player.state == PLAYER_DASH_ATTACK))
 		{
-			_startY += _player.speed;
+			keyDownInput(DOWN);
+			_player.y += _player.speed;
+			if (_isJump)
+			{
+				_startY += _player.speed;
+			}
 		}
+		else if (!(_player.state == PLAYER_COMBINATION) && !(_player.state == PLAYER_DASH_ATTACK))  _player.y += 0.5f;
+		else if (_player.state == PLAYER_DASH_ATTACK) _player.y += _player.speed;
 	}
 	if (KEYMANAGER->isOnceKeyUp(VK_DOWN))
 	{
@@ -278,16 +303,16 @@ void player::keyInput()
 	{
 		if (!_isRun && !_isJump)
 		{
-			_player.state = PLAYER_ATTACK;
+			_attackMoveStop = true;
 			if (_attackComboKey == 1)
 			{
 				_player.state = PLAYER_COMBINATION;
 			}
+			if (!(_player.state == PLAYER_COMBINATION)) _player.state = PLAYER_ATTACK;
 		}
 		else if (_isRun && !_isJump)
 		{
 			_player.state = PLAYER_DASH_ATTACK;
-			//_dashAttack->dashAttacking(&_player.x, &_player.y, &_startX, &_startY, _player.direction, 5);
 		}
 		if (_isJump && !(_player.speed == 5))
 		{
@@ -302,9 +327,10 @@ void player::keyInput()
 	}
 	if (KEYMANAGER->isOnceKeyUp('C'))
 	{
+
 		if (_attackComboKey == 0) _attackComboKey++;
 	}
-	
+
 	if (KEYMANAGER->isOnceKeyDown('X'))
 	{
 		if (GetTickCount() - _oldJumpTime >= 1 * 900)
@@ -318,13 +344,14 @@ void player::keyInput()
 	}
 	DoubleKeyIntVoid();
 }
+// 키 눌렀을때
 void player::keyDownInput(PLAYERDIRECTION direction)
 {
 	if (!(_player.state == PLAYER_JUMP || _player.state == PLAYER_DASH_ATTACK || _player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK))
 	{
 		if (!_isAttack)
 		{
-			if(!(_player.state == PLAYER_JUMP_ATTACK)) _player.direction = direction;
+			if (!(_player.state == PLAYER_JUMP_ATTACK)) _player.direction = direction;
 		}
 		if (!(_player.state == PLAYER_DASH_ATTACK))
 		{
@@ -336,17 +363,19 @@ void player::keyDownInput(PLAYERDIRECTION direction)
 			}
 		}
 	}
+
 }
+// 키 뗄때
 void player::keyUpInput(PLAYERDIRECTION direction)
 {
 	if (!(_player.state == PLAYER_JUMP))
 	{
 		if ((!(_player.state == PLAYER_RUN) || _player.direction == direction))
 		{
-			if(!(_player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK))
-			{ 
-			_player.state = PLAYER_IDLE;
-			_player.speed = 3;
+			if (!(_player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK))
+			{
+				_player.state = PLAYER_IDLE;
+				_player.speed = 3;
 			}
 		}
 
@@ -360,7 +389,6 @@ void player::keyUpInput(PLAYERDIRECTION direction)
 		//_player.speed = 0;
 	}
 }
-// 캐릭터 상태
 
 // 키 연속으로 눌렀을때 예외처리 모음
 void player::DoubleKeyIntVoid()
@@ -447,8 +475,8 @@ void player::callBackDashAttack(void * obj)
 {
 	player* playerAttack = (player*)obj;
 
-	if(playerAttack->getPlayerState() == PLAYER_IDLE)  playerAttack->setPlayerState(PLAYER_IDLE);
-	//else  playerAttack->setPlayerState(PLAYER_RUN);
+	if (playerAttack->getPlayerState() == PLAYER_IDLE)  playerAttack->setPlayerState(PLAYER_IDLE);
+	else  playerAttack->setPlayerState(PLAYER_RUN);
 	if (playerAttack->getPlayerDirection() == LEFT)
 	{
 		playerAttack->setPlayerDirection(LEFT);
@@ -510,5 +538,5 @@ void player::callBackJump(void * obj)
 		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runDown"));
 	}
 	playerAttack->getPlayerAni()->start();
-	
+
 }

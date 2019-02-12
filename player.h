@@ -80,9 +80,13 @@ private:
 	float _startX;						// 점프 시작 위치
 	float _startY;						// 점프 시작 위치
 
-	bool _isRun;
-	bool _isAttack;
-	bool _isJump;
+	bool _attackMoveStop;
+	int _attackMoveStopTime;
+
+	bool _isRun;						// 뛰는중
+	bool _isAttack;						// 공격중
+	bool _isJump;						// 점프중
+	bool _isWalk;						// 걷는중
 
 	enemyManager* _enemyManager;
 public:
@@ -92,16 +96,16 @@ public:
 	HRESULT init();
 	void release();
 	void update();
-	void render(float cameraX , float cameraY);
+	void render(float cameraX, float cameraY);
 
 	//각 상태 프레임 입력 초기값 
-	void keyFrameInit();		
+	void keyFrameInit();
 	//키 입력 
-	void keyInput();							
+	void keyInput();
 	//키다운 입력 중복된 코드 함수로 만들어서 사용
 	void keyDownInput(PLAYERDIRECTION direction);
 	//키업 입력 중복된 코드 함수로 만들어서 사용
-	void keyUpInput(PLAYERDIRECTION direction);	
+	void keyUpInput(PLAYERDIRECTION direction);
 	//플레이어 상태 애니메이션 재생 함수
 	void playerState();
 	//더블키(공격 , 달리기)
