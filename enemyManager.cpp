@@ -18,7 +18,6 @@ HRESULT enemyManager::init()
 	_fireMonsterBullet->init("fireMonster", WINSIZEX / 2, 10);
 	_fireBulletSpeed = 5;
 
-
 	return S_OK;
 }
 
@@ -77,6 +76,9 @@ void enemyManager::update()
 	//플레이어 공격에 에너미들이 맞을 함수
 	playerAttackEnemyCollision();
 
+	//에너미들이 죽을함수
+	enemyDead();
+
 }
 
 void enemyManager::render(float cameraX, float cameraY)
@@ -101,8 +103,8 @@ void enemyManager::render(float cameraX, float cameraY)
 		//sprintf_s(str, "x : %f", _vKnightMonster[i]->getX());
 		//TextOut(getMemDC(), 300, 100 + i * 20, str, strlen(str));
 
-		//sprintf_s(str, "y : %f", _vKnightMonster[i]->getY());
-		//TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
+		sprintf_s(str, "hp : %d", _vKnightMonster[i]->getCurrentHP());
+		TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
 	}
 
 	//for (int i = 0; i < _vBallMonster.size(); i++)
@@ -439,6 +441,7 @@ void enemyManager::playerAttackEnemyCollision()
 		{
 			if (IntersectRect(&temp, &_attackRect, &_vKnightMonster[i]->getRect()))
 			{
+				_vKnightMonster[i]->setCurrentHP(_vKnightMonster[i]->getCurrentHP() - 10);
 				_vKnightMonster[i]->setIsHit(true);
 				if (_player->getPlayerDirection() == LEFT)
 				{
@@ -510,7 +513,6 @@ void enemyManager::playerAttackEnemyCollision()
 		}
 		break;
 	}
-	
 }
 
 //불총알 발사
@@ -543,6 +545,15 @@ void enemyManager::fireMonsterBulletFire(int i)
 //에너미들이 죽을함수
 void enemyManager::enemyDead()
 {
+	for (int i = 0; i < _vKnightMonster.size();)
+	{
+		if (_vKnightMonster[i]->getCurrentHP() <= 0.0f)
+		{
+			_vKnightMonster.erase(_vKnightMonster.begin() + i);
+		}
+		else i++;
+	}
+
 }
 
 //에너미들이 죽은다음 리스폰할 함수
