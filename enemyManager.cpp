@@ -101,22 +101,22 @@ void enemyManager::enemyDraw(float cameraX, float cameraY)
 	//º¼¸ó½ºÅÍ ·»´õ¸µ
 	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
 	{
-		(*_viBallMonster)->render((*_viBallMonster)->getViewX(), (*_viBallMonster)->getViewY(), cameraX, cameraY);
+		(*_viBallMonster)->render(cameraX, cameraY);
 	}
 	//ÆÄÀÌ¾î¸ó½ºÅÍ ·»´õ¸µ
 	for (_viFireMonster = _vFireMonster.begin(); _viFireMonster != _vFireMonster.end(); _viFireMonster++)
 	{
-		(*_viFireMonster)->render((*_viFireMonster)->getViewX(), (*_viFireMonster)->getViewY(), cameraX, cameraY);
+		(*_viFireMonster)->render(cameraX, cameraY);
 	}
 	//³ªÀÌÆ®¸ó½ºÅÍ ·»´õ¸µ
 	for (_viKnightMonster = _vKnightMonster.begin(); _viKnightMonster != _vKnightMonster.end(); _viKnightMonster++)
 	{
-		(*_viKnightMonster)->render((*_viKnightMonster)->getViewX(), (*_viKnightMonster)->getViewY(), cameraX, cameraY);
+		(*_viKnightMonster)->render(cameraX, cameraY);
 	}
 	//ºÒ¸ó½ºÅÍ ÃÑ¾Ë ·»´õ¸µ
 	for (int i = 0; i < _fireMonsterBullet->getVFireBullet().size(); i++)
 	{
-		_fireMonsterBullet->render(_fireMonsterBullet->getVFireBullet()[i].viewX, _fireMonsterBullet->getVFireBullet()[i].viewY, cameraX, cameraY);
+		_fireMonsterBullet->render(cameraX, cameraY);
 	}
 }
 

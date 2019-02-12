@@ -32,7 +32,7 @@ public:
 	HRESULT init(const char* imageName, float range, int fireBulletMax);
 	void release();
 	void update();
-	void render(float viewX, float viewY, float cameraX, float cameraY);
+	void render(float cameraX, float cameraY);
 
 	void fire(float x, float y, float angle, float speed); //น฿ป็
 	

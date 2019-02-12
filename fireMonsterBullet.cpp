@@ -31,14 +31,14 @@ void fireMonsterBullet::update()
 	move();
 }
 
-void fireMonsterBullet::render(float viewX, float viewY, float cameraX, float cameraY)
+void fireMonsterBullet::render(float cameraX, float cameraY)
 {
 	for (_viFireBullet = _vFireBullet.begin(); _viFireBullet != _vFireBullet.end(); _viFireBullet++)
 	{
 		//카메라 좌표에따라 가상좌표 계산
-		viewX = _viFireBullet->x - cameraX;
-		viewY = _viFireBullet->y - cameraY;
-		_viFireBullet->image->expandAniRenderCenter(getMemDC(), viewX, viewY, _viFireBullet->fireBulletAni, 3.f, 3.f);
+		_viFireBullet->viewX = _viFireBullet->x - cameraX;
+		_viFireBullet->viewY = _viFireBullet->y - cameraY;
+		_viFireBullet->image->expandAniRenderCenter(getMemDC(), _viFireBullet->viewX, _viFireBullet->viewY, _viFireBullet->fireBulletAni, 3.f, 3.f);
 		//Rectangle(getMemDC(), _viFireBullet->rc);
 	}
 }

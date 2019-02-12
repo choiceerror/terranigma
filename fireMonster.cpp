@@ -43,12 +43,12 @@ void fireMonster::update()
 	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 20, _enemy.image->getFrameHeight() * 12);
 }
 
-void fireMonster::render(float viewX, float viewY, float cameraX, float cameraY)
+void fireMonster::render(float cameraX, float cameraY)
 {
 	//Rectangle(getMemDC(), _enemy.rangeRc);
-	viewX = _enemy.x - cameraX;
-	viewY = _enemy.y - cameraY;
-	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f, 2.f);
+	_enemy.viewX = _enemy.x - cameraX;
+	_enemy.viewY = _enemy.y - cameraY;
+	_enemy.image->expandAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion, 2.f, 2.f);
 }
 
 void fireMonster::move()

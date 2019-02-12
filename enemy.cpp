@@ -30,7 +30,7 @@ HRESULT enemy::init(string enemyName, const char* imageName, float x, float y, i
 	_directionTime = 2.0f;
 	_directionWorldTime = TIMEMANAGER->getWorldTime();
 
-	_enemy.rc = RectMakeCenter(x, y, _enemy.image->getFrameWidth() * 2, _enemy.image->getFrameHeight() * 2);
+	_enemy.rc = RectMakeCenter(x, y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 
 	return S_OK;
 }
@@ -44,14 +44,12 @@ void enemy::update()
 	enemyMove();
 }
 
-void enemy::render(float viewX, float viewY, float cameraX, float cameraY)
+void enemy::render(float cameraX, float cameraY)
 {
 	
 }
 
 void enemy::enemyMove()
 {
-	_enemy.viewX = _enemy.x;
-	_enemy.viewY = _enemy.y;
-	_enemy.rc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 2, _enemy.image->getFrameHeight() * 2);
+	_enemy.rc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 }

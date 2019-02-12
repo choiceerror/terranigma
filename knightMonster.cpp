@@ -18,7 +18,7 @@ HRESULT knightMonster::init(string enemyName, const char * imageName, float x, f
 	_enemy.currentHP = _enemy.maxHP = hp;
 	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
 	_enemy.direction = KNIGHTMONSTER_DIRECTION_DOWN;
-	_enemy.image->setAlpahBlend(true);
+	//_enemy.image->setAlpahBlend(true);
 
 	int downIdle[] = { 3 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downIdle", imageName, downIdle, 1, 3, true);
@@ -72,20 +72,45 @@ void knightMonster::update()
 	attack();
 
 	//나이트몬스터는 렉트가 너무크기때문에 여기서 재조정
-	_enemy.rc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
-	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 4, _enemy.image->getFrameHeight() * 4); 
+	_enemy.rc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() / 2, _enemy.image->getFrameHeight());
+	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 2, _enemy.image->getFrameHeight() * 2); 
 }
 
-void knightMonster::render(float viewX, float viewY, float cameraX, float cameraY)
+void knightMonster::render(float cameraX, float cameraY)
 {
-	viewX = _enemy.x - cameraX;
-	viewY = _enemy.y - cameraY;
+	_enemy.viewX = _enemy.x - (_enemy.rc.right - _enemy.rc.left) - cameraX;
+	_enemy.viewY = _enemy.y - (_enemy.rc.bottom - _enemy.rc.top) / 2 - cameraY;
 
-	//_enemy.image->alphaAniRender(getMemDC(), viewX, viewY, _enemy.motion, 100);
+	char str[128];
+
+	sprintf_s(str, "viewX : %f", _enemy.viewX);
+	TextOut(getMemDC(), 100, 160, str, strlen(str));
+
+	sprintf_s(str, "viewY : %f", _enemy.viewY);
+	TextOut(getMemDC(), 100, 180, str, strlen(str));
+
+	sprintf_s(str, "x : %f", _enemy.x);
+	TextOut(getMemDC(), 100, 200, str, strlen(str));
+
+	sprintf_s(str, "y : %f", _enemy.y);
+	TextOut(getMemDC(), 100, 220, str, strlen(str));
+
+	sprintf_s(str, "rc.left : %d", _enemy.rc.left);
+	TextOut(getMemDC(), 100, 240, str, strlen(str));
+
+	sprintf_s(str, "rc.top : %d", _enemy.rc.top);
+	TextOut(getMemDC(), 100, 260, str, strlen(str));
+
+	sprintf_s(str, "rc.right : %d", _enemy.rc.right);
+	TextOut(getMemDC(), 100, 280, str, strlen(str));
+
+	sprintf_s(str, "rc.bottom : %d", _enemy.rc.bottom);
+	TextOut(getMemDC(), 100, 300, str, strlen(str));
+	Rectangle(getMemDC(), _enemy.rangeRc);
 	//Rectangle(getMemDC(), _enemy.rc);
-	//Rectangle(getMemDC(), _enemy.rangeRc);
-	Rectangle(getMemDC(), _enemy.attackRc);
-	_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f, 2.f);
+	_enemy.image->alphaAniRender(getMemDC(), _enemy.viewX , _enemy.viewY, _enemy.motion);
+	//Rectangle(getMemDC(), _enemy.attackRc);
+	//_enemy.image->expandAniRenderCenter(getMemDC(), viewX, viewY, _enemy.motion, 2.f, 2.f);
 
 }
 
@@ -217,10 +242,10 @@ void knightMonster::move()
 void knightMonster::attack()
 {
 	//나이트 찌르기공격
-	if(_enemy.motion->getFramePosArr().x == 5 && _enemy.motion->getFramePosArr().y == 4) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y + 70, 30, 100); //아래공격
-	else if (_enemy.motion->getFramePosArr().x == 3 && _enemy.motion->getFramePosArr().y == 5) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y - 70, 30, 100); //위공격
-	else if (_enemy.motion->getFramePosArr().x == 5 && _enemy.motion->getFramePosArr().y == 6) _enemy.attackRc = RectMakeCenter(_enemy.x - 70, _enemy.y, 100, 30); //왼쪽공격
-	else if (_enemy.motion->getFramePosArr().x == 5 && _enemy.motion->getFramePosArr().y == 7) _enemy.attackRc = RectMakeCenter(_enemy.x + 70, _enemy.y, 100, 30); //오른쪽공격
+	if(_enemy.motion->getFramePosArr().x >= 5 && _enemy.motion->getFramePosArr().y == 4) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y + 70, 30, 100); //아래공격
+	else if (_enemy.motion->getFramePosArr().x >= 3 && _enemy.motion->getFramePosArr().y == 5) _enemy.attackRc = RectMakeCenter(_enemy.x, _enemy.y - 70, 30, 100); //위공격
+	else if (_enemy.motion->getFramePosArr().x >= 5 && _enemy.motion->getFramePosArr().y == 6) _enemy.attackRc = RectMakeCenter(_enemy.x - 70, _enemy.y, 100, 30); //왼쪽공격
+	else if (_enemy.motion->getFramePosArr().x >= 5 && _enemy.motion->getFramePosArr().y == 7) _enemy.attackRc = RectMakeCenter(_enemy.x + 70, _enemy.y, 100, 30); //오른쪽공격
 	else _enemy.attackRc = RectMakeCenter(0, 0, 0, 0); //공격끝나면 렉트 갱신
 }
 
