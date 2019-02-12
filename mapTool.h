@@ -37,6 +37,8 @@ private:
 
 	bool check;
 
+	bool _mouseUp;
+
 	int b, c;
 	POINTFLOAT view;
 

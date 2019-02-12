@@ -184,7 +184,29 @@ void mapTool::render()
 	IMAGEMANAGER->render("object", getMemDC(), box[3].left, box[3].top);
 	IMAGEMANAGER->render("eraser", getMemDC(), box[4].left, box[4].top);
 
+	//==========================체크 박스 =====================================//
 
+	if (_mouseUp || _ptMouse.x < _tilesetting[0].tilerc.left)
+	{
+		HPEN pen = CreatePen(PS_SOLID, 2, RGB(255, 180, 0));
+		HPEN oldPen = (HPEN)SelectObject(getMemDC(), pen);
+		HBRUSH brush = CreateSolidBrush(MAGENTA);
+		HBRUSH oldBrush = (HBRUSH)SelectObject(getMemDC(), brush);
+
+		if (_tileBox.x > 0 && _tileBox.y > 0)
+		{
+			MoveToEx(getMemDC(), _tilesetting[_tileBox.x + _tileBox.y * 30].tilerc.left, _tilesetting[_tileBox.x + _tileBox.y * 30].tilerc.top, NULL);
+			LineTo(getMemDC(), _tilesetting[_tileBox.lastX + _tileBox.lastY * 30].tilerc.right, _tilesetting[_tileBox.x + _tileBox.y * 30].tilerc.top);
+			LineTo(getMemDC(), _tilesetting[_tileBox.lastX + _tileBox.lastY * 30].tilerc.right, _tilesetting[_tileBox.lastX + _tileBox.lastY * 30].tilerc.bottom);
+			LineTo(getMemDC(), _tilesetting[_tileBox.x + _tileBox.y * 30].tilerc.left, _tilesetting[_tileBox.lastX + _tileBox.lastY * 30].tilerc.bottom);
+			LineTo(getMemDC(), _tilesetting[_tileBox.x + _tileBox.y * 30].tilerc.left, _tilesetting[_tileBox.x + _tileBox.y * 30].tilerc.top);
+		}
+		SelectObject(getMemDC(), oldBrush);
+		DeleteObject(brush);
+		SelectObject(getMemDC(), oldPen);
+		DeleteObject(pen);
+	}
+	//=========================================================================
 	char str[128];
 
 	if (num == 0)
@@ -564,6 +586,7 @@ void mapTool::tileDrag()
 {
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
+		_mouseUp = false;
 		for (int i = 0; i < basicTileX * basicTileY; ++i)
 		{
 			if (PtInRect(&_tilesetting[i].tilerc, _ptMouse))
@@ -576,6 +599,7 @@ void mapTool::tileDrag()
 
 	if (KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
 	{
+		_mouseUp = true;
 		for (int i = 0; i < basicTileX * basicTileY; ++i)
 		{
 			if (PtInRect(&_tilesetting[i].tilerc, _ptMouse))
