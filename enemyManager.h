@@ -38,7 +38,6 @@ private:
 	int _fireBulletSpeed;
 
 	RECT _attackRect; //임의의 공격렉트
-	float _x, _y;
 
 public:
 	enemyManager();

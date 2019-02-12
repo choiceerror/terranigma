@@ -141,40 +141,31 @@ void knightMonster::move()
 			break;
 		}
 		//랜덤으로 움직임.
-		if (_directionTime + _directionWorldTime <= TIMEMANAGER->getWorldTime())
+		if (_directionTime + _enemy.directionWorldTime <= TIMEMANAGER->getWorldTime())
 		{
-			_rndDirection = RND->getInt(4);
-			_rndState = RND->getInt(2);
+			_rndDirection[KNIGHTMONSTER] = RND->getInt(4);
+			_rndState[KNIGHTMONSTER] = RND->getInt(2);
 
-			if (_rndDirection == 0)
+			if (_rndDirection[KNIGHTMONSTER] == 0)
 			{
 				_enemy.direction = KNIGHTMONSTER_DIRECTION_DOWN;
-
-				if (_rndState == 0)	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
-				else _enemy.state = KNIGHTMONSTER_STATE_MOVE;
 			}
-			else if (_rndDirection == 1)
+			else if (_rndDirection[KNIGHTMONSTER] == 1)
 			{
 				_enemy.direction = KNIGHTMONSTER_DIRECTION_UP;
-
-				if (_rndState == 0)	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
-				else _enemy.state = KNIGHTMONSTER_STATE_MOVE;
 			}
-			else if (_rndDirection == 2)
+			else if (_rndDirection[KNIGHTMONSTER] == 2)
 			{
 				_enemy.direction = KNIGHTMONSTER_DIRECTION_RIGHT;
-
-				if (_rndState == 0)	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
-				else _enemy.state = KNIGHTMONSTER_STATE_MOVE;
 			}
-			else if (_rndDirection == 3)
+			else if (_rndDirection[KNIGHTMONSTER] == 3)
 			{
 				_enemy.direction = KNIGHTMONSTER_DIRECTION_LEFT;
-
-				if (_rndState == 0)	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
-				else _enemy.state = KNIGHTMONSTER_STATE_MOVE;
 			}
-			_directionWorldTime = TIMEMANAGER->getWorldTime();
+
+			if (_rndState[KNIGHTMONSTER] == 0)	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
+			else _enemy.state = KNIGHTMONSTER_STATE_MOVE;
+			_enemy.directionWorldTime = TIMEMANAGER->getWorldTime();
 		}
 	}
 	//플레이어 따라가는타입

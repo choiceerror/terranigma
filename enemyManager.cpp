@@ -42,31 +42,27 @@ void enemyManager::release()
 void enemyManager::update()
 {
 
-	//if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
-	//{
-	//	_x = _ptMouse.x;
-	//	_y = _ptMouse.y;
-	//	_attackRect = RectMakeCenter(_x, _y, 100, 100);
-	//}
-	//else _attackRect = RectMakeCenter(_x, _y, 0, 0);
-
-	//오른쪽 공격
-	if (_player->getPlayerAni()->getFramePosArr().x >= 1 && _player->getPlayerAni()->getFramePosArr().x < 4 && _player->getPlayerAni()->getFramePosArr().y == 13)
+	//오른쪽 공격, 대쉬공격
+	if ((_player->getPlayerAni()->getFramePosArr().x >= 1 && _player->getPlayerAni()->getFramePosArr().x < 4 && _player->getPlayerAni()->getFramePosArr().y == 13)
+		|| (_player->getPlayerAni()->getFramePosArr().x <= 2 && _player->getPlayerAni()->getFramePosArr().y == 28))
 	{
 		_attackRect = RectMakeCenter(_player->getPlayerX() + 30, _player->getPlayerY(), 100, 30);
 	}
-	//왼쪽 공격
-	else if (_player->getPlayerAni()->getFramePosArr().x >= 5 && _player->getPlayerAni()->getFramePosArr().y == 13)
+	//왼쪽 공격, 대쉬공격
+	else if ((_player->getPlayerAni()->getFramePosArr().x >= 5 && _player->getPlayerAni()->getFramePosArr().y == 13)
+		||(_player->getPlayerAni()->getFramePosArr().x >= 4 && _player->getPlayerAni()->getFramePosArr().y == 28))
 	{
 		_attackRect = RectMakeCenter(_player->getPlayerX() - 30, _player->getPlayerY(), 100, 30);
 	}
-	//위공격
-	else if (_player->getPlayerAni()->getFramePosArr().x >= 1 && _player->getPlayerAni()->getFramePosArr().x < 4 && _player->getPlayerAni()->getFramePosArr().y == 14)
+	//위공격, 대쉬공격
+	else if ((_player->getPlayerAni()->getFramePosArr().x >= 1 && _player->getPlayerAni()->getFramePosArr().x < 4 && _player->getPlayerAni()->getFramePosArr().y == 14)
+		|| (_player->getPlayerAni()->getFramePosArr().x <= 2 && _player->getPlayerAni()->getFramePosArr().y == 29))
 	{
 		_attackRect = RectMakeCenter(_player->getPlayerX(), _player->getPlayerY() - 30, 30, 100);
 	}
-	//아래 공격
-	else if (_player->getPlayerAni()->getFramePosArr().x >= 5 && _player->getPlayerAni()->getFramePosArr().y == 14)
+	//아래 공격, 대쉬공격
+	else if ((_player->getPlayerAni()->getFramePosArr().x >= 5 && _player->getPlayerAni()->getFramePosArr().y == 14)
+		|| (_player->getPlayerAni()->getFramePosArr().x >= 4 && _player->getPlayerAni()->getFramePosArr().y == 29))
 	{
 		_attackRect = RectMakeCenter(_player->getPlayerX(), _player->getPlayerY() + 30, 30, 100);
 	}
@@ -89,25 +85,25 @@ void enemyManager::render(float cameraX, float cameraY)
 	//렌더링 모음 함수
 	enemyDraw(cameraX, cameraY);
 
-	//char str[128];
+	char str[128];
 
-	//for (int i = 0; i < _vKnightMonster.size(); i++)
-	//{
-	//	sprintf_s(str, "targetDistance : %f", _vKnightMonster[i]->getTargetDistance());
-	//	TextOut(getMemDC(), 100, 100 + i * 20, str, strlen(str));
+	for (int i = 0; i < _vKnightMonster.size(); i++)
+	{
+		//sprintf_s(str, "moveType : %d", _vKnightMonster[i]->getMoveType());
+		//TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "viewX : %f", _vKnightMonster[i]->getViewX());
-	//	TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
+		//sprintf_s(str, "state : %d", _vKnightMonster[i]->getState());
+		//TextOut(getMemDC(), 100, 400 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "viewY : %f", _vKnightMonster[i]->getViewY());
-	//	TextOut(getMemDC(), 100, 300 + i * 20, str, strlen(str));
+		//sprintf_s(str, "viewY : %f", _vKnightMonster[i]->getViewY());
+		//TextOut(getMemDC(), 100, 300 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "x : %f", _vKnightMonster[i]->getX());
-	//	TextOut(getMemDC(), 300, 100 + i * 20, str, strlen(str));
+		//sprintf_s(str, "x : %f", _vKnightMonster[i]->getX());
+		//TextOut(getMemDC(), 300, 100 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "y : %f", _vKnightMonster[i]->getY());
-	//	TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
-	//}
+		//sprintf_s(str, "y : %f", _vKnightMonster[i]->getY());
+		//TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
+	}
 
 	//for (int i = 0; i < _vBallMonster.size(); i++)
 	//{
@@ -279,26 +275,26 @@ void enemyManager::enemyAI()
 			{
 				_vBallMonster[i]->setAttackAngle(getAngle(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
 				//여기는 처음에 스피드 0이랑 프레임속도 빠르게 해서 공격을 준비함.
-				_vBallMonster[i]->getMotion()->setFPS(30);
+				_vBallMonster[i]->getMotion()->setFPS(40);
 				_vBallMonster[i]->setSpeed(0);
 			}
-			// 1초에서 2초 사이에 가속도주면서 공격각도로 공격
-			else if (1.0f + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime() && 2.0f + _vBallMonster[i]->getAttackWorldTime() > TIMEMANAGER->getWorldTime())
+			// 1초에서 1.5초 사이에 가속도주면서 공격각도로 공격
+			else if (1.0f + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime() && 1.5f + _vBallMonster[i]->getAttackWorldTime() > TIMEMANAGER->getWorldTime())
 			{
 				_vBallMonster[i]->setSpeed(_vBallMonster[i]->getSpeed() + 0.3f);
 				_vBallMonster[i]->setX(_vBallMonster[i]->getX() + cosf(_vBallMonster[i]->getAttackAngle()) * _vBallMonster[i]->getSpeed());
 				_vBallMonster[i]->setY(_vBallMonster[i]->getY() + -sinf(_vBallMonster[i]->getAttackAngle()) * _vBallMonster[i]->getSpeed());
 			}
 
-			//2초에서 2.5초사이엔 스피드와 프레임 원래대로 돌려줌.
-			else if (2.0f + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime() && 2.5f + _vBallMonster[i]->getAttackWorldTime() > TIMEMANAGER->getWorldTime())
+			//1.5초에서 2초사이엔 스피드와 프레임 원래대로 돌려줌.
+			else if (1.5f + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime() && 2.0f + _vBallMonster[i]->getAttackWorldTime() > TIMEMANAGER->getWorldTime())
 			{
 				_vBallMonster[i]->setSpeed(1.0f);
 				_vBallMonster[i]->getMotion()->setFPS(5);
 			}
 
-			//2.5초가 지나면 공격끔.
-			else if (2.5f + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
+			//2초가 지나면 공격끔.
+			else if (2.0f + _vBallMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
 			{
 				_vBallMonster[i]->setMoveType(BASIC_MOVE_TYPE);
 				_vBallMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
@@ -390,7 +386,6 @@ void enemyManager::enemyAI()
 					(_vKnightMonster[i]->getTargetAngle() > (PI / 180) * 335 && _vKnightMonster[i]->getTargetAngle() < PI2))
 				{
 					_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_RIGHT);
-
 				}
 				else if (_vKnightMonster[i]->getTargetAngle() > (PI / 180) * 65 && _vKnightMonster[i]->getTargetAngle() < (PI / 180) * 115)
 				{
@@ -418,12 +413,12 @@ void enemyManager::enemyAI()
 		{
 			_vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_ATTACK);
 			_vKnightMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
-			
 		}
+		//멀어지면 랜덤으로 움직임
 		else if (_vKnightMonster[i]->getTargetDistance() > 100 && 1.0f + _vKnightMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
 		{
-		
-			_vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_MOVE);
+			if(_vKnightMonster[i]->getRndState() == 0) _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_IDLE);
+			else _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_MOVE);
 		}
 	}
 }
@@ -431,7 +426,6 @@ void enemyManager::enemyAI()
 //플레이어 공격에 에너미들이 맞을 함수
 void enemyManager::playerAttackEnemyCollision()
 {
-	RECT temp;
 	switch (_player->getPlayerState())
 	{
 	case PLAYER_ATTACK:
@@ -439,6 +433,7 @@ void enemyManager::playerAttackEnemyCollision()
 	case PLAYER_DASH_JUMP_ATTACK:
 	case PLAYER_DASH_ATTACK:
 
+		RECT temp;
 		//기사몬스터
 		for (int i = 0; i < _vKnightMonster.size(); i++)
 		{
@@ -460,6 +455,56 @@ void enemyManager::playerAttackEnemyCollision()
 				else if (_player->getPlayerDirection() == DOWN)
 				{
 					_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() + 2);
+				}
+			}
+		}
+
+		//공몬스터
+		for (int i = 0; i < _vBallMonster.size(); i++)
+		{
+			if (IntersectRect(&temp, &_attackRect, &_vBallMonster[i]->getRect()))
+			{
+				_vBallMonster[i]->setIsHit(true);
+				if (_player->getPlayerDirection() == LEFT)
+				{
+					_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 2);
+				}
+				else if (_player->getPlayerDirection() == RIGHT)
+				{
+					_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 2);
+				}
+				else if (_player->getPlayerDirection() == UP)
+				{
+					_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 2);
+				}
+				else if (_player->getPlayerDirection() == DOWN)
+				{
+					_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 2);
+				}
+			}
+		}
+
+		//불몬스터
+		for (int i = 0; i < _vFireMonster.size(); i++)
+		{
+			if (IntersectRect(&temp, &_attackRect, &_vFireMonster[i]->getRect()))
+			{
+				_vFireMonster[i]->setIsHit(true);
+				if (_player->getPlayerDirection() == LEFT)
+				{
+					_vFireMonster[i]->setX(_vFireMonster[i]->getX() - 2);
+				}
+				else if (_player->getPlayerDirection() == RIGHT)
+				{
+					_vFireMonster[i]->setX(_vFireMonster[i]->getX() + 2);
+				}
+				else if (_player->getPlayerDirection() == UP)
+				{
+					_vFireMonster[i]->setY(_vFireMonster[i]->getY() - 2);
+				}
+				else if (_player->getPlayerDirection() == DOWN)
+				{
+					_vFireMonster[i]->setY(_vFireMonster[i]->getY() + 2);
 				}
 			}
 		}

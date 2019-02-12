@@ -27,9 +27,9 @@ HRESULT enemy::init(string enemyName, const char* imageName, float x, float y, i
 	_enemy.isAttack = false; //처음엔 비공격상태
 	_enemy.worldTime = TIMEMANAGER->getWorldTime();
 	_enemy.attackWorldTime = TIMEMANAGER->getWorldTime();
+	_enemy.directionWorldTime = TIMEMANAGER->getWorldTime();
 	_enemy.alphaValue = 255;
-	_directionTime = 2.0f;
-	_directionWorldTime = TIMEMANAGER->getWorldTime();
+	_directionTime = 1.0f;
 
 	_enemy.rc = RectMakeCenter(x, y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 

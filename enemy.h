@@ -1,6 +1,6 @@
 #pragma once
 #include "gameNode.h"
-#define ATTACKFPS 5
+#define ATTACKFPS 6
 #define MOVEFPS 5
 //몬스터들의 방향
 enum ENEMYDIRECTION
@@ -16,7 +16,6 @@ enum ENEMYDIRECTION
 	FIREMONSTER_DIRECTION_RIGHT,
 	FIREMONSTER_DIRECTION_UP,
 	FIREMONSTER_DIRECTION_DOWN,
-
 
 	//나이트몬스터 방향
 	KNIGHTMONSTER_DIRECTION_LEFT,
@@ -59,6 +58,14 @@ enum ENEMYSTATE
 
 };
 
+enum ENEMYNAME
+{
+	BALLMONSTER,
+	FIREMONSTER,
+	KNIGHTMONSTER,
+	BOSS,
+};
+
 enum ENEMYMOVETYPE
 {
 	BASIC_MOVE_TYPE, //기본 움직임상태
@@ -90,6 +97,7 @@ struct tagEnemy
 	float attackAngle;
 	float attackWorldTime;
 	float worldTime;
+	float directionWorldTime;
 	bool isOneTime;
 	bool isHit; //맞았니
 	int alphaValue; //알파값
@@ -100,9 +108,9 @@ class enemy : public gameNode
 {
 protected:
 	tagEnemy _enemy;
-	int _rndDirection; //랜덤으로 방향전환
-	int _rndState; //랜덤으로 상태전환
-	float _directionTime, _directionWorldTime;
+	int _rndDirection[4]; //랜덤으로 방향전환
+	int _rndState[4]; //랜덤으로 상태전환
+	float _directionTime;
 
 public:
 	enemy();
@@ -140,6 +148,7 @@ public:
 	ENEMYSTATE getState() {return _enemy.state;}
 	void setState(ENEMYSTATE state) {_enemy.state = state;}
 
+	ENEMYMOVETYPE getMoveType() {return _enemy.moveType;}
 	void setMoveType(ENEMYMOVETYPE type) {_enemy.moveType = type;}
 	float getMoveAngle() {return _enemy.moveAngle;}
 
@@ -177,6 +186,8 @@ public:
 	bool getIsHit() {return _enemy.isHit;}
 	void setIsHit(bool hit) {_enemy.isHit = hit;}
 	tagEnemy getEnemy() {return _enemy;}
+
+	int getRndState() {return _rndState[KNIGHTMONSTER]; }
 
 
 	

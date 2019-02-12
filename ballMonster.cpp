@@ -140,40 +140,31 @@ void ballMonster::move()
 			break;
 		}
 		//몬스터들은 랜덤으로 움직인다.
-		if (_directionTime + _directionWorldTime <= TIMEMANAGER->getWorldTime() && _enemy.isAttack == false)
+		if (_directionTime + _enemy.directionWorldTime <= TIMEMANAGER->getWorldTime() && _enemy.isAttack == false)
 		{
-			_rndDirection = RND->getInt(4);
-			_rndState = RND->getInt(2);
+			_rndDirection[BALLMONSTER] = RND->getInt(4);
+			_rndState[BALLMONSTER] = RND->getInt(2);
 
-			if (_rndDirection == 0)
+			if (_rndDirection[BALLMONSTER] == 0)
 			{
 				_enemy.direction = BALLMONSTER_DIRECTION_DOWN;
-
-				if (_rndState == 0)	_enemy.state = BALLMONSTER_STATE_IDLE;
-				else _enemy.state = BALLMONSTER_STATE_MOVE;
 			}
-			else if (_rndDirection == 1)
+			else if (_rndDirection[BALLMONSTER] == 1)
 			{
 				_enemy.direction = BALLMONSTER_DIRECTION_UP;
-
-				if (_rndState == 0)	_enemy.state = BALLMONSTER_STATE_IDLE;
-				else _enemy.state = BALLMONSTER_STATE_MOVE;
 			}
-			else if (_rndDirection == 2)
+			else if (_rndDirection[BALLMONSTER] == 2)
 			{
 				_enemy.direction = BALLMONSTER_DIRECTION_RIGHT;
-
-				if (_rndState == 0)	_enemy.state = BALLMONSTER_STATE_IDLE;
-				else _enemy.state = BALLMONSTER_STATE_MOVE;
 			}
-			else if (_rndDirection == 3)
+			else if (_rndDirection[BALLMONSTER] == 3)
 			{
 				_enemy.direction = BALLMONSTER_DIRECTION_LEFT;
-
-				if (_rndState == 0)	_enemy.state = BALLMONSTER_STATE_IDLE;
-				else _enemy.state = BALLMONSTER_STATE_MOVE;
 			}
-			_directionWorldTime = TIMEMANAGER->getWorldTime();
+
+			if (_rndState[BALLMONSTER] == 0) _enemy.state = BALLMONSTER_STATE_IDLE;
+			else _enemy.state = BALLMONSTER_STATE_MOVE;
+			_enemy.directionWorldTime = TIMEMANAGER->getWorldTime();
 		}
 	}
 	else if (_enemy.moveType == FOLLOW_MOVE_TYPE)

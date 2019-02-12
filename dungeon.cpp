@@ -61,7 +61,6 @@ void dungeon::render()
 {
 
 	_dungeon->render(_camera->getCameraX(), _camera->getCameraY());
-
 	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY());
 

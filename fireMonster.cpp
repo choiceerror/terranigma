@@ -91,40 +91,30 @@ void fireMonster::move()
 		}
 
 		//몬스터들은 랜덤으로 움직인다.
-		if (_directionTime + _directionWorldTime <= TIMEMANAGER->getWorldTime())
+		if (_directionTime + _enemy.directionWorldTime <= TIMEMANAGER->getWorldTime())
 		{
-			_rndDirection = RND->getInt(4);
-			_rndState = RND->getInt(2);
+			_rndDirection[FIREMONSTER] = RND->getInt(4);
+			_rndState[FIREMONSTER] = RND->getInt(2);
 
-			if (_rndDirection == 0)
+			if (_rndDirection[FIREMONSTER] == 0)
 			{
 				_enemy.direction = FIREMONSTER_DIRECTION_DOWN;
-
-				if (_rndState == 0)	_enemy.state = FIREMONSTER_STATE_IDLE;
-				else _enemy.state = FIREMONSTER_STATE_MOVE;
 			}
-			else if (_rndDirection == 1)
+			else if (_rndDirection[FIREMONSTER] == 1)
 			{
 				_enemy.direction = FIREMONSTER_DIRECTION_UP;
-
-				if (_rndState == 0)	_enemy.state = FIREMONSTER_STATE_IDLE;
-				else _enemy.state = FIREMONSTER_STATE_MOVE;
 			}
-			else if (_rndDirection == 2)
+			else if (_rndDirection[FIREMONSTER] == 2)
 			{
 				_enemy.direction = FIREMONSTER_DIRECTION_RIGHT;
-
-				if (_rndState == 0)	_enemy.state = FIREMONSTER_STATE_IDLE;
-				else _enemy.state = FIREMONSTER_STATE_MOVE;
 			}
-			else if (_rndDirection == 3)
+			else if (_rndDirection[FIREMONSTER] == 3)
 			{
 				_enemy.direction = FIREMONSTER_DIRECTION_LEFT;
-
-				if (_rndState == 0)	_enemy.state = FIREMONSTER_STATE_IDLE;
-				else _enemy.state = FIREMONSTER_STATE_MOVE;
 			}
-			_directionWorldTime = TIMEMANAGER->getWorldTime(); //시간갱신
+			if (_rndState[FIREMONSTER] == 0)	_enemy.state = FIREMONSTER_STATE_IDLE;
+			else _enemy.state = FIREMONSTER_STATE_MOVE;
+			_enemy.directionWorldTime = TIMEMANAGER->getWorldTime(); //시간갱신
 		}
 	}
 	else if (_enemy.moveType == FOLLOW_MOVE_TYPE)
