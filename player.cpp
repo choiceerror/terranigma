@@ -13,22 +13,24 @@ player::~player()
 
 HRESULT player::init()
 {
-	IMAGEMANAGER->addFrameImage("player", "image/player_test.bmp", 0, 0, 1008, 2821, 12, 31, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("player", "image/player_test.bmp", 0, 0, 2016, 5642, 12, 31, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("player_obj", "image/player_obj.bmp", 0, 0, 1540, 800, 10, 10, true, RGB(255, 0, 255));
 
 	_player.image = IMAGEMANAGER->findImage("player");
 	_player.image_obj = IMAGEMANAGER->findImage("player_obj");
+	_player.image->setAlpahBlend(true);
 
 	keyFrameInit();
 
-	_player.x = WINSIZEX / 2;
-	_player.y = WINSIZEY / 2;
+	_player.x = GAMESIZEX / 2;
+	_player.y = GAMESIZEY / 2;
 	_player.speed = 3;
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 60);
 	_player.state = PLAYER_IDLE;
 	_player.direction = DOWN;
 	_player.jumpPower = 8.0f;
 	_player.gravity = 0.4f;
+	_player.alphaRender = 255;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -40,6 +42,8 @@ HRESULT player::init()
 	_attackComboKey = 0;
 
 	_isRun = _isAttack = _isJump = _isWalk = false;
+
+	_playerProtect = _alphaChange =  false;
 
 	_attackMoveStop = false;
 
@@ -97,8 +101,7 @@ void player::update()
 
 void player::render(float cameraX, float cameraY)
 {
-	//_player.image->aniRender(getMemDC(),_player.x, _player.y, _player.ani);
-	_player.image->expandAniRenderCenter(getMemDC(), _player.x - cameraX, _player.y - cameraY, _player.ani, 2, 2);
+	_player.image->alphaAniRenderCenter(getMemDC(), _player.x - cameraX, _player.y - cameraY, _player.ani, _player.alphaRender);
 	//Rectangle(getMemDC(), _player.rc);
 	char str[128];
 	for (int i = 0; i < 4; i++)
@@ -115,8 +118,10 @@ void player::render(float cameraX, float cameraY)
 	sprintf_s(str, "%d", _player.direction);
 	TextOut(getMemDC(), 120, 120, str, strlen(str));
 
-	sprintf_s(str, "%d", _isAttack);
+	sprintf_s(str, "%d", _player.alphaRender);
 	TextOut(getMemDC(), 140, 120, str, strlen(str));
+
+	enemyCollision();
 
 }
 // 캐릭터 프레임 초기값
@@ -542,4 +547,56 @@ void player::callBackJump(void * obj)
 	}
 	playerAttack->getPlayerAni()->start();
 
+}
+
+void player::enemyCollision()
+{
+	RECT rc;
+	for (int i = 0; i < _enemyManager->getVBallMonster().size(); i++)
+	{
+		if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVBallMonster()[i]->getRect()) )
+		{
+			_playerProtect = true;
+			_alphaChangeTime = GetTickCount();
+			_playerProtectTime = GetTickCount();
+		}
+	}
+	for (int i = 0; i < _enemyManager->getVFireMonster().size(); i++)
+	{
+		if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVFireMonster()[i]->getRect()) || 
+			_enemyManager->getVFireMonster()[i]->getIsAttack())
+		{
+			_playerProtect = true;
+			_alphaChangeTime = GetTickCount();
+			_playerProtectTime = GetTickCount();
+		}
+	}
+	for (int i = 0; i < _enemyManager->getVKnightMonster().size(); i++)
+	{
+		if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVKnightMonster()[i]->getRect()) || 
+			IntersectRect(&rc, &_player.rc, &_enemyManager->getVKnightMonster()[i]->getAttackRect()))
+		{
+			_playerProtect = true;
+			_alphaChangeTime = GetTickCount();
+			_playerProtectTime = GetTickCount();
+		}
+	}
+
+	if (_playerProtect)
+	{
+		if (GetTickCount() - _alphaChangeTime >= 200) _player.alphaRender = 200;
+		{
+			if (!_alphaChange) _alphaChange = true;
+			else _alphaChange = false;
+			_alphaChangeTime = GetTickCount();
+		}
+		if (!_alphaChange) 	_player.alphaRender = 150;
+		else 	_player.alphaRender = 200;
+
+		if (GetTickCount() - _playerProtectTime >= 1 * 800)
+		{
+			_player.alphaRender = 255;
+			_playerProtect = false;
+		}
+	}
 }

@@ -60,6 +60,7 @@ struct tagPlayer
 	int str;						//공격력
 	int def;						//방어력
 	int money;						//돈
+	int alphaRender;				//투명도
 };
 
 class player : public gameNode
@@ -80,8 +81,14 @@ private:
 	float _startX;						// 점프 시작 위치
 	float _startY;						// 점프 시작 위치
 
-	bool _attackMoveStop;
-	int _attackMoveStopTime;
+	bool _attackMoveStop;				// 공격 중엔 움직이지마
+	int _attackMoveStopTime;			// 몇 초 동안
+
+	int _playerProtectTime;				
+	int _alphaChangeTime;
+	bool _playerProtect;				//몬스터에게 공격당했을 때
+	bool _alphaChange;					//플레이어 알파블랜드 적용중
+	
 
 	bool _isRun;						// 뛰는중
 	bool _isAttack;						// 공격중
@@ -113,7 +120,7 @@ public:
 	//재생에 중복되는 코드 함수화
 	void playerAniName(string targetName, string aniName);
 
-	//void playerWorldMap();
+	void enemyCollision();
 
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 
@@ -155,7 +162,5 @@ public:
 
 	bool getPlayerJump() { return _isJump; }
 	bool getPlayerRun() { return _isRun; }
-
-
 };
 
