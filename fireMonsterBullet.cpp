@@ -38,7 +38,7 @@ void fireMonsterBullet::render(float cameraX, float cameraY)
 		//카메라 좌표에따라 가상좌표 계산
 		_viFireBullet->viewX = _viFireBullet->x - cameraX;
 		_viFireBullet->viewY = _viFireBullet->y - cameraY;
-		_viFireBullet->image->expandAniRenderCenter(getMemDC(), _viFireBullet->viewX, _viFireBullet->viewY, _viFireBullet->fireBulletAni, 3.f, 3.f);
+		_viFireBullet->image->expandAniRenderCenter(getMemDC(), _viFireBullet->viewX, _viFireBullet->viewY, _viFireBullet->fireBulletAni, 1.5f, 1.5f);
 		//Rectangle(getMemDC(), _viFireBullet->rc);
 	}
 }

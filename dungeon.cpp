@@ -16,9 +16,9 @@ HRESULT dungeon::init()
 	setWindowsSize(WINSTARTX, WINSTARTY, GAMESIZEX, GAMESIZEY);
 
 
-	IMAGEMANAGER->addFrameImage("ballMonster", "image/enemy1.bmp", 64, 64, 4, 4, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("fireMonster", "image/enemy2.bmp", 90, 87, 5, 3, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("knightMonster", "image/enemy_3.bmp", 910, 800, 7, 8, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("ballMonster", "image/enemy1.bmp", 128, 128, 4, 4, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("fireMonster", "image/enemy2.bmp", 180, 174, 5, 3, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("knightMonster", "image/enemy3.bmp", 1820, 1600, 7, 8, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("boss", "image/º¸½º.bmp", 1048, 239, 4, 1, true, MAGENTA);
 
 	_enemyManager = new enemyManager;
@@ -47,12 +47,13 @@ void dungeon::release()
 	SAFE_DELETE(_enemyManager);
 	SAFE_DELETE(_player);
 	SAFE_DELETE(_dungeon);
+	SAFE_DELETE(_camera);
 }
 
 void dungeon::update()
 {
-	_enemyManager->update();
 	_player->update();
+	_enemyManager->update();
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 }
 
@@ -63,6 +64,15 @@ void dungeon::render()
 
 	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY());
+
+
+	//char str[128];
+
+	//sprintf_s(str, "cameraX : %f", _camera->getCameraX());
+	//TextOut(getMemDC(), 600, 500, str, strlen(str));
+
+	//sprintf_s(str, "cameraY : %f", _camera->getCameraY());
+	//TextOut(getMemDC(), 600, 520, str, strlen(str));
 
 }
 
@@ -83,7 +93,5 @@ void dungeon::setWindowsSize(int x, int y, int width, int height)
 		(winRect.right - winRect.left),
 		(winRect.bottom - winRect.top),
 		SWP_NOZORDER | SWP_NOMOVE);
-
-
 
 }

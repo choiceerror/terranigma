@@ -19,6 +19,7 @@ HRESULT ballMonster::init(string enemyName, const char * imageName, float x, flo
 	_enemy.currentHP = _enemy.maxHP = hp;
 	_enemy.state = BALLMONSTER_STATE_IDLE;
 	_enemy.direction = BALLMONSTER_DIRECTION_DOWN;
+	_enemy.image->setAlpahBlend(true);
 
 	int upIdle[] = { 0 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upIdle", imageName, upIdle, 1, MOVEFPS, true);
@@ -71,7 +72,19 @@ void ballMonster::update()
 	{
 		_enemy.isOneTime = false; 
 	}
-	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 20, _enemy.image->getFrameHeight() * 20);
+
+	//알파값조정
+	if (_enemy.isHit == true)
+	{
+		_enemy.alphaValue -= 20;
+
+		if (_enemy.alphaValue <= 80)
+		{
+			_enemy.isHit = false;
+			_enemy.alphaValue = 255;
+		}
+	}
+	_enemy.rangeRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() * 15, _enemy.image->getFrameHeight() * 15);
 }
 
 void ballMonster::render(float cameraX, float cameraY)
@@ -80,13 +93,13 @@ void ballMonster::render(float cameraX, float cameraY)
 	//Rectangle(getMemDC(), _enemy.rc);
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
-	_enemy.image->expandAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion, 2.f , 2.f);
+	_enemy.image->alphaAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion, _enemy.alphaValue);
+	//_enemy.image->expandAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion, 2.f , 2.f);
 
 }
 
 void ballMonster::move()
 {
-
 	if (_enemy.moveType == BASIC_MOVE_TYPE)
 	{
 		//상태에 따라 프레임 동작

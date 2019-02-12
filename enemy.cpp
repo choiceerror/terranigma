@@ -27,6 +27,7 @@ HRESULT enemy::init(string enemyName, const char* imageName, float x, float y, i
 	_enemy.isAttack = false; //처음엔 비공격상태
 	_enemy.worldTime = TIMEMANAGER->getWorldTime();
 	_enemy.attackWorldTime = TIMEMANAGER->getWorldTime();
+	_enemy.alphaValue = 255;
 	_directionTime = 2.0f;
 	_directionWorldTime = TIMEMANAGER->getWorldTime();
 

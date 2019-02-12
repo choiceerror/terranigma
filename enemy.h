@@ -91,6 +91,8 @@ struct tagEnemy
 	float attackWorldTime;
 	float worldTime;
 	bool isOneTime;
+	bool isHit; //맞았니
+	int alphaValue; //알파값
 	int tileIndex[2];
 };
 
@@ -172,6 +174,8 @@ public:
 	void setWorldTime(float worldTime) { _enemy.worldTime = worldTime; }
 	void setAttackWorldTime(float attackWorldTime) { _enemy.attackWorldTime = attackWorldTime; }
 
+	bool getIsHit() {return _enemy.isHit;}
+	void setIsHit(bool hit) {_enemy.isHit = hit;}
 	tagEnemy getEnemy() {return _enemy;}
 
 

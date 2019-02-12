@@ -135,6 +135,7 @@ public:
 
 	void aniRender(HDC hdc, int destX, int destY, animation* ani);
 	void alphaAniRender(HDC hdc, int destX, int destY, animation* ani, BYTE alpha = 255);
+	void alphaAniRenderCenter(HDC hdc, int centerX, int centerY, animation* ani, BYTE alpha = 255);
 
 	//사이즈랜더(sizeX,Y는 배율! 1.0f이면 이미지가 1배(기본),2.0f하면 2배로 커진다.)
 	void expandRender(HDC hdc, int destX, int destY, int currentFrameX, int currentFrameY, float sizeX = 1.0f, float sizeY = 1.0f);
