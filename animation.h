@@ -73,6 +73,7 @@ public:
 	void stop();		//정지
 	void pause();		//일시정지
 	void resume();		//다시재생
+	void effectStart(); //이펙트 재생
 
 	inline BOOL isPlay() { return _play; }
 	inline POINT getFramePos() { return _frameList[_playList[_nowPlayIndex]]; }

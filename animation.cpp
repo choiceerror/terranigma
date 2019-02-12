@@ -671,7 +671,6 @@ void animation::start()
 {
 	_play = TRUE;
 	//_nowPlayIndex = 0;
-
 }
 
 void animation::stop()
@@ -689,4 +688,10 @@ void animation::pause()
 void animation::resume()
 {
 	_play = TRUE;
+}
+
+void animation::effectStart()
+{
+	_play = TRUE;
+	_nowPlayIndex = 0;
 }

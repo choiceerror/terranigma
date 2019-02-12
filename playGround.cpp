@@ -56,6 +56,7 @@ void playGround::update()
 
 	SCENEMANAGER->update();
 	KEYANIMANAGER->update();
+	EFFECTMANAGER->update();
 }
 
 
@@ -66,6 +67,7 @@ void playGround::render()
 	//===========================================================
 
 	SCENEMANAGER->render();
+	EFFECTMANAGER->render();
 
 	TIMEMANAGER->render(getMemDC());
 	//===========================================================

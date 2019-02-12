@@ -468,6 +468,7 @@ void enemyManager::playerAttackEnemyCollision()
 			if (IntersectRect(&temp, &_attackRect, &_vBallMonster[i]->getRect()))
 			{
 				_vBallMonster[i]->setIsHit(true);
+				_vBallMonster[i]->setCurrentHP(_vBallMonster[i]->getCurrentHP() - 10);
 				if (_player->getPlayerDirection() == LEFT)
 				{
 					_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 2);
@@ -493,6 +494,7 @@ void enemyManager::playerAttackEnemyCollision()
 			if (IntersectRect(&temp, &_attackRect, &_vFireMonster[i]->getRect()))
 			{
 				_vFireMonster[i]->setIsHit(true);
+				_vFireMonster[i]->setCurrentHP(_vFireMonster[i]->getCurrentHP() - 10);
 				if (_player->getPlayerDirection() == LEFT)
 				{
 					_vFireMonster[i]->setX(_vFireMonster[i]->getX() - 2);
@@ -545,11 +547,34 @@ void enemyManager::fireMonsterBulletFire(int i)
 //에너미들이 죽을함수
 void enemyManager::enemyDead()
 {
+	//기사몬스터
 	for (int i = 0; i < _vKnightMonster.size();)
 	{
 		if (_vKnightMonster[i]->getCurrentHP() <= 0.0f)
 		{
+			EFFECTMANAGER->play("deadEffect", _vKnightMonster[i]->getViewX(), _vKnightMonster[i]->getViewY());
 			_vKnightMonster.erase(_vKnightMonster.begin() + i);
+		}
+		else i++;
+	}
+
+	//공몬스터
+	for (int i = 0; i < _vBallMonster.size();)
+	{
+		if (_vBallMonster[i]->getCurrentHP() <= 0.0f)
+		{
+			EFFECTMANAGER->play("deadEffect", _vBallMonster[i]->getViewX(), _vBallMonster[i]->getViewY());
+			_vBallMonster.erase(_vBallMonster.begin() + i);
+		}
+		else i++;
+	}
+
+	for (int i = 0; i < _vFireMonster.size();)
+	{
+		if (_vFireMonster[i]->getCurrentHP() <= 0.0f)
+		{
+			EFFECTMANAGER->play("deadEffect", _vFireMonster[i]->getViewX(), _vFireMonster[i]->getViewY());
+			_vFireMonster.erase(_vFireMonster.begin() + i);
 		}
 		else i++;
 	}

@@ -72,7 +72,7 @@ void effect::startEffect(int x, int y)
 
 	_isRunning = true;
 
-	_effectAnimation->start();
+	_effectAnimation->effectStart();
 }
 
 void effect::killEffect()
