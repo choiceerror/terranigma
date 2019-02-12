@@ -23,8 +23,6 @@ HRESULT ui::init()
 
 	dataLode();
 
-	_iMgr->dropArmor(370, 200, ARMORTYPE::ICE_ARMOR);
-
 	IMAGEMANAGER->addFrameImage("yomi", "image/NPC_yomi.bmp", 275, 112, 11, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("UI", "image/UI.bmp", 4096, 768, 4, 1, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("UIIndex", "image/UIIndex.bmp", 4096, 768, 4, 1, true, MAGENTA);

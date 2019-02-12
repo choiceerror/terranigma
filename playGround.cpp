@@ -53,6 +53,19 @@ void playGround::update()
 	{
 		SCENEMANAGER->changeScene("dungeon");
 	}
+	if (KEYMANAGER->isOnceKeyDown(VK_F2))
+	{
+		SCENEMANAGER->changeScene("ui");
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_F3))
+	{
+		SCENEMANAGER->changeScene("town");
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_F4))
+	{
+		SCENEMANAGER->changeScene("worldMap");
+	}
+	
 
 	SCENEMANAGER->update();
 	KEYANIMANAGER->update();
