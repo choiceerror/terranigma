@@ -66,7 +66,7 @@ void player::update()
 	}
 	else _isRun = false;
 
-	if (_player.state == PLAYER_DASH_ATTACK || _player.state == PLAYER_ATTACK || _player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK)
+	if (_player.state == PLAYER_DASH_ATTACK || _player.state == PLAYER_ATTACK || _player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK || _player.state == PLAYER_COMBINATION)
 	{
 		_isAttack = true;
 	}
@@ -115,7 +115,7 @@ void player::render(float cameraX, float cameraY)
 	sprintf_s(str, "%d", _player.direction);
 	TextOut(getMemDC(), 120, 120, str, strlen(str));
 
-	sprintf_s(str, "%d", _attackMoveStop);
+	sprintf_s(str, "%d", _isAttack);
 	TextOut(getMemDC(), 140, 120, str, strlen(str));
 
 }
@@ -335,11 +335,14 @@ void player::keyInput()
 	{
 		if (GetTickCount() - _oldJumpTime >= 1 * 900)
 		{
-			_startX = _player.x;
-			_startY = _player.y;
-			_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
-			_player.state = PLAYER_JUMP;
-			_oldJumpTime = GetTickCount();
+			if (!_isAttack)
+			{
+				_startX = _player.x;
+				_startY = _player.y;
+				_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
+				_player.state = PLAYER_JUMP;
+				_oldJumpTime = GetTickCount();
+			}
 		}
 	}
 	DoubleKeyIntVoid();
@@ -351,7 +354,7 @@ void player::keyDownInput(PLAYERDIRECTION direction)
 	{
 		if (!_isAttack)
 		{
-			if (!(_player.state == PLAYER_JUMP_ATTACK)) _player.direction = direction;
+			if (!(_player.state == PLAYER_JUMP_ATTACK) && !(_player.state == PLAYER_COMBINATION)) _player.direction = direction;
 		}
 		if (!(_player.state == PLAYER_DASH_ATTACK))
 		{

@@ -35,8 +35,9 @@ HRESULT PlayerWorldMap::init()
 	_x = WINSIZEX / 2;
 	_y = WINSIZEY / 2;
 	_speed = 3;
-	_playerRc = RectMakeCenter(_x, _y + 10, 30, 30);
+	_playerRc = RectMakeCenter(_x, _y, 30, 30);
 	_playerDirection = WORLDMAP_IDLE_DOWN;
+
 	return S_OK;
 }
 
@@ -46,33 +47,35 @@ void PlayerWorldMap::release()
 
 void PlayerWorldMap::update()
 {
-	if (KEYMANAGER->isStayKeyDown(VK_NUMPAD4))
+
+	if (KEYMANAGER->isStayKeyDown(VK_NUMPAD4) && !(KEYMANAGER->isStayKeyDown(VK_NUMPAD8) || KEYMANAGER->isStayKeyDown(VK_NUMPAD5)))
 	{
 		_x -= _speed;
 		_playerDirection = WORLDMAP_MOVE_LEFT;
 	}
-	if (KEYMANAGER->isOnceKeyUp(VK_NUMPAD4)) 	_playerDirection = WORLDMAP_IDLE_LEFT;
-	
-	if (KEYMANAGER->isStayKeyDown(VK_NUMPAD6))
+	else if (KEYMANAGER->isStayKeyDown(VK_NUMPAD6) && !(KEYMANAGER->isStayKeyDown(VK_NUMPAD8) || KEYMANAGER->isStayKeyDown(VK_NUMPAD5)))
 	{
 		_x += _speed;
 		_playerDirection = WORLDMAP_MOVE_RIGHT;
 	}
-	if (KEYMANAGER->isOnceKeyUp(VK_NUMPAD6)) 	_playerDirection = WORLDMAP_IDLE_RIGHT;
-
-	if (KEYMANAGER->isStayKeyDown(VK_NUMPAD8))
+	else if (KEYMANAGER->isStayKeyDown(VK_NUMPAD8) && !(KEYMANAGER->isStayKeyDown(VK_NUMPAD4) || KEYMANAGER->isStayKeyDown(VK_NUMPAD6)))
 	{
 		_y -= _speed;
 		_playerDirection = WORLDMAP_MOVE_UP;
 	}
-	if (KEYMANAGER->isOnceKeyUp(VK_NUMPAD8)) 	_playerDirection = WORLDMAP_IDLE_UP;
-
-	if (KEYMANAGER->isStayKeyDown(VK_NUMPAD5))
+	else if (KEYMANAGER->isStayKeyDown(VK_NUMPAD5) && !(KEYMANAGER->isStayKeyDown(VK_NUMPAD4) || KEYMANAGER->isStayKeyDown(VK_NUMPAD6)))
 	{
 		_y += _speed;
 		_playerDirection = WORLDMAP_MOVE_DOWN;
 	}
-	if (KEYMANAGER->isOnceKeyUp(VK_NUMPAD5)) 	_playerDirection = WORLDMAP_IDLE_DOWN;
+
+	if (KEYMANAGER->isOnceKeyUp(VK_NUMPAD4) && _playerDirection == WORLDMAP_MOVE_LEFT) 	_playerDirection = WORLDMAP_IDLE_LEFT;
+
+	if (KEYMANAGER->isOnceKeyUp(VK_NUMPAD6) && _playerDirection == WORLDMAP_MOVE_RIGHT) 	_playerDirection = WORLDMAP_IDLE_RIGHT;
+	
+	if (KEYMANAGER->isOnceKeyUp(VK_NUMPAD8) && _playerDirection == WORLDMAP_MOVE_UP) 	_playerDirection = WORLDMAP_IDLE_UP;
+	
+	if (KEYMANAGER->isOnceKeyUp(VK_NUMPAD5) && _playerDirection == WORLDMAP_MOVE_DOWN) 	_playerDirection = WORLDMAP_IDLE_DOWN;
 
 	switch (_playerDirection)
 	{
@@ -110,10 +113,11 @@ void PlayerWorldMap::update()
 		break;
 	}
 
-	_playerRc = RectMakeCenter(_x, _y + 10, 30, 30);
+	_playerRc = RectMakeCenter(_x, _y + 20, 30, 30);
 }
 
 void PlayerWorldMap::render(float cameraX, float cameraY)
 {
 	_playerImage->expandAniRenderCenter(getMemDC(), _x - cameraX, _y - cameraY, _ani, 2, 2);
+	Rectangle(getMemDC(), _playerRc);
 }
