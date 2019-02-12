@@ -13,7 +13,7 @@ mapTool::~mapTool()
 
 HRESULT mapTool::init()
 {
-	IMAGEMANAGER->addFrameImage("Å¸ÀÏ¸Ê", "tileimage\\terranigma.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("Å¸ÀÏ¸Ê", "tileimage\\terranigma3.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("Å¸ÀÏ¸Ê2", "tileimage\\terranigma2.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("Å¸ÀÏ¸Ê4", "tileimage\\terranigma4.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("save", "tileimage\\save.bmp", 120, 50, true, RGB(255, 0, 255));
@@ -193,7 +193,7 @@ void mapTool::render()
 		HBRUSH brush = CreateSolidBrush(MAGENTA);
 		HBRUSH oldBrush = (HBRUSH)SelectObject(getMemDC(), brush);
 
-		if (_tileBox.x > 0 && _tileBox.y > 0)
+		if (_tileBox.x >= 0 && _tileBox.y >= 0)
 		{
 			MoveToEx(getMemDC(), _tilesetting[_tileBox.x + _tileBox.y * 30].tilerc.left, _tilesetting[_tileBox.x + _tileBox.y * 30].tilerc.top, NULL);
 			LineTo(getMemDC(), _tilesetting[_tileBox.lastX + _tileBox.lastY * 30].tilerc.right, _tilesetting[_tileBox.x + _tileBox.y * 30].tilerc.top);
