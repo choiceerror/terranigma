@@ -98,7 +98,7 @@ void dungeonMap::load()
 	DWORD read2;
 	char mapSize[128];
 
-	file2 = CreateFile("saveFile\\mapSize.map", GENERIC_READ, NULL, NULL,
+	file2 = CreateFile("saveFile\\dungeonSize.map", GENERIC_READ, NULL, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(file2, mapSize, 128, &read2, NULL);
 
@@ -138,7 +138,7 @@ void dungeonMap::load()
 	HANDLE file;
 	DWORD read;
 
-	file = CreateFile("saveFile\\mapSave.map", GENERIC_READ, NULL, NULL,
+	file = CreateFile("saveFile\\dungeonSave.map", GENERIC_READ, NULL, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);

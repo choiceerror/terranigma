@@ -50,7 +50,7 @@ void boss::move()
 	{
 	case BOSS_STATE_IDLE:
 		_enemy.motion->start();
-
+		break;
 	}
 
 }

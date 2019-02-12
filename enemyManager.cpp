@@ -91,20 +91,20 @@ void enemyManager::render(float cameraX, float cameraY)
 
 	//for (int i = 0; i < _vKnightMonster.size(); i++)
 	//{
-		//sprintf_s(str, "moveType : %d", _vKnightMonster[i]->getMoveType());
-		//TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
+	//	sprintf_s(str, "moveType : %d", _vKnightMonster[i]->getMoveType());
+	//	TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
 
-		//sprintf_s(str, "state : %d", _vKnightMonster[i]->getState());
-		//TextOut(getMemDC(), 100, 400 + i * 20, str, strlen(str));
+	//	sprintf_s(str, "state : %d", _vKnightMonster[i]->getState());
+	//	TextOut(getMemDC(), 100, 400 + i * 20, str, strlen(str));
 
-		//sprintf_s(str, "viewY : %f", _vKnightMonster[i]->getViewY());
-		//TextOut(getMemDC(), 100, 300 + i * 20, str, strlen(str));
+	//	sprintf_s(str, "viewY : %f", _vKnightMonster[i]->getViewY());
+	//	TextOut(getMemDC(), 100, 300 + i * 20, str, strlen(str));
 
-		//sprintf_s(str, "x : %f", _vKnightMonster[i]->getX());
-		//TextOut(getMemDC(), 300, 100 + i * 20, str, strlen(str));
+	//	sprintf_s(str, "x : %f", _vKnightMonster[i]->getX());
+	//	TextOut(getMemDC(), 300, 100 + i * 20, str, strlen(str));
 
-		//sprintf_s(str, "hp : %d", _vKnightMonster[i]->getCurrentHP());
-		//TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
+	//	sprintf_s(str, "hp : %d", _vKnightMonster[i]->getCurrentHP());
+	//	TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
 	//}
 
 	//for (int i = 0; i < _vBallMonster.size(); i++)
@@ -125,11 +125,11 @@ void enemyManager::render(float cameraX, float cameraY)
 	//	TextOut(getMemDC(), 800, 200 + i * 20, str, strlen(str));
 	//}
 
-	for (int i = 0; i < _vFireMonster.size(); i++)
-	{
-		sprintf_s(str, "isAttack : %d", _vFireMonster[i]->getIsAttack());
-		TextOut(getMemDC(), 600, 100 + i * 20, str, strlen(str));
-	}
+	//for (int i = 0; i < _vFireMonster.size(); i++)
+	//{
+	//	sprintf_s(str, "isAttack : %d", _vFireMonster[i]->getIsAttack());
+	//	TextOut(getMemDC(), 600, 100 + i * 20, str, strlen(str));
+	//}
 }
 
 //업데이트 모음
