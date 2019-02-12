@@ -1,7 +1,7 @@
 #pragma once
 #include "item.h"
 
-enum class TagPotion
+enum class POTIONTYPE
 {
 	NONE,
 	SMALL,
@@ -14,13 +14,13 @@ class Potion : public item
 private:
 	int _hpUpPoint;
 
-	TagPotion _potionType;
+	POTIONTYPE _potionType;
 
 public:
 	Potion();
 	~Potion();
 
-	virtual HRESULT init(const char* imageName, float x, float y, int frameX, int frameY);
+	virtual HRESULT init(const char* imageName, float x, float y, POTIONTYPE potionType);
 	virtual void release();
 	virtual void update();
 	virtual void render(float cameraX,float cameraY);
@@ -28,6 +28,6 @@ public:
 	int getHpUpPoint() { return _hpUpPoint; }
 	void setHpUpPoint(int hpUpPoint) { _hpUpPoint = hpUpPoint; }
 
-	TagPotion getTagPotion() { return _potionType; }
+	POTIONTYPE getTagPotion() { return _potionType; }
 };
 

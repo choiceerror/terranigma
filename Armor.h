@@ -1,7 +1,7 @@
 #pragma once
 #include "item.h"
 
-enum class TagArmor
+enum class ARMORTYPE
 {
 	NONE,
 	ICE_ARMOR,
@@ -14,7 +14,7 @@ class Armor : public item
 private:
 
 	int _armorPoint;
-	TagArmor _armorType;
+	ARMORTYPE _armorType;
 
 
 
@@ -24,7 +24,7 @@ public:
 
 
 
-	virtual HRESULT init(const char* imageName, float x, float y, int frameX, int frameY);
+	virtual HRESULT init(const char* imageName, float x, float y,ARMORTYPE armorType);
 	virtual void release();
 	virtual void update();
 	virtual void render(float cameraX, float cameraY);
@@ -32,6 +32,6 @@ public:
 	int getArmorPoint() { return _armorPoint; }
 	void setArmorPoint(int armorPoint) { _armorPoint = armorPoint; }
 
-	TagArmor getTagArmor() { return _armorType; }
+	ARMORTYPE getTagArmor() { return _armorType; }
 };
 

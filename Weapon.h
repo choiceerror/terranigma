@@ -1,7 +1,7 @@
 #pragma once
 #include "item.h"
 
-enum class TagWeapon
+enum class WEAPONTYPE
 {
 	NONE,
 	ICE_SPEAR,
@@ -14,13 +14,13 @@ class Weapon : public item
 private:
 	int _damagePoint;
 
-	TagWeapon _weaponType;
+	WEAPONTYPE _weaponType;
 
 public:
 	Weapon();
 	~Weapon();
 
-	virtual HRESULT init(const char* imageName, float x, float y, int frameX, int frameY);
+	virtual HRESULT init(const char* imageName, float x, float y, WEAPONTYPE weaponType);
 	virtual void release();
 	virtual void update();
 	virtual void render(float cameraX, float cameraY);
@@ -28,6 +28,6 @@ public:
 	int getDamagePoint() { return _damagePoint; }
 	void setDamagePoint(int damage) { _damagePoint = damage; }
 
-	TagWeapon getTagWeapon() { return _weaponType; }
+	WEAPONTYPE getTagWeapon() { return _weaponType; }
 };
 

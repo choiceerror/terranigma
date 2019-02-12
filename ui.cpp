@@ -18,7 +18,11 @@ HRESULT ui::init()
 	_blackFade = new blackFadeOut;
 	_blackFade->init();
 
+	_iMgr = new ItemManager;
+	_iMgr->init();
+
 	dataLode();
+
 
 	IMAGEMANAGER->addFrameImage("yomi", "image/NPC_yomi.bmp", 275, 112, 11, 2, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("UI", "image/UI.bmp", 4096, 768, 4, 1, true, MAGENTA);
@@ -50,11 +54,13 @@ HRESULT ui::init()
 void ui::release()
 {
 	SAFE_DELETE(_blackFade);
+	SAFE_DELETE(_iMgr);
 }
 
 void ui::update()
 {
 	_blackFade->update();
+	_iMgr->update();
 
 	//요미이동 목표점 설정
 	movePoint();
@@ -66,6 +72,8 @@ void ui::update()
 	placeChange();
 
 
+	//아이템 셋팅
+	itemSetting();
 
 	//===============지울것================
 	//_goal = RectMake(_goalX, _goalY, 10, 10);
@@ -102,9 +110,13 @@ void ui::render()
 	{
 		IMAGEMANAGER->frameRender("UIIndex", getMemDC(), 0, 0, _placeFrameX, 0);
 	}
+	_iMgr->render();
 	IMAGEMANAGER->expandRender("yomi", getMemDC(), _x - 30, _y - 36 * 3, _yomiFrameX, _yomiFrameY, 3.f, 3.f);
 
 	_blackFade->render();
+
+
+
 
 	//char str[100];
 	//sprintf_s(str, "_좌표 : %d  %d", _x,_y);
@@ -765,4 +777,8 @@ void ui::dataLode()
 	//ReadFile(file, "", sizeof(""), &lode, NULL);
 	//
 	//CloseHandle(file);
+}
+
+void ui::itemSetting()
+{
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "gameNode.h"
 #include "blackFadeOut.h"
+#include "ItemManager.h"
 
 enum UIROOM
 {
@@ -16,7 +17,7 @@ class ui : public gameNode
 private:
 	blackFadeOut* _blackFade;
 
-
+	ItemManager* _iMgr;
 
 	RECT _goal;
 	POINT _pt[36];
@@ -63,5 +64,6 @@ public:
 	void placeChange();
 
 	void dataLode();
+	void itemSetting();
 };
 

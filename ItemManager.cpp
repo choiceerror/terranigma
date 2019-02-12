@@ -34,9 +34,9 @@ void ItemManager::update()
 
 }
 
-void ItemManager::render()
+void ItemManager::render(float cameraX, float cameraY)
 {
-	itemDraw();
+	itemDraw(cameraX, cameraY);
 
 
 }
@@ -101,66 +101,66 @@ void ItemManager::deleteAll()
 	}
 }
 
-void ItemManager::itemDraw()
+void ItemManager::itemDraw(float cameraX, float cameraY)
 {
 	for (_viArmor = _vArmor.begin(); _viArmor != _vArmor.end(); ++_viArmor)
 	{
-		//(*_viArmor)->render(camera);
+		(*_viArmor)->render(cameraX, cameraY);
 	}
 	for (_viAccessery = _vAccessery.begin(); _viAccessery != _vAccessery.end(); ++_viAccessery)
 	{
-		//(*_viAccessery)->render(camera);
+		(*_viAccessery)->render(cameraX, cameraY);
 	}
 	for (_viGold = _vGold.begin(); _viGold != _vGold.end(); ++_viGold)
 	{
-		//(*_viGold)->render(camera);
+		(*_viGold)->render(cameraX, cameraY);
 	}
 	for (_viWeapon = _vWeapon.begin(); _viWeapon != _vWeapon.end(); ++_viWeapon)
 	{
-		//(*_viWeapon)->render(camera);
+		(*_viWeapon)->render(cameraX, cameraY);
 	}
 	for (_viPotion = _vPotion.begin(); _viPotion != _vPotion.end(); ++_viPotion)
 	{
-		//(*_viPotion)->render(camera);
+		(*_viPotion)->render(cameraX, cameraY);
 	}
 }
 
-void ItemManager::dropPotion(const char * imageName, float x, float y, int frameX, int frameY)
+void ItemManager::dropPotion(float x, float y, POTIONTYPE potionType)
 {
 	Potion* potion;
 	potion = new Potion;
-	potion->init(imageName, x, y, frameX, frameY);
+	potion->init("item", x, y, potionType);
 	_vPotion.push_back(potion);
 }
 
-void ItemManager::dropArmor(const char * imageName, float x, float y, int frameX, int frameY)
+void ItemManager::dropArmor(float x, float y, ARMORTYPE armorType)
 {
 	Armor* armor;
 	armor = new Armor;
-	armor->init(imageName, x, y, frameX, frameY);
+	armor->init("item", x, y, armorType);
 	_vArmor.push_back(armor);
 }
 
-void ItemManager::dropWeapon(const char * imageName, float x, float y, int frameX, int frameY)
+void ItemManager::dropWeapon(float x, float y, WEAPONTYPE weaponType)
 {
 	Weapon* weapon;
 	weapon = new Weapon;
-	weapon->init(imageName, x, y, frameX, frameY);
+	weapon->init("item", x, y, weaponType);
 	_vWeapon.push_back(weapon);
 }
 
-void ItemManager::dropGold(const char * imageName, float x, float y, int frameX, int frameY)
+void ItemManager::dropGold(float x, float y)
 {
 	Gold* gold;
 	gold = new Gold;
-	gold->init(imageName, x, y, frameX, frameY);
+	gold->init("item", x, y);
 	_vGold.push_back(gold);
 }
 
-void ItemManager::dropAccessory(const char * imageName, float x, float y, int frameX, int frameY)
+void ItemManager::dropAccessory(float x, float y, ACCESSORYTYPE accessoryType)
 {
 	Accessory* accessory;
 	accessory = new Accessory;
-	accessory->init(imageName, x, y, frameX, frameY);
+	accessory->init("item", x, y, accessoryType);
 	_vAccessery.push_back(accessory);
 }

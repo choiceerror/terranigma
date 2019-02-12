@@ -1,7 +1,7 @@
 #pragma once
 #include "item.h"
 
-enum class TagAccessory
+enum class ACCESSORYTYPE
 {
 	NONE,
 	RED_SCARF,
@@ -13,13 +13,13 @@ class Accessory : public item
 {
 private:
 	int _accesseryArmorPoint;
-	TagAccessory _accessoryType;
+	ACCESSORYTYPE _accessoryType;
 
 public:
 	Accessory();
 	~Accessory();
 
-	virtual HRESULT init(const char* imageName, float x, float y, int frameX, int frameY);
+	virtual HRESULT init(const char* imageName, float x, float y, ACCESSORYTYPE accessoryType);
 	virtual void release();
 	virtual void update();
 	virtual void render(float cameraX, float cameraY);
@@ -27,6 +27,6 @@ public:
 	int getAccesseryArmorPoint() { return _accesseryArmorPoint; }
 	void setAccesseryArmorPoint(int armorPoint) { _accesseryArmorPoint = armorPoint; }
 
-	TagAccessory getTagAccessory() { return _accessoryType; }
+	ACCESSORYTYPE getTagAccessory() { return _accessoryType; }
 };
 

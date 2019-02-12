@@ -6,14 +6,6 @@
 #include "Gold.h"
 #include "Accessory.h"
 
-enum ITEMTYPE
-{
-	NONE,
-	ARMOR,
-	WEAPON,
-	GOLD,
-	POTION
-};
 
 class ItemManager : public gameNode
 {
@@ -34,8 +26,6 @@ private:
 	vector<Accessory*>::iterator	_viAccessery;
 
 
-
-
 public:
 	ItemManager();
 	~ItemManager();
@@ -43,16 +33,34 @@ public:
 	HRESULT init();
 	void release();
 	void update();
-	void render();
+	void render(float cameraX = 0.f, float cameraY = 0.f);
 
 	void deleteAll();
-	void itemDraw();
+	void itemDraw(float cameraX,float cameraY);
 
-	void dropPotion(const char* imageName, float x, float y, int frameX, int frameY);
-	void dropArmor(const char* imageName, float x, float y, int frameX, int frameY);
-	void dropWeapon(const char* imageName, float x, float y, int frameX, int frameY);
-	void dropGold(const char* imageName, float x, float y, int frameX, int frameY);
-	void dropAccessory(const char* imageName, float x, float y, int frameX, int frameY);
+	void dropPotion(float x, float y, POTIONTYPE potionType);
+	void dropArmor(float x, float y, ARMORTYPE armorType);
+	void dropWeapon(float x, float y, WEAPONTYPE weaponType);
+	void dropGold(float x, float y);
+	void dropAccessory(float x, float y, ACCESSORYTYPE accessoryType);
+
+
+
+	//=================접근자 설정자=================
+	vector<Potion*> getVPotion() { return _vPotion; }
+	vector<Potion*>* setVPotion() { return &_vPotion; }
+
+	vector<Weapon*> getVWeapon() { return _vWeapon; }
+	vector<Weapon*>* setVWeapon() { return &_vWeapon; }
+
+	vector<Armor*> getVArmor() { return _vArmor; }
+	vector<Armor*>* setVArmor() { return &_vArmor; }
+
+	vector<Accessory*> getVAccessory() { return _vAccessery; }
+	vector<Accessory*>* setVAccessory() { return &_vAccessery; }
+
+	vector<Gold*> getVGlod() { return _vGold; }
+	vector<Gold*>* setVGlod() { return &_vGold; }
 
 };
 

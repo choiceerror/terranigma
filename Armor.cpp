@@ -11,24 +11,33 @@ Armor::~Armor()
 {
 }
 
-HRESULT Armor::init(const char* imageName, float x, float y, int frameX, int frameY)
+HRESULT Armor::init(const char* imageName, float x, float y, ARMORTYPE armorType)
 {
-	item::init(imageName, x, y, frameX, frameY);
+	item::init(imageName, x, y);
+	_item.itemType = ITEMTYPE::ARMOR;
+	_armorType = armorType;
 
-	if (frameX == 1)
+	if (_armorType == ARMORTYPE::ICE_ARMOR)
 	{
-		_armorType = TagArmor::ICE_ARMOR;
+		_item.frameX = 1;
+		_item.frameY = 0;
 		_armorPoint = 8;
 	}
-	else if (frameX == 2)
+	else if (_armorType == ARMORTYPE::HOOD)
 	{
-		_armorType = TagArmor::HOOD;
+		_item.frameX = 2;
+		_item.frameY = 0;
 		_armorPoint = 5;
 	}
-	else if (frameX == 3)
+	else if (_armorType == ARMORTYPE::IRON_ARMOR)
 	{
-		_armorType = TagArmor::IRON_ARMOR;
+		_item.frameX = 3;
+		_item.frameY = 0;
 		_armorPoint = 15;
+	}
+	else
+	{
+		return E_FAIL;
 	}
 
 	return S_OK;
@@ -46,7 +55,8 @@ void Armor::update()
 
 void Armor::render(float cameraX, float cameraY)
 {
-	_item->viewX = _item->x - cameraX;
-	_item->viewY = _item->y - cameraY;
-	IMAGEMANAGER->expandRender(_item->imageName, getMemDC(), _item->viewX, _item->viewY, _item->frameX, _item->frameY, 1.0f, 1.0f);
+	_item.viewX = _item.x - cameraX;
+	_item.viewY = _item.y - cameraY;
+	_item.rc = RectMake(_item.x, _item.y, _item.image->getFrameWidth(), _item.image->getFrameHeight());
+	IMAGEMANAGER->expandRender(_item.imageName, getMemDC(), _item.viewX, _item.viewY, _item.frameX, _item.frameY, 3.0f, 3.0f);
 }
