@@ -89,8 +89,8 @@ void enemyManager::render(float cameraX, float cameraY)
 
 	char str[128];
 
-	for (int i = 0; i < _vKnightMonster.size(); i++)
-	{
+	//for (int i = 0; i < _vKnightMonster.size(); i++)
+	//{
 		//sprintf_s(str, "moveType : %d", _vKnightMonster[i]->getMoveType());
 		//TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
 
@@ -103,9 +103,9 @@ void enemyManager::render(float cameraX, float cameraY)
 		//sprintf_s(str, "x : %f", _vKnightMonster[i]->getX());
 		//TextOut(getMemDC(), 300, 100 + i * 20, str, strlen(str));
 
-		sprintf_s(str, "hp : %d", _vKnightMonster[i]->getCurrentHP());
-		TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
-	}
+		//sprintf_s(str, "hp : %d", _vKnightMonster[i]->getCurrentHP());
+		//TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
+	//}
 
 	//for (int i = 0; i < _vBallMonster.size(); i++)
 	//{
@@ -124,6 +124,12 @@ void enemyManager::render(float cameraX, float cameraY)
 	//	sprintf_s(str, "bally : %f", _vBallMonster[i]->getY());
 	//	TextOut(getMemDC(), 800, 200 + i * 20, str, strlen(str));
 	//}
+
+	for (int i = 0; i < _vFireMonster.size(); i++)
+	{
+		sprintf_s(str, "isAttack : %d", _vFireMonster[i]->getIsAttack());
+		TextOut(getMemDC(), 600, 100 + i * 20, str, strlen(str));
+	}
 }
 
 //업데이트 모음
@@ -534,12 +540,18 @@ void enemyManager::fireMonsterBulletFire(int i)
 	}
 
 	//파이어몬스터 총알 충돌
-	for (int i = 0; i < _fireMonsterBullet->getVFireBullet().size(); i++)
+	for (int j = 0; j < _fireMonsterBullet->getVFireBullet().size(); j++)
 	{
 		RECT temp;
-		if (IntersectRect(&temp, &_fireMonsterBullet->getVFireBullet()[i].rc, &_player->getPlayerRc()))
+		if (IntersectRect(&temp, &_fireMonsterBullet->getVFireBullet()[j].rc, &_player->getPlayerRc()))
 		{
-			(*_fireMonsterBullet->setVFireBullet())[i].isCollision = true;
+			(*_fireMonsterBullet->setVFireBullet())[j].isCollision = true;
+			_vFireMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
+			_vFireMonster[i]->setIsAttack(true); //불공격에 맞았다.
+		}
+		if (0.8f + _vFireMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
+		{
+			_vFireMonster[i]->setIsAttack(false);
 		}
 	}
 }

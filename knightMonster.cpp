@@ -18,7 +18,6 @@ HRESULT knightMonster::init(string enemyName, const char * imageName, float x, f
 	_enemy.currentHP = _enemy.maxHP = hp;
 	_enemy.state = KNIGHTMONSTER_STATE_IDLE;
 	_enemy.direction = KNIGHTMONSTER_DIRECTION_DOWN;
-	_enemy.image->setAlpahBlend(true);
 
 	int downIdle[] = { 3 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "downIdle", imageName, downIdle, 1, 3, true);

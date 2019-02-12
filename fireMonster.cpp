@@ -19,7 +19,6 @@ HRESULT fireMonster::init(string enemyName, const char * imageName, float x, flo
 
 	_enemy.state = FIREMONSTER_STATE_IDLE;
 	_enemy.direction = FIREMONSTER_DIRECTION_DOWN;
-	_enemy.image->setAlpahBlend(true);
 
 	int idleORmove[] = { 0, 1, 2, 3 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "idleORmove", imageName, idleORmove, 4, MOVEFPS, true);

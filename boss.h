@@ -11,6 +11,8 @@ public:
 	virtual void update();
 	virtual void render(float cameraX, float cameraY);
 
+	void move();
+
 public:
 	//접근자 설정자 모음
 };

@@ -28,6 +28,7 @@ HRESULT enemy::init(string enemyName, const char* imageName, float x, float y, i
 	_enemy.worldTime = TIMEMANAGER->getWorldTime();
 	_enemy.attackWorldTime = TIMEMANAGER->getWorldTime();
 	_enemy.directionWorldTime = TIMEMANAGER->getWorldTime();
+	_enemy.image->setAlpahBlend(true);
 	_enemy.alphaValue = 255;
 	_directionTime = 1.0f;
 

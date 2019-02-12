@@ -22,6 +22,8 @@ HRESULT boss::init(string enemyName, const char * imageName, float x, float y, i
 
 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "move");
 
+
+
 	return S_OK;
 }
 
@@ -32,11 +34,23 @@ void boss::release()
 void boss::update()
 {
 	enemy::update();
+	move();
 }
 
 void boss::render(float cameraX, float cameraY)
 {
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
-	_enemy.image->expandAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion);
+	_enemy.image->alphaAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion);
+}
+
+void boss::move()
+{
+	switch (_enemy.state)
+	{
+	case BOSS_STATE_IDLE:
+		_enemy.motion->start();
+
+	}
+
 }

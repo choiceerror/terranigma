@@ -52,17 +52,17 @@ void dungeon::release()
 
 void dungeon::update()
 {
+	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_player->update();
 	_enemyManager->update();
-	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 }
 
 void dungeon::render()
 {
 
 	_dungeon->render(_camera->getCameraX(), _camera->getCameraY());
-	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY());
+	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 
 
 	//char str[128];

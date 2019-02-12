@@ -19,7 +19,6 @@ HRESULT ballMonster::init(string enemyName, const char * imageName, float x, flo
 	_enemy.currentHP = _enemy.maxHP = hp;
 	_enemy.state = BALLMONSTER_STATE_IDLE;
 	_enemy.direction = BALLMONSTER_DIRECTION_DOWN;
-	_enemy.image->setAlpahBlend(true);
 
 	int upIdle[] = { 0 };
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "upIdle", imageName, upIdle, 1, MOVEFPS, true);
