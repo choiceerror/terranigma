@@ -41,6 +41,7 @@ private:
 
 	int b, c;
 	POINTFLOAT view;
+	POINT _mouseIndex;
 
 public:
 

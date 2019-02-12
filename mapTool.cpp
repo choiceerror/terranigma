@@ -185,7 +185,7 @@ void mapTool::render()
 	IMAGEMANAGER->render("eraser", getMemDC(), box[4].left, box[4].top);
 
 	//==========================체크 박스 =====================================//
-
+	//오른쪽
 	if (_mouseUp || _ptMouse.x < _tilesetting[0].tilerc.left)
 	{
 		HPEN pen = CreatePen(PS_SOLID, 2, RGB(255, 180, 0));
@@ -206,6 +206,31 @@ void mapTool::render()
 		SelectObject(getMemDC(), oldPen);
 		DeleteObject(pen);
 	}
+	//왼쪽
+	if (_ptMouse.x < 800)
+	{
+		_mouseIndex.x = _ptMouse.x / 32;
+		_mouseIndex.y = _ptMouse.y / 32;
+
+		HPEN pen = CreatePen(PS_SOLID, 2, RGB(0, 240, 255));
+		HPEN oldPen = (HPEN)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), pen);
+		HBRUSH brush = CreateSolidBrush(MAGENTA);
+		HBRUSH oldBrush = (HBRUSH)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), brush);
+
+		MoveToEx(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left, _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top, NULL);
+		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right, _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top);
+		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right, _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom);
+		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left, _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom);
+		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left, _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top);
+
+		SelectObject(getMemDC(), oldBrush);
+		DeleteObject(brush);
+		SelectObject(getMemDC(), oldPen);
+		DeleteObject(pen);
+	}
+
+
+
 	//=========================================================================
 	char str[128];
 
