@@ -20,7 +20,7 @@ HRESULT dungeon::init()
 	IMAGEMANAGER->addFrameImage("fireMonster", "image/enemy2.bmp", 180, 174, 5, 3, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("knightMonster", "image/enemy3.bmp", 1820, 1600, 7, 8, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("boss", "image/º¸½º.bmp", 1048, 239, 4, 1, true, MAGENTA);
-	EFFECTMANAGER->addEffect("deadEffect", "image/deadEffect2.bmp", 1496, 110, 136, 110, 5, 0.05f, 1000);
+	EFFECTMANAGER->addEffect("deadEffect", "image/deadEffect2.bmp", 1496, 110, 136, 110, 5, 0.17f, 1000);
 	_enemyManager = new enemyManager;
 	_player = new player;
 	_camera = new camera;
@@ -35,7 +35,7 @@ HRESULT dungeon::init()
 	_enemyManager->init();
 
 	_enemyManager->setEnemy();
-	_camera->init(GAMESIZEX, GAMESIZEY, 3200, 3200);
+	_camera->init(GAMESIZEX, GAMESIZEY, GAMESIZEX, 3200);
 
 
 

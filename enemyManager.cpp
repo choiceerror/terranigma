@@ -83,7 +83,7 @@ void enemyManager::update()
 
 void enemyManager::render(float cameraX, float cameraY)
 {
-	Rectangle(getMemDC(), _attackRect);
+	//Rectangle(getMemDC(), _attackRect);
 	//렌더링 모음 함수
 	enemyDraw(cameraX, cameraY);
 
