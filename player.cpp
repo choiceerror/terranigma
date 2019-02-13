@@ -91,7 +91,10 @@ void player::update(bool enemyCheck)
 		_attackMoveStop = false;
 	}
 
-	keyInput();
+	if (!(_player.state == PLAYER_ENEMY_ATTACK) || _player.state == PLAYER_IDLE)
+	{
+		keyInput();
+	}
 	playerState();
 	_jump->update();
 	_dashAttack->update(&_player.x, &_player.y);
@@ -104,7 +107,7 @@ void player::update(bool enemyCheck)
 void player::render(float cameraX, float cameraY)
 {
 	_player.image->alphaAniRenderCenter(getMemDC(), _player.x - cameraX, _player.y - cameraY, _player.ani, _player.alphaRender);
-	Rectangle(getMemDC(), _player.rc);
+	//Rectangle(getMemDC(), _player.rc);
 	char str[128];
 	for (int i = 0; i < 4; i++)
 	{
@@ -148,13 +151,13 @@ void player::keyFrameInit()
 	int moveDown[] = { 48, 49, 50, 51, 52, 53 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "moveDown", "player", moveDown, 6, PLAYERFPS, true);
 	int enemyAttackLeft[] = {30, 31 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackLeft", "player", enemyAttackLeft, 2, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackLeft", "player", enemyAttackLeft, 2, 10, false);
 	int enemyAttackRight[] = { 18, 19 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackRight", "player", enemyAttackRight, 2, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackRight", "player", enemyAttackRight, 2, 10, false);
 	int enemyAttackUp[] = { 42, 43 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackUp", "player", enemyAttackUp, 2, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackUp", "player", enemyAttackUp, 2, 10, false);
 	int enemyAttackDown[] = { 54 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackDown", "player", enemyAttackDown, 1, PLAYERFPS, false);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackDown", "player", enemyAttackDown, 1, 10, false);
 	int runLeft[] = { 65, 66, 67, 68, 69 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "runLeft", "player", runLeft, 5, PLAYERFPS, true);
 	int runRight[] = { 60, 61, 62, 63, 64 };
@@ -676,11 +679,34 @@ void player::enemyCollision(bool enemyCheck)
 			if (!_alphaChange) 	_player.alphaRender = 150;
 			else 	_player.alphaRender = 200;
 
-			if (GetTickCount() - _playerProtectTime >= 1 * 800)
+			if (GetTickCount() - _playerProtectTime >= 1 * 600)
+			{
+				_player.state = PLAYER_IDLE;
+			}
+			if (GetTickCount() - _playerProtectTime >= 1 * 1000)
 			{
 				_player.alphaRender = 255;
 				_playerProtect = false;
 			}
+			if (_player.state == PLAYER_ENEMY_ATTACK)
+			{
+				switch (_player.direction)
+				{
+				case LEFT:
+					_player.x += 0.4;
+					break;
+				case RIGHT:
+					_player.x -= 0.4;
+					break;
+				case UP:
+					_player.y += 0.4;
+					break;
+				case DOWN:
+					_player.y -= 0.4;
+					break;
+				}
+			}
+
 		}
 		else
 		{

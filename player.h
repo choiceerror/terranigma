@@ -46,6 +46,7 @@ enum PLAYERDIRECTION
 struct tagPlayer
 {
 	RECT rc;						//캐릭터 렉트
+	RECT attackRc;
 	image* image_obj;				//캐릭터 오브젝트 들때 이미지
 	image* image;					//캐릭터 이미지
 	animation* ani;					//캐릭터 애니메이션
