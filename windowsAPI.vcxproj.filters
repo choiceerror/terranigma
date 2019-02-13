@@ -300,6 +300,9 @@
     <ClInclude Include="ItemType.h">
       <Filter>PlayGround\item</Filter>
     </ClInclude>
+    <ClInclude Include="townMap.h">
+      <Filter>PlayGround\tileMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -469,6 +472,9 @@
     </ClCompile>
     <ClCompile Include="playerState.cpp">
       <Filter>PlayGround\player</Filter>
+    </ClCompile>
+    <ClCompile Include="townMap.cpp">
+      <Filter>PlayGround\tileMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

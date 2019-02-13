@@ -12,6 +12,7 @@
 
 class enemyManager;
 class dungeonMap;
+class townMap;
 enum PLAYERSTATE
 {
 	PLAYER_IDLE = 0,			//캐릭터 아이들 상태
@@ -105,6 +106,7 @@ private:
 
 	enemyManager* _enemyManager;
 	dungeonMap* _dungeon;
+	townMap* _town;
 public:
 	player();
 	~player();
@@ -133,7 +135,7 @@ public:
 
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }
-
+	void setTownManagerAddressLink(townMap* to) { _town = to; }
 	//===================== 콜백 함수 =======================
 
 	//콜백 공격함수

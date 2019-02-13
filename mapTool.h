@@ -62,6 +62,8 @@ public:
 	void load();
 	void viewMove();
 	void tileDrag();
+	void tilePreview();
+
 	TERRAIN terrainSelect(int frameX, int frameY);
 
 	OBJECT objSelect(int frameX, int frameY);

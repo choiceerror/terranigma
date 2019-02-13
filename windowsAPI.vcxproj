@@ -203,6 +203,7 @@
     <ClInclude Include="timeManager.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="town.h" />
+    <ClInclude Include="townMap.h" />
     <ClInclude Include="txtData.h" />
     <ClInclude Include="ui.h" />
     <ClInclude Include="utils.h" />
@@ -265,6 +266,7 @@
     <ClCompile Include="timeManager.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="town.cpp" />
+    <ClCompile Include="townMap.cpp" />
     <ClCompile Include="txtData.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="utils.cpp" />
