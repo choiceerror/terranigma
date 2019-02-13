@@ -77,6 +77,7 @@ struct tagEnemy
 	RECT rc;
 	RECT attackRc; //공격렉트
 	RECT rangeRc; //플레이어가 범위안에 들어올시 공격을할 판별해줄 렉트
+	RECT tileCollisionRc; //타일 검출용 렉트
 	float x, y;
 	float viewX, viewY;
 	int idX, idY;
@@ -101,7 +102,8 @@ struct tagEnemy
 	bool isOneTime;
 	bool isHit; //맞았니
 	int alphaValue; //알파값
-	int tileIndex[2];
+	POINT tileIndex[4]; //타일검출 판별해줄 인덱스
+
 };
 
 class enemy : public gameNode
@@ -138,33 +140,50 @@ public:
 	int getIdX() { return _enemy.idX; }
 	int getIdY() { return _enemy.idY; }
 
+	void setIdX(int idX) { _enemy.idX = idX; }
+	void setIdY(int idY) { _enemy.idY = idY; }
+
+	image* getImage() { return _enemy.image; }
+
 	RECT getRect() { return _enemy.rc; }
+	void setRect(RECT rc) { _enemy.rc = rc; }
 	RECT getRangeRect() { return _enemy.rangeRc; }
 	RECT getAttackRect() { return _enemy.attackRc; }
+	RECT getTileCollisionRect() { return _enemy.tileCollisionRc; }
+	void setTileCollisionRect(RECT rc) { _enemy.tileCollisionRc = rc; }
+
+	//LONG getTileCollisionRcLeft() { return _enemy.tileCollisionRc.left; }
+	//LONG getTileCollisionRcTop() { return _enemy.tileCollisionRc.top; }
+	//LONG getTileCollisionRcRight() { return _enemy.tileCollisionRc.right; }
+	//LONG getTileCollisionRcBottom() { return _enemy.tileCollisionRc.bottom; }
+	//void setTileCollisionRcLeft(LONG left) { _enemy.tileCollisionRc.left = left; }
+	//void setTileCollisionRcTop(LONG top) { _enemy.tileCollisionRc.top = top; }
+	//void setTileCollisionRcRight(LONG right) { _enemy.tileCollisionRc.right = right; }
+	//void setTileCollisionRcBottom(LONG bottom) { _enemy.tileCollisionRc.bottom = bottom; }
 
 	ENEMYDIRECTION getDirection() { return _enemy.direction; }
 	void setDirection(ENEMYDIRECTION direction) { _enemy.direction = direction; }
 
-	ENEMYSTATE getState() {return _enemy.state;}
-	void setState(ENEMYSTATE state) {_enemy.state = state;}
+	ENEMYSTATE getState() { return _enemy.state; }
+	void setState(ENEMYSTATE state) { _enemy.state = state; }
 
-	ENEMYMOVETYPE getMoveType() {return _enemy.moveType;}
-	void setMoveType(ENEMYMOVETYPE type) {_enemy.moveType = type;}
-	float getMoveAngle() {return _enemy.moveAngle;}
+	ENEMYMOVETYPE getMoveType() { return _enemy.moveType; }
+	void setMoveType(ENEMYMOVETYPE type) { _enemy.moveType = type; }
+	float getMoveAngle() { return _enemy.moveAngle; }
 
-	int getCurrentHP() {return _enemy.currentHP;}
-	int getMaxHP() {return _enemy.maxHP;}
+	int getCurrentHP() { return _enemy.currentHP; }
+	int getMaxHP() { return _enemy.maxHP; }
 
-	void setCurrentHP(int hp) {_enemy.currentHP = hp;}
-	void setMaxHP(int maxHp) {_enemy.maxHP = maxHp;}
+	void setCurrentHP(int hp) { _enemy.currentHP = hp; }
+	void setMaxHP(int maxHp) { _enemy.maxHP = maxHp; }
 
-	float getTargetAngle() {return _enemy.targetAngle;}
-	void setTargetAngle(float angle) {_enemy.targetAngle = angle;}
+	float getTargetAngle() { return _enemy.targetAngle; }
+	void setTargetAngle(float angle) { _enemy.targetAngle = angle; }
 
-	float getTargetDistance() {return _enemy.targetDistance;}
-	void setTargetDistance(float distance) {_enemy.targetDistance = distance;}
+	float getTargetDistance() { return _enemy.targetDistance; }
+	void setTargetDistance(float distance) { _enemy.targetDistance = distance; }
 
-	float getSpeed() {return _enemy.speed;}
+	float getSpeed() { return _enemy.speed; }
 	void setSpeed(float speed) { _enemy.speed = speed; }
 
 	bool getIsAttack() { return _enemy.isAttack; }
@@ -183,13 +202,24 @@ public:
 	void setWorldTime(float worldTime) { _enemy.worldTime = worldTime; }
 	void setAttackWorldTime(float attackWorldTime) { _enemy.attackWorldTime = attackWorldTime; }
 
-	bool getIsHit() {return _enemy.isHit;}
-	void setIsHit(bool hit) {_enemy.isHit = hit;}
-	tagEnemy getEnemy() {return _enemy;}
+	bool getIsHit() { return _enemy.isHit; }
+	void setIsHit(bool hit) { _enemy.isHit = hit; }
+	tagEnemy getEnemy() { return _enemy; }
 
-	int getRndState() {return _rndState[KNIGHTMONSTER]; }
+	int getRndState() { return _rndState[KNIGHTMONSTER]; }
 
+	POINT getTileIndex(int i)
+	{
+		return _enemy.tileIndex[i];
+	}
 
-	
+	POINT* setTileIndex()
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			return &_enemy.tileIndex[i];
+		}
+	}
+
 };
 

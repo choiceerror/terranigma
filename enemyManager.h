@@ -4,6 +4,8 @@
 #include "fireMonster.h"
 #include "knightMonster.h"
 #include "fireMonsterBullet.h"
+#include "dungeonMap.h"
+
 //던전 층수
 enum DUNGEON_FLOOR
 {
@@ -34,8 +36,11 @@ private:
 
 	player* _player;
 
+	dungeonMap* _dungeonMap; //던전맵
+
 	DUNGEON_FLOOR _dungeonFloor; //던전 층수
 	int _fireBulletSpeed;
+	float _moveWorldTime;
 
 	RECT _attackRect; //임의의 공격렉트
 
@@ -56,19 +61,21 @@ public:
 	void fireMonsterBulletFire(int i); //파이어몬스터 총알 발사할 함수
 	void enemyDead(); //에너미들이 죽을 함수
 	void enemyRespon(); //에너미들이 죽은다음 리스폰할 함수
+	void tileCheckObjectCollision(); //타일검출 충돌 함수
 
 public:
 	//접근자 설정자 모음
-	vector<ballMonster*> getVBallMonster() {return _vBallMonster;}
-	vector<ballMonster*>* setVBallMonster() {return &_vBallMonster;}
+	vector<ballMonster*> getVBallMonster() { return _vBallMonster; }
+	vector<ballMonster*>* setVBallMonster() { return &_vBallMonster; }
 
-	vector<fireMonster*> getVFireMonster() {return _vFireMonster;}
-	vector<fireMonster*>* setVFireMonster() {return &_vFireMonster;}
+	vector<fireMonster*> getVFireMonster() { return _vFireMonster; }
+	vector<fireMonster*>* setVFireMonster() { return &_vFireMonster; }
 
-	vector<knightMonster*> getVKnightMonster() {return _vKnightMonster;}
-	vector<knightMonster*>* setVKnightMonster() {return &_vKnightMonster;}
+	vector<knightMonster*> getVKnightMonster() { return _vKnightMonster; }
+	vector<knightMonster*>* setVKnightMonster() { return &_vKnightMonster; }
 
-	void setPlayerMemoryAddressLink(player* player) {_player = player;}
+	void setPlayerMemoryAddressLink(player* player) { _player = player; }
+	void setDungeonMapAddressLink(dungeonMap* map) { _dungeonMap = map; }
 
 };
 

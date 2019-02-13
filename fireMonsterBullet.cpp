@@ -69,7 +69,7 @@ void fireMonsterBullet::move()
 		_viFireBullet->x += cosf(_viFireBullet->angle) * _viFireBullet->speed;
 		_viFireBullet->y += -sinf(_viFireBullet->angle) * _viFireBullet->speed;
 
-		_viFireBullet->rc = RectMakeCenter(_viFireBullet->x, _viFireBullet->y, _viFireBullet->image->getFrameWidth(), _viFireBullet->image->getFrameHeight());
+		_viFireBullet->rc = RectMakeCenter(_viFireBullet->x, _viFireBullet->y, _viFireBullet->image->getFrameWidth() / 2, _viFireBullet->image->getFrameHeight() / 4);
 		_viFireBullet->fireBulletAni->start();
 
 		if ((_range < getDistance(_viFireBullet->x, _viFireBullet->y, _viFireBullet->fireX, _viFireBullet->fireY)) || (*_viFireBullet).isCollision == true)

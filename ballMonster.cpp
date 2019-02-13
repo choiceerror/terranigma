@@ -89,7 +89,7 @@ void ballMonster::update()
 void ballMonster::render(float cameraX, float cameraY)
 {
 	//Rectangle(getMemDC(), _enemy.rangeRc);
-	//Rectangle(getMemDC(), _enemy.rc);
+	//Rectangle(getMemDC(), _enemy.tileCollisionRc);
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
 	_enemy.image->alphaAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion, _enemy.alphaValue);

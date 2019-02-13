@@ -17,6 +17,7 @@ HRESULT enemyManager::init()
 	_fireMonsterBullet = new fireMonsterBullet;
 	_fireMonsterBullet->init("fireMonster", WINSIZEX / 2, 10);
 	_fireBulletSpeed = 5;
+	_moveWorldTime = TIMEMANAGER->getWorldTime();
 
 	return S_OK;
 }
@@ -49,7 +50,7 @@ void enemyManager::update()
 	}
 	//왼쪽 공격, 대쉬공격
 	else if ((_player->getPlayerAni()->getFramePosArr().x >= 5 && _player->getPlayerAni()->getFramePosArr().y == 13)
-		||(_player->getPlayerAni()->getFramePosArr().x >= 4 && _player->getPlayerAni()->getFramePosArr().y == 28))
+		|| (_player->getPlayerAni()->getFramePosArr().x >= 4 && _player->getPlayerAni()->getFramePosArr().y == 28))
 	{
 		_attackRect = RectMakeCenter(_player->getPlayerX() - 30, _player->getPlayerY(), 100, 30);
 	}
@@ -67,6 +68,9 @@ void enemyManager::update()
 	}
 	else _attackRect = RectMakeCenter(0, 0, 0, 0);
 
+	//에너미들의 타일검출
+	tileCheckObjectCollision();
+
 	//업데이트 모음 함수
 	updateCollection();
 
@@ -79,6 +83,8 @@ void enemyManager::update()
 	//에너미들이 죽을함수
 	enemyDead();
 
+
+
 }
 
 void enemyManager::render(float cameraX, float cameraY)
@@ -89,23 +95,31 @@ void enemyManager::render(float cameraX, float cameraY)
 
 	char str[128];
 
-	//for (int i = 0; i < _vKnightMonster.size(); i++)
-	//{
-	//	sprintf_s(str, "moveType : %d", _vKnightMonster[i]->getMoveType());
-	//	TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
+	for (int i = 0; i < _vKnightMonster.size(); i++)
+	{
+		
+		sprintf_s(str, "left : %d", _vKnightMonster[i]->getTileCollisionRect().left);
+		TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "state : %d", _vKnightMonster[i]->getState());
-	//	TextOut(getMemDC(), 100, 400 + i * 20, str, strlen(str));
+		sprintf_s(str, "idX : %d", _vKnightMonster[i]->getIdX());
+		TextOut(getMemDC(), 100, 400 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "viewY : %f", _vKnightMonster[i]->getViewY());
-	//	TextOut(getMemDC(), 100, 300 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "x : %f", _vKnightMonster[i]->getX());
-	//	TextOut(getMemDC(), 300, 100 + i * 20, str, strlen(str));
+		sprintf_s(str, "idY : %d", _vKnightMonster[i]->getIdY());
+		TextOut(getMemDC(), 100, 600 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "hp : %d", _vKnightMonster[i]->getCurrentHP());
-	//	TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
-	//}
+		//sprintf_s(str, "state : %d", _vKnightMonster[i]->getState());
+		//TextOut(getMemDC(), 100, 400 + i * 20, str, strlen(str));
+
+		//sprintf_s(str, "viewY : %f", _vKnightMonster[i]->getViewY());
+		//TextOut(getMemDC(), 100, 300 + i * 20, str, strlen(str));
+
+		//sprintf_s(str, "x : %f", _vKnightMonster[i]->getX());
+		//TextOut(getMemDC(), 300, 100 + i * 20, str, strlen(str));
+
+		//sprintf_s(str, "hp : %d", _vKnightMonster[i]->getCurrentHP());
+		//TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
+	}
 
 	//for (int i = 0; i < _vBallMonster.size(); i++)
 	//{
@@ -149,12 +163,6 @@ void enemyManager::updateCollection()
 	for (_viKnightMonster = _vKnightMonster.begin(); _viKnightMonster != _vKnightMonster.end(); _viKnightMonster++)
 	{
 		(*_viKnightMonster)->update();
-	}
-
-	for (int i = 0; i < _vBallMonster.size(); i++)
-	{
-		_vBallMonster[i]->getEnemy().tileIndex[0];
-		_vBallMonster[i]->getEnemy().tileIndex[1];
 	}
 
 	//파이어몬스터 총알 업데이트
@@ -208,7 +216,7 @@ void enemyManager::setEnemy()
 			knightMonster* km;
 			km = new knightMonster;
 
-			km->init("knight", "knightMonster",WINSIZEX / 2 + j * 100, 200 + i * 100, 0, 0, 300);
+			km->init("knight", "knightMonster", 300 + j * 100, 300 + i * 100, j, i, 300);
 
 			_vKnightMonster.push_back(km);
 
@@ -270,13 +278,17 @@ void enemyManager::enemyAI()
 		}
 
 		//거리가 가까워지면 공격하고 시간텀마다 공격하기 위함.
-		if (_vBallMonster[i]->getTargetDistance() < 300 && 1.5f + _vBallMonster[i]->getWorldTime() <= TIMEMANAGER->getWorldTime())
+		if (_vBallMonster[i]->getTargetDistance() < 300 && 1.5f + _vBallMonster[i]->getWorldTime() <= TIMEMANAGER->getWorldTime() && _vBallMonster[i]->getMoveType() == FOLLOW_MOVE_TYPE)
 		{
 			_vBallMonster[i]->setIsAttack(true);
 		}
+		else if (_vBallMonster[i]->getTargetDistance() > 300)
+		{
+			_vBallMonster[i]->setIsAttack(false);
+		}
 
 		//공격상태라면
-		if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getState() != BALLMONSTER_STATE_IDLE)
+		if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getState() != BALLMONSTER_STATE_IDLE && _vBallMonster[i]->getState() == FOLLOW_MOVE_TYPE)
 		{
 			// 0.8초전에 공격각도 잡기위함
 			if (0.8f + _vBallMonster[i]->getAttackWorldTime() >= TIMEMANAGER->getWorldTime())
@@ -310,6 +322,7 @@ void enemyManager::enemyAI()
 				_vBallMonster[i]->setIsAttack(false);
 			}
 		}
+
 
 		//부딪혀도 다꺼줌.
 		if (IntersectRect(&temp, &_vBallMonster[i]->getRect(), &_player->getPlayerRc()))
@@ -384,7 +397,7 @@ void enemyManager::enemyAI()
 			//기사와 플레이어간의 각도 구해줌.
 			_vKnightMonster[i]->setTargetAngle(getAngle(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
 			_vKnightMonster[i]->setMoveType(FOLLOW_MOVE_TYPE); //따라가는 타입으로.
-			
+
 			switch (_vKnightMonster[i]->getState())
 			{
 			case KNIGHTMONSTER_STATE_IDLE:
@@ -411,13 +424,13 @@ void enemyManager::enemyAI()
 			}
 		}
 		//일정거리 지나면 다시 기본움직임 타입으로
-		else if (_vKnightMonster[i]->getTargetDistance() > 500)
+		else if (_vKnightMonster[i]->getTargetDistance() > 500 && _vKnightMonster[i]->getMoveType() == FOLLOW_MOVE_TYPE)
 		{
 			_vKnightMonster[i]->setMoveType(BASIC_MOVE_TYPE);
 		}
 
 		//거리가 가까워지면 공격
-		if (_vKnightMonster[i]->getTargetDistance() <= 100)
+		if (_vKnightMonster[i]->getTargetDistance() <= 100 && _vKnightMonster[i]->getMoveType() == FOLLOW_MOVE_TYPE)
 		{
 			_vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_ATTACK);
 			_vKnightMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
@@ -425,8 +438,8 @@ void enemyManager::enemyAI()
 		//멀어지면 랜덤으로 움직임
 		else if (_vKnightMonster[i]->getTargetDistance() > 100 && 1.0f + _vKnightMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
 		{
-			if(_vKnightMonster[i]->getRndState() == 0) _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_IDLE);
-			else _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_MOVE);
+			if (_vKnightMonster[i]->getRndState() == 0) _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_MOVE);
+			else _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_IDLE);
 		}
 	}
 }
@@ -581,6 +594,7 @@ void enemyManager::enemyDead()
 		else i++;
 	}
 
+	//불몬스터
 	for (int i = 0; i < _vFireMonster.size();)
 	{
 		if (_vFireMonster[i]->getCurrentHP() <= 0.0f)
@@ -593,7 +607,274 @@ void enemyManager::enemyDead()
 
 }
 
+//타일검출 충돌 함수
+void enemyManager::tileCheckObjectCollision()
+{
+	//공몬스터
+	for (int i = 0; i < _vBallMonster.size(); i++)
+	{
+		//충돌렉트에 실제렉트 대입
+		_vBallMonster[i]->setTileCollisionRect(_vBallMonster[i]->getRect());
+
+		//타일 인덱스 정해주기
+		_vBallMonster[i]->setIdX(_vBallMonster[i]->getTileCollisionRect().left / TileSIZE);
+		_vBallMonster[i]->setIdY(_vBallMonster[i]->getTileCollisionRect().top / TileSIZE);
+
+		//방향에따라 타일인덱스에 타일검출하기 위함
+		switch (_vBallMonster[i]->getDirection())
+		{
+		case BALLMONSTER_DIRECTION_LEFT:
+			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
+			break;
+		case BALLMONSTER_DIRECTION_UP:
+			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY();
+			break;
+		case BALLMONSTER_DIRECTION_RIGHT:
+			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
+			break;
+		case BALLMONSTER_DIRECTION_DOWN:
+			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY() + 1;
+			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
+			break;
+		}
+
+		if (_vBallMonster[i]->getAttackAngle() > 0 && _vBallMonster[i]->getAttackAngle() < PI / 2)
+		{
+			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
+		}
+		if (_vBallMonster[i]->getAttackAngle() > PI / 2 && _vBallMonster[i]->getAttackAngle() < PI)
+		{
+			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
+		}
+		if (_vBallMonster[i]->getAttackAngle() > PI && _vBallMonster[i]->getAttackAngle() < (PI / 180) * 270)
+		{
+			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
+			_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY() + 1;
+			_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
+		}
+		if (_vBallMonster[i]->getAttackAngle() > (PI / 180) * 270 && _vBallMonster[i]->getAttackAngle() < PI2)
+		{
+			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
+			_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY() + 1;
+			_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
+			_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
+		}
+		RECT temp;
+		for (int j = 0; j < 4; i++)
+		{
+			if (_dungeonMap->getAttr(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
+				&& IntersectRect(&temp, &_dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc, &_vBallMonster[i]->getTileCollisionRect()))
+			{
+				switch (_vBallMonster[i]->getDirection())
+				{
+				case BALLMONSTER_DIRECTION_LEFT:
+					_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 1);
+					break;
+				case BALLMONSTER_DIRECTION_RIGHT:
+					_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 1);
+					break;
+				case BALLMONSTER_DIRECTION_UP:
+					_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 1);
+					break;
+				case BALLMONSTER_DIRECTION_DOWN:
+					_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 1);
+					break;
+				}
+				if (_vBallMonster[i]->getIsAttack() == true)
+				{
+					_vBallMonster[i]->setSpeed(0);
+					_vBallMonster[i]->setIsAttack(false);
+					_vBallMonster[i]->setState(BALLMONSTER_STATE_IDLE);
+				}
+
+			}
+			break;
+		}
+		_vBallMonster[i]->setTileCollisionRect(RectMakeCenter(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _vBallMonster[i]->getImage()->getFrameWidth(), _vBallMonster[i]->getImage()->getFrameHeight()));
+		_vBallMonster[i]->setRect(_vBallMonster[i]->getTileCollisionRect());
+	}
+
+	for (int i = 0; i < _vFireMonster.size(); i++)
+	{
+		_vFireMonster[i]->setTileCollisionRect(_vFireMonster[i]->getRect());
+
+		//인덱스 정해주기
+		_vFireMonster[i]->setIdX(_vFireMonster[i]->getTileCollisionRect().left / TileSIZE);
+		_vFireMonster[i]->setIdY(_vFireMonster[i]->getTileCollisionRect().top / TileSIZE);
+
+		//범위검사
+		switch (_vFireMonster[i]->getDirection())
+		{
+		case FIREMONSTER_DIRECTION_LEFT:
+			_vFireMonster[i]->setTileIndex()[0].x = _vFireMonster[i]->getIdX();
+			_vFireMonster[i]->setTileIndex()[0].y = _vFireMonster[i]->getIdY();
+			_vFireMonster[i]->setTileIndex()[1].x = _vFireMonster[i]->getIdX();
+			_vFireMonster[i]->setTileIndex()[1].y = _vFireMonster[i]->getIdY() + 1;
+			break;
+		case FIREMONSTER_DIRECTION_UP:
+			_vFireMonster[i]->setTileIndex()[0].x = _vFireMonster[i]->getIdX();
+			_vFireMonster[i]->setTileIndex()[0].y = _vFireMonster[i]->getIdY();
+			_vFireMonster[i]->setTileIndex()[1].x = _vFireMonster[i]->getIdX() + 1;
+			_vFireMonster[i]->setTileIndex()[1].y = _vFireMonster[i]->getIdY();
+			break;
+		case FIREMONSTER_DIRECTION_RIGHT:
+			_vFireMonster[i]->setTileIndex()[0].x = _vFireMonster[i]->getIdX() + 1;
+			_vFireMonster[i]->setTileIndex()[0].y = _vFireMonster[i]->getIdY();
+			_vFireMonster[i]->setTileIndex()[1].x = _vFireMonster[i]->getIdX() + 1;
+			_vFireMonster[i]->setTileIndex()[1].y = _vFireMonster[i]->getIdY() + 1;
+			break;
+		case FIREMONSTER_DIRECTION_DOWN:
+			_vFireMonster[i]->setTileIndex()[0].x = _vFireMonster[i]->getIdX();
+			_vFireMonster[i]->setTileIndex()[0].y = _vFireMonster[i]->getIdY() + 1;
+			_vFireMonster[i]->setTileIndex()[1].x = _vFireMonster[i]->getIdX() + 1;
+			_vFireMonster[i]->setTileIndex()[1].y = _vFireMonster[i]->getIdY() + 1;
+			break;
+		}
+
+
+		RECT temp;
+		for (int j = 0; j < 2; i++)
+		{
+			if (_dungeonMap->getAttr(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
+				&& IntersectRect(&temp, &_dungeonMap->getTile(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y)->rc, &_vFireMonster[i]->getTileCollisionRect()))
+			{
+				switch (_vFireMonster[i]->getDirection())
+				{
+				case FIREMONSTER_DIRECTION_LEFT:
+					_vFireMonster[i]->setX(_vFireMonster[i]->getX() + 1);
+					break;
+				case FIREMONSTER_DIRECTION_RIGHT:
+					_vFireMonster[i]->setX(_vFireMonster[i]->getX() - 1);
+					break;
+				case FIREMONSTER_DIRECTION_UP:
+					_vFireMonster[i]->setY(_vFireMonster[i]->getY() + 1);
+					break;
+				case FIREMONSTER_DIRECTION_DOWN:
+					_vFireMonster[i]->setY(_vFireMonster[i]->getY() - 1);
+					break;
+				}
+
+			}
+			break;
+		}
+		_vFireMonster[i]->setTileCollisionRect(RectMakeCenter(_vFireMonster[i]->getX(), _vFireMonster[i]->getY(), _vFireMonster[i]->getImage()->getFrameWidth(), _vFireMonster[i]->getImage()->getFrameHeight()));
+
+	}
+
+	//기사몬스터
+	for (int i = 0; i < _vKnightMonster.size(); i++)
+	{
+		_vKnightMonster[i]->setTileCollisionRect(_vKnightMonster[i]->getRect());
+
+		//인덱스 정해주기
+		_vKnightMonster[i]->setIdX(_vKnightMonster[i]->getTileCollisionRect().left / TileSIZE);
+		_vKnightMonster[i]->setIdY(_vKnightMonster[i]->getTileCollisionRect().top / TileSIZE);
+
+		//범위검사
+		switch (_vKnightMonster[i]->getDirection())
+		{
+		case KNIGHTMONSTER_DIRECTION_LEFT:
+			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX();
+			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY();
+			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX();
+			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() + 1;
+			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX();
+			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
+			break;
+		case KNIGHTMONSTER_DIRECTION_UP:
+			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX();
+			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY();
+			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX() + 1;
+			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY();
+			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
+			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY();
+			break;
+		case KNIGHTMONSTER_DIRECTION_RIGHT:
+			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX() + 1;
+			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY();
+			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX() + 1;
+			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() + 1;
+			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() + 1;
+			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
+			break;
+		case KNIGHTMONSTER_DIRECTION_DOWN:
+			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX();
+			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY() + 2;
+			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX() + 1;
+			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() + 2;
+			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
+			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() + 2;
+			break;
+		}
+		RECT temp;
+		for (int j = 0; j < 2; j++)
+		{
+			if (_dungeonMap->getAttr(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
+				&& IntersectRect(&temp, &_dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc, &_vKnightMonster[i]->getTileCollisionRect()))
+			{
+				//공격중이 아닐때만
+				if (_vKnightMonster[i]->getState() != KNIGHTMONSTER_STATE_ATTACK)
+				{
+					switch (_vKnightMonster[i]->getDirection())
+					{
+					case KNIGHTMONSTER_DIRECTION_LEFT:
+						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() + 1);
+						break;
+					case KNIGHTMONSTER_DIRECTION_RIGHT:
+						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() - 1);
+						break;
+					case KNIGHTMONSTER_DIRECTION_UP:
+						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() + 1);
+						break;
+					case KNIGHTMONSTER_DIRECTION_DOWN:
+						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() - 1);
+						break;
+					}
+				}
+			}
+			break;
+		}
+		_vKnightMonster[i]->setTileCollisionRect(RectMakeCenter(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _vKnightMonster[i]->getImage()->getFrameWidth() - 236, _vKnightMonster[i]->getImage()->getFrameHeight() - 176)); //타일깎음
+		
+	}
+}
+
 //에너미들이 죽은다음 리스폰할 함수
 void enemyManager::enemyRespon()
 {
 }
+
