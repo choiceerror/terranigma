@@ -38,6 +38,12 @@ public:
 	void deleteAll();
 	void itemDraw(float cameraX,float cameraY);
 
+	//각각 그릴때
+	void weaponDraw(float cameraX = 0, float cameraY = 0);
+	void armorDraw(float cameraX = 0, float cameraY = 0);
+	void accessoryDraw(float cameraX = 0, float cameraY = 0);
+	void potionDraw(float cameraX = 0, float cameraY = 0);
+
 	void dropPotion(float x, float y, POTIONTYPE potionType);
 	void dropArmor(float x, float y, ARMORTYPE armorType);
 	void dropWeapon(float x, float y, WEAPONTYPE weaponType);

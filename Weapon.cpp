@@ -58,5 +58,5 @@ void Weapon::render(float cameraX, float cameraY)
 	_item.viewX = _item.x - cameraX;
 	_item.viewY = _item.y - cameraY;
 	_item.rc = RectMake(_item.x, _item.y, _item.image->getFrameWidth(), _item.image->getFrameHeight());
-	IMAGEMANAGER->expandRender(_item.imageName, getMemDC(), _item.viewX, _item.viewY, _item.frameX, _item.frameY, 3.0f, 3.0f);
+	IMAGEMANAGER->expandRender(_item.imageName, getMemDC(), _item.viewX, _item.viewY, _item.frameX, _item.frameY, 2.8f, 2.8f);
 }

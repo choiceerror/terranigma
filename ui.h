@@ -2,28 +2,35 @@
 #include "gameNode.h"
 #include "blackFadeOut.h"
 #include "ItemManager.h"
+#include "Inventory.h"
 
-enum UIROOM
-{
-	MAIN_ROOM,
-	WEAPON_ROOM,
-	ACCESSERY_ROOM,
-	ARMOR_ROOM
-};
+
 
 
 class ui : public gameNode
 {
 private:
-	blackFadeOut* _blackFade;
+	enum class ROOMTYPE
+	{
+		MAIN_ROOM,
+		WEAPON_ROOM,
+		ACCESSERY_ROOM,
+		ARMOR_ROOM
+	};
 
+	blackFadeOut* _blackFade;
 	ItemManager* _iMgr;
+	Inventory* _inventory;
 
 	RECT _goal;
-	POINT _pt[36];
+	POINT _uiPoint[36];
+
+	POINT _weaponPoint[16];
+	POINT _accessoryPoint[32];
+	POINT _armorPoint[16];
 
 	//방인덱스
-	int _placeFrameX;
+	ROOMTYPE _room;
 
 	//요미 프레임
 	int _yomiFrameX;
@@ -43,7 +50,10 @@ private:
 	bool _isRoomChanging;
 	bool _onceTime;
 
+	//시간관련
 	float _worldTime;
+	float _roomVisitTime;
+
 
 	//디버그용
 	bool _isIndexMode;
@@ -61,9 +71,11 @@ public:
 	void yomiFrame();
 	void yomiMove();
 	void movePoint();
+	void roomPointSetting();
 	void placeChange();
 
 	void dataLode();
 	void itemSetting();
+	void itemDraw();
 };
 

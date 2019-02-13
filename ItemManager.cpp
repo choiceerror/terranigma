@@ -13,9 +13,7 @@ ItemManager::~ItemManager()
 
 HRESULT ItemManager::init()
 {
-	IMAGEMANAGER->addFrameImage("item", "image/item.bmp", 286, 20, 14, 1, true, MAGENTA);
-
-
+	IMAGEMANAGER->addFrameImage("item", "image/item.bmp", 308, 20, 14, 1, true, MAGENTA);
 
 
 	return S_OK;
@@ -38,8 +36,6 @@ void ItemManager::update()
 void ItemManager::render(float cameraX, float cameraY)
 {
 	itemDraw(cameraX, cameraY);
-
-
 }
 
 //릴리즈용 제거함수
@@ -62,7 +58,6 @@ void ItemManager::deleteAll()
 		if (_viWeapon != _vWeapon.end())
 		{
 			SAFE_DELETE((*_viWeapon));
-
 		}
 		else
 		{
@@ -122,6 +117,38 @@ void ItemManager::itemDraw(float cameraX, float cameraY)
 	{
 		(*_viWeapon)->render(cameraX, cameraY);
 	}
+	for (_viPotion = _vPotion.begin(); _viPotion != _vPotion.end(); ++_viPotion)
+	{
+		(*_viPotion)->render(cameraX, cameraY);
+	}
+}
+
+void ItemManager::weaponDraw(float cameraX, float cameraY)
+{
+	for (_viWeapon = _vWeapon.begin(); _viWeapon != _vWeapon.end(); ++_viWeapon)
+	{
+		(*_viWeapon)->render(cameraX, cameraY);
+	}
+}
+
+void ItemManager::armorDraw(float cameraX, float cameraY)
+{
+	for (_viArmor = _vArmor.begin(); _viArmor != _vArmor.end(); ++_viArmor)
+	{
+		(*_viArmor)->render(cameraX, cameraY);
+	}
+}
+
+void ItemManager::accessoryDraw(float cameraX, float cameraY)
+{
+	for (_viAccessery = _vAccessery.begin(); _viAccessery != _vAccessery.end(); ++_viAccessery)
+	{
+		(*_viAccessery)->render(cameraX, cameraY);
+	}
+}
+
+void ItemManager::potionDraw(float cameraX, float cameraY)
+{
 	for (_viPotion = _vPotion.begin(); _viPotion != _vPotion.end(); ++_viPotion)
 	{
 		(*_viPotion)->render(cameraX, cameraY);

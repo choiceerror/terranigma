@@ -15,12 +15,27 @@ HRESULT Inventory::init()
 {
 	inventoryReset();
 
-
-
 	_weaponCount = 0;
 	_accessoryCount = 0;
 	_armorCount = 0;
 
+	//디버그용
+	//for (int i = 0; i < WEAPON_MAX_ARR; ++i)
+	//{
+	//	_weaponInv[i] = WEAPONTYPE::IRON_SPEAR;
+	//}
+	//for (int i = 0; i < ARMOR_MAX_ARR; ++i)
+	//{
+	//	_armorInv[i] = ARMORTYPE::IRON_ARMOR;
+	//}
+	//for (int i = 0; i < POTION_MAX_ARR; ++i)
+	//{
+	//	_potionInv[i] = POTIONTYPE::SMALL;
+	//}
+	//for (int i = 0; i < ACCESSORY_MAX_ARR; ++i)
+	//{
+	//	//_accessoryInv[i] = ACCESSORYTYPE::LEEF;
+	//}
 
 
 	//무기
@@ -40,15 +55,17 @@ void Inventory::update()
 	//아이템 먹었을경우 이동
 	itemMove();
 
-
 	//인벤토리에 담긴 수
 	itemCount();
-
-
 }
 
 void Inventory::render()
 {
+	//char str[120];
+	//sprintf_s(str, "%d  %d  %d  %d", _weaponCount, _armorCount, _accessoryCount, _potionCount);
+	//TextOut(getMemDC(), 300, 600, str, strlen(str));
+
+
 }
 
 void Inventory::inventoryReset()
@@ -78,6 +95,10 @@ void Inventory::inventoryReset()
 	{
 		_potionInv[i] = POTIONTYPE::NONE;
 	}
+
+	_currentWeapon = WEAPONTYPE::NONE;
+	_currentArmor = ARMORTYPE::NONE;
+	_currentAccessory = ACCESSORYTYPE::NONE;
 
 	_tempWeapon = WEAPONTYPE::NONE;
 	_tempArmor = ARMORTYPE::NONE;

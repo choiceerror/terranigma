@@ -14,16 +14,23 @@
 class Inventory : public gameNode
 {
 private:
+	//각각 인벤토리
 	WEAPONTYPE _weaponInv[16];
 	ARMORTYPE _armorInv[16];
 	ACCESSORYTYPE _accessoryInv[32];
 	POTIONTYPE _potionInv[32];
+
+	//현재 낀 아이템
+	WEAPONTYPE _currentWeapon;
+	ARMORTYPE _currentArmor;
+	ACCESSORYTYPE _currentAccessory;
 
 	//아이템을 먹을시 여기에 값이 들어가게함
 	WEAPONTYPE _tempWeapon;
 	ARMORTYPE _tempArmor;
 	ACCESSORYTYPE _tempAccessory;
 	POTIONTYPE _tempPorion;
+
 
 	//아이템 각각 소지 갯수
 	int _weaponCount;
@@ -44,6 +51,21 @@ public:
 	void inventoryReset();
 	void itemMove();
 	void itemCount();
+
+	//인벤토리 접근자
+	WEAPONTYPE getWeaponInv(int i) { return _weaponInv[i]; }
+	ARMORTYPE getArmorInv(int i) { return _armorInv[i]; }
+	ACCESSORYTYPE getAccessoryInv(int i) { return _accessoryInv[i]; }
+	POTIONTYPE getPotionInv(int i) { return _potionInv[i]; }
+
+	//현재 착용 아이템 접근자 설정자
+	WEAPONTYPE getCurrentWeapon() { return _currentWeapon; }
+	void setCurrentWeapon(WEAPONTYPE currentWeapon) { _currentWeapon = currentWeapon; }
+	ARMORTYPE getCurrentArmor() { return _currentArmor; }
+	void setCurrentArmor(ARMORTYPE currentArmor) { _currentArmor = currentArmor; }
+	ACCESSORYTYPE getCurrentAccessory() { return _currentAccessory; }
+	void setCurrentAccessory(ACCESSORYTYPE currentAccessory) { _currentAccessory = currentAccessory; }
+
 
 };
 
