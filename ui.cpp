@@ -24,6 +24,7 @@ HRESULT ui::init()
 	_inventory = new Inventory;
 	_inventory->init();
 
+	
 	dataLode();
 
 	//아이템 셋팅
@@ -34,7 +35,6 @@ HRESULT ui::init()
 	IMAGEMANAGER->addFrameImage("UI", "image/UI.bmp", 4096, 768, 4, 1, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("UIIndex", "image/UIIndex.bmp", 4096, 768, 4, 1, true, MAGENTA);
 	IMAGEMANAGER->addImage("blackRect", GAMESIZEX, GAMESIZEY);
-
 
 	//변수 초기화
 	_room = ROOMTYPE::MAIN_ROOM;
@@ -79,7 +79,8 @@ void ui::update()
 	//방이동
 	placeChange();
 
-	
+
+
 
 	//===============지울것================
 	//_goal = RectMake(_goalX, _goalY, 10, 10);
@@ -928,15 +929,8 @@ void ui::placeChange()
 
 void ui::dataLode()
 {
-	//HANDLE file;
-	//DWORD lode;
-	//
-	//file = CreateFile("", GENERIC_WRITE, NULL, NULL,
-	//	CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	//
-	//ReadFile(file, "", sizeof(""), &lode, NULL);
-	//
-	//CloseHandle(file);
+	_inventory->inventoryLode();
+	
 }
 
 void ui::itemSetting()
@@ -975,7 +969,6 @@ void ui::itemSetting()
 			_iMgr->dropArmor(_armorPoint[i].x - 16, _armorPoint[i].y - 25, _inventory->getArmorInv(i));
 		}
 	}
-
 }
 
 void ui::itemDraw()
@@ -999,7 +992,4 @@ void ui::itemDraw()
 	default:
 		break;
 	}
-
-
-
 }

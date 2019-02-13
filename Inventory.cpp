@@ -119,6 +119,7 @@ void Inventory::itemMove()
 			if (_weaponInv[i] == WEAPONTYPE::NONE)
 			{
 				_weaponInv[i] = _tempWeapon;
+				break;
 			}
 			//다른아이템이 담겨있다면
 			else
@@ -139,6 +140,7 @@ void Inventory::itemMove()
 			if (_armorInv[i] == ARMORTYPE::NONE)
 			{
 				_armorInv[i] = _tempArmor;
+				break;
 			}
 			//다른아이템이 담겨있다면
 			else
@@ -159,6 +161,7 @@ void Inventory::itemMove()
 			if (_accessoryInv[i] == ACCESSORYTYPE::NONE && _potionInv[i] == POTIONTYPE::NONE)
 			{
 				_accessoryInv[i] = _tempAccessory;
+				break;
 			}
 			//다른아이템이 담겨있다면
 			else
@@ -179,6 +182,7 @@ void Inventory::itemMove()
 			if (_potionInv[i] == POTIONTYPE::NONE && _accessoryInv[i] == ACCESSORYTYPE::NONE)
 			{
 				_potionInv[i] = _tempPorion;
+				break;
 			}
 			//다른아이템이 담겨있다면
 			else
@@ -243,4 +247,36 @@ void Inventory::itemCount()
 	_accessoryCount = accessoryNum;
 	_potionCount = potionNum;
 
+}
+
+void Inventory::inventorySave()
+{
+	HANDLE file;
+	DWORD save;
+
+	file = CreateFile("saveFile/inventory.inv", GENERIC_WRITE, NULL, NULL,
+						CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	WriteFile(file, _weaponInv, sizeof(WEAPONTYPE) * WEAPON_MAX_ARR, &save, NULL);
+	WriteFile(file, _armorInv, sizeof(ARMORTYPE) * ARMOR_MAX_ARR, &save, NULL);
+	WriteFile(file, _accessoryInv, sizeof(ACCESSORYTYPE) * ACCESSORY_MAX_ARR, &save, NULL);
+	WriteFile(file, _potionInv, sizeof(POTIONTYPE) * POTION_MAX_ARR, &save, NULL);
+
+	CloseHandle(file);
+}
+
+void Inventory::inventoryLode()
+{
+	HANDLE file;
+	DWORD lode;
+
+	file = CreateFile("saveFile/inventory.inv", GENERIC_READ, NULL, NULL,
+						OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, _weaponInv, sizeof(WEAPONTYPE) * WEAPON_MAX_ARR, &lode, NULL);
+	ReadFile(file, _armorInv, sizeof(ARMORTYPE) * ARMOR_MAX_ARR, &lode, NULL);
+	ReadFile(file, _accessoryInv, sizeof(ACCESSORYTYPE) * ACCESSORY_MAX_ARR, &lode, NULL);
+	ReadFile(file, _potionInv, sizeof(POTIONTYPE) * POTION_MAX_ARR, &lode, NULL);
+
+	CloseHandle(file);
 }

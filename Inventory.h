@@ -52,6 +52,12 @@ public:
 	void itemMove();
 	void itemCount();
 
+	void inventorySave();
+	void inventoryLode();
+
+
+	//============================접근자 설정자============================
+
 	//인벤토리 접근자
 	WEAPONTYPE getWeaponInv(int i) { return _weaponInv[i]; }
 	ARMORTYPE getArmorInv(int i) { return _armorInv[i]; }
@@ -66,6 +72,17 @@ public:
 	ACCESSORYTYPE getCurrentAccessory() { return _currentAccessory; }
 	void setCurrentAccessory(ACCESSORYTYPE currentAccessory) { _currentAccessory = currentAccessory; }
 
+	//각 아이템 소지갯수 접근자
+	int getWeaponCount() { return _weaponCount; }
+	int getArmorCount() { return _armorCount; }
+	int getAccessoryCount() { return _accessoryCount; }
+	int getPotionCount() { return _potionCount; }
+
+	//템프공간 설정자
+	void pickUpWeapon(WEAPONTYPE weaponType) { _tempWeapon = weaponType; }
+	void pickUpArmor(ARMORTYPE armorType) { _tempArmor = armorType; }
+	void pickUpAccessory(ACCESSORYTYPE accessoryType) { _tempAccessory = accessoryType; }
+	void pickUpPotion(POTIONTYPE potionType) { _tempPorion = potionType; }
 
 };
 
