@@ -116,21 +116,25 @@ void ballMonster::move()
 			{
 				_enemy.moveAngle = PI / 2;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 			}
 			else if (_enemy.direction == BALLMONSTER_DIRECTION_DOWN)
 			{
 				_enemy.moveAngle = PI / 180 * 270;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 			}
 			else if (_enemy.direction == BALLMONSTER_DIRECTION_RIGHT)
 			{
 				_enemy.moveAngle = PI2;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 			}
 			else if (_enemy.direction == BALLMONSTER_DIRECTION_LEFT)
 			{
 				_enemy.moveAngle = PI;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 			}
 			_enemy.motion->start();
 
@@ -176,21 +180,25 @@ void ballMonster::move()
 			{
 				_enemy.moveAngle = PI / 2;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 			}
 			else if (_enemy.direction == BALLMONSTER_DIRECTION_DOWN)
 			{
 				_enemy.moveAngle = (PI / 180) * 270;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 			}
 			else if (_enemy.direction == BALLMONSTER_DIRECTION_RIGHT)
 			{
 				_enemy.moveAngle = PI2;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 			}
 			else if (_enemy.direction == BALLMONSTER_DIRECTION_LEFT)
 			{
 				_enemy.moveAngle = PI;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 			}
 			_enemy.motion->start();
 

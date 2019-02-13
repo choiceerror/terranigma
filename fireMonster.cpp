@@ -57,6 +57,7 @@ void fireMonster::update()
 
 void fireMonster::render(float cameraX, float cameraY)
 {
+	//Rectangle(getMemDC(), _enemy.rc);
 	//Rectangle(getMemDC(), _enemy.rangeRc);
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
@@ -76,10 +77,26 @@ void fireMonster::move()
 
 			if (_enemy.state == FIREMONSTER_STATE_MOVE)
 			{
-				if (_enemy.direction == FIREMONSTER_DIRECTION_RIGHT)	  _enemy.moveAngle = PI2;
-				else if (_enemy.direction == FIREMONSTER_DIRECTION_LEFT)  _enemy.moveAngle = PI;
-				else if (_enemy.direction == FIREMONSTER_DIRECTION_UP)	  _enemy.moveAngle = PI / 2;
-				else if (_enemy.direction == FIREMONSTER_DIRECTION_DOWN)  _enemy.moveAngle = (PI / 180) * 270;
+				if (_enemy.direction == FIREMONSTER_DIRECTION_RIGHT)
+				{
+					_enemy.moveAngle = PI2;
+					_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+				}
+				else if (_enemy.direction == FIREMONSTER_DIRECTION_LEFT)
+				{
+					_enemy.moveAngle = PI;
+					_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+				}
+				else if (_enemy.direction == FIREMONSTER_DIRECTION_UP)
+				{
+					_enemy.moveAngle = PI / 2;
+					_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+				}
+				else if (_enemy.direction == FIREMONSTER_DIRECTION_DOWN)
+				{
+					_enemy.moveAngle = (PI / 180) * 270;
+					_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+				}
 
 				_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
 				_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;
@@ -122,10 +139,26 @@ void fireMonster::move()
 		{
 		case FIREMONSTER_STATE_MOVE:
 
-			if (_enemy.direction == FIREMONSTER_DIRECTION_RIGHT)	  _enemy.moveAngle = PI2;
-			else if (_enemy.direction == FIREMONSTER_DIRECTION_LEFT)  _enemy.moveAngle = PI;
-			else if (_enemy.direction == FIREMONSTER_DIRECTION_UP)	  _enemy.moveAngle = PI / 2;
-			else if (_enemy.direction == FIREMONSTER_DIRECTION_DOWN)  _enemy.moveAngle = (PI / 180) * 270;
+			if (_enemy.direction == FIREMONSTER_DIRECTION_RIGHT)
+			{
+				_enemy.moveAngle = PI2;
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+			}
+			else if (_enemy.direction == FIREMONSTER_DIRECTION_LEFT)
+			{
+				_enemy.moveAngle = PI;
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+			}
+			else if (_enemy.direction == FIREMONSTER_DIRECTION_UP)
+			{
+				_enemy.moveAngle = PI / 2;
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+			}
+			else if (_enemy.direction == FIREMONSTER_DIRECTION_DOWN)
+			{
+				_enemy.moveAngle = (PI / 180) * 270;
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+			}
 
 			_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
 			_enemy.y += -sinf(_enemy.moveAngle) * _enemy.speed;

@@ -53,5 +53,5 @@ void enemy::render(float cameraX, float cameraY)
 
 void enemy::enemyMove()
 {
-	//_enemy.rc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
+	_enemy.rc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight());
 }

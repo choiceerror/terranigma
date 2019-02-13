@@ -91,7 +91,7 @@ void knightMonster::render(float cameraX, float cameraY)
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
 
-	Rectangle(getMemDC(), _enemy.tileCollisionRc);
+	//Rectangle(getMemDC(), _enemy.tileCollisionRc);
 	//Rectangle(getMemDC(), _enemy.rc);
 	//Rectangle(getMemDC(), _enemy.rangeRc);
 	_enemy.image->alphaAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion, _enemy.alphaValue);

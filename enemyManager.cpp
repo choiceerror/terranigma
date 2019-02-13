@@ -98,15 +98,15 @@ void enemyManager::render(float cameraX, float cameraY)
 	for (int i = 0; i < _vKnightMonster.size(); i++)
 	{
 		
-		sprintf_s(str, "left : %d", _vKnightMonster[i]->getTileCollisionRect().left);
-		TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
+		//sprintf_s(str, "left : %d", _vKnightMonster[i]->getTileCollisionRect().left);
+		//TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
 
-		sprintf_s(str, "idX : %d", _vKnightMonster[i]->getIdX());
-		TextOut(getMemDC(), 100, 400 + i * 20, str, strlen(str));
+		//sprintf_s(str, "idX : %d", _vKnightMonster[i]->getIdX());
+		//TextOut(getMemDC(), 100, 400 + i * 20, str, strlen(str));
 
 
-		sprintf_s(str, "idY : %d", _vKnightMonster[i]->getIdY());
-		TextOut(getMemDC(), 100, 600 + i * 20, str, strlen(str));
+		//sprintf_s(str, "idY : %d", _vKnightMonster[i]->getIdY());
+		//TextOut(getMemDC(), 100, 600 + i * 20, str, strlen(str));
 
 		//sprintf_s(str, "state : %d", _vKnightMonster[i]->getState());
 		//TextOut(getMemDC(), 100, 400 + i * 20, str, strlen(str));
@@ -121,23 +121,26 @@ void enemyManager::render(float cameraX, float cameraY)
 		//TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
 	}
 
-	//for (int i = 0; i < _vBallMonster.size(); i++)
-	//{
-	//	sprintf_s(str, "targetDistance : %f", _vBallMonster[i]->getTargetDistance());
-	//	TextOut(getMemDC(), 600, 100 + i * 20, str, strlen(str));
+	for (int i = 0; i < _vBallMonster.size(); i++)
+	{
+		//sprintf_s(str, "targetDistance : %f", _vBallMonster[i]->getTargetDistance());
+		//TextOut(getMemDC(), 600, 100 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "ballviewX : %f", _vBallMonster[i]->getViewX());
-	//	TextOut(getMemDC(), 600, 200 + i * 20, str, strlen(str));
+		//sprintf_s(str, "ballviewX : %f", _vBallMonster[i]->getViewX());
+		//TextOut(getMemDC(), 600, 200 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "ballviewY : %f", _vBallMonster[i]->getViewY());
-	//	TextOut(getMemDC(), 600, 300 + i * 20, str, strlen(str));
+		//sprintf_s(str, "ballviewY : %f", _vBallMonster[i]->getViewY());
+		//TextOut(getMemDC(), 600, 300 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "ballx : %f", _vBallMonster[i]->getX());
-	//	TextOut(getMemDC(), 800, 100 + i * 20, str, strlen(str));
+		//sprintf_s(str, "ballx : %f", _vBallMonster[i]->getX());
+		//TextOut(getMemDC(), 800, 100 + i * 20, str, strlen(str));
 
-	//	sprintf_s(str, "bally : %f", _vBallMonster[i]->getY());
-	//	TextOut(getMemDC(), 800, 200 + i * 20, str, strlen(str));
-	//}
+		//sprintf_s(str, "bally : %f", _vBallMonster[i]->getY());
+		//TextOut(getMemDC(), 800, 200 + i * 20, str, strlen(str));
+
+		//sprintf_s(str, "isAttack : %d", _vBallMonster[i]->getIsAttack());
+		//TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
+	}
 
 	//for (int i = 0; i < _vFireMonster.size(); i++)
 	//{
@@ -272,19 +275,16 @@ void enemyManager::enemyAI()
 			}
 		}
 		//거리가 멀어지면 다시 기본움직임타입으로
-		else if (_vBallMonster[i]->getTargetDistance() > 480 && _vBallMonster[i]->getIsAttack() == false)
+		else if (_vBallMonster[i]->getTargetDistance() > 480)
 		{
 			_vBallMonster[i]->setMoveType(BASIC_MOVE_TYPE);
+			_vBallMonster[i]->setIsAttack(false);
 		}
 
 		//거리가 가까워지면 공격하고 시간텀마다 공격하기 위함.
 		if (_vBallMonster[i]->getTargetDistance() < 300 && 1.5f + _vBallMonster[i]->getWorldTime() <= TIMEMANAGER->getWorldTime() && _vBallMonster[i]->getMoveType() == FOLLOW_MOVE_TYPE)
 		{
 			_vBallMonster[i]->setIsAttack(true);
-		}
-		else if (_vBallMonster[i]->getTargetDistance() > 300)
-		{
-			_vBallMonster[i]->setIsAttack(false);
 		}
 
 		//공격상태라면
@@ -321,19 +321,18 @@ void enemyManager::enemyAI()
 				_vBallMonster[i]->setWorldTime(TIMEMANAGER->getWorldTime());
 				_vBallMonster[i]->setIsAttack(false);
 			}
+
+			//부딪혀도 다꺼줌.
+			if (IntersectRect(&temp, &_vBallMonster[i]->getRect(), &_player->getPlayerRc()))
+			{
+				_vBallMonster[i]->getMotion()->setFPS(5);
+				_vBallMonster[i]->setWorldTime(TIMEMANAGER->getWorldTime());
+				_vBallMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
+				_vBallMonster[i]->setIsAttack(false);
+				_vBallMonster[i]->setSpeed(1.0f);
+			}
 		}
 
-
-		//부딪혀도 다꺼줌.
-		if (IntersectRect(&temp, &_vBallMonster[i]->getRect(), &_player->getPlayerRc()))
-		{
-			_vBallMonster[i]->getMotion()->setFPS(5);
-			_vBallMonster[i]->setWorldTime(TIMEMANAGER->getWorldTime());
-			_vBallMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
-			_vBallMonster[i]->setIsAttack(false);
-			_vBallMonster[i]->setSpeed(1.0f);
-			_vBallMonster[i]->setMoveType(BASIC_MOVE_TYPE);
-		}
 	}
 
 	//불몬스터
@@ -436,7 +435,7 @@ void enemyManager::enemyAI()
 			_vKnightMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
 		}
 		//멀어지면 랜덤으로 움직임
-		else if (_vKnightMonster[i]->getTargetDistance() > 100 && 1.0f + _vKnightMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
+		else if (_vKnightMonster[i]->getTargetDistance() > 100 && 1.0f + _vKnightMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime() && _vKnightMonster[i]->getMoveType() == FOLLOW_MOVE_TYPE)
 		{
 			if (_vKnightMonster[i]->getRndState() == 0) _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_MOVE);
 			else _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_IDLE);
@@ -562,6 +561,7 @@ void enemyManager::fireMonsterBulletFire(int i)
 			_vFireMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
 			_vFireMonster[i]->setIsAttack(true); //불공격에 맞았다.
 		}
+		//0.8초뒤 공격꺼줌
 		if (0.8f + _vFireMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
 		{
 			_vFireMonster[i]->setIsAttack(false);
@@ -649,85 +649,110 @@ void enemyManager::tileCheckObjectCollision()
 			break;
 		}
 
-		if (_vBallMonster[i]->getAttackAngle() > 0 && _vBallMonster[i]->getAttackAngle() < PI / 2)
-		{
-			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
-			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
-			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
-			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY();
-			_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX() + 1;
-			_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY();
-			_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
-			_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
-		}
-		if (_vBallMonster[i]->getAttackAngle() > PI / 2 && _vBallMonster[i]->getAttackAngle() < PI)
-		{
-			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
-			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
-			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
-			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY();
-			_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
-			_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY();
-			_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX();
-			_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
-		}
-		if (_vBallMonster[i]->getAttackAngle() > PI && _vBallMonster[i]->getAttackAngle() < (PI / 180) * 270)
-		{
-			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
-			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
-			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX();
-			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
-			_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
-			_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY() + 1;
-			_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
-			_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
-		}
-		if (_vBallMonster[i]->getAttackAngle() > (PI / 180) * 270 && _vBallMonster[i]->getAttackAngle() < PI2)
-		{
-			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX() + 1;
-			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
-			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
-			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
-			_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
-			_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY() + 1;
-			_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
-			_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
-		}
+		//if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getAttackAngle() > 0 && _vBallMonster[i]->getAttackAngle() < PI / 2)
+		//{
+		//	_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
+		//	_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX() + 1;
+		//	_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
+		//	_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
+		//}
+		//if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getAttackAngle() > PI / 2 && _vBallMonster[i]->getAttackAngle() < PI)
+		//{
+		//	_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
+		//	_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
+		//}
+		//if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getAttackAngle() > PI && _vBallMonster[i]->getAttackAngle() < (PI / 180) * 270)
+		//{
+		//	_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
+		//	_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY() + 1;
+		//	_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
+		//	_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
+		//}
+		//if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getAttackAngle() > (PI / 180) * 270 && _vBallMonster[i]->getAttackAngle() < PI2)
+		//{
+		//	_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX() + 1;
+		//	_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
+		//	_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
+		//	_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY() + 1;
+		//	_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
+		//	_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
+		//}
 		RECT temp;
-		for (int j = 0; j < 4; i++)
+		for (int j = 0; j < 2; i++)
 		{
 			if (_dungeonMap->getAttr(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
 				&& IntersectRect(&temp, &_dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc, &_vBallMonster[i]->getTileCollisionRect()))
 			{
-				switch (_vBallMonster[i]->getDirection())
+
+				if (_vBallMonster[i]->getState() != BALLMONSTER_STATE_IDLE && _vBallMonster[i]->getIsAttack() == false)
 				{
-				case BALLMONSTER_DIRECTION_LEFT:
-					_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 1);
-					break;
-				case BALLMONSTER_DIRECTION_RIGHT:
-					_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 1);
-					break;
-				case BALLMONSTER_DIRECTION_UP:
-					_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 1);
-					break;
-				case BALLMONSTER_DIRECTION_DOWN:
-					_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 1);
-					break;
+					switch (_vBallMonster[i]->getDirection())
+					{
+					case BALLMONSTER_DIRECTION_LEFT:
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 1);
+						break;
+					case BALLMONSTER_DIRECTION_RIGHT:
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 1);
+						break;
+					case BALLMONSTER_DIRECTION_UP:
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 1);
+						break;
+					case BALLMONSTER_DIRECTION_DOWN:
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 1);
+						break;
+					}
+
 				}
-				if (_vBallMonster[i]->getIsAttack() == true)
+				else if (_vBallMonster[i]->getIsAttack() == true)
 				{
 					_vBallMonster[i]->setSpeed(0);
+					_vBallMonster[i]->getMotion()->setFPS(5);
 					_vBallMonster[i]->setIsAttack(false);
-					_vBallMonster[i]->setState(BALLMONSTER_STATE_IDLE);
-				}
+					_vBallMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
+					_vBallMonster[i]->setWorldTime(TIMEMANAGER->getWorldTime());
 
+					switch (_vBallMonster[i]->getDirection())
+					{
+					case BALLMONSTER_DIRECTION_LEFT:
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 20);
+						break;
+					case BALLMONSTER_DIRECTION_RIGHT:
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 20);
+						break;
+					case BALLMONSTER_DIRECTION_UP:
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 20);
+						break;
+					case BALLMONSTER_DIRECTION_DOWN:
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 20);
+						break;
+					}
+					//_vBallMonster[i]->setState(BALLMONSTER_STATE_IDLE);
+					//_vBallMonster[i]->setMoveType(BASIC_MOVE_TYPE);
+				}
 			}
 			break;
 		}
 		_vBallMonster[i]->setTileCollisionRect(RectMakeCenter(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _vBallMonster[i]->getImage()->getFrameWidth(), _vBallMonster[i]->getImage()->getFrameHeight()));
-		_vBallMonster[i]->setRect(_vBallMonster[i]->getTileCollisionRect());
+		//_vBallMonster[i]->setRect(_vBallMonster[i]->getTileCollisionRect());
 	}
 
+	//불몬스터
 	for (int i = 0; i < _vFireMonster.size(); i++)
 	{
 		_vFireMonster[i]->setTileCollisionRect(_vFireMonster[i]->getRect());
@@ -812,42 +837,42 @@ void enemyManager::tileCheckObjectCollision()
 			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY();
 			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX();
 			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() + 1;
-			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX();
-			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
+			_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX();
+			_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
 			break;
 		case KNIGHTMONSTER_DIRECTION_UP:
 			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX();
 			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY();
 			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX() + 1;
 			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY();
-			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
-			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY();
+			_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
+			_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY();
 			break;
 		case KNIGHTMONSTER_DIRECTION_RIGHT:
 			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX() + 1;
 			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY();
 			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX() + 1;
 			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() + 1;
-			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() + 1;
-			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
+			_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() + 1;
+			_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
 			break;
 		case KNIGHTMONSTER_DIRECTION_DOWN:
 			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX();
 			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY() + 2;
 			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX() + 1;
 			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() + 2;
-			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
-			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() + 2;
+			_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
+			_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() + 2;
 			break;
 		}
 		RECT temp;
-		for (int j = 0; j < 2; j++)
+		for (int j = 0; j < 3; j++)
 		{
 			if (_dungeonMap->getAttr(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
 				&& IntersectRect(&temp, &_dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc, &_vKnightMonster[i]->getTileCollisionRect()))
 			{
-				//공격중이 아닐때만
-				if (_vKnightMonster[i]->getState() != KNIGHTMONSTER_STATE_ATTACK)
+				//공격중이 아니고 가만히있지 않을때만
+				if (_vKnightMonster[i]->getState() != KNIGHTMONSTER_STATE_ATTACK && _vKnightMonster[i]->getState() != KNIGHTMONSTER_STATE_IDLE)
 				{
 					switch (_vKnightMonster[i]->getDirection())
 					{
