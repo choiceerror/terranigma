@@ -303,6 +303,9 @@
     <ClInclude Include="townMap.h">
       <Filter>PlayGround\tileMap</Filter>
     </ClInclude>
+    <ClInclude Include="IntroDungeon.h">
+      <Filter>PlayGround\Scene\dungeon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -475,6 +478,9 @@
     </ClCompile>
     <ClCompile Include="townMap.cpp">
       <Filter>PlayGround\tileMap</Filter>
+    </ClCompile>
+    <ClCompile Include="IntroDungeon.cpp">
+      <Filter>PlayGround\Scene\dungeon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

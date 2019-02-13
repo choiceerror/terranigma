@@ -1,5 +1,7 @@
 #pragma once
-class IntroDungeon
+#include "gameNode.h"
+
+class IntroDungeon : public gameNode
 {
 public:
 	IntroDungeon();

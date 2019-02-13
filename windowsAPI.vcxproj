@@ -23,7 +23,7 @@
     <ProjectGuid>{BE5C2545-DA5C-402F-8068-3E1EDF185C1C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>windowsAPI</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -172,6 +172,7 @@
     <ClInclude Include="imageManager.h" />
     <ClInclude Include="inGameScene.h" />
     <ClInclude Include="iniDataManager.h" />
+    <ClInclude Include="IntroDungeon.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="item.h" />
     <ClInclude Include="ItemManager.h" />
@@ -236,6 +237,7 @@
     <ClCompile Include="imageManager.cpp" />
     <ClCompile Include="inGameScene.cpp" />
     <ClCompile Include="iniDataManager.cpp" />
+    <ClCompile Include="IntroDungeon.cpp" />
     <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="item.cpp" />
     <ClCompile Include="ItemManager.cpp" />
