@@ -15,6 +15,11 @@ private:
 
 	DWORD* _attribute;
 
+	int tix;
+	int tiy;
+	int obx;
+	int oby;
+
 public:
 	dungeonMap();
 	~dungeonMap();

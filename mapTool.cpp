@@ -652,9 +652,9 @@ TERRAIN mapTool::terrainSelect(int frameX, int frameY)
 
 OBJECT mapTool::objSelect(int frameX, int frameY)
 {
-	for (int i = 0; i < basicTileY; ++i)
+	for (int i = 0; i < basicTileX; ++i)
 	{
-		for (int j = 0; j < basicTileX; ++j)
+		for (int j = 0; j < basicTileY; ++j)
 		{
 			if (frameX == i && frameY == j)
 

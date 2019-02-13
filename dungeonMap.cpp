@@ -32,7 +32,14 @@ void dungeonMap::render(float cameraX, float cameraY)
 	{
 		for (int j = 0; j < TILEX; ++j)
 		{
-
+			if (PtInRect(&_vvMap[i][j]->rc, _ptMouse))
+			{
+				obx = _vvMap[i][j]->objFrameX;
+				oby = _vvMap[i][j]->objFrameY;
+				tix = _vvMap[i][j]->FrameX;
+				tiy = _vvMap[i][j]->FrameY;
+			}
+		
 			if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
 			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
@@ -90,6 +97,11 @@ void dungeonMap::render(float cameraX, float cameraY)
 			}
 		}
 	}
+
+	char str[128];
+
+	sprintf_s(str, "오브x:%d 오브y:%d  지형x:%d 지형y:%d", obx,oby,tix,tiy);
+	TextOut(getMemDC(), 600, 500, str, strlen(str));
 }
 
 void dungeonMap::load()
