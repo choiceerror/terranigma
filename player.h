@@ -157,7 +157,7 @@ public:
 	void setPlayerDirection(PLAYERDIRECTION direction) { _player.direction = direction; }
 	void setPlayerAni(animation* animation) { _player.ani = animation; }
 	void setPlayerPosX(float playerX) { _player.x = playerX; }
-	void setPlayerPosY(float playerY) { _player.x = playerY; }
+	void setPlayerPosY(float playerY) { _player.y = playerY; }
 	void setPlayerSpeed(float speed) { _player.speed = speed; }
 
 	RECT getPlayerRc() { return _player.rc; }
