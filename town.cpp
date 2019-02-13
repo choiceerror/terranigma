@@ -27,7 +27,7 @@ void town::release()
 
 void town::update()
 {
-	_player->update();
+	_player->update(false);
 	_playerWorldMap->update();
 }
 

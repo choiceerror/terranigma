@@ -31,7 +31,8 @@ enum PLAYERSTATE
 	PLAYER_FALL,			//떨어질때
 	PLAYER_OBJ_PICKUP,		//오브젝트 들때
 	PLAYER_OBJ_WALK,		//오브젝트들고 걸을때
-	PLAYER_OBJ_THROW		//오브젝트 던질때
+	PLAYER_OBJ_THROW,		//오브젝트 던질때
+	PLAYER_ENEMY_ATTACK
 };
 
 enum PLAYERDIRECTION
@@ -109,7 +110,7 @@ public:
 
 	HRESULT init();
 	void release();
-	void update();
+	void update(bool enemyCheck);
 	void render(float cameraX, float cameraY);
 
 	//각 상태 프레임 입력 초기값 
@@ -127,7 +128,7 @@ public:
 	//재생에 중복되는 코드 함수화
 	void playerAniName(string targetName, string aniName);
 
-	void enemyCollision();
+	void enemyCollision(bool enemyCheck);
 
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }

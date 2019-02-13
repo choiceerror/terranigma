@@ -222,5 +222,22 @@ void player::playerState()
 			break;
 		}
 		break;
+	case PLAYER_ENEMY_ATTACK:
+		switch (_player.direction)
+		{
+		case LEFT:
+			playerAniName("ark", "enemyAttackLeft");
+			break;
+		case RIGHT:
+			playerAniName("ark", "enemyAttackRight");
+			break;
+		case UP:
+			playerAniName("ark", "enemyAttackUp");
+			break;
+		case DOWN:
+			playerAniName("ark", "enemyAttackDown");
+			break;
+		}
+		break;
 	}
 }

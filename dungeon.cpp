@@ -53,7 +53,7 @@ void dungeon::release()
 void dungeon::update()
 {
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
-	_player->update();
+	_player->update(true);
 	_enemyManager->update();
 }
 

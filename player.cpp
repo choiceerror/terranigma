@@ -63,7 +63,7 @@ void player::release()
 
 }
 
-void player::update()
+void player::update(bool enemyCheck)
 {
 	if (_player.state == PLAYER_RUN)
 	{
@@ -91,20 +91,20 @@ void player::update()
 		_attackMoveStop = false;
 	}
 
-
 	keyInput();
 	playerState();
 	_jump->update();
 	_dashAttack->update(&_player.x, &_player.y);
-	tileCheck();
-
-	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 50, 60);
+	
+	//tileCheck();
+	enemyCollision(enemyCheck);
+	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 50);
 }
 
 void player::render(float cameraX, float cameraY)
 {
 	_player.image->alphaAniRenderCenter(getMemDC(), _player.x - cameraX, _player.y - cameraY, _player.ani, _player.alphaRender);
-	//Rectangle(getMemDC(), _player.rc);
+	Rectangle(getMemDC(), _player.rc);
 	char str[128];
 	for (int i = 0; i < 4; i++)
 	{
@@ -123,7 +123,7 @@ void player::render(float cameraX, float cameraY)
 	sprintf_s(str, "%d", _player.alphaRender);
 	TextOut(getMemDC(), 140, 120, str, strlen(str));
 
-	enemyCollision();
+	
 
 }
 // 캐릭터 프레임 초기값
@@ -147,6 +147,14 @@ void player::keyFrameInit()
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "moveUp", "player", moveUp, 7, PLAYERFPS, true);
 	int moveDown[] = { 48, 49, 50, 51, 52, 53 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "moveDown", "player", moveDown, 6, PLAYERFPS, true);
+	int enemyAttackLeft[] = {30, 31 };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackLeft", "player", enemyAttackLeft, 2, PLAYERFPS, false);
+	int enemyAttackRight[] = { 18, 19 };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackRight", "player", enemyAttackRight, 2, PLAYERFPS, false);
+	int enemyAttackUp[] = { 42, 43 };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackUp", "player", enemyAttackUp, 2, PLAYERFPS, false);
+	int enemyAttackDown[] = { 54 };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackDown", "player", enemyAttackDown, 1, PLAYERFPS, false);
 	int runLeft[] = { 65, 66, 67, 68, 69 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "runLeft", "player", runLeft, 5, PLAYERFPS, true);
 	int runRight[] = { 60, 61, 62, 63, 64 };
@@ -653,54 +661,65 @@ void player::tileCheck()
 	}
 }
 
-void player::enemyCollision()
+void player::enemyCollision(bool enemyCheck)
 {
-	RECT rc;
-	for (int i = 0; i < _enemyManager->getVBallMonster().size(); i++)
+	if (enemyCheck == true)
 	{
-		if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVBallMonster()[i]->getRect()) )
+		if (_playerProtect)
 		{
-			_playerProtect = true;
-			_alphaChangeTime = GetTickCount();
-			_playerProtectTime = GetTickCount();
-		}
-	}
-	for (int i = 0; i < _enemyManager->getVFireMonster().size(); i++)
-	{
-		if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVFireMonster()[i]->getRect()) || 
-			_enemyManager->getVFireMonster()[i]->getIsAttack())
-		{
-			_playerProtect = true;
-			_alphaChangeTime = GetTickCount();
-			_playerProtectTime = GetTickCount();
-		}
-	}
-	for (int i = 0; i < _enemyManager->getVKnightMonster().size(); i++)
-	{
-		if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVKnightMonster()[i]->getRect()) || 
-			IntersectRect(&rc, &_player.rc, &_enemyManager->getVKnightMonster()[i]->getAttackRect()))
-		{
-			_playerProtect = true;
-			_alphaChangeTime = GetTickCount();
-			_playerProtectTime = GetTickCount();
-		}
-	}
+			if (GetTickCount() - _alphaChangeTime >= 200) _player.alphaRender = 200;
+			{
+				if (!_alphaChange) _alphaChange = true;
+				else _alphaChange = false;
+				_alphaChangeTime = GetTickCount();
+			}
+			if (!_alphaChange) 	_player.alphaRender = 150;
+			else 	_player.alphaRender = 200;
 
-	if (_playerProtect)
-	{
-		if (GetTickCount() - _alphaChangeTime >= 200) _player.alphaRender = 200;
-		{
-			if (!_alphaChange) _alphaChange = true;
-			else _alphaChange = false;
-			_alphaChangeTime = GetTickCount();
+			if (GetTickCount() - _playerProtectTime >= 1 * 800)
+			{
+				_player.alphaRender = 255;
+				_playerProtect = false;
+			}
 		}
-		if (!_alphaChange) 	_player.alphaRender = 150;
-		else 	_player.alphaRender = 200;
-
-		if (GetTickCount() - _playerProtectTime >= 1 * 800)
+		else
 		{
-			_player.alphaRender = 255;
-			_playerProtect = false;
+			RECT rc;
+			if (!(_player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK))
+			{
+				for (int i = 0; i < _enemyManager->getVBallMonster().size(); i++)
+				{
+					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVBallMonster()[i]->getRect()))
+					{
+						_playerProtect = true;
+						_alphaChangeTime = GetTickCount();
+						_playerProtectTime = GetTickCount();
+						_player.state = PLAYER_ENEMY_ATTACK;
+					}
+				}
+				for (int i = 0; i < _enemyManager->getVFireMonster().size(); i++)
+				{
+					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVFireMonster()[i]->getRect()) ||
+						_enemyManager->getVFireMonster()[i]->getIsAttack())
+					{
+						_playerProtect = true;
+						_alphaChangeTime = GetTickCount();
+						_playerProtectTime = GetTickCount();
+						_player.state = PLAYER_ENEMY_ATTACK;
+					}
+				}
+				for (int i = 0; i < _enemyManager->getVKnightMonster().size(); i++)
+				{
+					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVKnightMonster()[i]->getRect()) ||
+						IntersectRect(&rc, &_player.rc, &_enemyManager->getVKnightMonster()[i]->getAttackRect()))
+					{
+						_playerProtect = true;
+						_alphaChangeTime = GetTickCount();
+						_playerProtectTime = GetTickCount();
+						_player.state = PLAYER_ENEMY_ATTACK;
+					}
+				}
+			}
 		}
 	}
 }
