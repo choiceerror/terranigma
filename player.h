@@ -11,7 +11,7 @@
 //메소드는 맨앞에 하는일(뭐하는놈인가) 그 뒤로 어떤일을 하는녀석인가 3. 이유 
 
 class enemyManager;
-
+class dungeonMap;
 enum PLAYERSTATE
 {
 	PLAYER_IDLE = 0,			//캐릭터 아이들 상태
@@ -95,7 +95,14 @@ private:
 	bool _isJump;						// 점프중
 	bool _isWalk;						// 걷는중
 
+
+	int TileX, TileY;
+
+	int rightX, rightY;
+	POINT tileIndex[2];
+
 	enemyManager* _enemyManager;
+	dungeonMap* _dungeon;
 public:
 	player();
 	~player();
@@ -123,6 +130,7 @@ public:
 	void enemyCollision();
 
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
+	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }
 
 	//===================== 콜백 함수 =======================
 
@@ -133,6 +141,8 @@ public:
 	//콜백 점프
 	static void callBackJump(void* obj);
 
+	//===================== 타일 검출 =======================
+	void tileCheck();
 	//===================== 접근자 설정자 =======================
 
 	PLAYERSTATE getPlayerState() { return _player.state; }

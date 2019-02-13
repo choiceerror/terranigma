@@ -28,7 +28,7 @@ HRESULT dungeon::init()
 
 	_enemyManager->setPlayerMemoryAddressLink(_player);
 	_player->setEnemyManagerAddressLink(_enemyManager);
-	//_player->setMapManagetAddressLink(_dungeon);
+	_player->setMapManagerAddressLink(_dungeon);
 
 	_dungeon->init();
 	_player->init();

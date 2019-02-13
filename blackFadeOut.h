@@ -21,7 +21,6 @@ private:
 	float _worldTime;
 	bool _once;
 
-
 public:
 	blackFadeOut();
 	~blackFadeOut();

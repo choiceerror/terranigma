@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "player.h"
 #include "enemyManager.h"
+#include "dungeonMap.h"
 
 player::player()
 {
@@ -95,6 +96,7 @@ void player::update()
 	playerState();
 	_jump->update();
 	_dashAttack->update(&_player.x, &_player.y);
+	tileCheck();
 
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 50, 60);
 }
@@ -547,6 +549,108 @@ void player::callBackJump(void * obj)
 	}
 	playerAttack->getPlayerAni()->start();
 
+}
+
+void player::tileCheck()
+{
+	RECT rcCollision;
+	RECT rc;
+
+	rcCollision = _player.rc;
+
+	rcCollision.left += 4;
+	rcCollision.top += 4;
+	rcCollision.right -= 4;
+	rcCollision.bottom -= 4;
+
+	TileX = rcCollision.left / TileSIZE;
+	TileY = rcCollision.top / TileSIZE;
+
+	rightX = (rcCollision.left + 30) / TileSIZE;
+	rightY = (rcCollision.top + 30) / TileSIZE;
+
+	switch (_player.direction)
+	{
+	case LEFT:
+		
+			tileIndex[0].x = TileX;
+			tileIndex[0].y = TileY;
+
+			tileIndex[1].x = TileX;
+			tileIndex[1].y = TileY + 1;
+
+			for (int i = 0; i < 2; ++i)
+			{
+				if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+				{
+					if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+					{
+						_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.right + 16;
+					}
+				}
+			}
+		
+		break;
+	case UP:
+		tileIndex[0].x = TileX;
+		tileIndex[0].y = TileY;
+
+		tileIndex[1].x = TileX + 1;
+		tileIndex[1].y = TileY;
+
+		for (int i = 0; i < 2; ++i)
+		{
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.bottom + 16;
+				}
+			}
+		}
+
+		break;
+	case RIGHT:
+
+		tileIndex[0].x = rightX + 1;
+		tileIndex[0].y = rightY;
+
+		tileIndex[1].x = rightX + 1;
+		tileIndex[1].y = rightY + 1;
+
+
+		for (int i = 0; i < 2; ++i)
+		{
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.left - 20;
+				}
+			}
+		}
+
+		break;
+	case DOWN:
+
+		tileIndex[0].x = TileX;
+		tileIndex[0].y = TileY + 2;
+
+		tileIndex[1].x = TileX + 1;
+		tileIndex[1].y = TileY + 2;
+
+		for (int i = 0; i < 2; ++i)
+		{
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.top - 36;
+				}
+			}
+		}
+		break;
+	}
 }
 
 void player::enemyCollision()
