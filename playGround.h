@@ -6,6 +6,7 @@
 #include "menu.h"
 #include "mapTool.h"
 #include "dungeon.h"
+#include "IntroDungeon.h"
 
 class playGround : public gameNode
 {
@@ -16,6 +17,7 @@ private:
 	menu*		_menu;
 	mapTool*	_mapTool;
 	dungeon*	_dungeon;
+	IntroDungeon* _introDungeon;
 
 
 

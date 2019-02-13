@@ -32,6 +32,7 @@ HRESULT playGround::init()
 	_menu = new menu;
 	_mapTool = new mapTool;
 	_dungeon = new dungeon;
+	_introDungeon = new IntroDungeon;
 
 	SCENEMANAGER->addScene("worldMap", _worldMap);
 	SCENEMANAGER->addScene("ui", _ui);
@@ -39,9 +40,9 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("menu", _menu);
 	SCENEMANAGER->addScene("mapTool", _mapTool);
 	SCENEMANAGER->addScene("dungeon", _dungeon);
+	SCENEMANAGER->addScene("introDungeon", _introDungeon);
 
 	SCENEMANAGER->changeScene("mapTool");
-
 
 	return S_OK;
 }
@@ -74,6 +75,10 @@ void playGround::update()
 	if (KEYMANAGER->isOnceKeyDown(VK_F4))
 	{
 		SCENEMANAGER->changeScene("worldMap");
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_F5))
+	{
+		SCENEMANAGER->changeScene("introDungeon");
 	}
 	
 
