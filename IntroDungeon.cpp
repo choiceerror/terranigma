@@ -56,6 +56,7 @@ HRESULT IntroDungeon::init()
 	_player->setPlayerPosY(2300);
 	_player->setPlayerState(PLAYER_IDLE);
 	_player->setPlayerDirection(UP);
+	_player->setPlayerUnMove(true);
 
 	_dungeonPos.x = GAMESIZEX / 2;
 	_dungeonPos.y = GAMESIZEY / 2;
@@ -158,8 +159,9 @@ void IntroDungeon::update()
 
 	if (_doorDirection == 1)
 	{
-		_player->update(0);
+		_player->setPlayerUnMove(false);
 	}
+	_player->update(0);
 }
 
 void IntroDungeon::render()

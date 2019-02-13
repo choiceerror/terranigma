@@ -97,6 +97,7 @@ private:
 	bool _isAttack;						// 공격중
 	bool _isJump;						// 점프중
 	bool _isWalk;						// 걷는중
+	bool _unMove;						// 플레이어 움직이지 못하게
 
 
 	int TileX, TileY;
@@ -159,6 +160,7 @@ public:
 	void setPlayerPosX(float playerX) { _player.x = playerX; }
 	void setPlayerPosY(float playerY) { _player.y = playerY; }
 	void setPlayerSpeed(float speed) { _player.speed = speed; }
+	void setPlayerUnMove(bool unMove) { _unMove = unMove;  }
 
 	RECT getPlayerRc() { return _player.rc; }
 

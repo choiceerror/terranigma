@@ -48,6 +48,9 @@ HRESULT player::init()
 
 	_attackMoveStop = false;
 
+	_unMove = false;
+
+
 	_jump = new jump;
 	_jump->init();
 	_oldJumpTime = -100;
@@ -91,7 +94,7 @@ void player::update(bool enemyCheck)
 		_attackMoveStop = false;
 	}
 
-	if (!(_player.state == PLAYER_ENEMY_ATTACK) || _player.state == PLAYER_IDLE)
+	if ((!(_player.state == PLAYER_ENEMY_ATTACK) || _player.state == PLAYER_IDLE) && !_unMove)
 	{
 		keyInput();
 	}
