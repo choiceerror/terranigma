@@ -33,7 +33,7 @@ private:
 	DUNGEON_FLOOR _dungeonFloor; //던전 층수
 	int _fireBulletSpeed;
 
-	RECT _attackRect; //임의의 공격렉트
+	RECT _playerAttackRc; //임의의 공격렉트
 
 public:
 	enemyManager();

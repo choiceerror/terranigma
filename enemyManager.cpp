@@ -40,32 +40,6 @@ void enemyManager::release()
 
 void enemyManager::update()
 {
-	//오른쪽 공격, 대쉬공격
-	if ((_player->getPlayerAni()->getFramePosArr().x >= 1 && _player->getPlayerAni()->getFramePosArr().x < 4 && _player->getPlayerAni()->getFramePosArr().y == 13)
-		|| (_player->getPlayerAni()->getFramePosArr().x <= 2 && _player->getPlayerAni()->getFramePosArr().y == 28))
-	{
-		_attackRect = RectMakeCenter(_player->getPlayerX() + 30, _player->getPlayerY(), 100, 30);
-	}
-	//왼쪽 공격, 대쉬공격
-	else if ((_player->getPlayerAni()->getFramePosArr().x >= 5 && _player->getPlayerAni()->getFramePosArr().y == 13)
-		|| (_player->getPlayerAni()->getFramePosArr().x >= 4 && _player->getPlayerAni()->getFramePosArr().y == 28))
-	{
-		_attackRect = RectMakeCenter(_player->getPlayerX() - 30, _player->getPlayerY(), 100, 30);
-	}
-	//위공격, 대쉬공격
-	else if ((_player->getPlayerAni()->getFramePosArr().x >= 1 && _player->getPlayerAni()->getFramePosArr().x < 4 && _player->getPlayerAni()->getFramePosArr().y == 14)
-		|| (_player->getPlayerAni()->getFramePosArr().x <= 2 && _player->getPlayerAni()->getFramePosArr().y == 29))
-	{
-		_attackRect = RectMakeCenter(_player->getPlayerX(), _player->getPlayerY() - 30, 30, 100);
-	}
-	//아래 공격, 대쉬공격
-	else if ((_player->getPlayerAni()->getFramePosArr().x >= 5 && _player->getPlayerAni()->getFramePosArr().y == 14)
-		|| (_player->getPlayerAni()->getFramePosArr().x >= 4 && _player->getPlayerAni()->getFramePosArr().y == 29))
-	{
-		_attackRect = RectMakeCenter(_player->getPlayerX(), _player->getPlayerY() + 30, 30, 100);
-	}
-	else _attackRect = RectMakeCenter(0, 0, 0, 0);
-
 	//업데이트 모음 함수
 	updateCollection();
 
@@ -80,12 +54,11 @@ void enemyManager::update()
 
 	//에너미들이 죽을함수
 	enemyDead();
-
 }
 
 void enemyManager::render(float cameraX, float cameraY)
 {
-	//Rectangle(getMemDC(), _attackRect);
+	Rectangle(getMemDC(), _playerAttackRc);
 	//렌더링 모음 함수
 	enemyDraw(cameraX, cameraY);
 
@@ -442,18 +415,59 @@ void enemyManager::enemyAI()
 //플레이어 공격에 에너미들이 맞을 함수
 void enemyManager::playerAttackEnemyCollision()
 {
+	//플레이어의 공격렉트
+	//오른쪽 공격, 대쉬공격, 연속공격, 점프공격, 대쉬 점프공격
+	if ((_player->getPlayerAni()->getFramePosArr().x >= 1 && _player->getPlayerAni()->getFramePosArr().x < 4 && _player->getPlayerAni()->getFramePosArr().y == 13)
+		|| (_player->getPlayerAni()->getFramePosArr().x <= 2 && _player->getPlayerAni()->getFramePosArr().y == 28)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 180 && _player->getPlayerAni()->getFramePosArrOnce() <= 187)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 230 && _player->getPlayerAni()->getFramePosArrOnce() <= 235)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 279 && _player->getPlayerAni()->getFramePosArrOnce() <= 280))
+	{
+		_playerAttackRc = RectMakeCenter(_player->getPlayerX() + 30, _player->getPlayerY(), 100, 30);
+	}
+	//왼쪽 공격, 대쉬공격, 연속공격 , 점프공격, 대쉬 점프공격
+	else if ((_player->getPlayerAni()->getFramePosArr().x >= 5 && _player->getPlayerAni()->getFramePosArr().y == 13)
+		|| (_player->getPlayerAni()->getFramePosArr().x >= 4 && _player->getPlayerAni()->getFramePosArr().y == 28)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 192 && _player->getPlayerAni()->getFramePosArrOnce() <= 199)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 242 && _player->getPlayerAni()->getFramePosArrOnce() <= 247)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 291 && _player->getPlayerAni()->getFramePosArrOnce() <= 292))
+	{
+		_playerAttackRc = RectMakeCenter(_player->getPlayerX() - 30, _player->getPlayerY(), 100, 30);
+	}
+	//위공격, 대쉬공격, 연속공격, 점프공격, 대쉬 점프공격
+	else if ((_player->getPlayerAni()->getFramePosArr().x >= 1 && _player->getPlayerAni()->getFramePosArr().x < 4 && _player->getPlayerAni()->getFramePosArr().y == 14)
+		|| (_player->getPlayerAni()->getFramePosArr().x <= 2 && _player->getPlayerAni()->getFramePosArr().y == 29)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 204 && _player->getPlayerAni()->getFramePosArrOnce() <= 209)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 255 && _player->getPlayerAni()->getFramePosArrOnce() <= 259)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 303 && _player->getPlayerAni()->getFramePosArrOnce() <= 304))
+	{
+		_playerAttackRc = RectMakeCenter(_player->getPlayerX(), _player->getPlayerY() - 30, 30, 100);
+	}
+	//아래 공격, 대쉬공격, 연속공격, 점프공격, 대쉬 점프공격
+	else if ((_player->getPlayerAni()->getFramePosArr().x >= 5 && _player->getPlayerAni()->getFramePosArr().y == 14)
+		|| (_player->getPlayerAni()->getFramePosArr().x >= 4 && _player->getPlayerAni()->getFramePosArr().y == 29)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 216 && _player->getPlayerAni()->getFramePosArrOnce() <= 222)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 267 && _player->getPlayerAni()->getFramePosArrOnce() <= 271)
+		|| (_player->getPlayerAni()->getFramePosArrOnce() >= 315 && _player->getPlayerAni()->getFramePosArrOnce() <= 316))
+	{
+		_playerAttackRc = RectMakeCenter(_player->getPlayerX(), _player->getPlayerY() + 30, 30, 100);
+	}
+	//공격끝나면 렉트없앰.
+	else _playerAttackRc = RectMakeCenter(NULL, NULL, NULL, NULL);
+
 	switch (_player->getPlayerState())
 	{
 	case PLAYER_ATTACK:
 	case PLAYER_JUMP_ATTACK:
 	case PLAYER_DASH_JUMP_ATTACK:
 	case PLAYER_DASH_ATTACK:
+	case PLAYER_COMBINATION:
 
 		RECT temp;
 		//기사몬스터
 		for (int i = 0; i < _vKnightMonster.size(); i++)
 		{
-			if (IntersectRect(&temp, &_attackRect, &_vKnightMonster[i]->getRect()))
+			if (IntersectRect(&temp, &_playerAttackRc, &_vKnightMonster[i]->getRect()))
 			{
 				_vKnightMonster[i]->setCurrentHP(_vKnightMonster[i]->getCurrentHP() - 10);
 				_vKnightMonster[i]->setIsHit(true);
@@ -479,7 +493,7 @@ void enemyManager::playerAttackEnemyCollision()
 		//공몬스터
 		for (int i = 0; i < _vBallMonster.size(); i++)
 		{
-			if (IntersectRect(&temp, &_attackRect, &_vBallMonster[i]->getRect()))
+			if (IntersectRect(&temp, &_playerAttackRc, &_vBallMonster[i]->getRect()))
 			{
 				_vBallMonster[i]->setIsHit(true);
 				_vBallMonster[i]->setCurrentHP(_vBallMonster[i]->getCurrentHP() - 10);
@@ -505,7 +519,7 @@ void enemyManager::playerAttackEnemyCollision()
 		//불몬스터
 		for (int i = 0; i < _vFireMonster.size(); i++)
 		{
-			if (IntersectRect(&temp, &_attackRect, &_vFireMonster[i]->getRect()))
+			if (IntersectRect(&temp, &_playerAttackRc, &_vFireMonster[i]->getRect()))
 			{
 				_vFireMonster[i]->setIsHit(true);
 				_vFireMonster[i]->setCurrentHP(_vFireMonster[i]->getCurrentHP() - 10);
