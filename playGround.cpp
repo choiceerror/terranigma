@@ -94,11 +94,9 @@ void playGround::render()
 	PatBlt(getMemDC(), 0, 0, WINSIZEX, WINSIZEY, BLACKNESS);
 	//===========================================================
 
-	EFFECTMANAGER->render();
 	SCENEMANAGER->render();
-
-
-	//TIMEMANAGER->render(getMemDC());
+	EFFECTMANAGER->render();
+	TIMEMANAGER->render(getMemDC());
 	//===========================================================
 	this->getBackBuffer()->render(getHDC(), 0, 0);
 }

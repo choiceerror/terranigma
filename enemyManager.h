@@ -51,8 +51,8 @@ public:
 	void playerAttackEnemyCollision(); //플레이어 공격에 에너미들이 맞을함수
 	void fireMonsterBulletFire(int i); //파이어몬스터 총알 발사할 함수
 	void enemyDead(); //에너미들이 죽을 함수
-	void enemyRespon(); //에너미들이 죽은다음 리스폰할 함수
 	void tileCheckObjectCollision(); //타일검출 충돌 함수
+	void enemyRespon(); //에너미들이 죽은다음 리스폰할 함수
 
 public:
 	//접근자 설정자 모음
