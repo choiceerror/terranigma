@@ -21,7 +21,7 @@ private:
 	POINT _leftSubtraction;
 
 	RECT box[5];
-	RECT tileBox[5];
+	RECT tileBox[6];
 
 	RECT viewRc;
 	RECT rc;

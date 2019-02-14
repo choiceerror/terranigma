@@ -105,6 +105,10 @@ void player::update(bool enemyCheck, int a)
 	{
 		tileCheck();
 	}
+	else if (a == 2)
+	{
+		townCheck();
+	}
 	enemyCollision(enemyCheck);
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 50);
 }
@@ -738,6 +742,97 @@ void player::tileCheck()
 	//	}
 	//	break;
 	//}
+}
+
+void player::townCheck()
+{
+	RECT rcCollision;
+	RECT rc;
+
+	rcCollision = _player.rc;
+
+	rcCollision.left += 4;
+	rcCollision.top += 4;
+	rcCollision.right -= 4;
+	rcCollision.bottom -= 4;
+
+	TileX = _player.x / TileSIZE;
+	TileY = _player.y / TileSIZE;
+
+
+	if (KEYMANAGER->isStayKeyDown(VK_LEFT) && _player.direction != LEFT || _player.direction != RIGHT)
+	{
+		tileIndex[0].x = TileX - 1;
+		tileIndex[0].y = TileY;
+
+		//tileIndex[1].x = TileX - 1;
+		//tileIndex[1].y = TileY + 1;
+
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.x += _player.speed;
+				}
+			}
+		}
+	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && _player.direction != LEFT || _player.direction != RIGHT)
+	{
+		tileIndex[0].x = TileX + 1;
+		tileIndex[0].y = TileY;
+
+		//tileIndex[1].x = TileX;
+		//tileIndex[1].y = TileY + 1;
+
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.x -= _player.speed;
+				}
+			}
+		}
+	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_UP) && _player.direction != UP || _player.direction != DOWN)
+	{
+		tileIndex[0].x = TileX;
+		tileIndex[0].y = TileY - 1;
+
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.y += _player.speed;
+				}
+			}
+		}
+	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_DOWN) && _player.direction != UP || _player.direction != DOWN)
+	{
+		tileIndex[0].x = TileX;
+		tileIndex[0].y = TileY + 1;
+
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.y -= _player.speed;
+				}
+			}
+		}
+	}
 }
 
 void player::enemyCollision(bool enemyCheck)

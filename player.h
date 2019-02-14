@@ -148,6 +148,7 @@ public:
 
 	//===================== 타일 검출 =======================
 	void tileCheck();
+	void townCheck();
 	//===================== 접근자 설정자 =======================
 
 	PLAYERSTATE getPlayerState() { return _player.state; }

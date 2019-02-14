@@ -13,7 +13,7 @@ townMap::~townMap()
 
 HRESULT townMap::init()
 {
-	//load();
+	load();
 	return S_OK;
 }
 
@@ -31,14 +31,6 @@ void townMap::render(float cameraX, float cameraY)
 	{
 		for (int j = 0; j < TILEX; ++j)
 		{
-			if (PtInRect(&_vvMap[i][j]->rc, _ptMouse))
-			{
-				obx = _vvMap[i][j]->objFrameX;
-				oby = _vvMap[i][j]->objFrameY;
-				tix = _vvMap[i][j]->FrameX;
-				tiy = _vvMap[i][j]->FrameY;
-			}
-
 			if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
 			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
@@ -50,32 +42,46 @@ void townMap::render(float cameraX, float cameraY)
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
-			else if (_vvMap[i][j]->a == 1)
+			else if ((_vvMap[i][j]->a == 1))
 			{
 				IMAGEMANAGER->frameRender("≈∏¿œ∏ ", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
-			else if (_vvMap[i][j]->a == 2)
+			else if ((_vvMap[i][j]->a == 2))
 			{
 				IMAGEMANAGER->frameRender("≈∏¿œ∏ 2", getMemDC(),
+					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+			}
+			else if ((_vvMap[i][j]->a == 3))
+			{
+				IMAGEMANAGER->frameRender("≈∏¿œ∏ 5", getMemDC(),
+					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+			}
+			else if ((_vvMap[i][j]->a == 4))
+			{
+				IMAGEMANAGER->frameRender("≈∏¿œ∏ 6",getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
 		}
 	}
 
-	//ø¿∫Í¡ß∆Æ
+	////ø¿∫Í¡ß∆Æ
 	for (int i = 0; i < TILEY; ++i)
 	{
 		for (int j = 0; j < TILEX; ++j)
 		{
 			if (_vvMap[i][j]->obj == OBJ_NONE) continue;
+
 			if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
 			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
 
+		
 			if (_vvMap[i][j]->a == 0)
 			{
 				IMAGEMANAGER->frameRender("≈∏¿œ∏ 4", getMemDC(),
@@ -91,6 +97,18 @@ void townMap::render(float cameraX, float cameraY)
 			else if (_vvMap[i][j]->a == 2)
 			{
 				IMAGEMANAGER->frameRender("≈∏¿œ∏ 2", getMemDC(),
+					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+			}
+			else if (_vvMap[i][j]->a == 3)
+			{
+				IMAGEMANAGER->frameRender("≈∏¿œ∏ 5", getMemDC(),
+					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+			}
+			else if (_vvMap[i][j]->a == 4)
+			{
+				IMAGEMANAGER->frameRender("≈∏¿œ∏ 6", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}

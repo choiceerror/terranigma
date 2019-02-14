@@ -20,14 +20,13 @@ HRESULT town::init()
 	_camera = new camera;
 	_town = new townMap;
 
-
-	_player->init();
-	_playerWorldMap->init();
-	_town->init();
-
 	_player->setTownManagerAddressLink(_town);
 
-	_camera->init(GAMESIZEX, GAMESIZEY, 3200, 3200);
+	_town->init();
+	_player->init();
+	//_playerWorldMap->init();
+	
+	_camera->init(GAMESIZEX, GAMESIZEY, 2560, 2560);
 	return S_OK;
 }
 
@@ -37,15 +36,21 @@ void town::release()
 
 void town::update()
 {
+	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_player->update(false, 2);
-	_playerWorldMap->update();
+	//_playerWorldMap->update();
+
 }
 
 void town::render()
 {
-	_player->render(0 , 0);
-	//_playerWorldMap->render(0, 0);
+	_town->render(_camera->getCameraX(), _camera->getCameraY());
+	_player->render(_camera->getCameraX(), _camera->getCameraY());
+	//_playerWorldMap->render(_camera->getCameraX(), _camera->getCameraY());
+	
 }
+
+
 
 void town::setWindowsSize(int x, int y, int width, int height)
 {

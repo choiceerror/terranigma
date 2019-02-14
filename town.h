@@ -14,6 +14,7 @@ private:
 	PlayerWorldMap* _playerWorldMap;
 	camera* _camera;
 	townMap* _town;
+
 public:
 	town();
 	~town();
@@ -22,7 +23,6 @@ public:
 	void release();
 	void update();
 	void render();
-
 	void setWindowsSize(int x, int y, int width, int height);
 };
 

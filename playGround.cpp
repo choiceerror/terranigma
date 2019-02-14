@@ -20,6 +20,8 @@ HRESULT playGround::init()
 	IMAGEMANAGER->addFrameImage("Å¸ÀÏ¸Ê2", "tileimage\\terranigma2.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("Å¸ÀÏ¸Ê4", "tileimage\\terranigma4.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("Å¸ÀÏ¸Ê5", "tileimage\\terranigma5.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("Å¸ÀÏ¸Ê6", "tileimage\\terranigma.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("Å¸ÀÏ¸Ê7", "tileimage\\terranigma6.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("save", "tileimage\\save.bmp", 120, 50, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("load", "tileimage\\load.bmp", 120, 50, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("terrain", "tileimage\\terrain.bmp", 120, 50, true, RGB(255, 0, 255));
