@@ -4,6 +4,7 @@
 #include "PlayerWorldMap.h"
 #include "camera.h"
 #include "townMap.h"
+#include "npcManager.h"
 
 
 
@@ -15,6 +16,8 @@ private:
 	camera* _camera;
 	townMap* _town;
 
+	npcManager* _npcManager;
+
 public:
 	town();
 	~town();
@@ -23,6 +26,7 @@ public:
 	void release();
 	void update();
 	void render();
+
 	void setWindowsSize(int x, int y, int width, int height);
 };
 

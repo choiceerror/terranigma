@@ -15,18 +15,27 @@ HRESULT town::init()
 {
 	setWindowsSize(WINSTARTX, WINSTARTY, GAMESIZEX, GAMESIZEY);
 
+	IMAGEMANAGER->addFrameImage("bird", "image/²¿²¿.bmp", 140, 160, 4, 8, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("elle", "image/¿¤.bmp", 100, 140, 4, 4, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("elder", "image/Àå·Î.bmp", 330, 40, 11, 1, true, RGB(255, 0, 255));
+
 	_player = new player;
 	_playerWorldMap = new PlayerWorldMap;
 	_camera = new camera;
 	_town = new townMap;
+	_npcManager = new npcManager;
+
+
+	_player->init();
+	_playerWorldMap->init();
+	_town->init();
+	_npcManager->init();
+
+	_npcManager->setBird();
 
 	_player->setTownManagerAddressLink(_town);
 
-	_town->init();
-	_player->init();
-	//_playerWorldMap->init();
-	
-	_camera->init(GAMESIZEX, GAMESIZEY, 2560, 2560);
+	_camera->init(GAMESIZEX, GAMESIZEY, 3200, 3200);
 	return S_OK;
 }
 
@@ -38,19 +47,16 @@ void town::update()
 {
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_player->update(false, 2);
-	//_playerWorldMap->update();
-
+	_playerWorldMap->update();
+	_npcManager->update();
 }
 
 void town::render()
 {
-	_town->render(_camera->getCameraX(), _camera->getCameraY());
-	_player->render(_camera->getCameraX(), _camera->getCameraY());
-	//_playerWorldMap->render(_camera->getCameraX(), _camera->getCameraY());
-	
+	_player->render(0, 0);
+	_npcManager->render(_camera->getCameraX(), _camera->getCameraY());
+	//_playerWorldMap->render(0, 0);
 }
-
-
 
 void town::setWindowsSize(int x, int y, int width, int height)
 {
