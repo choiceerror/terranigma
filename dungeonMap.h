@@ -1,12 +1,17 @@
 #pragma once
 #include "gameNode.h"
 #include "mapTool.h"
+//湍瞪 類熱
+enum class DUNGEON_FLOOR
+{
+	FIRST_FLOOR, //1類
+	SECOND_FLOOR, //2類
+};
 
 class dungeonMap : public  gameNode
 {
 
 private:
-
 	mapTool* _mapT;
 
 	vector<vector<tagTile*>> _vvMap;
@@ -14,6 +19,7 @@ private:
 	unsigned int TILEY;
 
 	DWORD* _attribute;
+	DUNGEON_FLOOR _dungeonFloor; //湍瞪類熱
 
 	int tix;
 	int tiy;
@@ -29,12 +35,15 @@ public:
 	void update();
 	void render(float cameraX, float cameraY);
 	void load();
-	void tileDraw();
+	void tileDraw(float cameraX, float cameraY);
 
 	unsigned int getTileX() { return TILEX; }
 	unsigned int getTileY() { return TILEY; }
 
 	tagTile* getTile(int x, int y) { return _vvMap[y][x]; }
 	DWORD getAttr(int x, int y) { return _attribute[x + y * TILEX]; }
+
+	DUNGEON_FLOOR getDungeonFloor() { return _dungeonFloor; }
+	void setDungeonFloor(DUNGEON_FLOOR floor) { _dungeonFloor = floor; }
 };
 
