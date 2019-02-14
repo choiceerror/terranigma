@@ -10,3 +10,20 @@ npc::npc()
 npc::~npc()
 {
 }
+
+HRESULT npc::init()
+{
+	return S_OK;
+}
+
+void npc::release()
+{
+}
+
+void npc::update()
+{
+}
+
+void npc::render()
+{
+}
