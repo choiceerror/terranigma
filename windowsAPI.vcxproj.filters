@@ -55,9 +55,6 @@
     <Filter Include="PlayGround\Scene">
       <UniqueIdentifier>{f00335ff-c296-47de-aae7-ef46b0b7933f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PlayGround\Scene\menu">
-      <UniqueIdentifier>{0d268339-3b57-4bd0-b3e9-beb8861628e8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PlayGround\Scene\town">
       <UniqueIdentifier>{ba7f124b-be61-4dc6-ad0e-b06aa0858a4c}</UniqueIdentifier>
     </Filter>
@@ -114,6 +111,9 @@
     </Filter>
     <Filter Include="PlayGround\item\Gold">
       <UniqueIdentifier>{6f16ec98-48bd-479d-876a-ea8b87d71771}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\Scene\Intro">
+      <UniqueIdentifier>{0d268339-3b57-4bd0-b3e9-beb8861628e8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -197,9 +197,6 @@
     </ClInclude>
     <ClInclude Include="inGameScene.h">
       <Filter>2DFramework\loading</Filter>
-    </ClInclude>
-    <ClInclude Include="menu.h">
-      <Filter>PlayGround\Scene\menu</Filter>
     </ClInclude>
     <ClInclude Include="town.h">
       <Filter>PlayGround\Scene\town</Filter>
@@ -312,6 +309,9 @@
     <ClInclude Include="partsFadeOut.h">
       <Filter>PlayGround\effect</Filter>
     </ClInclude>
+    <ClInclude Include="intro.h">
+      <Filter>PlayGround\Scene\Intro</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -382,9 +382,6 @@
     </ClCompile>
     <ClCompile Include="inGameScene.cpp">
       <Filter>2DFramework\loading</Filter>
-    </ClCompile>
-    <ClCompile Include="menu.cpp">
-      <Filter>PlayGround\Scene\menu</Filter>
     </ClCompile>
     <ClCompile Include="town.cpp">
       <Filter>PlayGround\Scene\town</Filter>
@@ -493,6 +490,9 @@
     </ClCompile>
     <ClCompile Include="partsFadeOut.cpp">
       <Filter>PlayGround\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="intro.cpp">
+      <Filter>PlayGround\Scene\Intro</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

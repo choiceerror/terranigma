@@ -30,7 +30,7 @@ HRESULT playGround::init()
 	_worldMap = new worldMap;
 	_ui = new ui;
 	_town = new town;
-	_menu = new menu;
+	_intro = new intro;
 	_mapTool = new mapTool;
 	_dungeon = new dungeon;
 	_introDungeon = new IntroDungeon;
@@ -38,7 +38,7 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("worldMap", _worldMap);
 	SCENEMANAGER->addScene("ui", _ui);
 	SCENEMANAGER->addScene("town", _town);
-	SCENEMANAGER->addScene("menu", _menu);
+	SCENEMANAGER->addScene("menu", _intro);
 	SCENEMANAGER->addScene("mapTool", _mapTool);
 	SCENEMANAGER->addScene("dungeon", _dungeon);
 	SCENEMANAGER->addScene("introDungeon", _introDungeon);

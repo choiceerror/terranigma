@@ -3,7 +3,7 @@
 #include "worldMap.h"
 #include "ui.h"
 #include "town.h"
-#include "menu.h"
+#include "intro.h"
 #include "mapTool.h"
 #include "dungeon.h"
 #include "IntroDungeon.h"
@@ -14,7 +14,7 @@ private:
 	worldMap*	_worldMap;
 	ui*			_ui;
 	town*		_town;
-	menu*		_menu;
+	intro*		_intro;
 	mapTool*	_mapTool;
 	dungeon*	_dungeon;
 	IntroDungeon* _introDungeon;

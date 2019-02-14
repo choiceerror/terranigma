@@ -186,7 +186,7 @@
     <ClInclude Include="loadingScene.h" />
     <ClInclude Include="MapNode.h" />
     <ClInclude Include="mapTool.h" />
-    <ClInclude Include="menu.h" />
+    <ClInclude Include="intro.h" />
     <ClInclude Include="mode7.h" />
     <ClInclude Include="npc.h" />
     <ClInclude Include="partsFadeOut.h" />
@@ -251,7 +251,7 @@
     <ClCompile Include="knightMonster.cpp" />
     <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="mapTool.cpp" />
-    <ClCompile Include="menu.cpp" />
+    <ClCompile Include="intro.cpp" />
     <ClCompile Include="mode7.cpp" />
     <ClCompile Include="npc.cpp" />
     <ClCompile Include="partsFadeOut.cpp" />
