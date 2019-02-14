@@ -73,5 +73,10 @@ struct tilebox
 	// 마지막 - 첫타일 뺀 변수
 	int q;
 	int w;
+
+
+
+
+
 };
 

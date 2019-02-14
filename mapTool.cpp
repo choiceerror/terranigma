@@ -40,6 +40,7 @@ HRESULT mapTool::init()
 	}
 
 	check = false;
+	_leftDragMode = false;
 
 	return S_OK;
 }
@@ -203,27 +204,58 @@ void mapTool::render()
 		_mouseIndex.x = (_ptMouse.x + _camera->getCameraX())/ 32;
 		_mouseIndex.y = (_ptMouse.y + _camera->getCameraY()) / 32;
 
-		HPEN pen = CreatePen(PS_SOLID, 2, RGB(0, 240, 255));
-		HPEN oldPen = (HPEN)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), pen);
-		HBRUSH brush = CreateSolidBrush(MAGENTA);
-		HBRUSH oldBrush = (HBRUSH)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), brush);
+		if (_mouseIndex.x < TILEX && _mouseIndex.y < TILEY)
+		{
+			if (!_leftDragMode)
+			{
+				HPEN pen = CreatePen(PS_SOLID, 2, RGB(0, 240, 255));
+				HPEN oldPen = (HPEN)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), pen);
+				HBRUSH brush = CreateSolidBrush(MAGENTA);
+				HBRUSH oldBrush = (HBRUSH)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), brush);
 
-		MoveToEx(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left - _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top - _camera->getCameraY(), NULL);
-		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right- _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top - _camera->getCameraY());
-		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right- _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom - _camera->getCameraY());
-		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left- _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom - _camera->getCameraY());
-		LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left- _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top - _camera->getCameraY());
+				MoveToEx(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left - _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top - _camera->getCameraY(), NULL);
+				LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right - _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top - _camera->getCameraY());
+				LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right - _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom - _camera->getCameraY());
+				LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left - _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom - _camera->getCameraY());
+				LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.left - _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.top - _camera->getCameraY());
 
-		SelectObject(getMemDC(), oldBrush);
-		DeleteObject(brush);
-		SelectObject(getMemDC(), oldPen);
-		DeleteObject(pen);
+				SelectObject(getMemDC(), oldBrush);
+				DeleteObject(brush);
+				SelectObject(getMemDC(), oldPen);
+				DeleteObject(pen);
+			}
+			
+			if(!_mouseUp && _leftDragMode)
+			{
+				HPEN pen = CreatePen(PS_SOLID, 2, RGB(0, 240, 255));
+				HPEN oldPen = (HPEN)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), pen);
+				HBRUSH brush = CreateSolidBrush(MAGENTA);
+				HBRUSH oldBrush = (HBRUSH)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), brush);
+
+				MoveToEx(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_leftStartDrag.y][_leftStartDrag.x]->rc.left - _camera->getCameraX(), _vvMap[_leftStartDrag.y][_leftStartDrag.x]->rc.top - _camera->getCameraY(), NULL);
+				LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right - _camera->getCameraX(), _vvMap[_leftStartDrag.y][_leftStartDrag.x]->rc.top - _camera->getCameraY());
+				LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.right - _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom - _camera->getCameraY());
+				LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_leftStartDrag.y][_leftStartDrag.x]->rc.left - _camera->getCameraX(), _vvMap[_mouseIndex.y][_mouseIndex.x]->rc.bottom - _camera->getCameraY());
+				LineTo(IMAGEMANAGER->findImage("background")->getMemDC(), _vvMap[_leftStartDrag.y][_leftStartDrag.x]->rc.left - _camera->getCameraX(), _vvMap[_leftStartDrag.y][_leftStartDrag.x]->rc.top - _camera->getCameraY());
+
+				SelectObject(getMemDC(), oldBrush);
+				DeleteObject(brush);
+				SelectObject(getMemDC(), oldPen);
+				DeleteObject(pen);
+			}
+		}
 	}
 
 
 
 	//=========================================================================
 	char str[128];
+
+	if (_leftDragMode)
+	{
+		sprintf_s(str, "드래그모드 활성화");
+		TextOut(getMemDC(), 850, 530, str, strlen(str));
+	}
 
 	if (num == 0)
 	{
@@ -349,7 +381,7 @@ void mapTool::setMap()
 
 			if (PtInRect(&_vvMap[i][j]->rc, ptMouse2) && _ptMouse.x <= 800)
 			{
-				if (check == false)
+				if (check == false && _leftDragMode == false)
 				{
 					if (Click == CTRL_TERRAINDRAW)
 					{
@@ -601,9 +633,10 @@ void mapTool::viewMove()
 
 void mapTool::tileDrag()
 {
+	
+
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
-		_mouseUp = false;
 		for (int i = 0; i < basicTileX * basicTileY; ++i)
 		{
 			if (PtInRect(&_tilesetting[i].tilerc, _ptMouse))
@@ -612,11 +645,17 @@ void mapTool::tileDrag()
 				_tileBox.y = _tilesetting[i].tiley;
 			}
 		}
+
+		if (_ptMouse.x < 800)
+		{
+			_leftStartDrag.x = _mouseIndex.x;
+			_leftStartDrag.y = _mouseIndex.y;
+		}
+		_mouseUp = false;
 	}
 
 	if (KEYMANAGER->isOnceKeyUp(VK_LBUTTON))
 	{
-		_mouseUp = true;
 		for (int i = 0; i < basicTileX * basicTileY; ++i)
 		{
 			if (PtInRect(&_tilesetting[i].tilerc, _ptMouse))
@@ -625,6 +664,20 @@ void mapTool::tileDrag()
 				_tileBox.lastY = _tilesetting[i].tiley;
 			}
 		}
+		_mouseUp = true;
+
+		if (_ptMouse.x < 800)
+		{
+			_leftLastDrag.x = _mouseIndex.x;
+			_leftLastDrag.y = _mouseIndex.y;
+
+			_leftSubtraction.x = _leftLastDrag.x - _leftStartDrag.x;
+			_leftSubtraction.y = _leftLastDrag.y - _leftStartDrag.y;
+
+			tileLeftDrag();
+		}
+
+
 	}
 	_tileBox.q = abs(_tileBox.lastX) - abs(_tileBox.x);
 	_tileBox.w = abs(_tileBox.lastY) - abs(_tileBox.y);
@@ -644,6 +697,32 @@ void mapTool::tileDrag()
 	}
 }
 
+void mapTool::tileLeftDrag()
+{
+	if (!check && _leftDragMode)
+	{
+		for (int i = 0; i < _leftSubtraction.y + 1; ++i)
+		{
+			for (int j = 0; j < _leftSubtraction.x + 1; ++j)
+			{
+				if (Click == CTRL_TERRAINDRAW)
+				{
+					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->FrameX = _tileBox.x;
+					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->FrameY = _tileBox.y;
+					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->a = tilenum;
+					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->terrain = terrainSelect(_tileBox.x, _tileBox.y);
+				}
+				else if (Click == CTRL_OBJDRAW)
+				{
+					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->objFrameX = _tileBox.x;
+					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->objFrameY = _tileBox.y;
+					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->a = tilenum;
+					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->obj = objSelect(_tileBox.x, _tileBox.y);
+				}
+			}
+		}
+	}
+}
 
 TERRAIN mapTool::terrainSelect(int frameX, int frameY)
 {
@@ -730,6 +809,17 @@ void mapTool::mapSize()
 		TILEY++;
 	}
 
+	if (KEYMANAGER->isOnceKeyDown('5'))
+	{
+		if (_leftDragMode)
+		{
+			_leftDragMode = false;
+		}
+		else
+		{
+			_leftDragMode = true;
+		}
+	}
 
 }
 

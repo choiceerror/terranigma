@@ -16,6 +16,9 @@ private:
 	CTRL Click;
 
 	POINT ptMouse2;
+	POINT _leftStartDrag;
+	POINT _leftLastDrag;
+	POINT _leftSubtraction;
 
 	RECT box[5];
 	RECT tileBox[5];
@@ -43,6 +46,8 @@ private:
 	POINTFLOAT view;
 	POINT _mouseIndex;
 
+	bool _leftDragMode;
+
 public:
 
 	mapTool();
@@ -62,6 +67,8 @@ public:
 	void load();
 	void viewMove();
 	void tileDrag();
+	void tileLeftDrag();
+
 	void tilePreview();
 
 	TERRAIN terrainSelect(int frameX, int frameY);
