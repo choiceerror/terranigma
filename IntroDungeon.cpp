@@ -19,6 +19,7 @@ HRESULT IntroDungeon::init()
 	IMAGEMANAGER->addImage("dungeon", "image/introDungeon.bmp", 1024, 2490 , true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("door", "image/문.bmp", 4165, 392, 17, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("guardian", "image/가디언.bmp", 3135, 166, 33, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addImage("pixelMap", "image/introDungeonPixel.bmp", 1024, 2490, true, RGB(255, 0 ,255));
 
 	_camera = new camera;
 	_player = new player;
@@ -29,7 +30,7 @@ HRESULT IntroDungeon::init()
 	_door = IMAGEMANAGER->findImage("door");
 	_guardian = IMAGEMANAGER->findImage("guardian");
 
-	int doorClosed[] = { 0};
+	int doorClosed[] = { 0 };
 	KEYANIMANAGER->addArrayFrameAnimation("doorAnime", "doorClosed", "door", doorClosed, 1, 10, false);
 	int doorOpen[] = { 0, 1, 2, 3, 4, 5, 6, 7 , 8, 9, 10, 11, 12, 13, 14, 15, 16};
 	KEYANIMANAGER->addArrayFrameAnimation("doorAnime", "doorOpen", "door", doorOpen, 17, 10, false);
@@ -46,7 +47,6 @@ HRESULT IntroDungeon::init()
 	KEYANIMANAGER->addArrayFrameAnimation("guardianAnime", "guardianTalk", "guardian", guardianTalk, 4, 5, true);
 
 	_count = 0;
-
 	_doorDirection = 0;
 	_doorPos.x = GAMESIZEX / 2 - 105;
 	_doorPos.y = 1675;
@@ -58,11 +58,27 @@ HRESULT IntroDungeon::init()
 	_player->setPlayerDirection(UP);
 	_player->setPlayerUnMove(true);
 
+	_dungeonGo = false;
+
+	_playerSizeX = _playerSizeY = 1;
+
 	_dungeonPos.x = GAMESIZEX / 2;
 	_dungeonPos.y = GAMESIZEY / 2;
+
+	_probeX = _player->getPlayerX() - (_player->getPlayerRc().right - _player->getPlayerRc().left) / 2;
 	
+	//_camera->linearKeepMove(_dungeonPos.x, 2490 - GAMESIZEY / 2, 2, 100000);
+
 	_playerAccept = _guardianTalk = _doorOpen = false;
 	_guardianOn = false;
+	_playerSizeChange = false;
+
+	_introDungeonPlayerRc = RectMakeCenter(_player->getPlayerX(), _player->getPlayerY(), 40, 50);
+
+	_escapeRc = RectMakeCenter(GAMESIZEX / 2, 1950, 200, 100);
+	_escape = false;
+
+	_camera->linearKeepMove(_dungeonPos.x, 2490 - GAMESIZEY / 2, 0.1f, 100000);
 	return S_OK;
 }
 
@@ -74,12 +90,13 @@ void IntroDungeon::update()
 {
 	
 	_camera->update(0, 0);
-	
+
 	_count++;
 	if(_count < 250)
 	{
 		_camera->linearKeepMove(_dungeonPos.x, 2490 - GAMESIZEY / 2, 2, 100000);
 	}
+	
 	
 	if (!_playerAccept)
 	{
@@ -157,17 +174,86 @@ void IntroDungeon::update()
 		break;
 	}
 
-	if (_doorDirection == 1)
+	if (_doorDirection == 1 && !_playerSizeChange)
 	{
 		_player->setPlayerUnMove(false);
 	}
 	_player->update(0);
+
+
+	_probeX = _player->getPlayerX() + 28;
+	for (int i = _probeX + 50; i > _probeX - 50; i--)
+	{
+		if (_player->getPlayerDirection() == LEFT || _player->getPlayerDirection() == UP || _player->getPlayerDirection() == DOWN)
+		{
+			COLORREF color = GetPixel(IMAGEMANAGER->findImage("pixelMap")->getMemDC(), i, _player->getPlayerY());
+
+			int r = GetRValue(color);
+			int g = GetGValue(color);
+			int b = GetBValue(color);
+
+			if (r == 255 && g == 255 && b == 0)
+			{
+				_player->setPlayerPosX(i + 20);
+				break;
+			}
+		}
+		else
+		{
+			break;
+		}
+	}
+	_probeX = _player->getPlayerX() - 60;
+	for (int i = _probeX - 50; i < _probeX + 50; i++)
+	{
+		if (_player->getPlayerDirection() == RIGHT || _player->getPlayerDirection() == UP || _player->getPlayerDirection() == DOWN)
+		{
+			COLORREF color = GetPixel(IMAGEMANAGER->findImage("pixelMap")->getMemDC(), i, _player->getPlayerY());
+
+			int r = GetRValue(color);
+			int g = GetGValue(color);
+			int b = GetBValue(color);
+
+			if (r == 0 && g == 255 && b == 255)
+			{
+				_player->setPlayerPosX(i + 10);
+				break;
+			}
+		}
+		else
+		{
+			break;
+		}
+	}
+	
+	RECT rc;
+	if (IntersectRect(&rc, &_introDungeonPlayerRc, &_escapeRc) && _player->getPlayerDirection() == UP)
+	{
+		_player->setPlayerUnMove(true);
+		_player->setPlayerState(PLAYER_WALK);
+
+		_playerSizeChange = true;
+
+		if (_playerSizeX > 0 || _playerSizeY > 0)
+		{
+			_playerSizeX -= 0.01;
+			_playerSizeY -= 0.01;
+		}
+		else
+		{
+			_dungeonGo = true;
+		}
+	}
+
+	_escapeRc = RectMakeCenter(GAMESIZEX / 2 + 20 - _camera->getCameraX(), 1925 - _camera->getCameraY(), 200, 100);
+	_introDungeonPlayerRc = RectMakeCenter(_player->getPlayerX() - _camera->getCameraX(), _player->getPlayerY() + 10 - _camera->getCameraY(), 40, 50);
 }
 
 void IntroDungeon::render()
 {
 	IMAGEMANAGER->findImage("dungeonBackground")->render(getMemDC());
 	IMAGEMANAGER->findImage("dungeon")->render(getMemDC(), 0, 0, _camera->getCameraX(), _camera->getCameraY(), GAMESIZEX, GAMESIZEY);
+	//IMAGEMANAGER->findImage("pixelMap")->render(getMemDC(), 0, 0, _camera->getCameraX(), _camera->getCameraY(), GAMESIZEX, GAMESIZEY);
 
 	_door->aniRender(getMemDC(), _doorPos.x - _camera->getCameraX(), _doorPos.y - _camera->getCameraY(), _doorAni);
 
@@ -176,14 +262,25 @@ void IntroDungeon::render()
 		_guardian->aniRender(getMemDC(), (_doorPos.x + 75) - _camera->getCameraX(), (_doorPos.y + 200) - _camera->getCameraY(), _guardianAni);
 	}
 
-	_player->render(_camera->getCameraX(), _camera->getCameraY());
+	
+	if (!_playerSizeChange)
+	{
+		_player->render(_camera->getCameraX(), _camera->getCameraY());
+	}
+	else
+	{
+		IMAGEMANAGER->findImage("player")->expandAniRenderCenter(getMemDC(), _player->getPlayerX() - _camera->getCameraX(),
+			_player->getPlayerY() - _camera->getCameraY(), _player->getPlayerAni(), _playerSizeX, _playerSizeY);
+	}
+	//Rectangle(getMemDC(), _escapeRc);
+	//Rectangle(getMemDC(), _introDungeonPlayerRc);
 
 	char str[128];
-	sprintf_s(str, "%d", _doorDirection);
-	TextOut(getMemDC(), 100, 100, str, strlen(str));
+	sprintf_s(str, "%d", _dungeonGo);
+	TextOut(getMemDC(), 100, 80, str, strlen(str));
 
-	sprintf_s(str, "%d", KEYANIMANAGER->findAnimation("guardianAnime", "guardianOut")->getFramePosArrOnce());
-	TextOut(getMemDC(), 120, 100, str, strlen(str));
+	//sprintf_s(str, "플레이어X :%f, 플레이어Y : %f", _player->getPlayerX(), _player->getPlayerY());
+	//TextOut(getMemDC(), 120, 100, str, strlen(str));
 }
 
 void IntroDungeon::setWindowsSize(int x, int y, int width, int height)
