@@ -23,7 +23,7 @@
     <ProjectGuid>{BE5C2545-DA5C-402F-8068-3E1EDF185C1C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>windowsAPI</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -152,6 +152,7 @@
     <ClInclude Include="animation.h" />
     <ClInclude Include="Armor.h" />
     <ClInclude Include="ballMonster.h" />
+    <ClInclude Include="Bird.h" />
     <ClInclude Include="blackFadeOut.h" />
     <ClInclude Include="boss.h" />
     <ClInclude Include="button.h" />
@@ -163,6 +164,8 @@
     <ClInclude Include="dungeonMap.h" />
     <ClInclude Include="effect.h" />
     <ClInclude Include="effectManager.h" />
+    <ClInclude Include="Elder.h" />
+    <ClInclude Include="Elle.h" />
     <ClInclude Include="enemy.h" />
     <ClInclude Include="enemyManager.h" />
     <ClInclude Include="fireMonster.h" />
@@ -189,6 +192,7 @@
     <ClInclude Include="intro.h" />
     <ClInclude Include="mode7.h" />
     <ClInclude Include="npc.h" />
+    <ClInclude Include="npcManager.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="PlayerWorldMap.h" />
     <ClInclude Include="playGround.h" />
@@ -205,6 +209,7 @@
     <ClInclude Include="timeManager.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="town.h" />
+    <ClInclude Include="TownHuman.h" />
     <ClInclude Include="townMap.h" />
     <ClInclude Include="txtData.h" />
     <ClInclude Include="ui.h" />
@@ -218,6 +223,7 @@
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="Armor.cpp" />
     <ClCompile Include="ballMonster.cpp" />
+    <ClCompile Include="Bird.cpp" />
     <ClCompile Include="blackFadeOut.cpp" />
     <ClCompile Include="boss.cpp" />
     <ClCompile Include="button.cpp" />
@@ -229,6 +235,8 @@
     <ClCompile Include="dungeonMap.cpp" />
     <ClCompile Include="effect.cpp" />
     <ClCompile Include="effectManager.cpp" />
+    <ClCompile Include="Elder.cpp" />
+    <ClCompile Include="Elle.cpp" />
     <ClCompile Include="enemy.cpp" />
     <ClCompile Include="enemyManager.cpp" />
     <ClCompile Include="fireMonster.cpp" />
@@ -253,6 +261,7 @@
     <ClCompile Include="intro.cpp" />
     <ClCompile Include="mode7.cpp" />
     <ClCompile Include="npc.cpp" />
+    <ClCompile Include="npcManager.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerState.cpp" />
     <ClCompile Include="PlayerWorldMap.cpp" />
@@ -270,6 +279,7 @@
     <ClCompile Include="timeManager.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="town.cpp" />
+    <ClCompile Include="TownHuman.cpp" />
     <ClCompile Include="townMap.cpp" />
     <ClCompile Include="txtData.cpp" />
     <ClCompile Include="ui.cpp" />

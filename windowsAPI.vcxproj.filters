@@ -309,6 +309,21 @@
     <ClInclude Include="intro.h">
       <Filter>PlayGround\Scene\Intro</Filter>
     </ClInclude>
+    <ClInclude Include="Elder.h">
+      <Filter>PlayGround\npc</Filter>
+    </ClInclude>
+    <ClInclude Include="Elle.h">
+      <Filter>PlayGround\npc</Filter>
+    </ClInclude>
+    <ClInclude Include="npcManager.h">
+      <Filter>PlayGround\npc</Filter>
+    </ClInclude>
+    <ClInclude Include="TownHuman.h">
+      <Filter>PlayGround\npc</Filter>
+    </ClInclude>
+    <ClInclude Include="Bird.h">
+      <Filter>PlayGround\npc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -487,6 +502,21 @@
     </ClCompile>
     <ClCompile Include="intro.cpp">
       <Filter>PlayGround\Scene\Intro</Filter>
+    </ClCompile>
+    <ClCompile Include="Elder.cpp">
+      <Filter>PlayGround\npc</Filter>
+    </ClCompile>
+    <ClCompile Include="Elle.cpp">
+      <Filter>PlayGround\npc</Filter>
+    </ClCompile>
+    <ClCompile Include="npcManager.cpp">
+      <Filter>PlayGround\npc</Filter>
+    </ClCompile>
+    <ClCompile Include="TownHuman.cpp">
+      <Filter>PlayGround\npc</Filter>
+    </ClCompile>
+    <ClCompile Include="Bird.cpp">
+      <Filter>PlayGround\npc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
