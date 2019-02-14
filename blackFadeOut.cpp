@@ -15,13 +15,6 @@ HRESULT blackFadeOut::init()
 {
 	IMAGEMANAGER->addImage("blackBox", GAMESIZEX, GAMESIZEY);
 
-	HBRUSH brush = CreateSolidBrush(BLACK);
-	HBRUSH oldBrush = (HBRUSH)SelectObject(IMAGEMANAGER->findImage("blackBox")->getMemDC(), brush);
-	_blackBox = RectMake(0, 0, GAMESIZEX, GAMESIZEY);
-	Rectangle(IMAGEMANAGER->findImage("blackBox")->getMemDC(), _blackBox);
-	SelectObject(IMAGEMANAGER->findImage("blackBox")->getMemDC(), oldBrush);
-	DeleteObject(brush);
-
 	_isfadeOut = false;
 
 	_angle = 0.f;

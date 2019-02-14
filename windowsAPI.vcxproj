@@ -189,7 +189,6 @@
     <ClInclude Include="intro.h" />
     <ClInclude Include="mode7.h" />
     <ClInclude Include="npc.h" />
-    <ClInclude Include="partsFadeOut.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="PlayerWorldMap.h" />
     <ClInclude Include="playGround.h" />
@@ -254,7 +253,6 @@
     <ClCompile Include="intro.cpp" />
     <ClCompile Include="mode7.cpp" />
     <ClCompile Include="npc.cpp" />
-    <ClCompile Include="partsFadeOut.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerState.cpp" />
     <ClCompile Include="PlayerWorldMap.cpp" />

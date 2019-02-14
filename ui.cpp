@@ -62,9 +62,9 @@ HRESULT ui::init()
 
 void ui::release()
 {
-	SAFE_DELETE(_blackFade);
-	SAFE_DELETE(_iMgr);
-	SAFE_DELETE(_inventory);
+	//SAFE_DELETE(_blackFade);
+	//SAFE_DELETE(_iMgr);
+	//SAFE_DELETE(_inventory);
 	//SAFE_DELETE(_clockFade);
 }
 

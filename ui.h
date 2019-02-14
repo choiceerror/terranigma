@@ -6,7 +6,6 @@
 #include "ClockFadeOut.h"
 
 
-
 class ui : public gameNode
 {
 private:

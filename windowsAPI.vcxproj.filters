@@ -306,9 +306,6 @@
     <ClInclude Include="ClockFadeOut.h">
       <Filter>PlayGround\effect</Filter>
     </ClInclude>
-    <ClInclude Include="partsFadeOut.h">
-      <Filter>PlayGround\effect</Filter>
-    </ClInclude>
     <ClInclude Include="intro.h">
       <Filter>PlayGround\Scene\Intro</Filter>
     </ClInclude>
@@ -486,9 +483,6 @@
       <Filter>PlayGround\Scene\dungeon</Filter>
     </ClCompile>
     <ClCompile Include="ClockFadeOut.cpp">
-      <Filter>PlayGround\effect</Filter>
-    </ClCompile>
-    <ClCompile Include="partsFadeOut.cpp">
       <Filter>PlayGround\effect</Filter>
     </ClCompile>
     <ClCompile Include="intro.cpp">
