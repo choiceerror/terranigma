@@ -243,9 +243,6 @@
     <ClInclude Include="boss.h">
       <Filter>PlayGround\enemy</Filter>
     </ClInclude>
-    <ClInclude Include="MapNode.h">
-      <Filter>PlayGround\tileMap</Filter>
-    </ClInclude>
     <ClInclude Include="fireMonsterBullet.h">
       <Filter>PlayGround\enemyManager</Filter>
     </ClInclude>
@@ -323,6 +320,9 @@
     </ClInclude>
     <ClInclude Include="Bird.h">
       <Filter>PlayGround\npc</Filter>
+    </ClInclude>
+    <ClInclude Include="MapNode.h">
+      <Filter>PlayGround\Scene\mapTool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
