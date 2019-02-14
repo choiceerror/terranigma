@@ -178,7 +178,7 @@ void IntroDungeon::update()
 	{
 		_player->setPlayerUnMove(false);
 	}
-	_player->update(0);
+	_player->update(0, 0);
 
 
 	_probeX = _player->getPlayerX() + 28;

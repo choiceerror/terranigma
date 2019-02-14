@@ -1,14 +1,14 @@
 #pragma once
 #include "gameNode.h"
 
-class menu : public gameNode
+class intro : public gameNode
 {
 private:
 
 
 public:
-	menu();
-	~menu();
+	intro();
+	~intro();
 
 	HRESULT init();
 	void release();
