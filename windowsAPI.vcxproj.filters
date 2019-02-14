@@ -306,6 +306,12 @@
     <ClInclude Include="IntroDungeon.h">
       <Filter>PlayGround\Scene\dungeon</Filter>
     </ClInclude>
+    <ClInclude Include="ClockFadeOut.h">
+      <Filter>PlayGround\effect</Filter>
+    </ClInclude>
+    <ClInclude Include="partsFadeOut.h">
+      <Filter>PlayGround\effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -481,6 +487,12 @@
     </ClCompile>
     <ClCompile Include="IntroDungeon.cpp">
       <Filter>PlayGround\Scene\dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="ClockFadeOut.cpp">
+      <Filter>PlayGround\effect</Filter>
+    </ClCompile>
+    <ClCompile Include="partsFadeOut.cpp">
+      <Filter>PlayGround\effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

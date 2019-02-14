@@ -21,20 +21,6 @@ private:
 	float _worldTime;
 	bool _once;
 
-
-	//===================================
-	bool _isClockFadeOut;
-
-	POINT _clockPt[12];
-	float _clockAngle[4];
-
-	float _clockWorldTime;
-
-	bool _onceTime;
-
-	float _angleSpeed;
-
-
 public:
 	blackFadeOut();
 	~blackFadeOut();

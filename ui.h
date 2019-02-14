@@ -3,7 +3,7 @@
 #include "blackFadeOut.h"
 #include "ItemManager.h"
 #include "Inventory.h"
-
+#include "ClockFadeOut.h"
 
 
 
@@ -21,6 +21,12 @@ private:
 	blackFadeOut* _blackFade;
 	ItemManager* _iMgr;
 	Inventory* _inventory;
+
+	//=====테스트용====
+	ClockFadeOut* _clockFade;
+
+
+	//================
 
 	RECT _goal;
 	POINT _uiPoint[36];

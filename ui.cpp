@@ -18,6 +18,9 @@ HRESULT ui::init()
 	_blackFade = new blackFadeOut;
 	_blackFade->init();
 
+	//_clockFade = new ClockFadeOut;
+	//_clockFade->init();
+
 	_iMgr = new ItemManager;
 	_iMgr->init();
 
@@ -62,10 +65,12 @@ void ui::release()
 	SAFE_DELETE(_blackFade);
 	SAFE_DELETE(_iMgr);
 	SAFE_DELETE(_inventory);
+	//SAFE_DELETE(_clockFade);
 }
 
 void ui::update()
 {
+	//_clockFade->update();
 	_blackFade->update();
 	_iMgr->update();
 	_inventory->update();
@@ -129,7 +134,7 @@ void ui::render()
 	IMAGEMANAGER->expandRender("yomi", getMemDC(), _x - 30, _y - 36 * 3, _yomiFrameX, _yomiFrameY, 3.f, 3.f);
 	//ÆäÀÌµå¾Æ¿ô
 	_blackFade->render();
-
+	//_clockFade->render();
 
 
 

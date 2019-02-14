@@ -156,6 +156,7 @@
     <ClInclude Include="boss.h" />
     <ClInclude Include="button.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="ClockFadeOut.h" />
     <ClInclude Include="DashAttack.h" />
     <ClInclude Include="DashJumpAttack.h" />
     <ClInclude Include="dungeon.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="menu.h" />
     <ClInclude Include="mode7.h" />
     <ClInclude Include="npc.h" />
+    <ClInclude Include="partsFadeOut.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="PlayerWorldMap.h" />
     <ClInclude Include="playGround.h" />
@@ -221,6 +223,7 @@
     <ClCompile Include="boss.cpp" />
     <ClCompile Include="button.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="ClockFadeOut.cpp" />
     <ClCompile Include="DashAttack.cpp" />
     <ClCompile Include="DashJumpAttack.cpp" />
     <ClCompile Include="dungeon.cpp" />
@@ -251,6 +254,7 @@
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="mode7.cpp" />
     <ClCompile Include="npc.cpp" />
+    <ClCompile Include="partsFadeOut.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="playerState.cpp" />
     <ClCompile Include="PlayerWorldMap.cpp" />
