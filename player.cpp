@@ -44,7 +44,7 @@ HRESULT player::init()
 
 	_isRun = _isAttack = _isJump = _isWalk = false;
 
-	_playerProtect = _alphaChange =  false;
+	_playerProtect = _alphaChange = false;
 
 	_attackMoveStop = false;
 
@@ -66,7 +66,7 @@ void player::release()
 
 }
 
-void player::update(bool enemyCheck)
+void player::update(bool enemyCheck, int a)
 {
 	if (_player.state == PLAYER_RUN)
 	{
@@ -101,8 +101,10 @@ void player::update(bool enemyCheck)
 	playerState();
 	_jump->update();
 	_dashAttack->update(&_player.x, &_player.y);
-	
-	//tileCheck();
+	if (a == 1)
+	{
+		tileCheck();
+	}
 	enemyCollision(enemyCheck);
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 50);
 }
@@ -129,7 +131,7 @@ void player::render(float cameraX, float cameraY)
 	sprintf_s(str, "%d", _player.alphaRender);
 	TextOut(getMemDC(), 140, 120, str, strlen(str));
 
-	
+
 
 }
 // 캐릭터 프레임 초기값
@@ -153,7 +155,7 @@ void player::keyFrameInit()
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "moveUp", "player", moveUp, 7, PLAYERFPS, true);
 	int moveDown[] = { 48, 49, 50, 51, 52, 53 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "moveDown", "player", moveDown, 6, PLAYERFPS, true);
-	int enemyAttackLeft[] = {30, 31 };
+	int enemyAttackLeft[] = { 30, 31 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackLeft", "player", enemyAttackLeft, 2, 10, false);
 	int enemyAttackRight[] = { 18, 19 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "enemyAttackRight", "player", enemyAttackRight, 2, 10, false);
@@ -577,40 +579,18 @@ void player::tileCheck()
 	rcCollision.right -= 4;
 	rcCollision.bottom -= 4;
 
-	TileX = rcCollision.left / TileSIZE;
-	TileY = rcCollision.top / TileSIZE;
-
-	rightX = (rcCollision.left + 30) / TileSIZE;
-	rightY = (rcCollision.top + 30) / TileSIZE;
+	TileX = _player.x / TileSIZE;
+	TileY = _player.y / TileSIZE;
 
 	switch (_player.direction)
 	{
 	case LEFT:
-		
-			tileIndex[0].x = TileX;
-			tileIndex[0].y = TileY;
 
-			tileIndex[1].x = TileX;
-			tileIndex[1].y = TileY + 1;
-
-			for (int i = 0; i < 2; ++i)
-			{
-				if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
-				{
-					if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-					{
-						_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.right + 16;
-					}
-				}
-			}
-		
-		break;
-	case UP:
-		tileIndex[0].x = TileX;
+		tileIndex[0].x = TileX - 1;
 		tileIndex[0].y = TileY;
 
-		tileIndex[1].x = TileX + 1;
-		tileIndex[1].y = TileY;
+		tileIndex[1].x = TileX - 1;
+		tileIndex[1].y = TileY + 1;
 
 		for (int i = 0; i < 2; ++i)
 		{
@@ -618,7 +598,26 @@ void player::tileCheck()
 			{
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
-					_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.bottom + 16;
+					_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.right + 15;
+				}
+			}
+		}
+
+		break;
+	case UP:
+		tileIndex[0].x = TileX;
+		tileIndex[0].y = TileY;
+
+		tileIndex[1].x = TileX;
+		tileIndex[1].y = TileY + 1;
+
+		for (int i = 0; i < 2; ++i)
+		{
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.bottom + 4;
 				}
 			}
 		}
@@ -626,11 +625,11 @@ void player::tileCheck()
 		break;
 	case RIGHT:
 
-		tileIndex[0].x = rightX + 1;
-		tileIndex[0].y = rightY;
+		tileIndex[0].x = TileX + 1;
+		tileIndex[0].y = TileY;
 
-		tileIndex[1].x = rightX + 1;
-		tileIndex[1].y = rightY + 1;
+		tileIndex[1].x = TileX + 1;
+		tileIndex[1].y = TileX + 1;
 
 
 		for (int i = 0; i < 2; ++i)
@@ -639,7 +638,7 @@ void player::tileCheck()
 			{
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
-					_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.left - 20;
+					_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.left - 15;
 				}
 			}
 		}
@@ -648,10 +647,10 @@ void player::tileCheck()
 	case DOWN:
 
 		tileIndex[0].x = TileX;
-		tileIndex[0].y = TileY + 2;
+		tileIndex[0].y = TileY;
 
-		tileIndex[1].x = TileX + 1;
-		tileIndex[1].y = TileY + 2;
+		tileIndex[1].x = TileX;
+		tileIndex[1].y = TileY + 1;
 
 		for (int i = 0; i < 2; ++i)
 		{
@@ -659,7 +658,7 @@ void player::tileCheck()
 			{
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
-					_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.top - 36;
+					_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.top - 28;
 				}
 			}
 		}

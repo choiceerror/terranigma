@@ -87,11 +87,11 @@ private:
 	bool _attackMoveStop;				// 공격 중엔 움직이지마
 	int _attackMoveStopTime;			// 몇 초 동안
 
-	int _playerProtectTime;				
+	int _playerProtectTime;
 	int _alphaChangeTime;
 	bool _playerProtect;				//몬스터에게 공격당했을 때
 	bool _alphaChange;					//플레이어 알파블랜드 적용중
-	
+
 
 	bool _isRun;						// 뛰는중
 	bool _isAttack;						// 공격중
@@ -114,7 +114,7 @@ public:
 
 	HRESULT init();
 	void release();
-	void update(bool enemyCheck);
+	void update(bool enemyCheck, int a);
 	void render(float cameraX, float cameraY);
 
 	//각 상태 프레임 입력 초기값 
@@ -160,7 +160,7 @@ public:
 	void setPlayerPosX(float playerX) { _player.x = playerX; }
 	void setPlayerPosY(float playerY) { _player.y = playerY; }
 	void setPlayerSpeed(float speed) { _player.speed = speed; }
-	void setPlayerUnMove(bool unMove) { _unMove = unMove;  }
+	void setPlayerUnMove(bool unMove) { _unMove = unMove; }
 
 	RECT getPlayerRc() { return _player.rc; }
 
