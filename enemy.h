@@ -216,7 +216,7 @@ public:
 
 	POINT* setTileIndex()
 	{
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			return &_enemy.tileIndex[i];
 		}

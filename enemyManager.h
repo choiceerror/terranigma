@@ -6,14 +6,6 @@
 #include "fireMonsterBullet.h"
 #include "dungeonMap.h"
 
-//湍瞪 類熱
-enum DUNGEON_FLOOR
-{
-	FIRST_FLOOR, //1類
-	SECOND_FLOOR, //2類
-	THIRD_FLOOR, //3類
-};
-
 class player;
 
 class enemyManager : public gameNode
@@ -40,7 +32,6 @@ private:
 
 	DUNGEON_FLOOR _dungeonFloor; //湍瞪 類熱
 	int _fireBulletSpeed;
-	float _moveWorldTime;
 
 	RECT _attackRect; //歜曖曖 奢問滓お
 
