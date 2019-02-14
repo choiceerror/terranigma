@@ -79,7 +79,7 @@ void gameNode::release()
 
 void gameNode::update()
 {
-	
+	KEYMANAGER->update();
 	SOUNDMANAGER->update();
 }
 
