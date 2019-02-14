@@ -582,88 +582,162 @@ void player::tileCheck()
 	TileX = _player.x / TileSIZE;
 	TileY = _player.y / TileSIZE;
 
-	switch (_player.direction)
+
+	if (KEYMANAGER->isStayKeyDown(VK_LEFT) && _player.direction != LEFT || _player.direction != RIGHT)
 	{
-	case LEFT:
+			tileIndex[0].x = TileX - 1;
+			tileIndex[0].y = TileY;
 
-		tileIndex[0].x = TileX - 1;
-		tileIndex[0].y = TileY;
-
-		tileIndex[1].x = TileX - 1;
-		tileIndex[1].y = TileY + 1;
-
-		for (int i = 0; i < 2; ++i)
+			//tileIndex[1].x = TileX - 1;
+			//tileIndex[1].y = TileY + 1;
+		
+		for (int i = 0; i < 1; ++i)
 		{
 			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
 			{
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
-					_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.right + 15;
+					_player.x += _player.speed;
 				}
 			}
 		}
-
-		break;
-	case UP:
-		tileIndex[0].x = TileX;
-		tileIndex[0].y = TileY;
-
-		tileIndex[1].x = TileX;
-		tileIndex[1].y = TileY + 1;
-
-		for (int i = 0; i < 2; ++i)
-		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
-			{
-				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-				{
-					_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.bottom + 4;
-				}
-			}
-		}
-
-		break;
-	case RIGHT:
-
-		tileIndex[0].x = TileX + 1;
-		tileIndex[0].y = TileY;
-
-		tileIndex[1].x = TileX + 1;
-		tileIndex[1].y = TileX + 1;
-
-
-		for (int i = 0; i < 2; ++i)
-		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
-			{
-				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-				{
-					_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.left - 15;
-				}
-			}
-		}
-
-		break;
-	case DOWN:
-
-		tileIndex[0].x = TileX;
-		tileIndex[0].y = TileY;
-
-		tileIndex[1].x = TileX;
-		tileIndex[1].y = TileY + 1;
-
-		for (int i = 0; i < 2; ++i)
-		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
-			{
-				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-				{
-					_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.top - 28;
-				}
-			}
-		}
-		break;
 	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && _player.direction != LEFT || _player.direction != RIGHT)
+	{
+			tileIndex[0].x = TileX + 1 ;
+			tileIndex[0].y = TileY;
+		
+			//tileIndex[1].x = TileX;
+			//tileIndex[1].y = TileY + 1;
+		
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.x -= _player.speed;
+				}
+			}
+		}
+	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_UP) && _player.direction != UP || _player.direction != DOWN)
+	{
+		tileIndex[0].x = TileX;
+		tileIndex[0].y = TileY - 1;
+
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.y += _player.speed;
+				}
+			}
+		}
+	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_DOWN) && _player.direction != UP || _player.direction != DOWN)
+	{
+		tileIndex[0].x = TileX;
+		tileIndex[0].y = TileY + 1;
+
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_player.y -= _player.speed;
+				}
+			}
+		}
+	}
+	//switch (_player.direction)
+	//{
+	//case LEFT:
+	//
+	//	tileIndex[0].x = TileX - 1;
+	//	tileIndex[0].y = TileY;
+	//	
+	//	tileIndex[1].x = TileX - 1;
+	//	tileIndex[1].y = TileY + 1;
+	//	
+	//	for (int i = 0; i < 2; ++i)
+	//	{
+	//		if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+	//		{
+	//			if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+	//			{
+	//				_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.right + 15;
+	//			}
+	//		}
+	//	}
+	//
+	//	break;
+	//case UP:
+	//	tileIndex[0].x = TileX;
+	//	tileIndex[0].y = TileY;
+	//
+	//	tileIndex[1].x = TileX;
+	//	tileIndex[1].y = TileY + 1;
+	//
+	//	for (int i = 0; i < 2; ++i)
+	//	{
+	//		if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+	//		{
+	//			if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+	//			{
+	//				_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.bottom + 4;
+	//			}
+	//		}
+	//	}
+	//
+	//	break;
+	//case RIGHT:
+	//
+	//	tileIndex[0].x = TileX + 1;
+	//	tileIndex[0].y = TileY;
+	//
+	//	tileIndex[1].x = TileX + 1;
+	//	tileIndex[1].y = TileX + 1;
+	//
+	//
+	//	for (int i = 0; i < 2; ++i)
+	//	{
+	//		if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+	//		{
+	//			if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+	//			{
+	//				_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.left - 15;
+	//			}
+	//		}
+	//	}
+	//
+	//	break;
+	//case DOWN:
+	//
+	//	tileIndex[0].x = TileX;
+	//	tileIndex[0].y = TileY;
+	//
+	//	tileIndex[1].x = TileX;
+	//	tileIndex[1].y = TileY + 1;
+	//
+	//	for (int i = 0; i < 2; ++i)
+	//	{
+	//		if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+	//		{
+	//			if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+	//			{
+	//				_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.top - 28;
+	//			}
+	//		}
+	//	}
+	//	break;
+	//}
 }
 
 void player::enemyCollision(bool enemyCheck)
