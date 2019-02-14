@@ -91,10 +91,10 @@ void knightMonster::render(float cameraX, float cameraY)
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
 
-	//Rectangle(getMemDC(), _enemy.tileCollisionRc);
-	//Rectangle(getMemDC(), _enemy.rc);
 	//Rectangle(getMemDC(), _enemy.rangeRc);
+	//Rectangle(getMemDC(), _enemy.rc);
 	_enemy.image->alphaAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion, _enemy.alphaValue);
+	//Rectangle(getMemDC(), _enemy.tileCollisionRc);
 	//Rectangle(getMemDC(), _enemy.attackRc);
 	//_enemy.image->expandAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion);
 
@@ -119,25 +119,25 @@ void knightMonster::move()
 			{
 				_enemy.moveAngle = (PI / 180 * 270);
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
-				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() -236, _enemy.image->getFrameHeight() -176);
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y + 50, _enemy.image->getFrameWidth() -236, _enemy.image->getFrameHeight() -176);
 			}
 			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_UP)
 			{
 				_enemy.moveAngle = PI / 2;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
-				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() -236, _enemy.image->getFrameHeight() -176);
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y + 50, _enemy.image->getFrameWidth() -236, _enemy.image->getFrameHeight() -176);
 			}
 			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_LEFT)
 			{
 				_enemy.moveAngle = PI;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
-				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() -236, _enemy.image->getFrameHeight() -176);
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y + 50, _enemy.image->getFrameWidth() -236, _enemy.image->getFrameHeight() -176);
 			}
 			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_RIGHT)
 			{
 				_enemy.moveAngle = PI2;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
-				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() -236, _enemy.image->getFrameHeight() -176);
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y + 50, _enemy.image->getFrameWidth() -236, _enemy.image->getFrameHeight() -176);
 			}
 			_enemy.motion->start();
 			_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;
@@ -182,25 +182,25 @@ void knightMonster::move()
 			{
 				_enemy.moveAngle = (PI / 180 * 270);
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "downMove");
-				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() - 236, _enemy.image->getFrameHeight() - 176);
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y + 50, _enemy.image->getFrameWidth() - 236, _enemy.image->getFrameHeight() - 176);
 			}
 			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_UP)
 			{
 				_enemy.moveAngle = PI / 2;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "upMove");
-				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() - 236, _enemy.image->getFrameHeight() - 176);
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y + 50, _enemy.image->getFrameWidth() - 236, _enemy.image->getFrameHeight() - 176);
 			}
 			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_LEFT)
 			{
 				_enemy.moveAngle = PI;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "leftMove");
-				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() - 236, _enemy.image->getFrameHeight() - 176);
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y + 50, _enemy.image->getFrameWidth() - 236, _enemy.image->getFrameHeight() - 176);
 			}
 			else if (_enemy.direction == KNIGHTMONSTER_DIRECTION_RIGHT)
 			{
 				_enemy.moveAngle = PI2;
 				_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "rightMove");
-				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth() - 236, _enemy.image->getFrameHeight() - 176);
+				_enemy.tileCollisionRc = RectMakeCenter(_enemy.x, _enemy.y + 50, _enemy.image->getFrameWidth() - 236, _enemy.image->getFrameHeight() - 176);
 			}
 			_enemy.motion->start();
 			_enemy.x += cosf(_enemy.moveAngle) * _enemy.speed;

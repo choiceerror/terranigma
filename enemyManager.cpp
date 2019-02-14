@@ -69,10 +69,10 @@ void enemyManager::update()
 	else _attackRect = RectMakeCenter(0, 0, 0, 0);
 
 	//에너미들의 타일검출
-	tileCheckObjectCollision();
+	updateCollection();
 
 	//업데이트 모음 함수
-	updateCollection();
+	tileCheckObjectCollision();
 
 	//에너미 AI 함수
 	enemyAI();
@@ -82,8 +82,6 @@ void enemyManager::update()
 
 	//에너미들이 죽을함수
 	enemyDead();
-
-
 
 }
 
@@ -97,7 +95,7 @@ void enemyManager::render(float cameraX, float cameraY)
 
 	for (int i = 0; i < _vKnightMonster.size(); i++)
 	{
-		
+
 		//sprintf_s(str, "left : %d", _vKnightMonster[i]->getTileCollisionRect().left);
 		//TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
 
@@ -617,23 +615,23 @@ void enemyManager::tileCheckObjectCollision()
 		_vBallMonster[i]->setTileCollisionRect(_vBallMonster[i]->getRect());
 
 		//타일 인덱스 정해주기
-		_vBallMonster[i]->setIdX(_vBallMonster[i]->getTileCollisionRect().left / TileSIZE);
-		_vBallMonster[i]->setIdY(_vBallMonster[i]->getTileCollisionRect().top / TileSIZE);
+		_vBallMonster[i]->setIdX(_vBallMonster[i]->getX() / TileSIZE);
+		_vBallMonster[i]->setIdY(_vBallMonster[i]->getY() / TileSIZE);
 
 		//방향에따라 타일인덱스에 타일검출하기 위함
 		switch (_vBallMonster[i]->getDirection())
 		{
 		case BALLMONSTER_DIRECTION_LEFT:
-			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX() - 1;
 			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
-			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX();
+			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() - 1;
 			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
 			break;
 		case BALLMONSTER_DIRECTION_UP:
 			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
-			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY() - 1;
 			_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
-			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY();
+			_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() - 1;
 			break;
 		case BALLMONSTER_DIRECTION_RIGHT:
 			_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX() + 1;
@@ -652,9 +650,9 @@ void enemyManager::tileCheckObjectCollision()
 		//if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getAttackAngle() > 0 && _vBallMonster[i]->getAttackAngle() < PI / 2)
 		//{
 		//	_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
-		//	_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY() - 1;
 		//	_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
-		//	_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() - 1;
 		//	_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX() + 1;
 		//	_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY();
 		//	_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
@@ -662,20 +660,20 @@ void enemyManager::tileCheckObjectCollision()
 		//}
 		//if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getAttackAngle() > PI / 2 && _vBallMonster[i]->getAttackAngle() < PI)
 		//{
-		//	_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX() - 1;
 		//	_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
-		//	_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() + 1;
-		//	_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY();
+		//	_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() - 1;
+		//	_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
 		//	_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
-		//	_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY();
-		//	_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX();
-		//	_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() + 1;
+		//	_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY() - 1;
+		//	_vBallMonster[i]->setTileIndex()[3].x = _vBallMonster[i]->getIdX() + 1;
+		//	_vBallMonster[i]->setTileIndex()[3].y = _vBallMonster[i]->getIdY() - 1;
 		//}
 		//if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getAttackAngle() > PI && _vBallMonster[i]->getAttackAngle() < (PI / 180) * 270)
 		//{
-		//	_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[0].x = _vBallMonster[i]->getIdX() - 1;
 		//	_vBallMonster[i]->setTileIndex()[0].y = _vBallMonster[i]->getIdY();
-		//	_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX();
+		//	_vBallMonster[i]->setTileIndex()[1].x = _vBallMonster[i]->getIdX() - 1;
 		//	_vBallMonster[i]->setTileIndex()[1].y = _vBallMonster[i]->getIdY() + 1;
 		//	_vBallMonster[i]->setTileIndex()[2].x = _vBallMonster[i]->getIdX();
 		//	_vBallMonster[i]->setTileIndex()[2].y = _vBallMonster[i]->getIdY() + 1;
@@ -699,22 +697,25 @@ void enemyManager::tileCheckObjectCollision()
 			if (_dungeonMap->getAttr(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
 				&& IntersectRect(&temp, &_dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc, &_vBallMonster[i]->getTileCollisionRect()))
 			{
-
 				if (_vBallMonster[i]->getState() != BALLMONSTER_STATE_IDLE && _vBallMonster[i]->getIsAttack() == false)
 				{
 					switch (_vBallMonster[i]->getDirection())
 					{
 					case BALLMONSTER_DIRECTION_LEFT:
-						_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 1);
+						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().left - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.right);
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - _vBallMonster[i]->getTum());
 						break;
 					case BALLMONSTER_DIRECTION_RIGHT:
-						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 1);
+						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().right - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.left);
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - _vBallMonster[i]->getTum());
 						break;
 					case BALLMONSTER_DIRECTION_UP:
-						_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 1);
+						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().top - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.bottom);
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - _vBallMonster[i]->getTum());
 						break;
 					case BALLMONSTER_DIRECTION_DOWN:
-						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 1);
+						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().bottom - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.top);
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - _vBallMonster[i]->getTum());
 						break;
 					}
 
@@ -730,20 +731,24 @@ void enemyManager::tileCheckObjectCollision()
 					switch (_vBallMonster[i]->getDirection())
 					{
 					case BALLMONSTER_DIRECTION_LEFT:
-						_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 20);
+						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().left - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.right);
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - _vBallMonster[i]->getTum());
 						break;
 					case BALLMONSTER_DIRECTION_RIGHT:
-						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 20);
+						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().right - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.left);
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - _vBallMonster[i]->getTum());
 						break;
 					case BALLMONSTER_DIRECTION_UP:
-						_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 20);
+						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().top - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.bottom);
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - _vBallMonster[i]->getTum());
 						break;
 					case BALLMONSTER_DIRECTION_DOWN:
-						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 20);
+						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().bottom - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.top);
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - _vBallMonster[i]->getTum());
 						break;
 					}
-					//_vBallMonster[i]->setState(BALLMONSTER_STATE_IDLE);
-					//_vBallMonster[i]->setMoveType(BASIC_MOVE_TYPE);
+					_vBallMonster[i]->setState(BALLMONSTER_STATE_IDLE);
+					_vBallMonster[i]->setMoveType(BASIC_MOVE_TYPE);
 				}
 			}
 			break;
@@ -758,23 +763,23 @@ void enemyManager::tileCheckObjectCollision()
 		_vFireMonster[i]->setTileCollisionRect(_vFireMonster[i]->getRect());
 
 		//인덱스 정해주기
-		_vFireMonster[i]->setIdX(_vFireMonster[i]->getTileCollisionRect().left / TileSIZE);
-		_vFireMonster[i]->setIdY(_vFireMonster[i]->getTileCollisionRect().top / TileSIZE);
+		_vFireMonster[i]->setIdX(_vFireMonster[i]->getX() / TileSIZE);
+		_vFireMonster[i]->setIdY(_vFireMonster[i]->getY() / TileSIZE);
 
 		//범위검사
 		switch (_vFireMonster[i]->getDirection())
 		{
 		case FIREMONSTER_DIRECTION_LEFT:
-			_vFireMonster[i]->setTileIndex()[0].x = _vFireMonster[i]->getIdX();
+			_vFireMonster[i]->setTileIndex()[0].x = _vFireMonster[i]->getIdX() - 1;
 			_vFireMonster[i]->setTileIndex()[0].y = _vFireMonster[i]->getIdY();
-			_vFireMonster[i]->setTileIndex()[1].x = _vFireMonster[i]->getIdX();
+			_vFireMonster[i]->setTileIndex()[1].x = _vFireMonster[i]->getIdX() - 1;
 			_vFireMonster[i]->setTileIndex()[1].y = _vFireMonster[i]->getIdY() + 1;
 			break;
 		case FIREMONSTER_DIRECTION_UP:
 			_vFireMonster[i]->setTileIndex()[0].x = _vFireMonster[i]->getIdX();
-			_vFireMonster[i]->setTileIndex()[0].y = _vFireMonster[i]->getIdY();
+			_vFireMonster[i]->setTileIndex()[0].y = _vFireMonster[i]->getIdY() - 1;
 			_vFireMonster[i]->setTileIndex()[1].x = _vFireMonster[i]->getIdX() + 1;
-			_vFireMonster[i]->setTileIndex()[1].y = _vFireMonster[i]->getIdY();
+			_vFireMonster[i]->setTileIndex()[1].y = _vFireMonster[i]->getIdY() - 1;
 			break;
 		case FIREMONSTER_DIRECTION_RIGHT:
 			_vFireMonster[i]->setTileIndex()[0].x = _vFireMonster[i]->getIdX() + 1;
@@ -800,16 +805,20 @@ void enemyManager::tileCheckObjectCollision()
 				switch (_vFireMonster[i]->getDirection())
 				{
 				case FIREMONSTER_DIRECTION_LEFT:
-					_vFireMonster[i]->setX(_vFireMonster[i]->getX() + 1);
+					_vFireMonster[i]->setTum(_vFireMonster[i]->getRect().left - _dungeonMap->getTile(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y)->rc.right);
+					_vFireMonster[i]->setX(_vFireMonster[i]->getX() - _vFireMonster[i]->getTum());
 					break;
 				case FIREMONSTER_DIRECTION_RIGHT:
-					_vFireMonster[i]->setX(_vFireMonster[i]->getX() - 1);
+					_vFireMonster[i]->setTum(_vFireMonster[i]->getRect().right - _dungeonMap->getTile(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y)->rc.left);
+					_vFireMonster[i]->setX(_vFireMonster[i]->getX() - _vFireMonster[i]->getTum());
 					break;
 				case FIREMONSTER_DIRECTION_UP:
-					_vFireMonster[i]->setY(_vFireMonster[i]->getY() + 1);
+					_vFireMonster[i]->setTum(_vFireMonster[i]->getRect().top - _dungeonMap->getTile(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y)->rc.bottom);
+					_vFireMonster[i]->setY(_vFireMonster[i]->getY() - _vFireMonster[i]->getTum());
 					break;
 				case FIREMONSTER_DIRECTION_DOWN:
-					_vFireMonster[i]->setY(_vFireMonster[i]->getY() - 1);
+					_vFireMonster[i]->setTum(_vFireMonster[i]->getRect().bottom - _dungeonMap->getTile(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y)->rc.top);
+					_vFireMonster[i]->setY(_vFireMonster[i]->getY() - _vFireMonster[i]->getTum());
 					break;
 				}
 
@@ -826,47 +835,47 @@ void enemyManager::tileCheckObjectCollision()
 		_vKnightMonster[i]->setTileCollisionRect(_vKnightMonster[i]->getRect());
 
 		//인덱스 정해주기
-		_vKnightMonster[i]->setIdX(_vKnightMonster[i]->getTileCollisionRect().left / TileSIZE);
-		_vKnightMonster[i]->setIdY(_vKnightMonster[i]->getTileCollisionRect().top / TileSIZE);
+		_vKnightMonster[i]->setIdX(_vKnightMonster[i]->getX() / TileSIZE);
+		_vKnightMonster[i]->setIdY(_vKnightMonster[i]->getY() / TileSIZE);
 
 		//범위검사
 		switch (_vKnightMonster[i]->getDirection())
 		{
 		case KNIGHTMONSTER_DIRECTION_LEFT:
-			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX();
+			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX() - 1;
 			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY();
-			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX();
+			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX() - 1;
 			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() + 1;
-			_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX();
-			_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
+			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
+			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
 			break;
 		case KNIGHTMONSTER_DIRECTION_UP:
 			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX();
-			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY();
+			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY() - 1;
 			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX() + 1;
-			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY();
-			_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
-			_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY();
+			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() - 1;
+			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
+			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
 			break;
 		case KNIGHTMONSTER_DIRECTION_RIGHT:
 			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX() + 1;
 			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY();
 			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX() + 1;
 			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() + 1;
-			_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() + 1;
-			_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
+			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() + 1;
+			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() - 1;
 			break;
 		case KNIGHTMONSTER_DIRECTION_DOWN:
 			_vKnightMonster[i]->setTileIndex()[0].x = _vKnightMonster[i]->getIdX();
-			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY() + 2;
+			_vKnightMonster[i]->setTileIndex()[0].y = _vKnightMonster[i]->getIdY() + 1;
 			_vKnightMonster[i]->setTileIndex()[1].x = _vKnightMonster[i]->getIdX() + 1;
-			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() + 2;
-			_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
-			_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() + 2;
+			_vKnightMonster[i]->setTileIndex()[1].y = _vKnightMonster[i]->getIdY() + 1;
+			//_vKnightMonster[i]->setTileIndex()[2].x = _vKnightMonster[i]->getIdX() - 1;
+			//_vKnightMonster[i]->setTileIndex()[2].y = _vKnightMonster[i]->getIdY() + 2;
 			break;
 		}
 		RECT temp;
-		for (int j = 0; j < 3; j++)
+		for (int j = 0; j < 2; j++)
 		{
 			if (_dungeonMap->getAttr(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
 				&& IntersectRect(&temp, &_dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc, &_vKnightMonster[i]->getTileCollisionRect()))
@@ -877,24 +886,28 @@ void enemyManager::tileCheckObjectCollision()
 					switch (_vKnightMonster[i]->getDirection())
 					{
 					case KNIGHTMONSTER_DIRECTION_LEFT:
-						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() + 1);
+						_vKnightMonster[i]->setTum(_vKnightMonster[i]->getRect().left - _dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc.right);
+						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() - _vKnightMonster[i]->getTum());
 						break;
 					case KNIGHTMONSTER_DIRECTION_RIGHT:
-						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() - 1);
+						_vKnightMonster[i]->setTum(_vKnightMonster[i]->getRect().right - _dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc.left);
+						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() - _vKnightMonster[i]->getTum());
 						break;
 					case KNIGHTMONSTER_DIRECTION_UP:
-						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() + 1);
+						_vKnightMonster[i]->setTum(_vKnightMonster[i]->getRect().top - _dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc.top);
+						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() - _vKnightMonster[i]->getTum());
 						break;
 					case KNIGHTMONSTER_DIRECTION_DOWN:
-						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() - 1);
+						_vKnightMonster[i]->setTum(_vKnightMonster[i]->getRect().bottom - _dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc.bottom);
+						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() - _vKnightMonster[i]->getTum());
 						break;
 					}
 				}
 			}
 			break;
 		}
-		_vKnightMonster[i]->setTileCollisionRect(RectMakeCenter(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _vKnightMonster[i]->getImage()->getFrameWidth() - 236, _vKnightMonster[i]->getImage()->getFrameHeight() - 176)); //타일깎음
-		
+		_vKnightMonster[i]->setTileCollisionRect(RectMakeCenter(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY() + 50, _vKnightMonster[i]->getImage()->getFrameWidth() - 236, _vKnightMonster[i]->getImage()->getFrameHeight() - 176)); //타일깎음
+
 	}
 }
 

@@ -101,6 +101,10 @@ void ballMonster::move()
 {
 	if (_enemy.moveType == BASIC_MOVE_TYPE)
 	{
+		if (_enemy.isAttack == false)
+		{
+			_enemy.speed = 1;
+		}
 		//상태에 따라 프레임 동작
 		switch (_enemy.state)
 		{
@@ -172,6 +176,10 @@ void ballMonster::move()
 	}
 	else if (_enemy.moveType == FOLLOW_MOVE_TYPE)
 	{
+		if (_enemy.isAttack == false)
+		{
+			_enemy.speed = 1;
+		}
 		switch (_enemy.state)
 		{
 		case BALLMONSTER_STATE_MOVE:

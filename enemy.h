@@ -103,6 +103,7 @@ struct tagEnemy
 	bool isHit; //맞았니
 	int alphaValue; //알파값
 	POINT tileIndex[4]; //타일검출 판별해줄 인덱스
+	float tum;
 
 };
 
@@ -220,6 +221,9 @@ public:
 			return &_enemy.tileIndex[i];
 		}
 	}
+
+	float getTum() { return _enemy.tum; }
+	void setTum(float tum) { _enemy.tum = tum; }
 
 };
 
