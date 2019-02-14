@@ -30,10 +30,11 @@ private:
 
 	dungeonMap* _dungeonMap; //던전맵
 
-	DUNGEON_FLOOR _dungeonFloor; //던전 층수
 	int _fireBulletSpeed;
 
 	RECT _playerAttackRc; //임의의 공격렉트
+
+	int _rndMove[3];
 
 public:
 	enemyManager();

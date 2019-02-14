@@ -62,12 +62,12 @@ void enemyManager::render(float cameraX, float cameraY)
 	//렌더링 모음 함수
 	enemyDraw(cameraX, cameraY);
 
-	//char str[128];
+	char str[128];
 
-	//for (int i = 0; i < _vKnightMonster.size(); i++)
+	for (int i = 0; i < _vKnightMonster.size(); i++)
 	{
 
-		//sprintf_s(str, "left : %d", _vKnightMonster[i]->getTileCollisionRect().left);
+		//sprintf_s(str, "distance : %f", _vKnightMonster[i]->getTargetDistance());
 		//TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
 
 		//sprintf_s(str, "idX : %d", _vKnightMonster[i]->getIdX());
@@ -90,7 +90,7 @@ void enemyManager::render(float cameraX, float cameraY)
 		//TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
 	}
 
-	//for (int i = 0; i < _vBallMonster.size(); i++)
+	for (int i = 0; i < _vBallMonster.size(); i++)
 	{
 		//sprintf_s(str, "targetDistance : %f", _vBallMonster[i]->getTargetDistance());
 		//TextOut(getMemDC(), 600, 100 + i * 20, str, strlen(str));
@@ -359,6 +359,7 @@ void enemyManager::enemyAI()
 		RECT temp;
 		//기사와 플레이어간의 거리 구해줌.
 		_vKnightMonster[i]->setTargetDistance(getDistance(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
+		
 		//판정렉트와 충돌하면
 		if (IntersectRect(&temp, &_vKnightMonster[i]->getRangeRect(), &_player->getPlayerRc()))
 		{
@@ -400,11 +401,36 @@ void enemyManager::enemyAI()
 		//거리가 가까워지면 공격
 		if (_vKnightMonster[i]->getTargetDistance() <= 100 && _vKnightMonster[i]->getMoveType() == FOLLOW_MOVE_TYPE)
 		{
-			_vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_ATTACK);
+			_vKnightMonster[i]->setAttackAngle(getAngle(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
+			//오른쪽각도에 있으면 오른쪽공격으로
+			if ((_vKnightMonster[i]->getAttackAngle() < (PI / 180) * 60 && _vKnightMonster[i]->getAttackAngle() > 0) ||
+				(_vKnightMonster[i]->getAttackAngle() > (PI / 180) * 300 && _vKnightMonster[i]->getAttackAngle() < PI2))
+			{
+				_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_RIGHT);
+				_vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_ATTACK);
+			}
+			//위에각도에 있으면 위쪽공격으로
+			else if (_vKnightMonster[i]->getAttackAngle() > (PI / 180) * 60 && _vKnightMonster[i]->getAttackAngle() < (PI / 180) * 120)
+			{
+				_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_UP);
+				_vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_ATTACK);
+			}
+			//왼쪽각도
+			else if (_vKnightMonster[i]->getAttackAngle() > (PI / 180) * 120 && _vKnightMonster[i]->getAttackAngle() < (PI / 180) * 210)
+			{
+				_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_LEFT);
+				_vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_ATTACK);
+			}
+			//아래각도
+			else if (_vKnightMonster[i]->getAttackAngle() > (PI / 180) * 210 && _vKnightMonster[i]->getAttackAngle() < (PI / 180) * 300)
+			{
+				_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_DOWN);
+				_vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_ATTACK);
+			}
 			_vKnightMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
 		}
 		//멀어지면 랜덤으로 움직임
-		else if (_vKnightMonster[i]->getTargetDistance() > 100 && 1.0f + _vKnightMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime() && _vKnightMonster[i]->getMoveType() == FOLLOW_MOVE_TYPE)
+		else if (_vKnightMonster[i]->getTargetDistance() > 100 && 1.0f + _vKnightMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
 		{
 			if (_vKnightMonster[i]->getRndState() == 0) _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_MOVE);
 			else _vKnightMonster[i]->setState(KNIGHTMONSTER_STATE_IDLE);
@@ -673,6 +699,9 @@ void enemyManager::tileCheckObjectCollision()
 			if (_dungeonMap->getAttr(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
 				&& IntersectRect(&temp, &_dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc, &_vBallMonster[i]->getTileCollisionRect()))
 			{
+				//랜덤으로 무빙을 받음.
+				_rndMove[BALLMONSTER] = RND->getRandomInt(1, 3);
+
 				if (_vBallMonster[i]->getState() != BALLMONSTER_STATE_IDLE && _vBallMonster[i]->getIsAttack() == false)
 				{
 					switch (_vBallMonster[i]->getDirection())
@@ -680,18 +709,70 @@ void enemyManager::tileCheckObjectCollision()
 					case BALLMONSTER_DIRECTION_LEFT:
 						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().left - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.right);
 						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - _vBallMonster[i]->getTum());
+
+						if (_rndMove[BALLMONSTER] == 1)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_DOWN);
+						}
+						else if (_rndMove[BALLMONSTER] == 2)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_RIGHT);
+						}
+						else if (_rndMove[BALLMONSTER] == 3)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_UP);
+						}
 						break;
 					case BALLMONSTER_DIRECTION_RIGHT:
 						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().right - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.left);
 						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - _vBallMonster[i]->getTum());
+
+						if (_rndMove[BALLMONSTER] == 1)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_DOWN);
+						}
+						else if (_rndMove[BALLMONSTER] == 2)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_LEFT);
+						}
+						else if (_rndMove[BALLMONSTER] == 3)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_UP);
+						}
 						break;
 					case BALLMONSTER_DIRECTION_UP:
 						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().top - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.bottom);
 						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - _vBallMonster[i]->getTum());
+
+						if (_rndMove[BALLMONSTER] == 1)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_DOWN);
+						}
+						else if (_rndMove[BALLMONSTER] == 2)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_RIGHT);
+						}
+						else if (_rndMove[BALLMONSTER] == 3)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_LEFT);
+						}
 						break;
 					case BALLMONSTER_DIRECTION_DOWN:
 						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().bottom - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.top);
 						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - _vBallMonster[i]->getTum());
+
+						if (_rndMove[BALLMONSTER] == 1)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_LEFT);
+						}
+						else if (_rndMove[BALLMONSTER] == 2)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_RIGHT);
+						}
+						else if (_rndMove[BALLMONSTER] == 3)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_UP);
+						}
 						break;
 					}
 
@@ -709,18 +790,70 @@ void enemyManager::tileCheckObjectCollision()
 					case BALLMONSTER_DIRECTION_LEFT:
 						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().left - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.right);
 						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - _vBallMonster[i]->getTum());
+
+						if (_rndMove[BALLMONSTER] == 1)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_DOWN);
+						}
+						else if (_rndMove[BALLMONSTER] == 2)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_RIGHT);
+						}
+						else if (_rndMove[BALLMONSTER] == 3)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_UP);
+						}
 						break;
 					case BALLMONSTER_DIRECTION_RIGHT:
 						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().right - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.left);
 						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - _vBallMonster[i]->getTum());
+
+						if (_rndMove[BALLMONSTER] == 1)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_LEFT);
+						}
+						else if (_rndMove[BALLMONSTER] == 2)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_DOWN);
+						}
+						else if (_rndMove[BALLMONSTER] == 3)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_UP);
+						}
 						break;
 					case BALLMONSTER_DIRECTION_UP:
 						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().top - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.bottom);
 						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - _vBallMonster[i]->getTum());
+
+						if (_rndMove[BALLMONSTER] == 1)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_LEFT);
+						}
+						else if (_rndMove[BALLMONSTER] == 2)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_RIGHT);
+						}
+						else if (_rndMove[BALLMONSTER] == 3)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_DOWN);
+						}
 						break;
 					case BALLMONSTER_DIRECTION_DOWN:
 						_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().bottom - _dungeonMap->getTile(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y)->rc.top);
 						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - _vBallMonster[i]->getTum());
+
+						if (_rndMove[BALLMONSTER] == 1)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_LEFT);
+						}
+						else if (_rndMove[BALLMONSTER] == 2)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_RIGHT);
+						}
+						else if (_rndMove[BALLMONSTER] == 3)
+						{
+							_vBallMonster[i]->setDirection(BALLMONSTER_DIRECTION_UP);
+						}
 						break;
 					}
 					//_vBallMonster[i]->setState(BALLMONSTER_STATE_IDLE);
@@ -778,23 +911,78 @@ void enemyManager::tileCheckObjectCollision()
 			if (_dungeonMap->getAttr(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
 				&& IntersectRect(&temp, &_dungeonMap->getTile(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y)->rc, &_vFireMonster[i]->getTileCollisionRect()))
 			{
+				//랜덤으로 무빙을 받음.
+				_rndMove[FIREMONSTER] = RND->getRandomInt(1, 3);
+
 				switch (_vFireMonster[i]->getDirection())
 				{
 				case FIREMONSTER_DIRECTION_LEFT:
 					_vFireMonster[i]->setTum(_vFireMonster[i]->getRect().left - _dungeonMap->getTile(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y)->rc.right);
 					_vFireMonster[i]->setX(_vFireMonster[i]->getX() - _vFireMonster[i]->getTum());
+
+					if (_rndMove[FIREMONSTER] == 1)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_DOWN);
+					}
+					else if (_rndMove[FIREMONSTER] == 2)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_RIGHT);
+					}
+					else if (_rndMove[FIREMONSTER] == 3)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_UP);
+					}
 					break;
 				case FIREMONSTER_DIRECTION_RIGHT:
 					_vFireMonster[i]->setTum(_vFireMonster[i]->getRect().right - _dungeonMap->getTile(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y)->rc.left);
 					_vFireMonster[i]->setX(_vFireMonster[i]->getX() - _vFireMonster[i]->getTum());
+
+					if (_rndMove[FIREMONSTER] == 1)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_DOWN);
+					}
+					else if (_rndMove[FIREMONSTER] == 2)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_LEFT);
+					}
+					else if (_rndMove[FIREMONSTER] == 3)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_UP);
+					}
 					break;
 				case FIREMONSTER_DIRECTION_UP:
 					_vFireMonster[i]->setTum(_vFireMonster[i]->getRect().top - _dungeonMap->getTile(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y)->rc.bottom);
 					_vFireMonster[i]->setY(_vFireMonster[i]->getY() - _vFireMonster[i]->getTum());
+
+					if (_rndMove[FIREMONSTER] == 1)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_DOWN);
+					}
+					else if (_rndMove[FIREMONSTER] == 2)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_LEFT);
+					}
+					else if (_rndMove[FIREMONSTER] == 3)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_RIGHT);
+					}
 					break;
 				case FIREMONSTER_DIRECTION_DOWN:
 					_vFireMonster[i]->setTum(_vFireMonster[i]->getRect().bottom - _dungeonMap->getTile(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y)->rc.top);
 					_vFireMonster[i]->setY(_vFireMonster[i]->getY() - _vFireMonster[i]->getTum());
+
+					if (_rndMove[FIREMONSTER] == 1)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_RIGHT);
+					}
+					else if (_rndMove[FIREMONSTER] == 2)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_LEFT);
+					}
+					else if (_rndMove[FIREMONSTER] == 3)
+					{
+						_vFireMonster[i]->setDirection(FIREMONSTER_DIRECTION_UP);
+					}
 					break;
 				}
 
@@ -848,6 +1036,9 @@ void enemyManager::tileCheckObjectCollision()
 			if (_dungeonMap->getAttr(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
 				&& IntersectRect(&temp, &_dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc, &_vKnightMonster[i]->getTileCollisionRect()))
 			{
+				//랜덤으로 무빙함.
+				_rndMove[KNIGHTMONSTER] = RND->getRandomInt(1, 3);
+
 				//공격중이 아니고 가만히있지 않을때만
 				if (_vKnightMonster[i]->getState() != KNIGHTMONSTER_STATE_ATTACK && _vKnightMonster[i]->getState() != KNIGHTMONSTER_STATE_IDLE)
 				{
@@ -856,18 +1047,70 @@ void enemyManager::tileCheckObjectCollision()
 					case KNIGHTMONSTER_DIRECTION_LEFT:
 						_vKnightMonster[i]->setTum(_vKnightMonster[i]->getRect().left - _dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc.right);
 						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() - _vKnightMonster[i]->getTum());
+
+						if (_rndMove[KNIGHTMONSTER] == 1)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_RIGHT);
+						}
+						else if (_rndMove[KNIGHTMONSTER] == 2)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_DOWN);
+						}
+						else if (_rndMove[KNIGHTMONSTER] == 3)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_UP);
+						}
 						break;
 					case KNIGHTMONSTER_DIRECTION_RIGHT:
 						_vKnightMonster[i]->setTum(_vKnightMonster[i]->getRect().right - _dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc.left);
 						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() - _vKnightMonster[i]->getTum());
+
+						if (_rndMove[KNIGHTMONSTER] == 1)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_LEFT);
+						}
+						else if (_rndMove[KNIGHTMONSTER] == 2)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_DOWN);
+						}
+						else if (_rndMove[KNIGHTMONSTER] == 3)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_UP);
+						}
 						break;
 					case KNIGHTMONSTER_DIRECTION_UP:
 						_vKnightMonster[i]->setTum(_vKnightMonster[i]->getRect().top - _dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc.top);
 						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() - _vKnightMonster[i]->getTum());
+
+						if (_rndMove[KNIGHTMONSTER] == 1)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_RIGHT);
+						}
+						else if (_rndMove[KNIGHTMONSTER] == 2)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_DOWN);
+						}
+						else if (_rndMove[KNIGHTMONSTER] == 3)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_LEFT);
+						}
 						break;
 					case KNIGHTMONSTER_DIRECTION_DOWN:
 						_vKnightMonster[i]->setTum(_vKnightMonster[i]->getRect().bottom - _dungeonMap->getTile(_vKnightMonster[i]->getTileIndex(j).x, _vKnightMonster[i]->getTileIndex(j).y)->rc.bottom);
 						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() - _vKnightMonster[i]->getTum());
+
+						if (_rndMove[KNIGHTMONSTER] == 1)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_RIGHT);
+						}
+						else if (_rndMove[KNIGHTMONSTER] == 2)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_LEFT);
+						}
+						else if (_rndMove[KNIGHTMONSTER] == 3)
+						{
+							_vKnightMonster[i]->setDirection(KNIGHTMONSTER_DIRECTION_UP);
+						}
 						break;
 					}
 				}
