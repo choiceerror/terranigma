@@ -17,7 +17,7 @@ HRESULT Bird::init(string npcName, const char* imageName, float x, float y, int 
 	_npc.y = y;
 	_npc.name = npcName;
 	_npc.state = BIRD_IDLE;
-	_npc.direction = BIRD_DOWN;
+	_npc.direction = NPC_DOWN;
 
 	int idleLeft[] = { 8 };
 	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "idleLeft", imageName, idleLeft, 1, 5, true);
@@ -78,19 +78,19 @@ void Bird::birdState()
 	case BIRD_IDLE:
 		switch (_npc.direction)
 		{
-		case BIRD_LEFT:
+		case NPC_LEFT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleLeft");
 			_npc.ani->start();
 			break;
-		case BIRD_RIGHT:
+		case NPC_RIGHT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleRight");
 			_npc.ani->start();
 			break;
-		case BIRD_UP:
+		case NPC_UP:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleUp");
 			_npc.ani->start();
 			break;
-		case BIRD_DOWN:
+		case NPC_DOWN:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleDown");
 			_npc.ani->start();
 			break;
@@ -99,22 +99,22 @@ void Bird::birdState()
 	case BIRD_MOVE:
 		switch (_npc.direction)
 		{
-		case BIRD_LEFT:
+		case NPC_LEFT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveLeft");
 			_npc.ani->start();
 			_npc.x -= 1.0f;
 			break;
-		case BIRD_RIGHT:
+		case NPC_RIGHT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveRight");
 			_npc.ani->start();
 			_npc.x += 1.0f;
 			break;
-		case BIRD_UP:
+		case NPC_UP:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveUp");
 			_npc.ani->start();
 			_npc.y -= 1.0f;
 			break;
-		case BIRD_DOWN:
+		case NPC_DOWN:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveDown");
 			_npc.ani->start();
 			_npc.y += 1.0f;
@@ -124,19 +124,19 @@ void Bird::birdState()
 	case BIRD_PECK:
 		switch (_npc.direction)
 		{
-		case BIRD_LEFT:
+		case NPC_LEFT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "peckLeft");
 			_npc.ani->start();
 			break;
-		case BIRD_RIGHT:
+		case NPC_RIGHT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "peckRight");
 			_npc.ani->start();
 			break;
-		case BIRD_UP:
+		case NPC_UP:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "peckUp");
 			_npc.ani->start();
 			break;
-		case BIRD_DOWN:
+		case NPC_DOWN:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "peckDown");
 			_npc.ani->start();
 			break;

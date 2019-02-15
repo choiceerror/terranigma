@@ -18,7 +18,7 @@ HRESULT Elle::init(string npcName, const char* imageName, float x, float y, int 
 	_npc.y = y;
 	_npc.name = npcName;
 	_npc.state = ELLE_IDLE;
-	_npc.direction = ELLE_DOWN;
+	_npc.direction = NPC_DOWN;
 
 	int idleLeft[] = { 9 };
 	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "idleLeft", imageName, idleLeft, 1, 5, true);
@@ -60,7 +60,7 @@ void Elle::update()
 void Elle::render(float cameraX, float cameraY)
 {
 	//Rectangle(getMemDC(), _npc.rc);
-	_npc.image->expandAniRenderCenter(getMemDC(), _npc.x, _npc.y, _npc.ani, 2, 2);
+	_npc.image->expandAniRenderCenter(getMemDC(), _npc.x - cameraX, _npc.y - cameraY, _npc.ani, 2, 2);
 }
 
 void Elle::elleState()
@@ -70,19 +70,19 @@ void Elle::elleState()
 	case ELLE_IDLE:
 		switch (_npc.direction)
 		{
-		case ELLE_LEFT:
+		case NPC_LEFT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleLeft");
 			_npc.ani->start();
 			break;
-		case ELLE_RIGHT:
+		case NPC_RIGHT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleRight");
 			_npc.ani->start();
 			break;
-		case ELLE_UP:
+		case NPC_UP:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleUp");
 			_npc.ani->start();
 			break;
-		case ELLE_DOWN:
+		case NPC_DOWN:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleDown");
 			_npc.ani->start();
 			break;
@@ -91,19 +91,19 @@ void Elle::elleState()
 	case ELLE_MOVE:
 		switch (_npc.direction)
 		{
-		case ELLE_LEFT:
+		case NPC_LEFT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveLeft");
 			_npc.ani->start();
 			break;
-		case ELLE_RIGHT:
+		case NPC_RIGHT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveRight");
 			_npc.ani->start();
 			break;
-		case ELLE_UP:
+		case NPC_UP:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveUp");
 			_npc.ani->start();
 			break;
-		case ELLE_DOWN:
+		case NPC_DOWN:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveDown");
 			_npc.ani->start();
 			break;

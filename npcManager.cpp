@@ -35,6 +35,10 @@ void npcManager::release()
 	{
 		SAFE_DELETE((*_viElle));
 	}
+	for (_viTownHuman = _vTownHuman.begin(); _viTownHuman != _vTownHuman.end(); _viTownHuman++)
+	{
+		SAFE_DELETE((*_viTownHuman));
+	}
 }
 
 void npcManager::update()
@@ -51,6 +55,10 @@ void npcManager::update()
 	{
 		(*_viElle)->update();
 	}
+	for (_viTownHuman = _vTownHuman.begin(); _viTownHuman != _vTownHuman.end(); _viTownHuman++)
+	{
+		(*_viTownHuman)->update();
+	}
 }
 
 void npcManager::render(float cameraX, float cameraY)
@@ -66,6 +74,10 @@ void npcManager::render(float cameraX, float cameraY)
 	for (_viElle = _vElle.begin(); _viElle != _vElle.end(); _viElle++)
 	{
 		(*_viElle)->render(cameraX, cameraY);
+	}
+	for (_viTownHuman = _vTownHuman.begin(); _viTownHuman != _vTownHuman.end(); _viTownHuman++)
+	{
+		(*_viTownHuman)->render(cameraX, cameraY);
 	}
 }
 
@@ -101,6 +113,14 @@ void npcManager::setElle()
 	_vElle.push_back(elle);
 }
 
+void npcManager::setTownHuman(TOWNHUMAN townHumanName, float x, float y)
+{
+	TownHuman* townHuman;
+	townHuman = new TownHuman;
+	townHuman->init(townHumanName, "townHumanAni", "townHuman", x, y, 0, 0);
+	_vTownHuman.push_back(townHuman);
+}
+
 void npcManager::aiBirdUpdate()
 {
 
@@ -116,16 +136,15 @@ void npcManager::aiBirdUpdate()
 			switch (_aiDirectionPatten)
 			{
 			case 0:
-				_vBird[i]->setNPCDirection(BIRD_LEFT);
-				break;
+				_vBird[i]->setNPCDirection(NPC_LEFT);
 			case 1:
-				_vBird[i]->setNPCDirection(BIRD_RIGHT);
+				_vBird[i]->setNPCDirection(NPC_RIGHT);
 				break;
 			case 2:
-				_vBird[i]->setNPCDirection(BIRD_UP);
+				_vBird[i]->setNPCDirection(NPC_UP);
 				break;
 			case 3:
-				_vBird[i]->setNPCDirection(BIRD_DOWN);
+				_vBird[i]->setNPCDirection(NPC_DOWN);
 				break;
 			}
 		}

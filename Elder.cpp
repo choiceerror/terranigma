@@ -17,7 +17,7 @@ HRESULT Elder::init(string npcName, const char* imageName, float x, float y, int
 	_npc.y = y;
 	_npc.name = npcName;
 	_npc.state = ELDER_SIT;
-	_npc.direction = ELDER_DOWN;
+	_npc.direction = NPC_DOWN;
 
 	int idleDown[] = { 4 };
 	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "idleDown", imageName, idleDown, 1, 5, true);
@@ -65,11 +65,11 @@ void Elder::elderState()
 	case ELDER_IDLE:
 		switch (_npc.direction)
 		{
-		case ELDER_UP:
+		case NPC_UP:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleUp");
 			_npc.ani->start();
 			break;
-		case ELDER_DOWN:
+		case NPC_DOWN:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleDown");
 			_npc.ani->start();
 			break;
@@ -78,12 +78,12 @@ void Elder::elderState()
 	case ELDER_MOVE:
 		switch (_npc.direction)
 		{
-		case ELDER_UP:
+		case NPC_UP:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "MoveUp");
 			_npc.ani->start();
 			_npc.y -= 1.0f;
 			break;
-		case ELDER_DOWN:
+		case NPC_DOWN:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "MoveDown");
 			_npc.ani->start();
 			_npc.y += 1.0f;
@@ -93,15 +93,15 @@ void Elder::elderState()
 	case ELDER_SIT:
 		switch (_npc.direction)
 		{
-		case ELDER_RIGHT:
+		case NPC_RIGHT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "sitRight");
 			_npc.ani->start();
 			break;
-		case ELDER_UP:
+		case NPC_UP:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "sitUp");
 			_npc.ani->start();
 			break;
-		case ELDER_DOWN:
+		case NPC_DOWN:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "sitDown");
 			_npc.ani->start();
 			break;

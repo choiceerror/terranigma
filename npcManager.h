@@ -3,6 +3,7 @@
 #include "Bird.h"
 #include "Elder.h"
 #include "Elle.h"
+#include "TownHuman.h"
 #include "randomFunction.h"
 
 class npcManager : public gameNode
@@ -17,6 +18,9 @@ private:
 
 	vector<Elle*> _vElle;
 	vector<Elle*>::iterator _viElle;
+
+	vector<TownHuman*> _vTownHuman;
+	vector<TownHuman*>::iterator _viTownHuman;
 
 	randomFunction* _randomFunction;
 	
@@ -38,6 +42,7 @@ public:
 	void setBird();
 	void setElder();
 	void setElle();
+	void setTownHuman(TOWNHUMAN townHumanName, float x, float y);
 
 	void aiBirdUpdate();
 	void aiElderUpdate();
@@ -51,5 +56,8 @@ public:
 
 	vector<Elle*> getVElle() { return _vElle; }
 	vector<Elle*>* setVElle() { return &_vElle; }
+
+	vector<TownHuman*> getVTownHuman() { return _vTownHuman; }
+	vector<TownHuman*>* setVTownHuman() { return &_vTownHuman; }
 };
 

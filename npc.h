@@ -3,29 +3,59 @@
 
 enum NPCDIRECTION
 {
-	//≤ø≤ø
-	BIRD_LEFT,
-	BIRD_RIGHT,
-	BIRD_UP,
-	BIRD_DOWN,
+	NPC_LEFT = 0,
+	NPC_RIGHT,
+	NPC_UP,
+	NPC_DOWN
+	////≤ø≤ø
+	//BIRD_LEFT,
+	//BIRD_RIGHT,
+	//BIRD_UP,
+	//BIRD_DOWN,
+	//
+	////«“∫Œ¡ˆ
+	//ELDER_LEFT,
+	//ELDER_RIGHT,
+	//ELDER_UP,
+	//ELDER_DOWN,
+	//
+	////ø§
+	//ELLE_LEFT,
+	//ELLE_RIGHT,
+	//ELLE_UP,
+	//ELLE_DOWN,
+	//
+	////∏∂¿ª¡÷πŒ(∏ﬁ¿ÃµÂ)
+	//TOWNHUMAN_MAID_LEFT,
+	//TOWNHUMAN_MAID_RIGHT,
+	//TOWNHUMAN_MAID_UP,
+	//TOWNHUMAN_MAID_DOWN,
+	//
+	////∏∂¿ª¡÷πŒ(«“π´¿Ã)
+	//TOWNHUMAN_GRANDMA_LEFT,
+	//TOWNHUMAN_GRANDMA_RIGHT,
+	//TOWNHUMAN_GRANDMA_UP,
+	//TOWNHUMAN_GRANDMA_DOWN,
+	//
+	////∏∂¿ª¡÷πŒ(«“∫Œ¡ˆ)
+	//TOWNHUMAN_GRANDFA_LEFT,
+	//TOWNHUMAN_GRANDFA_RIGHt,
+	//TOWNHUMAN_GRANDFA_UP,
+	//TOWNHUMAN_GRANDFA_DOWN,
+	//
+	////∏∂¿ª¡÷πŒ(≥¨Ω√≤€)
+	//TOWNHUMAN_FISHMAN_LEFT,
+	//TOWNHUMAN_FISHMAN_RIGHT,
+	//TOWNHUMAN_FISHMAN_UP,
+	//TOWNHUMAN_FISHMAN_DOWN,
+	//
+	////∏∂¿ª¡÷πŒ(∆Úπ¸)
+	//TOWNHUMAN_NORMAL_LEFT,
+	//TOWNHUMAN_NORMAL_RIGHT,
+	//TOWNHUMAN_NORMAL_UP,
+	//TOWNHUMAN_NORMAL_DOWN,
+	
 
-	//«“∫Œ¡ˆ
-	ELDER_LEFT,
-	ELDER_RIGHT,
-	ELDER_UP,
-	ELDER_DOWN,
-
-	//ø§
-	ELLE_LEFT,
-	ELLE_RIGHT,
-	ELLE_UP,
-	ELLE_DOWN,
-
-	//∏∂¿ª¡÷πŒ
-	TOWNHUMAN_LEFT,
-	TOWNHUMAN_RIGHT,
-	TOWNHUMAN_UP,
-	TOWNHUMAN_DOWN
 };
 
 enum NPCSTATE
@@ -42,7 +72,34 @@ enum NPCSTATE
 
 	//ø§
 	ELLE_IDLE,
-	ELLE_MOVE
+	ELLE_MOVE,
+
+	//∏∂¿ª¡÷πŒ(∏ﬁ¿ÃµÂ)
+	TOWNHUMAN_MAID_IDLE,
+	TOWNHUMAN_MAID_MOVE,
+	TOWNHUMAN_MAID_IDLEACTION,
+
+	//∏∂¿ª¡÷πŒ(«“π´¿Ã)
+	TOWNHUMAN_GRANDMA_IDLE,
+
+	//∏∂¿ª¡÷πŒ(«“∫Œ¡ˆ)
+	TOWNHUMAN_GRANDFA_IDLE,
+
+	//∏∂¿ª¡÷πŒ(≥¨Ω√≤€)
+	TOWNHUMAN_FISHMAN_IDLE,
+
+	//∏∂¿ª¡÷πŒ(∆Úπ¸)
+	TOWNHUMAN_TOWNMAN_IDLE,
+	TOWNHUMAN_TOWNMAN_MOVE
+};
+
+enum TOWNHUMAN
+{
+	TOWN_MAID = 0,
+	TOWN_GRANDMA,
+	TOWN_GRANDFA,
+	TOWN_FISHMAN,
+	TOWN_TOWNMAN
 };
 
 struct TagNPC
@@ -52,6 +109,7 @@ struct TagNPC
 	animation* ani;
 	NPCDIRECTION direction;
 	NPCSTATE state;
+	TOWNHUMAN townNumber;
 	RECT rc;
 	float x, y;
 	float speed;

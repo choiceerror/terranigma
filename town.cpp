@@ -18,6 +18,7 @@ HRESULT town::init()
 	IMAGEMANAGER->addFrameImage("bird", "image/²¿²¿.bmp", 140, 160, 4, 8, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("elle", "image/¿¤.bmp", 100, 140, 4, 4, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("elder", "image/Àå·Î.bmp", 330, 40, 11, 1, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("townHuman", "image/townHuman.bmp", 700, 250, 14, 5, true, RGB(255, 0, 255));
 
 	_player = new player;
 	_playerWorldMap = new PlayerWorldMap;
@@ -33,7 +34,11 @@ HRESULT town::init()
 	_npcManager->setBird();
 	_npcManager->setElder();
 	_npcManager->setElle();
+	_npcManager->setTownHuman(TOWN_FISHMAN, 500, 500);
+	_npcManager->setTownHuman(TOWN_GRANDFA, 200, 500);
+	_npcManager->setTownHuman(TOWN_GRANDMA, 200, 400);
 	_npcManager->init();
+
 	
 
 	_player->setTownManagerAddressLink(_town);
@@ -54,7 +59,6 @@ void town::update()
 	_playerWorldMap->update();
 	_npcManager->update();
 	_npcManager->aiBirdUpdate();
-
 }
 
 void town::render()
