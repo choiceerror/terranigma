@@ -5,7 +5,9 @@ struct tagFireBullet
 {
 	image* image;
 	RECT rc;
+	RECT tileCollisionRc;
 	float x, y;
+	int idX, idY;
 	float angle;
 	float radius;
 	float speed;
@@ -13,6 +15,7 @@ struct tagFireBullet
 	float viewX, viewY;
 	bool isCollision;
 	animation* fireBulletAni;
+	POINT tileIndex[8]; //타일인덱스 판별
 };
 
 class fireMonsterBullet : public gameNode
@@ -38,6 +41,7 @@ public:
 	
 	void move(); //이동
 
+public:
 	//접근자 설정자
 	vector<tagFireBullet> getVFireBullet() {return _vFireBullet;}
 	vector<tagFireBullet>* setVFireBullet() {return &_vFireBullet;}

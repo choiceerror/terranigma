@@ -102,7 +102,7 @@ struct tagEnemy
 	bool isOneTime;
 	bool isHit; //맞았니
 	int alphaValue; //알파값
-	POINT tileIndex[4]; //타일검출 판별해줄 인덱스
+	POINT tileIndex[3]; //타일검출 판별해줄 인덱스
 	float tum;
 
 };

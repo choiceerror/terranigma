@@ -14,7 +14,7 @@ dungeonMap::~dungeonMap()
 HRESULT dungeonMap::init()
 {
 
-	_dungeonFloor = DUNGEON_FLOOR::FIRST_FLOOR;
+	_dungeonFloor = DUNGEON_FLOOR::SECOND_FLOOR;
 	load();
 	return S_OK;
 }

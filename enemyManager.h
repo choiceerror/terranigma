@@ -5,6 +5,7 @@
 #include "knightMonster.h"
 #include "fireMonsterBullet.h"
 #include "dungeonMap.h"
+#include "ItemManager.h"
 
 enum ENEMYINFO
 {
@@ -33,15 +34,25 @@ private:
 	//파이어몬스터 총알
 	fireMonsterBullet* _fireMonsterBullet;
 
+	vector<POINTFLOAT> _vMonsterDeadPoint;
+
 	player* _player;
 
 	dungeonMap* _dungeonMap; //던전맵
+
+	//아이템 매니저
+	ItemManager* _itemManager;
 
 	int _fireBulletSpeed;
 
 	RECT _playerAttackRc; //임의의 공격렉트
 
+	int _rndItemDrop; //아이템 랜덤으로 드랍할것
+	int _rndItemTypeDrop; //아이템 타입 랜덤으로 드랍할것.
+
 	int _rndMove[3];
+
+	RECT _objectRc; //몬스터들 못가게 막기위한 임시렉트
 
 public:
 	enemyManager();
@@ -57,10 +68,12 @@ public:
 	void setEnemy(); //에너미 셋팅
 	void enemyAI(); //에너미들의 AI
 	void playerAttackEnemyCollision(); //플레이어 공격에 에너미들이 맞을함수
-	void fireMonsterBulletFire(int i); //파이어몬스터 총알 발사할 함수
+	void fireMonsterBulletFireCollision(int num); //파이어몬스터 총알 발사하고 충돌할 함수
 	void enemyDead(); //에너미들이 죽을 함수
 	void tileCheckObjectCollision(); //타일검출 충돌 함수
+	void itemRandomDrop(); //아이템 랜덤드랍
 	void enemyRespon(); //에너미들이 죽은다음 리스폰할 함수
+
 
 public:
 	//접근자 설정자 모음

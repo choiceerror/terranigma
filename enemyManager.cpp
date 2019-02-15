@@ -18,6 +18,10 @@ HRESULT enemyManager::init()
 	_fireMonsterBullet->init("fireMonster", GAMESIZEX / 2, 10);
 	_fireBulletSpeed = 5;
 
+	_itemManager = new ItemManager;
+	_itemManager->init();
+
+	_objectRc = RectMake(80, 355, 160, 125);
 	return S_OK;
 }
 
@@ -54,13 +58,20 @@ void enemyManager::update()
 
 	//에너미들이 죽을함수
 	enemyDead();
+
+	//아이템 랜덤드랍
+	itemRandomDrop();
+
 }
 
 void enemyManager::render(float cameraX, float cameraY)
 {
+	//Rectangle(getMemDC(), _objectRc);
 	//Rectangle(getMemDC(), _playerAttackRc);
 	//렌더링 모음 함수
 	enemyDraw(cameraX, cameraY);
+
+	_itemManager->render(cameraX, cameraY);
 
 	char str[128];
 
@@ -139,6 +150,9 @@ void enemyManager::updateCollection()
 
 	//파이어몬스터 총알 업데이트
 	_fireMonsterBullet->update();
+
+	//아이템매니저 업데이트
+	_itemManager->update();
 }
 
 //렌더링 모음
@@ -182,7 +196,7 @@ void enemyManager::setEnemy()
 			{
 				bm->init("ball", "ballMonster", GAMESIZEX / 4 + j * 300, 300 + i * 200, j, i, BALLMONSTER_HP);
 				_vBallMonster.push_back(bm);
-				
+
 				fm->init("fire", "fireMonster", GAMESIZEX / 3 + j * 200, 500 + i * 300, j, i, FIREMONSTER_HP);
 				_vFireMonster.push_back(fm);
 			}
@@ -191,7 +205,7 @@ void enemyManager::setEnemy()
 				bm->init("ball", "ballMonster", 200 + j * 700, 200 + i * 800, j, i, BALLMONSTER_HP);
 				_vBallMonster.push_back(bm);
 
-				fm->init("fire", "fireMonster", 200 + j * 680, 460 + i * 400, j, i, FIREMONSTER_HP);
+				fm->init("fire", "fireMonster", 200 + j * 680, 480 + i * 300, j, i, FIREMONSTER_HP);
 				_vFireMonster.push_back(fm);
 
 				knightMonster* km;
@@ -363,7 +377,7 @@ void enemyManager::enemyAI()
 				//거리가 가까워지면 공격
 				if (_vFireMonster[i]->getTargetDistance() < 400)
 				{
-					fireMonsterBulletFire(i); //불총알 발사
+					fireMonsterBulletFireCollision(i); //불총알 발사하고 충돌할 함수
 				}
 				break;
 			}
@@ -381,7 +395,7 @@ void enemyManager::enemyAI()
 		RECT temp;
 		//기사와 플레이어간의 거리 구해줌.
 		_vKnightMonster[i]->setTargetDistance(getDistance(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY(), _player->getPlayerX(), _player->getPlayerY()));
-		
+
 		//판정렉트와 충돌하면
 		if (IntersectRect(&temp, &_vKnightMonster[i]->getRangeRect(), &_player->getPlayerRc()))
 		{
@@ -593,14 +607,14 @@ void enemyManager::playerAttackEnemyCollision()
 	}
 }
 
-//불총알 발사
-void enemyManager::fireMonsterBulletFire(int i)
+//불총알 발사, 충돌함수
+void enemyManager::fireMonsterBulletFireCollision(int num)
 {
 	//파이어 몬스터가 쏜 총알의 카운트 발사가 true라면
-	if (_vFireMonster[i]->fireBulletCountFire() == true)
+	if (_vFireMonster[num]->fireBulletCountFire() == true)
 	{
 		RECT fireRc; //불몬스터 렉트
-		fireRc = _vFireMonster[i]->getRect();
+		fireRc = _vFireMonster[num]->getRect();
 
 		//불몬스터가 총알을 방향별로 쏘게함.
 		for (int i = 0; i < 4; i++)
@@ -610,19 +624,60 @@ void enemyManager::fireMonsterBulletFire(int i)
 	}
 
 	//파이어몬스터 총알 충돌
-	for (int j = 0; j < _fireMonsterBullet->getVFireBullet().size(); j++)
+	for (int i = 0; i < _fireMonsterBullet->getVFireBullet().size(); i++)
 	{
+		//타일 충돌렉트에 실제렉트 대입.
+		(*_fireMonsterBullet->setVFireBullet())[i].tileCollisionRc = _fireMonsterBullet->getVFireBullet()[i].rc;
+
+		//인덱스 정해주기
+		(*_fireMonsterBullet->setVFireBullet())[i].idX = _fireMonsterBullet->getVFireBullet()[i].x / TileSIZE;
+		(*_fireMonsterBullet->setVFireBullet())[i].idY = _fireMonsterBullet->getVFireBullet()[i].y / TileSIZE;
+
+		//타일 인덱스로 검사 8방향 검사
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[0].x = _fireMonsterBullet->getVFireBullet()[i].idX - 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[0].y = _fireMonsterBullet->getVFireBullet()[i].idY;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[1].x = _fireMonsterBullet->getVFireBullet()[i].idX - 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[1].y = _fireMonsterBullet->getVFireBullet()[i].idY - 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[2].x = _fireMonsterBullet->getVFireBullet()[i].idX - 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[2].y = _fireMonsterBullet->getVFireBullet()[i].idY + 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[3].x = _fireMonsterBullet->getVFireBullet()[i].idX;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[3].y = _fireMonsterBullet->getVFireBullet()[i].idY - 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[4].x = _fireMonsterBullet->getVFireBullet()[i].idX;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[4].y = _fireMonsterBullet->getVFireBullet()[i].idY + 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[5].x = _fireMonsterBullet->getVFireBullet()[i].idX + 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[5].y = _fireMonsterBullet->getVFireBullet()[i].idY;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[6].x = _fireMonsterBullet->getVFireBullet()[i].idX + 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[6].y = _fireMonsterBullet->getVFireBullet()[i].idY - 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[7].x = _fireMonsterBullet->getVFireBullet()[i].idX + 1;
+		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[7].y = _fireMonsterBullet->getVFireBullet()[i].idY + 1;
+
+
 		RECT temp;
-		if (IntersectRect(&temp, &_fireMonsterBullet->getVFireBullet()[j].rc, &_player->getPlayerRc()))
+		for (int j = 0; j < 8; j++)
 		{
-			(*_fireMonsterBullet->setVFireBullet())[j].isCollision = true;
-			_vFireMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
-			_vFireMonster[i]->setIsAttack(true); //불공격에 맞았다.
+			//타일에 부딪히면
+			if (_dungeonMap->getAttr(_fireMonsterBullet->getVFireBullet()[i].tileIndex[j].x, _fireMonsterBullet->getVFireBullet()[i].tileIndex[j].y) == ATTR_UNMOVE
+				&& IntersectRect(&temp, &_dungeonMap->getTile(_fireMonsterBullet->getVFireBullet()[i].tileIndex[j].x, _fireMonsterBullet->getVFireBullet()[i].tileIndex[j].y)->rc, &_fireMonsterBullet->getVFireBullet()[i].tileCollisionRc))
+			{
+				//총알 없애줌
+				(*_fireMonsterBullet->setVFireBullet())[i].isCollision = true;
+				break;
+			}
+			
+		}
+
+		(*_fireMonsterBullet->setVFireBullet())[i].tileCollisionRc = RectMakeCenter(_fireMonsterBullet->getVFireBullet()[i].x, _fireMonsterBullet->getVFireBullet()[i].y, _fireMonsterBullet->getVFireBullet()[i].image->getFrameWidth(), _fireMonsterBullet->getVFireBullet()[i].image->getFrameHeight());
+
+		if (IntersectRect(&temp, &_fireMonsterBullet->getVFireBullet()[i].rc, &_player->getPlayerRc()))
+		{
+			(*_fireMonsterBullet->setVFireBullet())[i].isCollision = true;
+			_vFireMonster[num]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
+			_vFireMonster[num]->setIsAttack(true); //불공격에 맞았다.
 		}
 		//0.8초뒤 공격꺼줌
-		if (0.8f + _vFireMonster[i]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
+		if (0.8f + _vFireMonster[num]->getAttackWorldTime() <= TIMEMANAGER->getWorldTime())
 		{
-			_vFireMonster[i]->setIsAttack(false);
+			_vFireMonster[num]->setIsAttack(false);
 		}
 	}
 }
@@ -630,23 +685,19 @@ void enemyManager::fireMonsterBulletFire(int i)
 //에너미들이 죽을함수
 void enemyManager::enemyDead()
 {
-	//기사몬스터
-	for (int i = 0; i < _vKnightMonster.size();)
-	{
-		if (_vKnightMonster[i]->getCurrentHP() <= 0.0f)
-		{
-			EFFECTMANAGER->play("deadEffect", _vKnightMonster[i]->getViewX(), _vKnightMonster[i]->getViewY());
-			_vKnightMonster.erase(_vKnightMonster.begin() + i);
-		}
-		else i++;
-	}
-
 	//공몬스터
 	for (int i = 0; i < _vBallMonster.size();)
 	{
 		if (_vBallMonster[i]->getCurrentHP() <= 0.0f)
 		{
 			EFFECTMANAGER->play("deadEffect", _vBallMonster[i]->getViewX(), _vBallMonster[i]->getViewY());
+
+			//몬스터죽으면 몬스터위치 받고 푸시백
+			POINTFLOAT monster;
+			monster.x = _vBallMonster[i]->getX() - TileSIZE;
+			monster.y = _vBallMonster[i]->getY() - TileSIZE;
+			_vMonsterDeadPoint.push_back(monster);
+
 			_vBallMonster.erase(_vBallMonster.begin() + i);
 		}
 		else i++;
@@ -658,7 +709,32 @@ void enemyManager::enemyDead()
 		if (_vFireMonster[i]->getCurrentHP() <= 0.0f)
 		{
 			EFFECTMANAGER->play("deadEffect", _vFireMonster[i]->getViewX(), _vFireMonster[i]->getViewY());
+
+			//몬스터죽으면 몬스터위치 받고 푸시백
+			POINTFLOAT monster;
+			monster.x = _vFireMonster[i]->getX() - _vFireMonster[i]->getImage()->getFrameWidth();
+			monster.y = _vFireMonster[i]->getY() - _vFireMonster[i]->getImage()->getFrameHeight() / 2;
+			_vMonsterDeadPoint.push_back(monster);
+		
 			_vFireMonster.erase(_vFireMonster.begin() + i);
+		}
+		else i++;
+	}
+
+	//기사몬스터
+	for (int i = 0; i < _vKnightMonster.size();)
+	{
+		if (_vKnightMonster[i]->getCurrentHP() <= 0.0f)
+		{
+			EFFECTMANAGER->play("deadEffect", _vKnightMonster[i]->getViewX(), _vKnightMonster[i]->getViewY());
+
+			//몬스터죽으면 몬스터위치 받고 푸시백
+			POINTFLOAT monster;
+			monster.x = _vKnightMonster[i]->getX() - TileSIZE;
+			monster.y = _vKnightMonster[i]->getY();
+			_vMonsterDeadPoint.push_back(monster);
+		
+			_vKnightMonster.erase(_vKnightMonster.begin() + i);
 		}
 		else i++;
 	}
@@ -674,7 +750,7 @@ void enemyManager::tileCheckObjectCollision()
 		//충돌렉트에 실제렉트 대입
 		_vBallMonster[i]->setTileCollisionRect(_vBallMonster[i]->getRect());
 
-		//타일 인덱스 정해주기
+		//인덱스 정해주기
 		_vBallMonster[i]->setIdX(_vBallMonster[i]->getX() / TileSIZE);
 		_vBallMonster[i]->setIdY(_vBallMonster[i]->getY() / TileSIZE);
 
@@ -716,6 +792,30 @@ void enemyManager::tileCheckObjectCollision()
 		}
 
 		RECT temp;
+		//임시오브젝트 렉트 충돌용
+		if (IntersectRect(&temp, &_objectRc, &_vBallMonster[i]->getRect()))
+		{
+			switch (_vBallMonster[i]->getDirection())
+			{
+			case BALLMONSTER_DIRECTION_UP:
+				_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().top - _objectRc.bottom);
+				_vBallMonster[i]->setY(_vBallMonster[i]->getY() - _vBallMonster[i]->getTum());
+				break;
+			case BALLMONSTER_DIRECTION_DOWN:
+				_vBallMonster[i]->setTum(_vBallMonster[i]->getRect().bottom - _objectRc.top);
+				_vBallMonster[i]->setY(_vBallMonster[i]->getY() - _vBallMonster[i]->getTum());
+				break;
+			}
+			if (_vBallMonster[i]->getIsAttack() == true)
+			{
+				_vBallMonster[i]->setSpeed(0);
+				_vBallMonster[i]->getMotion()->setFPS(5);
+				_vBallMonster[i]->setIsAttack(false);
+				_vBallMonster[i]->setAttackWorldTime(TIMEMANAGER->getWorldTime());
+				_vBallMonster[i]->setWorldTime(TIMEMANAGER->getWorldTime());
+			}
+		}
+
 		for (int j = 0; j < 3; i++)
 		{
 			if (_dungeonMap->getAttr(_vBallMonster[i]->getTileIndex(j).x, _vBallMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
@@ -797,7 +897,7 @@ void enemyManager::tileCheckObjectCollision()
 						}
 						break;
 					}
-
+				
 				}
 				else if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getState() != BALLMONSTER_STATE_IDLE)
 				{
@@ -878,14 +978,11 @@ void enemyManager::tileCheckObjectCollision()
 						}
 						break;
 					}
-					//_vBallMonster[i]->setState(BALLMONSTER_STATE_IDLE);
-					//_vBallMonster[i]->setMoveType(BASIC_MOVE_TYPE);
 				}
 			}
 			break;
 		}
 		_vBallMonster[i]->setTileCollisionRect(RectMakeCenter(_vBallMonster[i]->getX(), _vBallMonster[i]->getY(), _vBallMonster[i]->getImage()->getFrameWidth(), _vBallMonster[i]->getImage()->getFrameHeight()));
-		//_vBallMonster[i]->setRect(_vBallMonster[i]->getTileCollisionRect());
 	}
 
 	//불몬스터
@@ -926,8 +1023,22 @@ void enemyManager::tileCheckObjectCollision()
 			break;
 		}
 
-
 		RECT temp;
+		//임시오브젝트 렉트 충돌용
+		if (IntersectRect(&temp, &_objectRc, &_vFireMonster[i]->getRect()))
+		{
+			switch (_vFireMonster[i]->getDirection())
+			{
+			case FIREMONSTER_DIRECTION_UP:
+				_vFireMonster[i]->setTum(_vFireMonster[i]->getRect().top - _objectRc.bottom);
+				_vFireMonster[i]->setY(_vFireMonster[i]->getY() - _vFireMonster[i]->getTum());
+				break;
+			case FIREMONSTER_DIRECTION_DOWN:
+				_vFireMonster[i]->setTum(_vFireMonster[i]->getRect().bottom - _objectRc.top);
+				_vFireMonster[i]->setY(_vFireMonster[i]->getY() - _vFireMonster[i]->getTum());
+				break;
+			}
+		}
 		for (int j = 0; j < 2; i++)
 		{
 			if (_dungeonMap->getAttr(_vFireMonster[i]->getTileIndex(j).x, _vFireMonster[i]->getTileIndex(j).y) == ATTR_UNMOVE
@@ -1144,8 +1255,120 @@ void enemyManager::tileCheckObjectCollision()
 	}
 }
 
+//아이템 랜덤드랍
+void enemyManager::itemRandomDrop()
+{
+	for (int i = 0; i < _vMonsterDeadPoint.size(); i++)
+	{
+		_rndItemDrop = RND->getRandomInt(0, 300);
+		_rndItemTypeDrop = RND->getRandomInt(0, 100);
+
+		//40퍼확률
+		if (_rndItemDrop >= 0 && _rndItemDrop <= 40)
+		{
+			_itemManager->dropGold(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y);
+		}
+		//20퍼확률
+		else if (_rndItemDrop > 40 && _rndItemDrop <= 60)
+		{
+			//40퍼 확률
+			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
+			{
+				_itemManager->dropPotion(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, POTIONTYPE::SMALL);
+			}
+			//30퍼 확률
+			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
+			{
+				_itemManager->dropPotion(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, POTIONTYPE::MIDDLE);
+			}
+			//20퍼확률
+			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
+			{
+				_itemManager->dropPotion(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, POTIONTYPE::BIG);
+			}
+			//10퍼확률로 안나옴
+			else
+			{
+				_itemManager->dropPotion(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, POTIONTYPE::NONE);
+			}
+		}
+		//20퍼확률
+		else if (_rndItemDrop > 60 && _rndItemDrop <= 80)
+		{
+			//40퍼 확률
+			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
+			{
+				_itemManager->dropAccessory(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ACCESSORYTYPE::LEEF);
+			}
+			//30퍼 확률
+			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
+			{
+				_itemManager->dropAccessory(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ACCESSORYTYPE::RED_SCARF);
+			}
+			//20퍼확률
+			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
+			{
+				_itemManager->dropAccessory(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ACCESSORYTYPE::TALISMAN);
+			}
+			//10퍼확률로 안나옴
+			else
+			{
+				_itemManager->dropAccessory(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ACCESSORYTYPE::NONE);
+			}
+		}
+		else if (_rndItemDrop > 80 && _rndItemDrop <= 100)
+		{
+			//40퍼 확률
+			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
+			{
+				_itemManager->dropArmor(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ARMORTYPE::HOOD);
+			}
+			//30퍼 확률
+			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
+			{
+				_itemManager->dropArmor(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ARMORTYPE::ICE_ARMOR);
+			}
+			//20퍼확률
+			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
+			{
+				_itemManager->dropArmor(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ARMORTYPE::IRON_ARMOR);
+			}
+			//10퍼확률로 안나옴
+			else
+			{
+				_itemManager->dropArmor(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ARMORTYPE::NONE);
+			}
+		}
+		else if (_rndItemDrop > 100 && _rndItemDrop <= 120)
+		{
+			//40퍼 확률
+			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
+			{
+				_itemManager->dropWeapon(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, WEAPONTYPE::FIRE_SPEAR);
+			}
+			//30퍼 확률
+			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
+			{
+				_itemManager->dropWeapon(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, WEAPONTYPE::ICE_SPEAR);
+			}
+			//20퍼확률
+			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
+			{
+				_itemManager->dropWeapon(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, WEAPONTYPE::IRON_SPEAR);
+			}
+			//10퍼확률로 안나옴
+			else
+			{
+				_itemManager->dropWeapon(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, WEAPONTYPE::NONE);
+			}
+		}
+
+		//아이템 계속생성하지 않기위해서 지움.
+		_vMonsterDeadPoint.erase(_vMonsterDeadPoint.begin() + i);
+	}
+}
+
 //에너미들이 죽은다음 리스폰할 함수
 void enemyManager::enemyRespon()
 {
 }
-
