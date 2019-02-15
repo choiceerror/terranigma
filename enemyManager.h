@@ -6,6 +6,13 @@
 #include "fireMonsterBullet.h"
 #include "dungeonMap.h"
 
+enum ENEMYINFO
+{
+	BALLMONSTER_HP = 100,
+	FIREMONSTER_HP = 100,
+	KNIGHTMONSTER_HP = 300,
+};
+
 class player;
 
 class enemyManager : public gameNode

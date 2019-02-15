@@ -15,7 +15,7 @@ enemyManager::~enemyManager()
 HRESULT enemyManager::init()
 {
 	_fireMonsterBullet = new fireMonsterBullet;
-	_fireMonsterBullet->init("fireMonster", WINSIZEX / 2, 10);
+	_fireMonsterBullet->init("fireMonster", GAMESIZEX / 2, 10);
 	_fireBulletSpeed = 5;
 
 	return S_OK;
@@ -58,7 +58,7 @@ void enemyManager::update()
 
 void enemyManager::render(float cameraX, float cameraY)
 {
-	Rectangle(getMemDC(), _playerAttackRc);
+	//Rectangle(getMemDC(), _playerAttackRc);
 	//렌더링 모음 함수
 	enemyDraw(cameraX, cameraY);
 
@@ -171,30 +171,52 @@ void enemyManager::setEnemy()
 {
 	for (int i = 0; i < 2; i++)
 	{
-		for (int j = 0; j < 2; j++)
+		for (int j = 0; j < 3; j++)
 		{
 			ballMonster* bm;
 			bm = new ballMonster;
 
-			bm->init("ball", "ballMonster", 500 + j * 100, 100 + i * 100, j, i, 100);
-			_vBallMonster.push_back(bm);
-
 			fireMonster* fm;
 			fm = new fireMonster;
+			if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR)
+			{
+				bm->init("ball", "ballMonster", GAMESIZEX / 4 + j * 300, 300 + i * 200, j, i, BALLMONSTER_HP);
+				_vBallMonster.push_back(bm);
+				
+				fm->init("fire", "fireMonster", GAMESIZEX / 3 + j * 200, 500 + i * 300, j, i, FIREMONSTER_HP);
+				_vFireMonster.push_back(fm);
+			}
+			else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::SECOND_FLOOR)
+			{
+				bm->init("ball", "ballMonster", 200 + j * 700, 200 + i * 800, j, i, BALLMONSTER_HP);
+				_vBallMonster.push_back(bm);
 
-			fm->init("fire", "fireMonster", 100 + j * 100, 500 + i * 100, j, i, 200);
-			_vFireMonster.push_back(fm);
+				fm->init("fire", "fireMonster", 200 + j * 680, 460 + i * 400, j, i, FIREMONSTER_HP);
+				_vFireMonster.push_back(fm);
 
-			knightMonster* km;
-			km = new knightMonster;
+				knightMonster* km;
+				km = new knightMonster;
 
-			km->init("knight", "knightMonster", 300 + j * 100, 300 + i * 100, j, i, 300);
-
-			_vKnightMonster.push_back(km);
-
+				km->init("knight", "knightMonster", 2240 / 3 + j * 300, 1600 / 2 + i * 300, j, i, KNIGHTMONSTER_HP);
+				_vKnightMonster.push_back(km);
+			}
 		}
 	}
 
+	//밑에쪽 생성
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			ballMonster* bm;
+			bm = new ballMonster;
+			if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR)
+			{
+				bm->init("ball", "ballMonster", GAMESIZEX / 4 + j * 300, 1500 + i * 500, j, i, BALLMONSTER_HP);
+				_vBallMonster.push_back(bm);
+			}
+		}
+	}
 }
 
 //에너미들의 AI

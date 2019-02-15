@@ -34,11 +34,17 @@ HRESULT dungeon::init()
 	_dungeon->init();
 	_player->init();
 	_enemyManager->init();
-
 	_enemyManager->setEnemy();
-	_camera->init(GAMESIZEX, GAMESIZEY, GAMESIZEX, 3200);
 
 
+	if (_dungeon->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR)
+	{
+		_camera->init(GAMESIZEX, GAMESIZEY, GAMESIZEX, 3200);
+	}
+	else if (_dungeon->getDungeonFloor() == DUNGEON_FLOOR::SECOND_FLOOR)
+	{
+		_camera->init(GAMESIZEX, GAMESIZEY, 2240, 1600);
+	}
 
 	return S_OK;
 }
@@ -56,6 +62,11 @@ void dungeon::update()
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_player->update(false, 1);
 	_enemyManager->update();
+
+	if (KEYMANAGER->isOnceKeyDown('W'))
+	{
+		_dungeon->setDungeonFloor(DUNGEON_FLOOR::SECOND_FLOOR);
+	}
 }
 
 void dungeon::render()
