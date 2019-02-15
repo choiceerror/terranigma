@@ -118,6 +118,6 @@ void PlayerWorldMap::update()
 
 void PlayerWorldMap::render(float cameraX, float cameraY)
 {
-	_playerImage->expandAniRenderCenter(getMemDC(), _x - cameraX, _y - cameraY, _ani, 2, 2);
+	_playerImage->expandAniRenderCenter(getMemDC(), _x - cameraX, _y - cameraY, _ani, 1, 1);
 	Rectangle(getMemDC(), _playerRc);
 }

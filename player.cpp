@@ -14,7 +14,7 @@ player::~player()
 
 HRESULT player::init()
 {
-	IMAGEMANAGER->addFrameImage("player", "image/player_test.bmp", 0, 0, 2016, 5642, 12, 31, true, RGB(255, 0, 255));
+
 	IMAGEMANAGER->addFrameImage("player_obj", "image/player_obj.bmp", 0, 0, 1540, 800, 10, 10, true, RGB(255, 0, 255));
 
 	_player.image = IMAGEMANAGER->findImage("player");
