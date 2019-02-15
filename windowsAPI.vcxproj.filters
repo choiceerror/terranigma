@@ -324,6 +324,9 @@
     <ClInclude Include="MapNode.h">
       <Filter>PlayGround\Scene\mapTool</Filter>
     </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>PlayGround\tileMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -517,6 +520,9 @@
     </ClCompile>
     <ClCompile Include="Bird.cpp">
       <Filter>PlayGround\npc</Filter>
+    </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>PlayGround\tileMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

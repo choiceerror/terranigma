@@ -13,6 +13,7 @@ enum PLAYERWORLDMAP
 	WORLDMAP_MOVE_DOWN
 };
 
+class world;
 class PlayerWorldMap : gameNode
 {
 private:
@@ -23,6 +24,8 @@ private:
 	float _x, _y;
 	float _speed;
 
+	world* _world;
+
 public:
 	PlayerWorldMap();
 	~PlayerWorldMap();
@@ -31,5 +34,8 @@ public:
 	void release();
 	void update();
 	void render(float cameraX, float cameraY);
+
+	float getPlayerX() { return _x; }
+	float getPlayerY() { return _y; }
 };
 

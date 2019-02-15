@@ -1,8 +1,7 @@
 #pragma once
 #include "gameNode.h"
 #include "mapTool.h"
-
-class townMap : public gameNode
+class world : public gameNode
 {
 private:
 	mapTool* _mapT;
@@ -19,15 +18,16 @@ private:
 	int oby;
 
 public:
-	townMap();
-	~townMap();
+	world();
+	~world();
+
 
 	HRESULT init();
 	void release();
 	void update();
 	void render(float cameraX, float cameraY);
 	void load();
-	void tileDraw();
+
 
 	unsigned int getTileX() { return TILEX; }
 	unsigned int getTileY() { return TILEY; }

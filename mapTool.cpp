@@ -89,6 +89,10 @@ void mapTool::render()
 	{
 		IMAGEMANAGER->render("townTile", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("townTile")->GetWidth(), 0);
 	}
+	else if (tilenum == 4)
+	{
+		IMAGEMANAGER->render("worldTile", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("worldTile")->GetWidth(), 0);
+	}
 	
 	//ÁöÇü
 	for (int i = 0; i < TILEY; ++i)
@@ -127,6 +131,12 @@ void mapTool::render()
 			else if ((_vvMap[i][j]->a == 3))
 			{
 				IMAGEMANAGER->frameRender("townTile", IMAGEMANAGER->findImage("background")->getMemDC(),
+					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
+					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+			}
+			else if ((_vvMap[i][j]->a == 4))
+			{
+				IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
@@ -171,6 +181,12 @@ void mapTool::render()
 			else if (_vvMap[i][j]->a == 3)
 			{
 				IMAGEMANAGER->frameRender("townTile", IMAGEMANAGER->findImage("background")->getMemDC(),
+					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
+					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+			}
+			else if (_vvMap[i][j]->a == 4)
+			{
+				IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
@@ -521,7 +537,7 @@ void mapTool::save()
 	DWORD save2;
 	char mapSize[128];
 	sprintf_s(mapSize, "%d,%d", TILEX, TILEY);
-	file2 = CreateFile("saveFile\\townSize.map", GENERIC_WRITE, NULL, NULL,
+	file2 = CreateFile("saveFile\\worldSize.map", GENERIC_WRITE, NULL, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	WriteFile(file2, mapSize, strlen(mapSize), &save2, NULL);
@@ -540,7 +556,7 @@ void mapTool::save()
 	HANDLE file;
 	DWORD save;
 
-	file = CreateFile("saveFile\\townSave.map", GENERIC_WRITE, NULL, NULL,
+	file = CreateFile("saveFile\\worldSave.map", GENERIC_WRITE, NULL, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &save, NULL);
@@ -566,7 +582,7 @@ void mapTool::load()
 	DWORD read2;
 	char mapSize[128];
 
-	file2 = CreateFile("saveFile\\townSize.map", GENERIC_READ, NULL, NULL,
+	file2 = CreateFile("saveFile\\worldSize.map", GENERIC_READ, NULL, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(file2, mapSize, 128, &read2, NULL);
 	CloseHandle(file2);
@@ -605,7 +621,7 @@ void mapTool::load()
 	HANDLE file;
 	DWORD read;
 
-	file = CreateFile("saveFile\\townSave.map", GENERIC_READ, NULL, NULL,
+	file = CreateFile("saveFile\\worldSave.map", GENERIC_READ, NULL, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
