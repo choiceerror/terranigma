@@ -21,27 +21,25 @@ HRESULT town::init()
 	IMAGEMANAGER->addFrameImage("townHuman", "image/townHuman.bmp", 700, 250, 14, 5, true, RGB(255, 0, 255));
 
 	_player = new player;
-	_playerWorldMap = new PlayerWorldMap;
 	_camera = new camera;
 	_town = new townMap;
 	_npcManager = new npcManager;
 
 
 	_player->init();
-	_playerWorldMap->init();
 	_town->init();
 
 	_npcManager->setBird();
 	_npcManager->setElder();
 	_npcManager->setElle();
-	_npcManager->setTownHuman(TOWN_FISHMAN, 500, 500);
+	_npcManager->setTownHuman(TOWN_FISHMAN, 870, 870);
 	_npcManager->setTownHuman(TOWN_GRANDFA, 200, 500);
 	_npcManager->setTownHuman(TOWN_GRANDMA, 200, 400);
 	_npcManager->init();
 
 	_player->setTownManagerAddressLink(_town);
 
-	_camera->init(GAMESIZEX, GAMESIZEY, 3200, 3200);
+	_camera->init(GAMESIZEX, GAMESIZEY, 2560, 2560);
 
 	return S_OK;
 }
@@ -54,17 +52,16 @@ void town::update()
 {
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_player->update(false, 2);
-	_playerWorldMap->update();
 	_npcManager->update();
 	_npcManager->aiBirdUpdate();
 }
 
 void town::render()
 {
-	_player->render(0, 0);
+	_town->render(_camera->getCameraX(), _camera->getCameraY());
+	_player->render(_camera->getCameraX(),_camera->getCameraY());
 	_npcManager->render(_camera->getCameraX(), _camera->getCameraY());
-	//_playerWorldMap->render(0, 0);
-	
+
 }
 
 void town::setWindowsSize(int x, int y, int width, int height)

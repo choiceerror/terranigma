@@ -70,9 +70,6 @@
     <Filter Include="PlayGround\Scene\dungeon">
       <UniqueIdentifier>{8eebf6c3-a48f-4ee8-94d2-00310fb611c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PlayGround\player">
-      <UniqueIdentifier>{66de6247-4e26-4a67-b533-144cb159d19c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PlayGround\tileMap">
       <UniqueIdentifier>{d76d5014-f81d-425c-a10b-75fbd73b86af}</UniqueIdentifier>
     </Filter>
@@ -94,9 +91,6 @@
     <Filter Include="PlayGround\effect">
       <UniqueIdentifier>{c89162af-b43b-45ca-a053-6d397af381ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PlayGround\player\state">
-      <UniqueIdentifier>{6ff57a3f-5ebf-49c8-af55-4a4753678398}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PlayGround\item\Armor">
       <UniqueIdentifier>{763407c2-e5e2-4b03-97bc-78e72108aed7}</UniqueIdentifier>
     </Filter>
@@ -114,6 +108,12 @@
     </Filter>
     <Filter Include="PlayGround\Scene\Intro">
       <UniqueIdentifier>{0d268339-3b57-4bd0-b3e9-beb8861628e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\npc\player">
+      <UniqueIdentifier>{66de6247-4e26-4a67-b533-144cb159d19c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayGround\npc\player\state">
+      <UniqueIdentifier>{6ff57a3f-5ebf-49c8-af55-4a4753678398}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -217,7 +217,7 @@
       <Filter>PlayGround\Scene\dungeon</Filter>
     </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>PlayGround\player</Filter>
+      <Filter>PlayGround\npc\player</Filter>
     </ClInclude>
     <ClInclude Include="enemyManager.h">
       <Filter>PlayGround\enemyManager</Filter>
@@ -253,19 +253,19 @@
       <Filter>PlayGround\effect</Filter>
     </ClInclude>
     <ClInclude Include="PlayerWorldMap.h">
-      <Filter>PlayGround\player</Filter>
+      <Filter>PlayGround\npc\player</Filter>
     </ClInclude>
     <ClInclude Include="DashAttack.h">
-      <Filter>PlayGround\player\state</Filter>
+      <Filter>PlayGround\npc\player\state</Filter>
     </ClInclude>
     <ClInclude Include="DashJumpAttack.h">
-      <Filter>PlayGround\player\state</Filter>
+      <Filter>PlayGround\npc\player\state</Filter>
     </ClInclude>
     <ClInclude Include="jump.h">
-      <Filter>PlayGround\player\state</Filter>
+      <Filter>PlayGround\npc\player\state</Filter>
     </ClInclude>
     <ClInclude Include="JumpAttack.h">
-      <Filter>PlayGround\player\state</Filter>
+      <Filter>PlayGround\npc\player\state</Filter>
     </ClInclude>
     <ClInclude Include="Armor.h">
       <Filter>PlayGround\item\Armor</Filter>
@@ -417,7 +417,7 @@
       <Filter>PlayGround\Scene\dungeon</Filter>
     </ClCompile>
     <ClCompile Include="player.cpp">
-      <Filter>PlayGround\player</Filter>
+      <Filter>PlayGround\npc\player</Filter>
     </ClCompile>
     <ClCompile Include="enemyManager.cpp">
       <Filter>PlayGround\enemyManager</Filter>
@@ -453,19 +453,19 @@
       <Filter>PlayGround\effect</Filter>
     </ClCompile>
     <ClCompile Include="PlayerWorldMap.cpp">
-      <Filter>PlayGround\player</Filter>
+      <Filter>PlayGround\npc\player</Filter>
     </ClCompile>
     <ClCompile Include="DashAttack.cpp">
-      <Filter>PlayGround\player\state</Filter>
+      <Filter>PlayGround\npc\player\state</Filter>
     </ClCompile>
     <ClCompile Include="DashJumpAttack.cpp">
-      <Filter>PlayGround\player\state</Filter>
+      <Filter>PlayGround\npc\player\state</Filter>
     </ClCompile>
     <ClCompile Include="jump.cpp">
-      <Filter>PlayGround\player\state</Filter>
+      <Filter>PlayGround\npc\player\state</Filter>
     </ClCompile>
     <ClCompile Include="JumpAttack.cpp">
-      <Filter>PlayGround\player\state</Filter>
+      <Filter>PlayGround\npc\player\state</Filter>
     </ClCompile>
     <ClCompile Include="Armor.cpp">
       <Filter>PlayGround\item\Armor</Filter>
@@ -492,7 +492,7 @@
       <Filter>PlayGround\tileMap</Filter>
     </ClCompile>
     <ClCompile Include="playerState.cpp">
-      <Filter>PlayGround\player</Filter>
+      <Filter>PlayGround\npc\player</Filter>
     </ClCompile>
     <ClCompile Include="townMap.cpp">
       <Filter>PlayGround\tileMap</Filter>
