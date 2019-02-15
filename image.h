@@ -148,6 +148,8 @@ public:
 	void rotateFrameRender(HDC hdc, float centerX, float centerY, int currentFrameX, int currentFrameY, float angle);
 
 	inline HDC getMemDC() { return _imageInfo->hMemDC; }
+	inline HBITMAP getBitMap(void) { return _imageInfo->hBit; }
+	inline void setBitMap(HBITMAP bit) { _imageInfo->hOBit = bit; }
 
 	//=================================================
 	// 이미지 관련 접근자, 설정자 이제부터 편하게 쓰세용 ^_^)/

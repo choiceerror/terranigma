@@ -18,6 +18,7 @@ private:
 	player* _player;
 	camera* _camera;
 	POINT _dungeonPos;
+	POINT _goal;
 
 	image* _door;
 	animation* _doorAni;
@@ -47,6 +48,13 @@ private:
 
 	bool _playerSizeChange;
 	bool _dungeonGo;
+
+	float _time;
+	float _worldTime;
+	float _speed;
+	float _angle;
+	bool _isLinear;
+	bool _once;
 	
 public:
 	IntroDungeon();
@@ -56,6 +64,8 @@ public:
 	void release();
 	void update();
 	void render();
+
+	void linearMove();
 
 	void setWindowsSize(int x, int y, int width, int height);
 

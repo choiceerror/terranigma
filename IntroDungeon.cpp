@@ -79,6 +79,13 @@ HRESULT IntroDungeon::init()
 	_escape = false;
 
 	_camera->linearKeepMove(_dungeonPos.x, 2490 - GAMESIZEY / 2, 0.1f, 100000);
+
+	_time = 1.4f;
+	_worldTime = 0;
+	_speed = 0;
+	_isLinear = false;
+	_once = false;
+
 	return S_OK;
 }
 
@@ -233,6 +240,7 @@ void IntroDungeon::update()
 		_player->setPlayerState(PLAYER_WALK);
 
 		_playerSizeChange = true;
+		_isLinear = true;
 
 		if (_playerSizeX > 0 || _playerSizeY > 0)
 		{
@@ -244,6 +252,8 @@ void IntroDungeon::update()
 			_dungeonGo = true;
 		}
 	}
+
+	linearMove();
 
 	_escapeRc = RectMakeCenter(GAMESIZEX / 2 + 20 - _camera->getCameraX(), 1925 - _camera->getCameraY(), 200, 100);
 	_introDungeonPlayerRc = RectMakeCenter(_player->getPlayerX() - _camera->getCameraX(), _player->getPlayerY() + 10 - _camera->getCameraY(), 40, 50);
@@ -281,6 +291,31 @@ void IntroDungeon::render()
 
 	//sprintf_s(str, "플레이어X :%f, 플레이어Y : %f", _player->getPlayerX(), _player->getPlayerY());
 	//TextOut(getMemDC(), 120, 100, str, strlen(str));
+}
+
+void IntroDungeon::linearMove()
+{
+	if (_isLinear)
+	{
+		_goal.x = 535;
+		_goal.y = 1957;
+		_angle = getAngle(_player->getPlayerX(), _player->getPlayerY(), _goal.x, _goal.y);
+
+		if (!_once)
+		{
+			_speed = getDistance(_player->getPlayerX(), _player->getPlayerY(), _goal.x, _goal.y) * (TIMEMANAGER->getElapsedTime() / 1.5f);
+			_worldTime = TIMEMANAGER->getWorldTime();
+
+		}
+
+		if (_time + _worldTime >= TIMEMANAGER->getWorldTime())
+		{
+			_player->setPlayerPosX(_player->getPlayerX() + cosf(_angle)*_speed);
+			_player->setPlayerPosY(_player->getPlayerY() + -sinf(_angle)*_speed);
+		}
+
+		_once = true;
+	}
 }
 
 void IntroDungeon::setWindowsSize(int x, int y, int width, int height)
