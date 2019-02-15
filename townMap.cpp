@@ -36,33 +36,9 @@ void townMap::render(float cameraX, float cameraY)
 			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
 
-			if (_vvMap[i][j]->a == 0)
+			if ((_vvMap[i][j]->a == 3))
 			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê4", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-			else if ((_vvMap[i][j]->a == 1))
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-			else if ((_vvMap[i][j]->a == 2))
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê2", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-			else if ((_vvMap[i][j]->a == 3))
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê5", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-			else if ((_vvMap[i][j]->a == 4))
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê6",getMemDC(),
+				IMAGEMANAGER->frameRender("townTile", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
@@ -81,37 +57,14 @@ void townMap::render(float cameraX, float cameraY)
 			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
 
-		
-			if (_vvMap[i][j]->a == 0)
+
+			if (_vvMap[i][j]->a == 3)
 			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê4", getMemDC(),
+				IMAGEMANAGER->frameRender("townTile", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
-			else if (_vvMap[i][j]->a == 1)
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-			else if (_vvMap[i][j]->a == 2)
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê2", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-			else if (_vvMap[i][j]->a == 3)
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê5", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-			else if (_vvMap[i][j]->a == 4)
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê6", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
+
 		}
 	}
 

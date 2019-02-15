@@ -87,16 +87,9 @@ void mapTool::render()
 	}
 	else if (tilenum == 3)
 	{
-		IMAGEMANAGER->render("Å¸ÀÏ¸Ê5", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê5")->GetWidth(), 0);
+		IMAGEMANAGER->render("townTile", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("townTile")->GetWidth(), 0);
 	}
-	else if (tilenum == 4)
-	{
-		IMAGEMANAGER->render("Å¸ÀÏ¸Ê6", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê6")->GetWidth(), 0);
-	}
-	else if (tilenum == 5)
-	{
-		IMAGEMANAGER->render("Å¸ÀÏ¸Ê7", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê7")->GetWidth(), 0);
-	}
+	
 	//ÁöÇü
 	for (int i = 0; i < TILEY; ++i)
 	{
@@ -133,19 +126,7 @@ void mapTool::render()
 			}
 			else if ((_vvMap[i][j]->a == 3))
 			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê5", IMAGEMANAGER->findImage("background")->getMemDC(),
-					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-			else if ((_vvMap[i][j]->a == 4))
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê6", IMAGEMANAGER->findImage("background")->getMemDC(),
-					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-			}
-			else if ((_vvMap[i][j]->a == 5))
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê7", IMAGEMANAGER->findImage("background")->getMemDC(),
+				IMAGEMANAGER->frameRender("townTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
@@ -189,19 +170,7 @@ void mapTool::render()
 			}
 			else if (_vvMap[i][j]->a == 3)
 			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê5", IMAGEMANAGER->findImage("background")->getMemDC(),
-					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-			else if (_vvMap[i][j]->a == 4)
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê6", IMAGEMANAGER->findImage("background")->getMemDC(),
-					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
-			else if (_vvMap[i][j]->a == 5)
-			{
-				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê7", IMAGEMANAGER->findImage("background")->getMemDC(),
+				IMAGEMANAGER->frameRender("townTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
@@ -552,7 +521,7 @@ void mapTool::save()
 	DWORD save2;
 	char mapSize[128];
 	sprintf_s(mapSize, "%d,%d", TILEX, TILEY);
-	file2 = CreateFile("saveFile\\dungeonSize.map", GENERIC_WRITE, NULL, NULL,
+	file2 = CreateFile("saveFile\\townSize.map", GENERIC_WRITE, NULL, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	WriteFile(file2, mapSize, strlen(mapSize), &save2, NULL);
@@ -571,7 +540,7 @@ void mapTool::save()
 	HANDLE file;
 	DWORD save;
 
-	file = CreateFile("saveFile\\dungeonSave.map", GENERIC_WRITE, NULL, NULL,
+	file = CreateFile("saveFile\\townSave.map", GENERIC_WRITE, NULL, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &save, NULL);
@@ -597,7 +566,7 @@ void mapTool::load()
 	DWORD read2;
 	char mapSize[128];
 
-	file2 = CreateFile("saveFile\\dungeonSize.map", GENERIC_READ, NULL, NULL,
+	file2 = CreateFile("saveFile\\townSize.map", GENERIC_READ, NULL, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	ReadFile(file2, mapSize, 128, &read2, NULL);
 	CloseHandle(file2);
@@ -636,7 +605,7 @@ void mapTool::load()
 	HANDLE file;
 	DWORD read;
 
-	file = CreateFile("saveFile\\dungeonSave.map", GENERIC_READ, NULL, NULL,
+	file = CreateFile("saveFile\\townSave.map", GENERIC_READ, NULL, NULL,
 		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
