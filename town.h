@@ -5,6 +5,7 @@
 #include "camera.h"
 #include "townMap.h"
 #include "npcManager.h"
+#include "randomFunction.h"
 
 
 

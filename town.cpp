@@ -29,13 +29,17 @@ HRESULT town::init()
 	_player->init();
 	_playerWorldMap->init();
 	_town->init();
-	_npcManager->init();
 
 	_npcManager->setBird();
+	_npcManager->setElder();
+	_npcManager->setElle();
+	_npcManager->init();
+	
 
 	_player->setTownManagerAddressLink(_town);
 
 	_camera->init(GAMESIZEX, GAMESIZEY, 3200, 3200);
+
 	return S_OK;
 }
 
@@ -49,6 +53,8 @@ void town::update()
 	_player->update(false, 2);
 	_playerWorldMap->update();
 	_npcManager->update();
+	_npcManager->aiBirdUpdate();
+
 }
 
 void town::render()
@@ -56,6 +62,7 @@ void town::render()
 	_player->render(0, 0);
 	_npcManager->render(_camera->getCameraX(), _camera->getCameraY());
 	//_playerWorldMap->render(0, 0);
+	
 }
 
 void town::setWindowsSize(int x, int y, int width, int height)

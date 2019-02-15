@@ -11,6 +11,9 @@ public:
 	virtual void release();
 	virtual void update();
 	virtual void render(float cameraX, float cameraY);
+
+	void birdState();
+
 };
 
 

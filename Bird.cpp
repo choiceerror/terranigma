@@ -22,11 +22,11 @@ HRESULT Bird::init(string npcName, const char* imageName, float x, float y, int 
 	int idleLeft[] = { 8 };
 	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "idleLeft", imageName, idleLeft, 1, 5, true);
 	int idleRight[] = { 4 };
-	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "idleRight", imageName, idleLeft, 1, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "idleRight", imageName, idleRight, 1, 5, true);
 	int idleUp[] = { 12 };
-	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "idleUp", imageName, idleLeft, 1, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "idleUp", imageName, idleUp, 1, 5, true);
 	int idleDown[] = { 0 };
-	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "idleDown", imageName, idleLeft, 1, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "idleDown", imageName, idleDown, 1, 5, true);
 	int peckLeft[] = { 8, 9 ,10, 11 };
 	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "peckLeft", imageName, peckLeft, 4, 5, false);
 	int peckRight[] = { 4, 5, 6, 7 };
@@ -46,7 +46,8 @@ HRESULT Bird::init(string npcName, const char* imageName, float x, float y, int 
 
 	_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleDown");
 
-	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 30 - 3, 30 - 3);
+	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 30, 30);
+
 
 	return S_OK;
 }
@@ -56,6 +57,21 @@ void Bird::release()
 }
 
 void Bird::update()
+{
+	npc::update();
+	birdState();
+
+	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 32, 32);
+}
+
+void Bird::render(float cameraX, float cameraY)
+{
+	//Rectangle(getMemDC(), _npc.rc);
+	//_npc.image->aniRender(getMemDC(), _npc.x - cameraX, _npc.y - cameraY, _npc.ani);
+	_npc.image->expandAniRenderCenter(getMemDC(), _npc.x - cameraX, _npc.y - cameraY, _npc.ani, 2, 2);
+}
+
+void Bird::birdState()
 {
 	switch (_npc.state)
 	{
@@ -86,18 +102,22 @@ void Bird::update()
 		case BIRD_LEFT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveLeft");
 			_npc.ani->start();
+			_npc.x -= 1.0f;
 			break;
 		case BIRD_RIGHT:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveRight");
 			_npc.ani->start();
+			_npc.x += 1.0f;
 			break;
 		case BIRD_UP:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveUp");
 			_npc.ani->start();
+			_npc.y -= 1.0f;
 			break;
 		case BIRD_DOWN:
 			_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "moveDown");
 			_npc.ani->start();
+			_npc.y += 1.0f;
 			break;
 		}
 		break;
@@ -123,9 +143,4 @@ void Bird::update()
 		}
 		break;
 	}
-}
-
-void Bird::render(float cameraX, float cameraY)
-{
-	_npc.image->aniRender(getMemDC(), _npc.x - cameraX, _npc.y - cameraY, _npc.ani);
 }

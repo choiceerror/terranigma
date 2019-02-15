@@ -30,10 +30,15 @@ void npc::release()
 
 void npc::update()
 {
-
+	npcMove();
 }
 
 void npc::render()
 {
+	
+}
 
+void npc::npcMove()
+{
+	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 32, 32);
 }

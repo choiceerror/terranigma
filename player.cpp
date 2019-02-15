@@ -355,7 +355,7 @@ void player::keyInput()
 	if (KEYMANAGER->isOnceKeyUp('C'))
 	{
 
-		if (_attackComboKey == 0) _attackComboKey++;
+		if (_attackComboKey < 2) _attackComboKey++;
 	}
 
 	if (KEYMANAGER->isOnceKeyDown('X'))
@@ -465,7 +465,7 @@ void player::DoubleKeyIntVoid()
 		_oldTime[DOWN] = GetTickCount();
 	}
 
-	else if (GetTickCount() - _oldAttackTime >= 1 * 400 && _attackComboKey == 1) //더블키 공격 
+	else if (GetTickCount() - _oldAttackTime >= 1 * 400 && _attackComboKey > 0) //더블키 공격 
 	{
 		_attackComboKey--;
 		_oldAttackTime = GetTickCount();
