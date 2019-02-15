@@ -45,8 +45,8 @@ HRESULT TownHuman::init(TOWNHUMAN townName, string npcName, const char* imageNam
 	int fafaIdle[] = { 28, 29, 30 };
 	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "fafaIdle", imageName, fafaIdle, 3, 5, true);
 
-	int fishIdle[] = { 42, 43, 44, 45, 46 };
-	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "fishIdle", imageName, fishIdle, 5, 5, true);
+	int fishIdle[] = { 42, 43, 44, 45, 46 , 45, 44, 43 };
+	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "fishIdle", imageName, fishIdle, 8, 5, true);
 
 	int townManIdleLeft[] = { 63 };
 	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "townManIdleLeft", imageName, townManIdleLeft, 1, 5, true);
@@ -69,24 +69,28 @@ HRESULT TownHuman::init(TOWNHUMAN townName, string npcName, const char* imageNam
 	{
 	case TOWN_MAID:
 		_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "maidIdleDown");
+		_npc.state = TOWNHUMAN_MAID_IDLE;
 		break;
 	case TOWN_GRANDMA:
 		_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "mamaIdle");
+		_npc.state = TOWNHUMAN_GRANDMA_IDLE;
 		break;
 	case TOWN_GRANDFA:
 		_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "fafaIdle");
+		_npc.state = TOWNHUMAN_GRANDFA_IDLE;
 		break;
 	case TOWN_FISHMAN:
 		_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "fishIdle");
+		_npc.state = TOWNHUMAN_FISHMAN_IDLE;
 		break;
 	case TOWN_TOWNMAN:
 		_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "townManIdleDown");
+		_npc.state = TOWNHUMAN_TOWNMAN_IDLE;
 		break;
 	}
 
 
-	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 30, 30);
-
+	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 32, 32);
 
 	return S_OK;
 }

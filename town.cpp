@@ -39,8 +39,6 @@ HRESULT town::init()
 	_npcManager->setTownHuman(TOWN_GRANDMA, 200, 400);
 	_npcManager->init();
 
-	
-
 	_player->setTownManagerAddressLink(_town);
 
 	_camera->init(GAMESIZEX, GAMESIZEY, 3200, 3200);

@@ -19,6 +19,8 @@ private:
 
 	npcManager* _npcManager;
 
+	
+
 public:
 	town();
 	~town();

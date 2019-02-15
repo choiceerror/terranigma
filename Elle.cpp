@@ -40,7 +40,7 @@ HRESULT Elle::init(string npcName, const char* imageName, float x, float y, int 
 
 	_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "idleDown");
 
-	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 30, 30);
+	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 32, 32);
 
 	return S_OK;
 }

@@ -37,7 +37,7 @@ HRESULT Elder::init(string npcName, const char* imageName, float x, float y, int
 
 	_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "sitDown");
 
-	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 30, 30);
+	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 32, 32);
 }
 
 void Elder::release()

@@ -27,8 +27,9 @@ private:
 	int _aiStatePatten;
 	int _aiIdleActionPatten;
 	int _aiDirectionPatten;
-	int _aiDirectionPattenOldTime;
 	int _aiStatePattenOldTime;
+
+	bool _randCheck;
 
 public:
 	npcManager();

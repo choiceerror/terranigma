@@ -15,8 +15,9 @@ HRESULT npcManager::init()
 {
 	_randomFunction = new randomFunction;
 
-	_aiDirectionPatten = _aiStatePatten = _aiIdleActionPatten = _aiDirectionPattenOldTime = _aiStatePattenOldTime =  0;
+	_aiDirectionPatten = _aiStatePatten = _aiIdleActionPatten = _aiStatePattenOldTime =  0;
 
+	_randCheck = false;
 
 	return S_OK;
 }
@@ -124,53 +125,48 @@ void npcManager::setTownHuman(TOWNHUMAN townHumanName, float x, float y)
 void npcManager::aiBirdUpdate()
 {
 
-	for (int i = 0; i < _vBird.size(); i++)
+	if (GetTickCount() - _aiStatePattenOldTime >= 1 * 1000)
 	{
-
-		if (GetTickCount() - _aiDirectionPattenOldTime >= 1 * 1000)
+		for (int i = 0; i < _vBird.size(); i++)
 		{
 			_aiDirectionPatten = _randomFunction->getRandomInt(0, 3);
 			_aiIdleActionPatten = _randomFunction->getRandomInt(0, 2);
-			_aiDirectionPattenOldTime = GetTickCount();
 
-			switch (_aiDirectionPatten)
-			{
-			case 0:
-				_vBird[i]->setNPCDirection(NPC_LEFT);
-			case 1:
-				_vBird[i]->setNPCDirection(NPC_RIGHT);
-				break;
-			case 2:
-				_vBird[i]->setNPCDirection(NPC_UP);
-				break;
-			case 3:
-				_vBird[i]->setNPCDirection(NPC_DOWN);
-				break;
-			}
-		}
-		
-
-		if (GetTickCount() - _aiStatePattenOldTime >= 2 * 1000)
-		{
 			_aiStatePatten = _randomFunction->getRandomInt(0, 2);
+			_randCheck = _randomFunction->getRandomInt(0, 1);
 			_aiStatePattenOldTime = GetTickCount();
-
-			if (_aiStatePatten == 0)
+			
+			if (_randCheck)
 			{
-				_vBird[i]->setNPCState(BIRD_IDLE);
-			}
-			else
-			{
-				if (_aiIdleActionPatten == 0)
+				switch (_aiDirectionPatten)
 				{
-					_vBird[i]->setNPCState(BIRD_PECK);
+				case 0:
+					_vBird[i]->setNPCDirection(NPC_LEFT);
+				case 1:
+					_vBird[i]->setNPCDirection(NPC_RIGHT);
+					break;
+				case 2:
+					_vBird[i]->setNPCDirection(NPC_UP);
+					break;
+				case 3:
+					_vBird[i]->setNPCDirection(NPC_DOWN);
+					break;
 				}
-				else _vBird[i]->setNPCState(BIRD_MOVE);
+
+				if (_aiStatePatten == 0)
+				{
+					_vBird[i]->setNPCState(BIRD_IDLE);
+				}
+				else
+				{
+					if (_aiIdleActionPatten == 0)
+					{
+						_vBird[i]->setNPCState(BIRD_PECK);
+					}
+					else _vBird[i]->setNPCState(BIRD_MOVE);
+				}
 			}
 		}
-	
-		
-
 	}
 }
 
