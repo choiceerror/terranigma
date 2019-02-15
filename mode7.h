@@ -23,7 +23,6 @@ private:
 
 	float		_line;
 	float		_worldA;
-	float		_worldB;
 
 	float		_near;
 	float		_far;

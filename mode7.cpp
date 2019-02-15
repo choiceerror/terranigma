@@ -19,7 +19,6 @@ HRESULT mode7::init(image* img)
 
 	_worldH = 100.0f;
 
-	_worldB = PI / 5.0f;
 
 	_foVHalf = PI / 5.0f;
 	_foHHalf = PI / 8.0f;
