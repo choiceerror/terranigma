@@ -29,6 +29,10 @@ private:
 	camera* _camera;
 
 
+	RECT sizeButton[4];
+
+	RECT tileSelect[2];
+
 	unsigned int TILEX;
 	unsigned int TILEY;
 

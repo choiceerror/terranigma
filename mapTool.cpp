@@ -33,12 +33,26 @@ HRESULT mapTool::init()
 	{
 		box[i] = RectMakeCenter(900 + (i * 150), 750, 120, 50);
 	}
-
-	for (int i = 0; i < 6; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
-		tileBox[i] = RectMakeCenter(1400 + (i * 70), 650, 50, 50);
+		if (i == 0)
+		{
+			sizeButton[i] = RectMakeCenter(900, 550, 30, 30);
+		}
+		else if (i == 1)
+		{
+			sizeButton[i] = RectMakeCenter(900, 600, 30, 30);
+		}
+		else
+		{
+			sizeButton[i] = RectMakeCenter(725 + (i * 70), 575, 30, 30);
+		}
 	}
 
+	for (int i = 0; i < 2; ++i)
+	{
+		tileSelect[i] = RectMakeCenter(1700 + (i * 50), 550, 30, 30);
+	}
 	check = false;
 	_leftDragMode = false;
 
@@ -93,7 +107,7 @@ void mapTool::render()
 	{
 		IMAGEMANAGER->render("worldTile", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("worldTile")->GetWidth(), 0);
 	}
-	
+
 	//지형
 	for (int i = 0; i < TILEY; ++i)
 	{
@@ -103,12 +117,6 @@ void mapTool::render()
 			if (_vvMap[i][j]->rc.left - _camera->getCameraX() > 800) continue;
 			if (_vvMap[i][j]->rc.top - _camera->getCameraY() + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - _camera->getCameraY() > 800) continue;
-
-			//기본 세팅//
-			//IMAGEMANAGER->frameRender("타일맵4", IMAGEMANAGER->findImage("background")->getMemDC(),
-			//	_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
-			//	_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
-
 
 			if (_vvMap[i][j]->a == 0)
 			{
@@ -155,11 +163,6 @@ void mapTool::render()
 			if (_vvMap[i][j]->rc.top - _camera->getCameraY() + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - _camera->getCameraY() > 800) continue;
 
-			////기본 세팅//
-			//IMAGEMANAGER->frameRender("타일맵4", IMAGEMANAGER->findImage("background")->getMemDC(),
-			//	_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
-			//	_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-
 			if (_vvMap[i][j]->a == 0)
 			{
 				IMAGEMANAGER->frameRender("타일맵4", IMAGEMANAGER->findImage("background")->getMemDC(),
@@ -195,12 +198,15 @@ void mapTool::render()
 
 
 	//==========================체크 박스 =====================================//
-
-	for (int i = 0; i <6; ++i)
+	for (int i = 0; i < 4; ++i)
 	{
-		Rectangle(getMemDC(), tileBox[i]);
+		Rectangle(getMemDC(), sizeButton[i]);
 	}
 
+	for (int i = 0; i < 2; ++i)
+	{
+		Rectangle(getMemDC(), tileSelect[i]);
+	}
 	IMAGEMANAGER->render("save", getMemDC(), box[0].left, box[0].top);
 	IMAGEMANAGER->render("load", getMemDC(), box[1].left, box[1].top);
 	IMAGEMANAGER->render("terrain", getMemDC(), box[2].left, box[2].top);
@@ -232,7 +238,7 @@ void mapTool::render()
 	//왼쪽
 	if (_ptMouse.x < 800)
 	{
-		_mouseIndex.x = (_ptMouse.x + _camera->getCameraX())/ 32;
+		_mouseIndex.x = (_ptMouse.x + _camera->getCameraX()) / 32;
 		_mouseIndex.y = (_ptMouse.y + _camera->getCameraY()) / 32;
 
 		if (_mouseIndex.x < TILEX && _mouseIndex.y < TILEY)
@@ -255,8 +261,8 @@ void mapTool::render()
 				SelectObject(getMemDC(), oldPen);
 				DeleteObject(pen);
 			}
-			
-			if(!_mouseUp && _leftDragMode)
+
+			if (!_mouseUp && _leftDragMode)
 			{
 				HPEN pen = CreatePen(PS_SOLID, 2, RGB(0, 240, 255));
 				HPEN oldPen = (HPEN)SelectObject(IMAGEMANAGER->findImage("background")->getMemDC(), pen);
@@ -285,7 +291,7 @@ void mapTool::render()
 	if (_leftDragMode)
 	{
 		sprintf_s(str, "드래그모드 활성화");
-		TextOut(getMemDC(), 850, 530, str, strlen(str));
+		TextOut(getMemDC(), 950, 530, str, strlen(str));
 	}
 
 	if (num == 0)
@@ -329,16 +335,7 @@ void mapTool::render()
 	sprintf_s(str, "타일Y개수 : %d", TILEY);
 	TextOut(getMemDC(), 1100, 550, str, strlen(str));
 
-	//if (_tileBox.x != _tileBox.y && _tileBox.q != _tileBox.w)
-	//{
-	//	rc = RectMakeCenter(_tilesetting[_tileBox.x + basicTileX * _tileBox.y].tilerc.left, _tilesetting[_tileBox.x + basicTileX * _tileBox.y].tilerc.top, 100, 100);
-	//	HBRUSH brush = CreateSolidBrush(RGB(255, 0, 255));
-	//	FrameRect(getMemDC(), &rc, brush);
-	//}
-	if (_tileBox.x == _tileBox.y && _tileBox.q == _tileBox.w)
-	{
-		EllipseMakeCenter(getMemDC(), _tilesetting[_tileBox.x + basicTileX * _tileBox.y].tilerc.left, _tilesetting[_tileBox.x + basicTileX * _tileBox.y].tilerc.top, 6, 6);
-	}
+
 	Rectangle(IMAGEMANAGER->findImage("background")->getMemDC(), viewRc);
 
 
@@ -474,7 +471,7 @@ void mapTool::setMap()
 
 void mapTool::ClickBox()
 {
-	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
 		if (PtInRect(&box[0], _ptMouse))
 		{
@@ -503,30 +500,19 @@ void mapTool::ClickBox()
 			Click = CTRL_ERASER;
 			num = 4;
 		}
-		else if (PtInRect(&tileBox[0], _ptMouse))
+		else if (PtInRect(&tileSelect[0], _ptMouse) && tilenum > 0)
 		{
-			tilenum = 0;
+			tilenum--;
 		}
-		else if (PtInRect(&tileBox[1], _ptMouse))
+		else if (PtInRect(&tileSelect[1], _ptMouse) && tilenum < 4)
 		{
-			tilenum = 1;
+			tilenum++;
 		}
-		else if (PtInRect(&tileBox[2], _ptMouse))
-		{
-			tilenum = 2;
-		}
-		else if (PtInRect(&tileBox[3], _ptMouse))
-		{
-			tilenum = 3;
-		}
-		else if (PtInRect(&tileBox[4], _ptMouse))
-		{
-			tilenum = 4;
-		}
-		else if (PtInRect(&tileBox[5], _ptMouse))
-		{
-			tilenum = 5;
-		}
+
+	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
+	{
 		setMap();
 	}
 }
@@ -671,7 +657,7 @@ void mapTool::viewMove()
 
 void mapTool::tileDrag()
 {
-	
+
 
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
@@ -785,68 +771,71 @@ OBJECT mapTool::objSelect(int frameX, int frameY)
 void mapTool::mapSize()
 {
 	//사이즈 줄이기  
-	if (KEYMANAGER->isStayKeyDown('1') && TILEX > 1)
+	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
 	{
-		for (int i = 0; i < TILEY; i++)
+		if (PtInRect(&sizeButton[2], _ptMouse) && TILEX > 1)
 		{
-			tagTile* map = _vvMap[i].back();
-			_vvMap[i].pop_back();
-			//SAFE_DELETE(map);
+			for (int i = 0; i < TILEY; i++)
+			{
+				tagTile* map = _vvMap[i].back();
+				_vvMap[i].pop_back();
+				//SAFE_DELETE(map);
+			}
+			TILEX--;
 		}
-		TILEX--;
-	}
-	//사이즈 늘이기
-	if (KEYMANAGER->isStayKeyDown('2') && TILEX < 100)
-	{
-		for (int i = 0; i < TILEY; ++i)
-		{
-			tagTile* _tile = new tagTile;
-			_tile->a = 2;
-			_tile->FrameX = 12;
-			_tile->FrameY = 4;
-			_tile->objFrameX = 0;
-			_tile->objFrameY = 0;
-			_tile->terrain = terrainSelect(_tile->FrameX, _tile->FrameY);
-			_tile->obj = OBJ_NONE;
-			_tile->rc = RectMake(TILEX * TileSIZE, i * TileSIZE, TileSIZE, TileSIZE);
-			_vvMap[i].push_back(_tile);
-		}
-		TILEX++;
 
-	}
-
-	// 사이즈 줄이기
-	if (KEYMANAGER->isStayKeyDown('3') && TILEY > 1)
-	{
-		for (int i = 0; i < TILEX; i++)
+		//사이즈 늘이기
+		else if (PtInRect(&sizeButton[3], _ptMouse) && TILEX < 100)
 		{
-			//	delete _vvMap.back()[i];
-			_vvMap.back()[i] = nullptr;
-		}
-		_vvMap.pop_back();
-		TILEY--;
-	}
-	// 사이즈 늘리기
-	if (KEYMANAGER->isStayKeyDown('4') && TILEY < 100)
-	{
-		vector<tagTile*> vTile;
-		for (int i = 0; i < TILEX; i++)
-		{
-			tagTile* _tile = new tagTile;
-			_tile->a = 2;
-			_tile->FrameX = 12;
-			_tile->FrameY = 4;
-			_tile->objFrameX = 0;
-			_tile->objFrameY = 0;
-			_tile->terrain = terrainSelect(_tile->FrameX, _tile->FrameY);
-			_tile->obj = OBJ_NONE;
-			_tile->rc = RectMake(i * TileSIZE, TILEY * TileSIZE, TileSIZE, TileSIZE);
-			vTile.push_back(_tile);
-		}
-		_vvMap.push_back(vTile);
-		TILEY++;
-	}
+			for (int i = 0; i < TILEY; ++i)
+			{
+				tagTile* _tile = new tagTile;
+				_tile->a = 2;
+				_tile->FrameX = 12;
+				_tile->FrameY = 4;
+				_tile->objFrameX = 0;
+				_tile->objFrameY = 0;
+				_tile->terrain = terrainSelect(_tile->FrameX, _tile->FrameY);
+				_tile->obj = OBJ_NONE;
+				_tile->rc = RectMake(TILEX * TileSIZE, i * TileSIZE, TileSIZE, TileSIZE);
+				_vvMap[i].push_back(_tile);
+			}
+			TILEX++;
 
+		}
+
+		// 사이즈 줄이기
+		if (PtInRect(&sizeButton[0], _ptMouse) && TILEY > 1)
+		{
+			for (int i = 0; i < TILEX; i++)
+			{
+				//	delete _vvMap.back()[i];
+				_vvMap.back()[i] = nullptr;
+			}
+			_vvMap.pop_back();
+			TILEY--;
+		}
+		// 사이즈 늘리기
+		if (PtInRect(&sizeButton[1], _ptMouse) && TILEY < 100)
+		{
+			vector<tagTile*> vTile;
+			for (int i = 0; i < TILEX; i++)
+			{
+				tagTile* _tile = new tagTile;
+				_tile->a = 2;
+				_tile->FrameX = 12;
+				_tile->FrameY = 4;
+				_tile->objFrameX = 0;
+				_tile->objFrameY = 0;
+				_tile->terrain = terrainSelect(_tile->FrameX, _tile->FrameY);
+				_tile->obj = OBJ_NONE;
+				_tile->rc = RectMake(i * TileSIZE, TILEY * TileSIZE, TileSIZE, TileSIZE);
+				vTile.push_back(_tile);
+			}
+			_vvMap.push_back(vTile);
+			TILEY++;
+		}
+	}
 	if (KEYMANAGER->isOnceKeyDown('5'))
 	{
 		if (_leftDragMode)
