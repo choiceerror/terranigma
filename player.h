@@ -2,6 +2,7 @@
 #include "gameNode.h"
 #include "jump.h"
 #include "DashAttack.h"
+#include "Inventory.h"
 
 #define PLAYERFPS 6			//캐릭터 프레임 
 #define PLAYERJUMP 14		//점프 프레임
@@ -73,6 +74,8 @@ private:
 	image* _image;
 	jump* _jump;
 	DashAttack* _dashAttack;
+
+	Inventory* _inventory;
 
 	int _doubleKey[4];					// 키를 2번 눌렀을때 달리게 해주기위한 인트형 변수
 	int _curTime[4], _oldTime[4];
@@ -154,6 +157,7 @@ public:
 	PLAYERSTATE getPlayerState() { return _player.state; }
 	PLAYERDIRECTION getPlayerDirection() { return _player.direction; }
 	animation* getPlayerAni() { return _player.ani; }
+	Inventory* getInventory() {return _inventory;}
 
 	void setPlayerState(PLAYERSTATE state) { _player.state = state; }
 	void setPlayerDirection(PLAYERDIRECTION direction) { _player.direction = direction; }

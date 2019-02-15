@@ -18,9 +18,6 @@ HRESULT enemyManager::init()
 	_fireMonsterBullet->init("fireMonster", GAMESIZEX / 2, 10);
 	_fireBulletSpeed = 5;
 
-	_itemManager = new ItemManager;
-	_itemManager->init();
-
 	_objectRc = RectMake(80, 355, 160, 125);
 	return S_OK;
 }
@@ -58,10 +55,6 @@ void enemyManager::update()
 
 	//에너미들이 죽을함수
 	enemyDead();
-
-	//아이템 랜덤드랍
-	itemRandomDrop();
-
 }
 
 void enemyManager::render(float cameraX, float cameraY)
@@ -69,15 +62,12 @@ void enemyManager::render(float cameraX, float cameraY)
 	//Rectangle(getMemDC(), _objectRc);
 	//Rectangle(getMemDC(), _playerAttackRc);
 	//렌더링 모음 함수
-	enemyDraw(cameraX, cameraY);
+	drawAll(cameraX, cameraY);
 
-	_itemManager->render(cameraX, cameraY);
-
-	char str[128];
+	//char str[128];
 
 	for (int i = 0; i < _vKnightMonster.size(); i++)
 	{
-
 		//sprintf_s(str, "distance : %f", _vKnightMonster[i]->getTargetDistance());
 		//TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
 
@@ -150,13 +140,10 @@ void enemyManager::updateCollection()
 
 	//파이어몬스터 총알 업데이트
 	_fireMonsterBullet->update();
-
-	//아이템매니저 업데이트
-	_itemManager->update();
 }
 
 //렌더링 모음
-void enemyManager::enemyDraw(float cameraX, float cameraY)
+void enemyManager::drawAll(float cameraX, float cameraY)
 {
 	//볼몬스터 렌더링
 	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
@@ -205,7 +192,7 @@ void enemyManager::setEnemy()
 				bm->init("ball", "ballMonster", 200 + j * 700, 200 + i * 800, j, i, BALLMONSTER_HP);
 				_vBallMonster.push_back(bm);
 
-				fm->init("fire", "fireMonster", 200 + j * 680, 480 + i * 300, j, i, FIREMONSTER_HP);
+				fm->init("fire", "fireMonster", 200 + j * 680, 460 + i * 300, j, i, FIREMONSTER_HP);
 				_vFireMonster.push_back(fm);
 
 				knightMonster* km;
@@ -696,7 +683,7 @@ void enemyManager::enemyDead()
 			POINTFLOAT monster;
 			monster.x = _vBallMonster[i]->getX() - TileSIZE;
 			monster.y = _vBallMonster[i]->getY() - TileSIZE;
-			_vMonsterDeadPoint.push_back(monster);
+			_vEnemyDeadPoint.push_back(monster);
 
 			_vBallMonster.erase(_vBallMonster.begin() + i);
 		}
@@ -714,7 +701,7 @@ void enemyManager::enemyDead()
 			POINTFLOAT monster;
 			monster.x = _vFireMonster[i]->getX() - _vFireMonster[i]->getImage()->getFrameWidth();
 			monster.y = _vFireMonster[i]->getY() - _vFireMonster[i]->getImage()->getFrameHeight() / 2;
-			_vMonsterDeadPoint.push_back(monster);
+			_vEnemyDeadPoint.push_back(monster);
 		
 			_vFireMonster.erase(_vFireMonster.begin() + i);
 		}
@@ -732,7 +719,7 @@ void enemyManager::enemyDead()
 			POINTFLOAT monster;
 			monster.x = _vKnightMonster[i]->getX() - TileSIZE;
 			monster.y = _vKnightMonster[i]->getY();
-			_vMonsterDeadPoint.push_back(monster);
+			_vEnemyDeadPoint.push_back(monster);
 		
 			_vKnightMonster.erase(_vKnightMonster.begin() + i);
 		}
@@ -1252,119 +1239,6 @@ void enemyManager::tileCheckObjectCollision()
 		}
 		_vKnightMonster[i]->setTileCollisionRect(RectMakeCenter(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY() + 50, _vKnightMonster[i]->getImage()->getFrameWidth() - 240, _vKnightMonster[i]->getImage()->getFrameHeight() - 180)); //타일깎음
 
-	}
-}
-
-//아이템 랜덤드랍
-void enemyManager::itemRandomDrop()
-{
-	for (int i = 0; i < _vMonsterDeadPoint.size(); i++)
-	{
-		_rndItemDrop = RND->getRandomInt(0, 300);
-		_rndItemTypeDrop = RND->getRandomInt(0, 100);
-
-		//40퍼확률
-		if (_rndItemDrop >= 0 && _rndItemDrop <= 40)
-		{
-			_itemManager->dropGold(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y);
-		}
-		//20퍼확률
-		else if (_rndItemDrop > 40 && _rndItemDrop <= 60)
-		{
-			//40퍼 확률
-			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
-			{
-				_itemManager->dropPotion(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, POTIONTYPE::SMALL);
-			}
-			//30퍼 확률
-			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
-			{
-				_itemManager->dropPotion(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, POTIONTYPE::MIDDLE);
-			}
-			//20퍼확률
-			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
-			{
-				_itemManager->dropPotion(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, POTIONTYPE::BIG);
-			}
-			//10퍼확률로 안나옴
-			else
-			{
-				_itemManager->dropPotion(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, POTIONTYPE::NONE);
-			}
-		}
-		//20퍼확률
-		else if (_rndItemDrop > 60 && _rndItemDrop <= 80)
-		{
-			//40퍼 확률
-			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
-			{
-				_itemManager->dropAccessory(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ACCESSORYTYPE::LEEF);
-			}
-			//30퍼 확률
-			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
-			{
-				_itemManager->dropAccessory(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ACCESSORYTYPE::RED_SCARF);
-			}
-			//20퍼확률
-			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
-			{
-				_itemManager->dropAccessory(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ACCESSORYTYPE::TALISMAN);
-			}
-			//10퍼확률로 안나옴
-			else
-			{
-				_itemManager->dropAccessory(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ACCESSORYTYPE::NONE);
-			}
-		}
-		else if (_rndItemDrop > 80 && _rndItemDrop <= 100)
-		{
-			//40퍼 확률
-			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
-			{
-				_itemManager->dropArmor(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ARMORTYPE::HOOD);
-			}
-			//30퍼 확률
-			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
-			{
-				_itemManager->dropArmor(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ARMORTYPE::ICE_ARMOR);
-			}
-			//20퍼확률
-			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
-			{
-				_itemManager->dropArmor(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ARMORTYPE::IRON_ARMOR);
-			}
-			//10퍼확률로 안나옴
-			else
-			{
-				_itemManager->dropArmor(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, ARMORTYPE::NONE);
-			}
-		}
-		else if (_rndItemDrop > 100 && _rndItemDrop <= 120)
-		{
-			//40퍼 확률
-			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
-			{
-				_itemManager->dropWeapon(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, WEAPONTYPE::FIRE_SPEAR);
-			}
-			//30퍼 확률
-			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
-			{
-				_itemManager->dropWeapon(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, WEAPONTYPE::ICE_SPEAR);
-			}
-			//20퍼확률
-			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
-			{
-				_itemManager->dropWeapon(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, WEAPONTYPE::IRON_SPEAR);
-			}
-			//10퍼확률로 안나옴
-			else
-			{
-				_itemManager->dropWeapon(_vMonsterDeadPoint[i].x, _vMonsterDeadPoint[i].y, WEAPONTYPE::NONE);
-			}
-		}
-
-		//아이템 계속생성하지 않기위해서 지움.
-		_vMonsterDeadPoint.erase(_vMonsterDeadPoint.begin() + i);
 	}
 }
 

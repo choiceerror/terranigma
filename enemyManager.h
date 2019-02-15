@@ -5,13 +5,12 @@
 #include "knightMonster.h"
 #include "fireMonsterBullet.h"
 #include "dungeonMap.h"
-#include "ItemManager.h"
 
 enum ENEMYINFO
 {
 	BALLMONSTER_HP = 100,
 	FIREMONSTER_HP = 100,
-	KNIGHTMONSTER_HP = 300,
+	KNIGHTMONSTER_HP = 500,
 };
 
 class player;
@@ -34,21 +33,15 @@ private:
 	//파이어몬스터 총알
 	fireMonsterBullet* _fireMonsterBullet;
 
-	vector<POINTFLOAT> _vMonsterDeadPoint;
+	vector<POINTFLOAT> _vEnemyDeadPoint;
 
 	player* _player;
 
 	dungeonMap* _dungeonMap; //던전맵
 
-	//아이템 매니저
-	ItemManager* _itemManager;
-
 	int _fireBulletSpeed;
 
 	RECT _playerAttackRc; //임의의 공격렉트
-
-	int _rndItemDrop; //아이템 랜덤으로 드랍할것
-	int _rndItemTypeDrop; //아이템 타입 랜덤으로 드랍할것.
 
 	int _rndMove[3];
 
@@ -64,14 +57,13 @@ public:
 	void render(float cameraX, float cameraY);
 
 	void updateCollection(); //업데이트 모음 함수
-	void enemyDraw(float cameraX, float cameraY); //에너미들 랜더링 모음함수
+	void drawAll(float cameraX, float cameraY); //랜더링 모음함수
 	void setEnemy(); //에너미 셋팅
 	void enemyAI(); //에너미들의 AI
 	void playerAttackEnemyCollision(); //플레이어 공격에 에너미들이 맞을함수
 	void fireMonsterBulletFireCollision(int num); //파이어몬스터 총알 발사하고 충돌할 함수
 	void enemyDead(); //에너미들이 죽을 함수
 	void tileCheckObjectCollision(); //타일검출 충돌 함수
-	void itemRandomDrop(); //아이템 랜덤드랍
 	void enemyRespon(); //에너미들이 죽은다음 리스폰할 함수
 
 
@@ -85,6 +77,9 @@ public:
 
 	vector<knightMonster*> getVKnightMonster() { return _vKnightMonster; }
 	vector<knightMonster*>* setVKnightMonster() { return &_vKnightMonster; }
+
+	vector<POINTFLOAT> getVEnemyDeadPoint() {return _vEnemyDeadPoint;}
+	vector<POINTFLOAT>* setVEnemyDeadPoint() {return &_vEnemyDeadPoint;}
 
 	void setPlayerMemoryAddressLink(player* player) { _player = player; }
 	void setDungeonMapAddressLink(dungeonMap* map) { _dungeonMap = map; }

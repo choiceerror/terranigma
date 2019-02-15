@@ -86,6 +86,11 @@ void ui::update()
 
 
 
+	if (KEYMANAGER->isOnceKeyDown(VK_SHIFT))
+	{
+		_inventory->inventorySave();
+		SCENEMANAGER->changeScene("dungeon");
+	}
 
 	//===============Áö¿ï°Í================
 	//_goal = RectMake(_goalX, _goalY, 10, 10);
@@ -137,9 +142,9 @@ void ui::render()
 	//_clockFade->render();
 
 
-	//char str[100];
-	//sprintf_s(str, "%d  %d", a,b);
-	//TextOut(getMemDC(), 30, 100, str, strlen(str));
+	char str[100];
+	sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
+	TextOut(getMemDC(), 30, 100, str, strlen(str));
 	//sprintf_s(str, "°ñ ÁÂÇ¥ : %d  %d", _goalX, _goalY);
 	//TextOut(getMemDC(), 30, 120, str, strlen(str));
 	//sprintf_s(str, "%d", _placeFrameX);

@@ -25,6 +25,7 @@ HRESULT dungeon::init()
 	_player = new player;
 	_camera = new camera;
 	_dungeon = new dungeonMap;
+	_itemManager = new ItemManager;
 
 	_enemyManager->setPlayerMemoryAddressLink(_player);
 	_player->setEnemyManagerAddressLink(_enemyManager);
@@ -34,8 +35,8 @@ HRESULT dungeon::init()
 	_dungeon->init();
 	_player->init();
 	_enemyManager->init();
+	_itemManager->init();
 	_enemyManager->setEnemy();
-
 
 	if (_dungeon->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR)
 	{
@@ -45,6 +46,7 @@ HRESULT dungeon::init()
 	{
 		_camera->init(GAMESIZEX, GAMESIZEY, 2240, 1600);
 	}
+
 
 	return S_OK;
 }
@@ -62,28 +64,188 @@ void dungeon::update()
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_player->update(false, 1);
 	_enemyManager->update();
-
-	if (KEYMANAGER->isOnceKeyDown('W'))
-	{
-		_dungeon->setDungeonFloor(DUNGEON_FLOOR::SECOND_FLOOR);
-	}
+	_itemManager->update();
+	itemRandomDrop();
+	playerItemGet();
 }
 
 void dungeon::render()
 {
-
 	_dungeon->render(_camera->getCameraX(), _camera->getCameraY());
 	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
+	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY());
 
+	//char str[100];
+	//sprintf_s(str, "%d", _player->getInventory()->getPotionCount());
+	//TextOut(getMemDC(), 120, 120, str, strlen(str));
 
-	//char str[128];
+}
 
-	//sprintf_s(str, "cameraX : %f", _camera->getCameraX());
-	//TextOut(getMemDC(), 600, 500, str, strlen(str));
+void dungeon::itemRandomDrop()
+{
+	for (int i = 0; i < _enemyManager->getVEnemyDeadPoint().size(); i++)
+	{
+		_rndItemDrop = RND->getRandomInt(0, 300);
+		_rndItemTypeDrop = RND->getRandomInt(0, 100);
 
-	//sprintf_s(str, "cameraY : %f", _camera->getCameraY());
-	//TextOut(getMemDC(), 600, 520, str, strlen(str));
+		//40ÆÛÈ®·ü
+		if (_rndItemDrop >= 0 && _rndItemDrop <= 40)
+		{
+			_itemManager->dropGold(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y);
+		}
+		//20ÆÛÈ®·ü
+		else if (_rndItemDrop > 40 && _rndItemDrop <= 60)
+		{
+			//40ÆÛ È®·ü
+			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
+			{
+				_itemManager->dropPotion(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, POTIONTYPE::SMALL);
+			}
+			//30ÆÛ È®·ü
+			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
+			{
+				_itemManager->dropPotion(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, POTIONTYPE::MIDDLE);
+			}
+			//20ÆÛÈ®·ü
+			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
+			{
+				_itemManager->dropPotion(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, POTIONTYPE::BIG);
+			}
+			//10ÆÛÈ®·ü·Î ¾È³ª¿È
+			else
+			{
+				_itemManager->dropPotion(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, POTIONTYPE::NONE);
+			}
+		}
+		//20ÆÛÈ®·ü
+		else if (_rndItemDrop > 60 && _rndItemDrop <= 80)
+		{
+			//40ÆÛ È®·ü
+			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
+			{
+				_itemManager->dropAccessory(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, ACCESSORYTYPE::LEEF);
+			}
+			//30ÆÛ È®·ü
+			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
+			{
+				_itemManager->dropAccessory(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, ACCESSORYTYPE::RED_SCARF);
+			}
+			//20ÆÛÈ®·ü
+			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
+			{
+				_itemManager->dropAccessory(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, ACCESSORYTYPE::TALISMAN);
+			}
+			//10ÆÛÈ®·ü·Î ¾È³ª¿È
+			else
+			{
+				_itemManager->dropAccessory(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, ACCESSORYTYPE::NONE);
+			}
+		}
+		else if (_rndItemDrop > 80 && _rndItemDrop <= 100)
+		{
+			//40ÆÛ È®·ü
+			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
+			{
+				_itemManager->dropArmor(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, ARMORTYPE::HOOD);
+			}
+			//30ÆÛ È®·ü
+			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
+			{
+				_itemManager->dropArmor(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, ARMORTYPE::ICE_ARMOR);
+			}
+			//20ÆÛÈ®·ü
+			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
+			{
+				_itemManager->dropArmor(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, ARMORTYPE::IRON_ARMOR);
+			}
+			//10ÆÛÈ®·ü·Î ¾È³ª¿È
+			else
+			{
+				_itemManager->dropArmor(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, ARMORTYPE::NONE);
+			}
+		}
+		else if (_rndItemDrop > 100 && _rndItemDrop <= 120)
+		{
+			//40ÆÛ È®·ü
+			if (_rndItemTypeDrop >= 60 && _rndItemTypeDrop <= 100)
+			{
+				_itemManager->dropWeapon(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, WEAPONTYPE::FIRE_SPEAR);
+			}
+			//30ÆÛ È®·ü
+			else if (_rndItemTypeDrop >= 30 && _rndItemTypeDrop < 60)
+			{
+				_itemManager->dropWeapon(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, WEAPONTYPE::ICE_SPEAR);
+			}
+			//20ÆÛÈ®·ü
+			else if (_rndItemTypeDrop >= 10 && _rndItemTypeDrop < 30)
+			{
+				_itemManager->dropWeapon(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, WEAPONTYPE::IRON_SPEAR);
+			}
+			//10ÆÛÈ®·ü·Î ¾È³ª¿È
+			else
+			{
+				_itemManager->dropWeapon(_enemyManager->getVEnemyDeadPoint()[i].x, _enemyManager->getVEnemyDeadPoint()[i].y, WEAPONTYPE::NONE);
+			}
+		}
+
+		//¾ÆÀÌÅÛ °è¼Ó»ý¼ºÇÏÁö ¾Ê±âÀ§ÇØ¼­ Áö¿ò.
+		_enemyManager->setVEnemyDeadPoint()->erase(_enemyManager->setVEnemyDeadPoint()->begin() + i);
+	}
+
+}
+
+void dungeon::playerItemGet()
+{
+	RECT temp;
+	//°ñµå¾ÆÀÌÅÛ
+	for (int i = 0; i < _itemManager->getVGlod().size(); i++)
+	{
+		if (IntersectRect(&temp, &_player->getPlayerRc(), &_itemManager->getVGlod()[i]->getItemRect()))
+		{
+			_itemManager->getVGlod()[i]->setItemIsLive(false);
+		}
+	}
+
+	//Æ÷¼Ç¾ÆÀÌÅÛ
+	for (int i = 0; i < _itemManager->getVPotion().size(); i++)
+	{
+		if (IntersectRect(&temp, &_player->getPlayerRc(), &_itemManager->getVPotion()[i]->getItemRect()))
+		{
+			_player->getInventory()->pickUpPotion(_itemManager->getVPotion()[i]->getTagPotion());
+			_itemManager->getVPotion()[i]->setItemIsLive(false);
+		}
+	}
+	
+	//¾Ç¼¼»ç¸®
+	for (int i = 0; i < _itemManager->getVAccessory().size(); i++)
+	{
+		if (IntersectRect(&temp, &_player->getPlayerRc(), &_itemManager->getVAccessory()[i]->getItemRect()))
+		{
+			_player->getInventory()->pickUpAccessory(_itemManager->getVAccessory()[i]->getTagAccessory());
+			_itemManager->getVAccessory()[i]->setItemIsLive(false);
+		}
+	}
+
+	//¹æ¾î±¸
+	for (int i = 0; i < _itemManager->getVArmor().size(); i++)
+	{
+		if (IntersectRect(&temp, &_player->getPlayerRc(), &_itemManager->getVArmor()[i]->getItemRect()))
+		{
+			_player->getInventory()->pickUpArmor(_itemManager->getVArmor()[i]->getTagArmor());
+			_itemManager->getVArmor()[i]->setItemIsLive(false);
+		}
+	}
+
+	//¹«±â
+	for (int i = 0; i < _itemManager->getVWeapon().size(); i++)
+	{
+		if (IntersectRect(&temp, &_player->getPlayerRc(), &_itemManager->getVWeapon()[i]->getItemRect()))
+		{
+			_player->getInventory()->pickUpWeapon(_itemManager->getVWeapon()[i]->getTagWeapon());
+			_itemManager->getVWeapon()[i]->setItemIsLive(false);
+		}
+	}
 
 }
 

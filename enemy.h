@@ -104,6 +104,7 @@ struct tagEnemy
 	int alphaValue; //알파값
 	POINT tileIndex[3]; //타일검출 판별해줄 인덱스
 	float tum;
+	bool isDead;
 
 };
 
@@ -224,6 +225,9 @@ public:
 
 	float getTum() { return _enemy.tum; }
 	void setTum(float tum) { _enemy.tum = tum; }
+
+	bool getIsDead() { return _enemy.isDead; }
+	void setIsDead(bool isDead) { _enemy.isDead = isDead; }
 
 };
 

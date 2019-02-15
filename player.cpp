@@ -14,14 +14,22 @@ player::~player()
 
 HRESULT player::init()
 {
-
 	IMAGEMANAGER->addFrameImage("player_obj", "image/player_obj.bmp", 0, 0, 1540, 800, 10, 10, true, RGB(255, 0, 255));
+	_jump = new jump;
+	_dashAttack = new DashAttack;
+	_inventory = new Inventory;
+	_jump->init();
+	_dashAttack->init();
+	_inventory->init();
+	_inventory->inventoryLode();
+
+	keyFrameInit();
 
 	_player.image = IMAGEMANAGER->findImage("player");
 	_player.image_obj = IMAGEMANAGER->findImage("player_obj");
 	_player.image->setAlpahBlend(true);
 
-	keyFrameInit();
+	_oldJumpTime = -100;
 
 	_player.x = GAMESIZEX / 2;
 	_player.y = GAMESIZEY / 2;
@@ -50,13 +58,6 @@ HRESULT player::init()
 
 	_unMove = false;
 
-
-	_jump = new jump;
-	_jump->init();
-	_oldJumpTime = -100;
-
-	_dashAttack = new DashAttack;
-	_dashAttack->init();
 
 	return S_OK;
 }
@@ -101,6 +102,7 @@ void player::update(bool enemyCheck, int a)
 	playerState();
 	_jump->update();
 	_dashAttack->update(&_player.x, &_player.y);
+	_inventory->update();
 	if (a == 1)
 	{
 		tileCheck();
@@ -111,6 +113,13 @@ void player::update(bool enemyCheck, int a)
 	}
 	enemyCollision(enemyCheck);
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 50);
+
+	if (KEYMANAGER->isOnceKeyDown(VK_SHIFT))
+	{
+		_inventory->inventorySave();
+		SCENEMANAGER->changeScene("ui");
+	}
+
 }
 
 void player::render(float cameraX, float cameraY)
@@ -118,23 +127,23 @@ void player::render(float cameraX, float cameraY)
 	_player.image->alphaAniRenderCenter(getMemDC(), _player.x - cameraX, _player.y - cameraY, _player.ani, _player.alphaRender);
 	//Rectangle(getMemDC(), _player.rc);
 	char str[128];
-	for (int i = 0; i < 4; i++)
-	{
-		sprintf_s(str, "%d", _doubleKey[i]);
-		//SetTextColor(getMemDC(), RGB(0, 0, 0));
-		TextOut(getMemDC(), 100 + i * 30, 100, str, strlen(str));
-	}
-
-	sprintf_s(str, "%d", _player.state);
-	//SetTextColor(getMemDC(), RGB(0, 0, 0));
-	TextOut(getMemDC(), 100, 120, str, strlen(str));
-
-	sprintf_s(str, "%d", _player.direction);
-	TextOut(getMemDC(), 120, 120, str, strlen(str));
-
-	sprintf_s(str, "%d", _player.alphaRender);
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	sprintf_s(str, "%d", _doubleKey[i]);
+	//	//SetTextColor(getMemDC(), RGB(0, 0, 0));
+	//	TextOut(getMemDC(), 100 + i * 30, 100, str, strlen(str));
+	//}
+	//
+	//sprintf_s(str, "%d", _player.state);
+	////SetTextColor(getMemDC(), RGB(0, 0, 0));
+	//TextOut(getMemDC(), 100, 120, str, strlen(str));
+	//
+	//sprintf_s(str, "%d", _player.direction);
+	//TextOut(getMemDC(), 120, 120, str, strlen(str));
+	//
+	sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
 	TextOut(getMemDC(), 140, 120, str, strlen(str));
-
+	//
 
 
 }
@@ -255,6 +264,10 @@ void player::keyFrameInit()
 	KEYANIMANAGER->addArrayFrameAnimation("ark_obj", "objThrowUp", "player_obj", objThrowUp, 8, PLAYERFPS, false);
 	int objThrowDown[] = { 71, 72, 73, 74, 75, 76, 77, 78 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark_obj", "objThrowDown", "player_obj", objThrowDown, 8, PLAYERFPS, false);
+
+	_player.ani = KEYANIMANAGER->findAnimation("ark", "idleLeft");
+
+	
 }
 // е╟ ют╥б
 void player::keyInput()
