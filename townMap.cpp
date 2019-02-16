@@ -140,6 +140,8 @@ void townMap::load()
 			{
 				_attribute[j + i * TILEX] |= ATTR_UNMOVE;
 			}
+
+
 		}
 	}
 	CloseHandle(file);
