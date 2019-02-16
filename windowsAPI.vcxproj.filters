@@ -115,9 +115,6 @@
     <Filter Include="PlayGround\player\state">
       <UniqueIdentifier>{6ff57a3f-5ebf-49c8-af55-4a4753678398}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PlayGround\tileMap\dungeonMap">
-      <UniqueIdentifier>{9c065aee-db2a-444e-87f5-8591287d170a}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -327,14 +324,14 @@
     <ClInclude Include="world.h">
       <Filter>PlayGround\tileMap</Filter>
     </ClInclude>
-    <ClInclude Include="dungeonMap.h">
-      <Filter>PlayGround\tileMap\dungeonMap</Filter>
-    </ClInclude>
     <ClInclude Include="dungeon2F.h">
       <Filter>PlayGround\Scene\dungeon</Filter>
     </ClInclude>
     <ClInclude Include="bossScene.h">
       <Filter>PlayGround\Scene\dungeon</Filter>
+    </ClInclude>
+    <ClInclude Include="dungeonMap.h">
+      <Filter>PlayGround\tileMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -530,14 +527,14 @@
     <ClCompile Include="world.cpp">
       <Filter>PlayGround\tileMap</Filter>
     </ClCompile>
-    <ClCompile Include="dungeonMap.cpp">
-      <Filter>PlayGround\tileMap\dungeonMap</Filter>
-    </ClCompile>
     <ClCompile Include="dungeon2F.cpp">
       <Filter>PlayGround\Scene\dungeon</Filter>
     </ClCompile>
     <ClCompile Include="bossScene.cpp">
       <Filter>PlayGround\Scene\dungeon</Filter>
+    </ClCompile>
+    <ClCompile Include="dungeonMap.cpp">
+      <Filter>PlayGround\tileMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

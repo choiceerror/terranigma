@@ -56,11 +56,6 @@ void dungeon::update()
 	itemRandomDrop();
 	playerItemGet();
 
-	if (KEYMANAGER->isOnceKeyDown('W'))
-	{
-		SCENEMANAGER->changeScene("dungeon2F");
-	}
-
 }
 
 void dungeon::render()

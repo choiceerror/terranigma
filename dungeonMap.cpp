@@ -280,6 +280,12 @@ void dungeonMap::tileDraw(float cameraX, float cameraY)
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
+			else if (_vvMap[i][j]->a == 5)
+			{
+				IMAGEMANAGER->frameRender("bossTile", getMemDC(),
+					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+			}
 		}
 	}
 
@@ -309,6 +315,12 @@ void dungeonMap::tileDraw(float cameraX, float cameraY)
 			else if (_vvMap[i][j]->a == 2)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê2", getMemDC(),
+					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+			}
+			else if (_vvMap[i][j]->a == 5)
+			{
+				IMAGEMANAGER->frameRender("bossTile", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}

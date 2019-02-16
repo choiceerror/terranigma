@@ -201,21 +201,21 @@ void enemyManager::setEnemy()
 				km->init("knight", "knightMonster", 2240 / 3 + j * 300, 1600 / 2 + i * 300, j, i, KNIGHTMONSTER_HP);
 				_vKnightMonster.push_back(km);
 			}
-			
 		}
+	}
 
-		//关俊率 积己
-		for (int i = 0; i < 3; i++)
+	//关俊率 积己
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
 		{
-			for (int j = 0; j < 3; j++)
+			if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR)
 			{
 				ballMonster* bm;
 				bm = new ballMonster;
-				if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR)
-				{
-					bm->init("ball", "ballMonster", GAMESIZEX / 4 + j * 300, 1500 + i * 500, j, i, BALLMONSTER_HP);
-					_vBallMonster.push_back(bm);
-				}
+
+				bm->init("ball", "ballMonster", GAMESIZEX / 4 + j * 300, 1500 + i * 500, j, i, BALLMONSTER_HP);
+				_vBallMonster.push_back(bm);
 			}
 		}
 	}

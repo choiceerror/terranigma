@@ -95,6 +95,15 @@ void playGround::update()
 		SCENEMANAGER->changeScene("introDungeon");
 	}
 
+	if (KEYMANAGER->isOnceKeyDown('W'))
+	{
+		SCENEMANAGER->changeScene("dungeon2F");
+	}
+	if (KEYMANAGER->isOnceKeyDown('E'))
+	{
+		SCENEMANAGER->changeScene("bossScene");
+	}
+
 	KEYANIMANAGER->update();
 	EFFECTMANAGER->update();
 	SCENEMANAGER->update();
