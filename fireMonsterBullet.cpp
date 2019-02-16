@@ -72,7 +72,7 @@ void fireMonsterBullet::move()
 		_viFireBullet->rc = RectMakeCenter(_viFireBullet->x, _viFireBullet->y, _viFireBullet->image->getFrameWidth() / 2, _viFireBullet->image->getFrameHeight() / 4);
 		_viFireBullet->ani->start();
 
-		if ((_range < getDistance(_viFireBullet->x, _viFireBullet->y, _viFireBullet->fireX, _viFireBullet->fireY)) || (*_viFireBullet).isCollision == true)
+		if ((_range < getDistance(_viFireBullet->x, _viFireBullet->y, _viFireBullet->fireX, _viFireBullet->fireY)) || _viFireBullet->isCollision == true)
 		{
 			_viFireBullet = _vFireBullet.erase(_viFireBullet);
 		}
@@ -129,4 +129,20 @@ void bossBullet::bossFire(float x, float y, float angle, float speed)
 
 void bossBullet::move()
 {
+	for (_viBossBullet = _vBossBullet.begin(); _viBossBullet != _vBossBullet.end();)
+	{
+		//ÃÑ¾Ë ÀÌµ¿
+		_viBossBullet->x += cosf(_viBossBullet->angle) * _viBossBullet->speed;
+		_viBossBullet->y += -sinf(_viBossBullet->angle) * _viBossBullet->speed;
+
+		_viBossBullet->rc = RectMakeCenter(_viBossBullet->x, _viBossBullet->y, _viBossBullet->image->getFrameWidth() / 2, _viBossBullet->image->getFrameHeight() / 4);
+		_viBossBullet->ani->start();
+
+		if ((_range < getDistance(_viBossBullet->x, _viBossBullet->y, _viBossBullet->fireX, _viBossBullet->fireY)) || _viBossBullet->isCollision == true)
+		{
+			_viBossBullet = _vBossBullet.erase(_viBossBullet);
+		}
+		else _viBossBullet++;
+	}
+
 }

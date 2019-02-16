@@ -77,7 +77,13 @@ public:
 
 	void move(); //이동
 
+public:
+	//접근자 설정자
 	BULLETATTACKPATTERN getPattern() { return _pattern; }
 	void setPattern(BULLETATTACKPATTERN pattern) { _pattern = pattern; }
+
+	//접근자 설정자
+	vector<tagFireBullet> getVBossBullet() { return _vBossBullet; }
+	vector<tagFireBullet>* setVBossBullet() { return &_vBossBullet; }
 };
 

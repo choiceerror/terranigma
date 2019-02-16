@@ -6,6 +6,7 @@ enum class DUNGEON_FLOOR
 {
 	FIRST_FLOOR, //1類
 	SECOND_FLOOR, //2類
+	BOSS_FLOOR, // 爾蝶類
 };
 
 class dungeonMap : public  gameNode
@@ -21,6 +22,7 @@ private:
 	DWORD* _attribute;
 	DUNGEON_FLOOR _dungeonFloor; //湍瞪類熱
 
+	bool _isMapChange[3];
 	int tix;
 	int tiy;
 	int obx;
@@ -35,6 +37,8 @@ public:
 	void update();
 	void render(float cameraX, float cameraY);
 	void load();
+	void load2F();
+	void bossMapLoad();
 	void tileDraw(float cameraX, float cameraY);
 
 	unsigned int getTileX() { return TILEX; }

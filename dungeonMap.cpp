@@ -14,8 +14,11 @@ dungeonMap::~dungeonMap()
 HRESULT dungeonMap::init()
 {
 
-	_dungeonFloor = DUNGEON_FLOOR::SECOND_FLOOR;
-	load();
+	_dungeonFloor = DUNGEON_FLOOR::FIRST_FLOOR;
+	if (_dungeonFloor == DUNGEON_FLOOR::FIRST_FLOOR) load();
+	else if (_dungeonFloor == DUNGEON_FLOOR::SECOND_FLOOR) load2F();
+	else if (_dungeonFloor == DUNGEON_FLOOR::BOSS_FLOOR) bossMapLoad();
+
 	return S_OK;
 }
 
@@ -25,6 +28,21 @@ void dungeonMap::release()
 
 void dungeonMap::update()
 {
+	if (_dungeonFloor == DUNGEON_FLOOR::FIRST_FLOOR && _isMapChange[0] == false)
+	{
+		load();
+		_isMapChange[0] = true;
+	}
+	else if (_dungeonFloor == DUNGEON_FLOOR::SECOND_FLOOR && _isMapChange[1] == false)
+	{
+		load2F();
+		_isMapChange[1] = true;
+	}
+	else if (_dungeonFloor == DUNGEON_FLOOR::BOSS_FLOOR && _isMapChange[2] == false)
+	{
+		bossMapLoad();
+		_isMapChange[2] = true;
+	} 
 }
 
 void dungeonMap::render(float cameraX, float cameraY)
@@ -34,146 +52,212 @@ void dungeonMap::render(float cameraX, float cameraY)
 
 void dungeonMap::load()
 {
-	//1Ãþ¸Ê
-	if (_dungeonFloor == DUNGEON_FLOOR::FIRST_FLOOR)
+	HANDLE file2;
+	DWORD read2;
+	char mapSize[128];
+	file2 = CreateFile("saveFile\\dungeonSize.map", GENERIC_READ, NULL, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(file2, mapSize, 128, &read2, NULL);
+
+	string sizeX, sizeY;
+	bool x = true;
+	for (int i = 0; i < strlen(mapSize); i++)
 	{
-		HANDLE file2;
-		DWORD read2;
-		char mapSize[128];
-		file2 = CreateFile("saveFile\\dungeonSize.map", GENERIC_READ, NULL, NULL,
-			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		ReadFile(file2, mapSize, 128, &read2, NULL);
-
-		string sizeX, sizeY;
-		bool x = true;
-		for (int i = 0; i < strlen(mapSize); i++)
+		if (mapSize[i] == ',')
 		{
-			if (mapSize[i] == ',')
-			{
-				x = false;
-				continue;
-			}
-			if (mapSize[i] == NULL) break;
-			if (x)
-			{
-				sizeX += mapSize[i];
-			}
-			else
-			{
-				sizeY += mapSize[i];
-			}
+			x = false;
+			continue;
 		}
-
-
-		TILEX = stoi(sizeX);
-		TILEY = stoi(sizeY);
-		_vvMap.resize(TILEY);
-
-
-		for (int i = 0; i < TILEY; i++)
+		if (mapSize[i] == NULL) break;
+		if (x)
 		{
-			_vvMap[i].resize(TILEX);
+			sizeX += mapSize[i];
 		}
-
-		tagTile* _tiles = new tagTile[TILEX * TILEY];
-		HANDLE file;
-		DWORD read;
-
-		file = CreateFile("saveFile\\dungeonSave.map", GENERIC_READ, NULL, NULL,
-			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-		ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
-
-		_attribute = new DWORD[TILEX * TILEY];
-
-		memset(_attribute, 0, sizeof(DWORD)*TILEX*TILEY);
-
-		for (int i = 0; i < TILEY; i++)
+		else
 		{
-			for (int j = 0; j < TILEX; j++)
-			{
-				_attribute[j + i * TILEX] = NULL;
-				_vvMap[i][j] = &_tiles[j + i * TILEX];
-
-				if (_vvMap[i][j]->obj == OBJ_WALL)
-				{
-					_attribute[j + i * TILEX] |= ATTR_UNMOVE;
-				}
-			}
+			sizeY += mapSize[i];
 		}
-		CloseHandle(file);
-		CloseHandle(file2);
 	}
-	//2Ãþ¸Ê
-	else if (_dungeonFloor == DUNGEON_FLOOR::SECOND_FLOOR)
+
+
+	TILEX = stoi(sizeX);
+	TILEY = stoi(sizeY);
+	_vvMap.resize(TILEY);
+
+
+	for (int i = 0; i < TILEY; i++)
 	{
-		HANDLE file2;
-		DWORD read2;
-		char mapSize[128];
-		file2 = CreateFile("saveFile\\dungeon2FSize.map", GENERIC_READ, NULL, NULL,
-			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-		ReadFile(file2, mapSize, 128, &read2, NULL);
-
-		string sizeX, sizeY;
-		bool x = true;
-		for (int i = 0; i < strlen(mapSize); i++)
-		{
-			if (mapSize[i] == ',')
-			{
-				x = false;
-				continue;
-			}
-			if (mapSize[i] == NULL) break;
-			if (x)
-			{
-				sizeX += mapSize[i];
-			}
-			else
-			{
-				sizeY += mapSize[i];
-			}
-		}
-
-
-		TILEX = stoi(sizeX);
-		TILEY = stoi(sizeY);
-		_vvMap.resize(TILEY);
-
-
-		for (int i = 0; i < TILEY; i++)
-		{
-			_vvMap[i].resize(TILEX);
-		}
-
-		tagTile* _tiles = new tagTile[TILEX * TILEY];
-		HANDLE file;
-		DWORD read;
-
-		file = CreateFile("saveFile\\dungeon2FSave.map", GENERIC_READ, NULL, NULL,
-			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-		ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
-
-		_attribute = new DWORD[TILEX * TILEY];
-
-		memset(_attribute, 0, sizeof(DWORD)*TILEX*TILEY);
-
-		for (int i = 0; i < TILEY; i++)
-		{
-			for (int j = 0; j < TILEX; j++)
-			{
-				_attribute[j + i * TILEX] = NULL;
-				_vvMap[i][j] = &_tiles[j + i * TILEX];
-
-				if (_vvMap[i][j]->obj == OBJ_WALL)
-				{
-					_attribute[j + i * TILEX] |= ATTR_UNMOVE;
-				}
-			}
-		}
-		CloseHandle(file);
-		CloseHandle(file2);
+		_vvMap[i].resize(TILEX);
 	}
+
+	tagTile* _tiles = new tagTile[TILEX * TILEY];
+	HANDLE file;
+	DWORD read;
+
+	file = CreateFile("saveFile\\dungeonSave.map", GENERIC_READ, NULL, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
+
+	_attribute = new DWORD[TILEX * TILEY];
+
+	memset(_attribute, 0, sizeof(DWORD)*TILEX*TILEY);
+
+	for (int i = 0; i < TILEY; i++)
+	{
+		for (int j = 0; j < TILEX; j++)
+		{
+			_attribute[j + i * TILEX] = NULL;
+			_vvMap[i][j] = &_tiles[j + i * TILEX];
+
+			if (_vvMap[i][j]->obj == OBJ_WALL)
+			{
+				_attribute[j + i * TILEX] |= ATTR_UNMOVE;
+			}
+		}
+	}
+	CloseHandle(file);
+	CloseHandle(file2);
+}
+
+void dungeonMap::load2F()
+{
+	HANDLE file2;
+	DWORD read2;
+	char mapSize[128];
+	file2 = CreateFile("saveFile\\dungeon2FSize.map", GENERIC_READ, NULL, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(file2, mapSize, 128, &read2, NULL);
+
+	string sizeX, sizeY;
+	bool x = true;
+	for (int i = 0; i < strlen(mapSize); i++)
+	{
+		if (mapSize[i] == ',')
+		{
+			x = false;
+			continue;
+		}
+		if (mapSize[i] == NULL) break;
+		if (x)
+		{
+			sizeX += mapSize[i];
+		}
+		else
+		{
+			sizeY += mapSize[i];
+		}
+	}
+
+
+	TILEX = stoi(sizeX);
+	TILEY = stoi(sizeY);
+	_vvMap.resize(TILEY);
+
+
+	for (int i = 0; i < TILEY; i++)
+	{
+		_vvMap[i].resize(TILEX);
+	}
+
+	tagTile* _tiles = new tagTile[TILEX * TILEY];
+	HANDLE file;
+	DWORD read;
+
+	file = CreateFile("saveFile\\dungeon2FSave.map", GENERIC_READ, NULL, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
+
+	_attribute = new DWORD[TILEX * TILEY];
+
+	memset(_attribute, 0, sizeof(DWORD)*TILEX*TILEY);
+
+	for (int i = 0; i < TILEY; i++)
+	{
+		for (int j = 0; j < TILEX; j++)
+		{
+			_attribute[j + i * TILEX] = NULL;
+			_vvMap[i][j] = &_tiles[j + i * TILEX];
+
+			if (_vvMap[i][j]->obj == OBJ_WALL)
+			{
+				_attribute[j + i * TILEX] |= ATTR_UNMOVE;
+			}
+		}
+	}
+	CloseHandle(file);
+	CloseHandle(file2);
+}
+
+void dungeonMap::bossMapLoad()
+{
+	HANDLE file2;
+	DWORD read2;
+	char mapSize[128];
+	file2 = CreateFile("saveFile\\bossSize.map", GENERIC_READ, NULL, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	ReadFile(file2, mapSize, 128, &read2, NULL);
+
+	string sizeX, sizeY;
+	bool x = true;
+	for (int i = 0; i < strlen(mapSize); i++)
+	{
+		if (mapSize[i] == ',')
+		{
+			x = false;
+			continue;
+		}
+		if (mapSize[i] == NULL) break;
+		if (x)
+		{
+			sizeX += mapSize[i];
+		}
+		else
+		{
+			sizeY += mapSize[i];
+		}
+	}
+
+
+	TILEX = stoi(sizeX);
+	TILEY = stoi(sizeY);
+	_vvMap.resize(TILEY);
+
+
+	for (int i = 0; i < TILEY; i++)
+	{
+		_vvMap[i].resize(TILEX);
+	}
+
+	tagTile* _tiles = new tagTile[TILEX * TILEY];
+	HANDLE file;
+	DWORD read;
+
+	file = CreateFile("saveFile\\bossSave.map", GENERIC_READ, NULL, NULL,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
+
+	_attribute = new DWORD[TILEX * TILEY];
+
+	memset(_attribute, 0, sizeof(DWORD)*TILEX*TILEY);
+
+	for (int i = 0; i < TILEY; i++)
+	{
+		for (int j = 0; j < TILEX; j++)
+		{
+			_attribute[j + i * TILEX] = NULL;
+			_vvMap[i][j] = &_tiles[j + i * TILEX];
+
+			if (_vvMap[i][j]->obj == OBJ_WALL)
+			{
+				_attribute[j + i * TILEX] |= ATTR_UNMOVE;
+			}
+		}
+	}
+	CloseHandle(file);
+	CloseHandle(file2);
 }
 
 void dungeonMap::tileDraw(float cameraX, float cameraY)
