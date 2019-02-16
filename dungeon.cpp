@@ -20,6 +20,8 @@ HRESULT dungeon::init()
 	IMAGEMANAGER->addFrameImage("fireMonster", "image/enemy2.bmp", 180, 174, 5, 3, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("knightMonster", "image/enemy3.bmp", 1820, 1600, 7, 8, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("boss", "image/보스.bmp", 1048, 239, 4, 1, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("bossBullet", "image/bullet.bmp", 104, 78, 4, 3, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("shockAttack", "image/보스공격이펙트.bmp", 1600, 288, 8, 2, true, MAGENTA);
 	EFFECTMANAGER->addEffect("deadEffect", "image/deadEffect2.bmp", 1496, 110, 136, 110, 5, 0.17f, 1000);
 	_enemyManager = new enemyManager;
 	_player = new player;
