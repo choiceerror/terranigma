@@ -54,7 +54,8 @@ private:
 	float		_sampleX;
 	float		_sampleY;
 
-
+	bool _mode7FlatMode;
+	bool _once;
 
 public:
 	mode7();
@@ -69,5 +70,7 @@ public:
 	void setObjectImage(image* objectImage);
 	void setKartBitmap(HBITMAP bitmap) { GetBitmapBits(bitmap, TOTALSIZEX * TOTALSIZEY * 4, _kartPattern); }
 	HBITMAP getKartBitmap(void) { return _kartMode7Bitmap; }
+	bool getFlatMode() { return _mode7FlatMode; }
+	void setFlatMode(bool torf) { _mode7FlatMode = torf; }
 };
 

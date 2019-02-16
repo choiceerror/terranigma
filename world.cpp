@@ -13,7 +13,7 @@ world::~world()
 
 HRESULT world::init()
 {
-
+	IMAGEMANAGER->addImage("worldMapTile", 1920, 1920);
 	load();
 	return S_OK;
 }
@@ -32,14 +32,14 @@ void world::render(float cameraX, float cameraY)
 	{
 		for (int j = 0; j < TILEX; ++j)
 		{
-			if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
-			if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
-			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
-			if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
+			//if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
+			//if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
+			//if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
+			//if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
 
 			if ((_vvMap[i][j]->a == 4))
 			{
-				IMAGEMANAGER->frameRender("worldTile", getMemDC(),
+				IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("worldMapTile")->getMemDC() ,
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
@@ -53,21 +53,23 @@ void world::render(float cameraX, float cameraY)
 		{
 			if (_vvMap[i][j]->obj == OBJ_NONE) continue;
 
-			if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
-			if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
-			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
-			if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
+			//if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
+			//if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
+			//if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
+			//if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
 
 
 			if (_vvMap[i][j]->a == 4)
 			{
-				IMAGEMANAGER->frameRender("worldTile", getMemDC(),
+				IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("worldMapTile")->getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
 
 		}
 	}
+
+	
 
 	char str[128];
 

@@ -50,22 +50,34 @@ void PlayerWorldMap::update()
 
 	if (KEYMANAGER->isStayKeyDown(VK_LEFT) && !(KEYMANAGER->isStayKeyDown(VK_UP) || KEYMANAGER->isStayKeyDown(VK_DOWN)))
 	{
-		_x -= _speed;
+		if (_x > 0)
+		{
+			_x -= _speed;
+		}
 		_playerDirection = WORLDMAP_MOVE_LEFT;
 	}
 	else if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && !(KEYMANAGER->isStayKeyDown(VK_UP) || KEYMANAGER->isStayKeyDown(VK_DOWN)))
 	{
-		_x += _speed;
+		if (_x < 1920)
+		{
+			_x += _speed;
+		}
 		_playerDirection = WORLDMAP_MOVE_RIGHT;
 	}
 	else if (KEYMANAGER->isStayKeyDown(VK_UP) && !(KEYMANAGER->isStayKeyDown(VK_LEFT) || KEYMANAGER->isStayKeyDown(VK_RIGHT)))
 	{
-		_y -= _speed;
+		if (_y > 0)
+		{
+			_y -= _speed;
+		}
 		_playerDirection = WORLDMAP_MOVE_UP;
 	}
 	else if (KEYMANAGER->isStayKeyDown(VK_DOWN) && !(KEYMANAGER->isStayKeyDown(VK_LEFT) || KEYMANAGER->isStayKeyDown(VK_RIGHT)))
 	{
-		_y += _speed;
+		if (_y < 1920)
+		{
+			_y += _speed;
+		}
 		_playerDirection = WORLDMAP_MOVE_DOWN;
 	}
 
