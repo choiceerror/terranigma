@@ -201,20 +201,21 @@ void enemyManager::setEnemy()
 				km->init("knight", "knightMonster", 2240 / 3 + j * 300, 1600 / 2 + i * 300, j, i, KNIGHTMONSTER_HP);
 				_vKnightMonster.push_back(km);
 			}
+			
 		}
-	}
 
-	//밑에쪽 생성
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
+		//밑에쪽 생성
+		for (int i = 0; i < 3; i++)
 		{
-			ballMonster* bm;
-			bm = new ballMonster;
-			if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR)
+			for (int j = 0; j < 3; j++)
 			{
-				bm->init("ball", "ballMonster", GAMESIZEX / 4 + j * 300, 1500 + i * 500, j, i, BALLMONSTER_HP);
-				_vBallMonster.push_back(bm);
+				ballMonster* bm;
+				bm = new ballMonster;
+				if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR)
+				{
+					bm->init("ball", "ballMonster", GAMESIZEX / 4 + j * 300, 1500 + i * 500, j, i, BALLMONSTER_HP);
+					_vBallMonster.push_back(bm);
+				}
 			}
 		}
 	}
@@ -780,7 +781,7 @@ void enemyManager::tileCheckObjectCollision()
 
 		RECT temp;
 		//임시오브젝트 렉트 충돌용
-		if (IntersectRect(&temp, &_objectRc, &_vBallMonster[i]->getRect()))
+		if (IntersectRect(&temp, &_objectRc, &_vBallMonster[i]->getRect()) && _dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::SECOND_FLOOR)
 		{
 			switch (_vBallMonster[i]->getDirection())
 			{
@@ -1011,8 +1012,8 @@ void enemyManager::tileCheckObjectCollision()
 		}
 
 		RECT temp;
-		//임시오브젝트 렉트 충돌용
-		if (IntersectRect(&temp, &_objectRc, &_vFireMonster[i]->getRect()))
+		//임시오브젝트 렉트 충돌용 2층일때만
+		if (IntersectRect(&temp, &_objectRc, &_vFireMonster[i]->getRect()) && _dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::SECOND_FLOOR)
 		{
 			switch (_vFireMonster[i]->getDirection())
 			{

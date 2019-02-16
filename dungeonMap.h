@@ -22,7 +22,6 @@ private:
 	DWORD* _attribute;
 	DUNGEON_FLOOR _dungeonFloor; //´øÀüÃþ¼ö
 
-	bool _isMapChange[3];
 	int tix;
 	int tiy;
 	int obx;
@@ -32,13 +31,11 @@ public:
 	dungeonMap();
 	~dungeonMap();
 
-	HRESULT init();
+	HRESULT init(DUNGEON_FLOOR floor);
 	void release();
 	void update();
 	void render(float cameraX, float cameraY);
-	void load();
-	void load2F();
-	void bossMapLoad();
+	void load(DUNGEON_FLOOR floor);
 	void tileDraw(float cameraX, float cameraY);
 
 	unsigned int getTileX() { return TILEX; }

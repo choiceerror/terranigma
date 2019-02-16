@@ -6,6 +6,7 @@
 #include "fireMonsterBullet.h"
 #include "dungeonMap.h"
 
+
 enum ENEMYINFO
 {
 	BALLMONSTER_HP = 100,
@@ -39,6 +40,7 @@ private:
 	player* _player;
 
 	dungeonMap* _dungeonMap; //´øÀü¸Ê
+
 
 	int _fireBulletSpeed;
 
@@ -79,8 +81,8 @@ public:
 	vector<knightMonster*> getVKnightMonster() { return _vKnightMonster; }
 	vector<knightMonster*>* setVKnightMonster() { return &_vKnightMonster; }
 
-	vector<POINTFLOAT> getVEnemyDeadPoint() {return _vEnemyDeadPoint;}
-	vector<POINTFLOAT>* setVEnemyDeadPoint() {return &_vEnemyDeadPoint;}
+	vector<POINTFLOAT> getVEnemyDeadPoint() { return _vEnemyDeadPoint; }
+	vector<POINTFLOAT>* setVEnemyDeadPoint() { return &_vEnemyDeadPoint; }
 
 	void setPlayerMemoryAddressLink(player* player) { _player = player; }
 	void setDungeonMapAddressLink(dungeonMap* map) { _dungeonMap = map; }

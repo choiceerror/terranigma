@@ -6,23 +6,21 @@
 #include "camera.h"
 #include "ItemManager.h"
 
-
-class dungeon : public gameNode
+class dungeon2F : public gameNode
 {
 private:
 	enemyManager* _enemyManager;
 	player* _player;
 	camera* _camera;
 
-	dungeonMap* _dungeon;
+	dungeonMap* _dungeon2F;
 	ItemManager* _itemManager;
 
 	int _rndItemDrop; //아이템 랜덤으로 드랍할것
 	int _rndItemTypeDrop; //아이템 타입 랜덤으로 드랍할것.
-
 public:
-	dungeon();
-	~dungeon();
+	dungeon2F();
+	~dungeon2F();
 
 	HRESULT init();
 	void release();
@@ -33,7 +31,5 @@ public:
 	void playerItemGet(); //플레이어 아이템 얻는 함수
 
 	void setWindowsSize(int x, int y, int width, int height);
-
-
 };
 

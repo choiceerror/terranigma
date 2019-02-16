@@ -1,53 +1,48 @@
 #include "stdafx.h"
-#include "dungeon.h"
+#include "dungeon2F.h"
 
 
-dungeon::dungeon()
+dungeon2F::dungeon2F()
 {
 }
 
 
-dungeon::~dungeon()
+dungeon2F::~dungeon2F()
 {
 }
 
-HRESULT dungeon::init()
+HRESULT dungeon2F::init()
 {
 	setWindowsSize(WINSTARTX, WINSTARTY, GAMESIZEX, GAMESIZEY);
 
 	_enemyManager = new enemyManager;
 	_player = new player;
 	_camera = new camera;
-	_dungeon = new dungeonMap;
+	_dungeon2F = new dungeonMap;
 	_itemManager = new ItemManager;
 
 	_enemyManager->setPlayerMemoryAddressLink(_player);
 	_player->setEnemyManagerAddressLink(_enemyManager);
-	_player->setMapManagerAddressLink(_dungeon);
-	_enemyManager->setDungeonMapAddressLink(_dungeon);
+	_player->setMapManagerAddressLink(_dungeon2F);
+	_enemyManager->setDungeonMapAddressLink(_dungeon2F);
 
-	_dungeon->setDungeonFloor(DUNGEON_FLOOR::FIRST_FLOOR);
-	_dungeon->init(_dungeon->getDungeonFloor());
+	_dungeon2F->setDungeonFloor(DUNGEON_FLOOR::SECOND_FLOOR);
+	_dungeon2F->init(_dungeon2F->getDungeonFloor());
 	_player->init();
 	_enemyManager->init();
 	_itemManager->init();
 	_enemyManager->setEnemy();
 
-	_camera->init(GAMESIZEX, GAMESIZEY, GAMESIZEX, 3200);
-
+	_camera->init(GAMESIZEX, GAMESIZEY, 2240, 1600);
 
 	return S_OK;
 }
 
-void dungeon::release()
+void dungeon2F::release()
 {
-	//SAFE_DELETE(_enemyManager);
-	//SAFE_DELETE(_player);
-	//SAFE_DELETE(_dungeon);
-	//SAFE_DELETE(_camera);
 }
 
-void dungeon::update()
+void dungeon2F::update()
 {
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_player->update(false, 1);
@@ -55,28 +50,17 @@ void dungeon::update()
 	_itemManager->update();
 	itemRandomDrop();
 	playerItemGet();
-
-	if (KEYMANAGER->isOnceKeyDown('W'))
-	{
-		SCENEMANAGER->changeScene("dungeon2F");
-	}
-
 }
 
-void dungeon::render()
+void dungeon2F::render()
 {
-	_dungeon->render(_camera->getCameraX(), _camera->getCameraY());
+	_dungeon2F->render(_camera->getCameraX(), _camera->getCameraY());
 	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY());
-
-	//char str[100];
-	//sprintf_s(str, "%d", _player->getInventory()->getPotionCount());
-	//TextOut(getMemDC(), 120, 120, str, strlen(str));
-
 }
 
-void dungeon::itemRandomDrop()
+void dungeon2F::itemRandomDrop()
 {
 	for (int i = 0; i < _enemyManager->getVEnemyDeadPoint().size(); i++)
 	{
@@ -189,7 +173,7 @@ void dungeon::itemRandomDrop()
 
 }
 
-void dungeon::playerItemGet()
+void dungeon2F::playerItemGet()
 {
 	RECT temp;
 	//°ñµå¾ÆÀÌÅÛ
@@ -210,7 +194,7 @@ void dungeon::playerItemGet()
 			_itemManager->getVPotion()[i]->setItemIsLive(false);
 		}
 	}
-	
+
 	//¾Ç¼¼»ç¸®
 	for (int i = 0; i < _itemManager->getVAccessory().size(); i++)
 	{
@@ -240,12 +224,10 @@ void dungeon::playerItemGet()
 			_itemManager->getVWeapon()[i]->setItemIsLive(false);
 		}
 	}
-
 }
 
-void dungeon::setWindowsSize(int x, int y, int width, int height)
+void dungeon2F::setWindowsSize(int x, int y, int width, int height)
 {
-
 	RECT winRect;
 
 	winRect.left = 0;
@@ -260,5 +242,4 @@ void dungeon::setWindowsSize(int x, int y, int width, int height)
 		(winRect.right - winRect.left),
 		(winRect.bottom - winRect.top),
 		SWP_NOZORDER | SWP_NOMOVE);
-
 }

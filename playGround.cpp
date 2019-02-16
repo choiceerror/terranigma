@@ -28,6 +28,13 @@ HRESULT playGround::init()
 	IMAGEMANAGER->addImage("object", "tileimage\\object.bmp", 120, 50, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("eraser", "tileimage\\eraser.bmp", 120, 50, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("player", "image/player_test.bmp", 0, 0, 2016, 5642, 12, 31, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("ballMonster", "image/enemy1.bmp", 128, 128, 4, 4, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("fireMonster", "image/enemy2.bmp", 180, 174, 5, 3, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("knightMonster", "image/enemy3.bmp", 1820, 1600, 7, 8, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("boss", "image/보스.bmp", 1048, 239, 4, 1, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("bossBullet", "image/bullet.bmp", 104, 78, 4, 3, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("shockAttack", "image/보스공격이펙트.bmp", 1600, 288, 8, 2, true, MAGENTA);
+	EFFECTMANAGER->addEffect("deadEffect", "image/deadEffect2.bmp", 1496, 110, 136, 110, 5, 0.17f, 1000);
 
 	_worldMap = new worldMap;
 	_ui = new ui;
@@ -36,6 +43,8 @@ HRESULT playGround::init()
 	_mapTool = new mapTool;
 	_dungeon = new dungeon;
 	_introDungeon = new IntroDungeon;
+	_dungeon2F = new dungeon2F;
+	_bossScene = new bossScene;
 
 	SCENEMANAGER->addScene("worldMap", _worldMap);
 	SCENEMANAGER->addScene("ui", _ui);
@@ -44,6 +53,8 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("mapTool", _mapTool);
 	SCENEMANAGER->addScene("dungeon", _dungeon);
 	SCENEMANAGER->addScene("introDungeon", _introDungeon);
+	SCENEMANAGER->addScene("bossScene", _bossScene);
+	SCENEMANAGER->addScene("dungeon2F", _dungeon2F);
 
 	SCENEMANAGER->changeScene("mapTool");
 
