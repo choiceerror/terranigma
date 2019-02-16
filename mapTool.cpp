@@ -107,7 +107,10 @@ void mapTool::render()
 	{
 		IMAGEMANAGER->render("worldTile", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("worldTile")->GetWidth(), 0);
 	}
-
+	else if (tilenum == 5)
+	{
+		IMAGEMANAGER->render("bossTile", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("bossTile")->GetWidth(), 0);
+	}
 	//ÁöÇü
 	for (int i = 0; i < TILEY; ++i)
 	{
@@ -145,6 +148,12 @@ void mapTool::render()
 			else if ((_vvMap[i][j]->a == 4))
 			{
 				IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("background")->getMemDC(),
+					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
+					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+			}
+			else if ((_vvMap[i][j]->a == 5))
+			{
+				IMAGEMANAGER->frameRender("bossTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
@@ -190,6 +199,12 @@ void mapTool::render()
 			else if (_vvMap[i][j]->a == 4)
 			{
 				IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("background")->getMemDC(),
+					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
+					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+			}
+			else if (_vvMap[i][j]->a == 5)
+			{
+				IMAGEMANAGER->frameRender("bossTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
@@ -504,7 +519,7 @@ void mapTool::ClickBox()
 		{
 			tilenum--;
 		}
-		else if (PtInRect(&tileSelect[1], _ptMouse) && tilenum < 4)
+		else if (PtInRect(&tileSelect[1], _ptMouse) && tilenum < 5)
 		{
 			tilenum++;
 		}
