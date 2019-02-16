@@ -37,7 +37,8 @@ public:
 	void update();
 	void render(float cameraX, float cameraY);
 
-	void fire(float x, float y, float angle, float speed); //발사
+	void fire(float x, float y, float angle, float speed); //파이어몬스터 총알발사
+	void bossBulletFire(float x, float y, float angle, float speed);
 	
 	void move(); //이동
 
