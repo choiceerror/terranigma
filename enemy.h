@@ -154,15 +154,6 @@ public:
 	RECT getTileCollisionRect() { return _enemy.tileCollisionRc; }
 	void setTileCollisionRect(RECT rc) { _enemy.tileCollisionRc = rc; }
 
-	//LONG getTileCollisionRcLeft() { return _enemy.tileCollisionRc.left; }
-	//LONG getTileCollisionRcTop() { return _enemy.tileCollisionRc.top; }
-	//LONG getTileCollisionRcRight() { return _enemy.tileCollisionRc.right; }
-	//LONG getTileCollisionRcBottom() { return _enemy.tileCollisionRc.bottom; }
-	//void setTileCollisionRcLeft(LONG left) { _enemy.tileCollisionRc.left = left; }
-	//void setTileCollisionRcTop(LONG top) { _enemy.tileCollisionRc.top = top; }
-	//void setTileCollisionRcRight(LONG right) { _enemy.tileCollisionRc.right = right; }
-	//void setTileCollisionRcBottom(LONG bottom) { _enemy.tileCollisionRc.bottom = bottom; }
-
 	ENEMYDIRECTION getDirection() { return _enemy.direction; }
 	void setDirection(ENEMYDIRECTION direction) { _enemy.direction = direction; }
 
@@ -171,7 +162,9 @@ public:
 
 	ENEMYMOVETYPE getMoveType() { return _enemy.moveType; }
 	void setMoveType(ENEMYMOVETYPE type) { _enemy.moveType = type; }
+
 	float getMoveAngle() { return _enemy.moveAngle; }
+	void setMoveAngle(float angle) { _enemy.moveAngle = angle; }
 
 	int getCurrentHP() { return _enemy.currentHP; }
 	int getMaxHP() { return _enemy.maxHP; }

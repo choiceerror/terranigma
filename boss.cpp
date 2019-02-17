@@ -17,14 +17,12 @@ HRESULT boss::init(string enemyName, const char * imageName, float x, float y, i
 	_enemy.name = enemyName;
 	_enemy.currentHP = _enemy.maxHP = hp;
 
-	
+	_enemy.state = BOSS_STATE_MOVE;
 
 	int move[] = {0, 1, 2, 3};
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "move", imageName, move, 4, 4, true);
 
 	_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "move");
-
-
 
 	return S_OK;
 }
@@ -43,7 +41,7 @@ void boss::render(float cameraX, float cameraY)
 {
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
-	_enemy.image->alphaAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion);
+	_enemy.image->expandAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion, 3.f, 3.f);
 }
 
 void boss::move()
@@ -51,6 +49,8 @@ void boss::move()
 	switch (_enemy.state)
 	{
 	case BOSS_STATE_IDLE:
+	case BOSS_STATE_MOVE:
+		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "move");
 		_enemy.motion->start();
 		break;
 	}

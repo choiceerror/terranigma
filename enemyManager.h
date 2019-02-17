@@ -5,6 +5,7 @@
 #include "knightMonster.h"
 #include "fireMonsterBullet.h"
 #include "dungeonMap.h"
+#include "boss.h"
 
 
 enum ENEMYINFO
@@ -31,6 +32,10 @@ private:
 	//나이트 몬스터 벡터
 	vector<knightMonster*> _vKnightMonster;
 	vector<knightMonster*>::iterator _viKnightMonster;
+
+	//보스 벡터
+	vector<boss*> _vBoss;
+	vector<boss*>::iterator _viBoss;
 
 	//파이어몬스터 총알
 	fireMonsterBullet* _fireMonsterBullet;
@@ -80,6 +85,9 @@ public:
 
 	vector<knightMonster*> getVKnightMonster() { return _vKnightMonster; }
 	vector<knightMonster*>* setVKnightMonster() { return &_vKnightMonster; }
+
+	vector<boss*> getVBoss() { return _vBoss; }
+	vector<boss*>* setVBOss() { return &_vBoss; }
 
 	vector<POINTFLOAT> getVEnemyDeadPoint() { return _vEnemyDeadPoint; }
 	vector<POINTFLOAT>* setVEnemyDeadPoint() { return &_vEnemyDeadPoint; }

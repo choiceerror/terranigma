@@ -73,7 +73,7 @@ void knightMonster::update()
 	//알파값조정
 	if (_enemy.isHit == true)
 	{
-		_enemy.alphaValue -= 20;
+		_enemy.alphaValue -= 10;
 
 		if (_enemy.alphaValue <= 80)
 		{
