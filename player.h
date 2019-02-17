@@ -137,6 +137,8 @@ public:
 
 	void enemyCollision(bool enemyCheck);
 
+	void playerUI();
+
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }
 	void setTownManagerAddressLink(townMap* to) { _town = to; }
