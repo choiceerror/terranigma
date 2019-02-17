@@ -37,7 +37,7 @@ HRESULT mode7::init(image* img)
 	_kartPattern = new unsigned int[TOTALSIZEX * TOTALSIZEY];
 
 	
-	_mode7FlatMode = true;
+	_mode7FlatMode = false;
 
 	_once = false;
 
