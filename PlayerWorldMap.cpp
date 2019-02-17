@@ -37,7 +37,8 @@ HRESULT PlayerWorldMap::init()
 	_speed = 3;
 	_playerRc = RectMakeCenter(_x, _y, 30, 30);
 	_playerDirection = WORLDMAP_IDLE_DOWN;
-
+	
+	_ani = KEYANIMANAGER->findAnimation("ark", "worldMapIdleDown");
 	return S_OK;
 }
 

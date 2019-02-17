@@ -36,6 +36,11 @@ HRESULT ClockFadeOut::init()
 		_clockMagentaPt[i].x = -50;
 		_clockMagentaPt[i].y = -50;
 	}
+	for (int i = 3; i < 12; ++i)
+	{
+		_clockBlackPt[i].x = -50;
+		_clockBlackPt[i].y = -50;
+	}
 
 	_clockMagentaAngle[0] = (PI / 180) * 90;
 	_clockMagentaAngle[1] = (PI / 180) * 360;
@@ -49,6 +54,20 @@ HRESULT ClockFadeOut::init()
 	_clockMagentaPt[1].y = -50;
 	_clockMagentaPt[2].x = -50;
 	_clockMagentaPt[2].y = -50;
+
+	_clockBlackAngle[0] = (PI / 180) * 90;
+	_clockBlackAngle[1] = (PI / 180) * 360;
+	_clockBlackAngle[2] = (PI / 180) * 270;
+	_clockBlackAngle[3] = (PI / 180) * 180;
+
+	_clockBlackPt[0].x = -50;
+	_clockBlackPt[0].y = -50;
+	_clockBlackPt[1].x = -50;
+	_clockBlackPt[1].y = -50;
+	_clockBlackPt[2].x = -50;
+	_clockBlackPt[2].y = -50;
+
+	
 
 	return S_OK;
 }
@@ -80,6 +99,10 @@ void ClockFadeOut::update()
 		if (0.3f + _clockWorldTime >= TIMEMANAGER->getWorldTime())
 		{
 			_clockBlackAngle[0] -= (PI / 180) * _angleSpeed;
+			_clockBlackPt[0].x = GAMESIZEX / 2;
+			_clockBlackPt[0].y = GAMESIZEY / 2;
+			_clockBlackPt[1].x = GAMESIZEX / 2 + cosf((PI / 180) * 90) * 1400;
+			_clockBlackPt[1].y = GAMESIZEY / 2 + -sinf((PI / 180) * 90) * 1400;
 			_clockBlackPt[2].x = GAMESIZEX / 2 + cosf(_clockBlackAngle[0]) * 1400;
 			_clockBlackPt[2].y = GAMESIZEY / 2 + -sinf(_clockBlackAngle[0]) * 1400;
 		}

@@ -59,7 +59,8 @@ private:
 	bool _once;
 
 	float _indunTime;
-
+	
+	int _alphaValue;
 	
 public:
 	IntroDungeon();
@@ -71,6 +72,8 @@ public:
 	void render();
 
 	void linearMove();
+
+	void escapeDungeon();
 
 	void setWindowsSize(int x, int y, int width, int height);
 

@@ -21,6 +21,7 @@ HRESULT IntroDungeon::init()
 	IMAGEMANAGER->addFrameImage("guardian", "image/°¡µð¾ð.bmp", 3135, 166, 33, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("pixelMap", "image/introDungeonPixel.bmp", 1024, 2490, true, RGB(255, 0 ,255));
 
+	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 	_camera = new camera;
 	_player = new player;
 	_clock = new ClockFadeOut;
@@ -88,6 +89,8 @@ HRESULT IntroDungeon::init()
 	_speed = 0;
 	_isLinear = false;
 	_once = false;
+
+	_alphaValue = 0;
 
 	return S_OK;
 }
@@ -257,6 +260,7 @@ void IntroDungeon::update()
 	}
 
 	linearMove();
+	escapeDungeon();
 
 	if (KEYMANAGER->isOnceKeyDown('9'))
 	{
@@ -298,6 +302,7 @@ void IntroDungeon::render()
 			_player->getPlayerY() - _camera->getCameraY(), _player->getPlayerAni(), _playerSizeX, _playerSizeY);
 	}
 
+	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_clock->render();
 	//Rectangle(getMemDC(), _escapeRc);
 	//Rectangle(getMemDC(), _introDungeonPlayerRc);
@@ -325,7 +330,6 @@ void IntroDungeon::linearMove()
 		{
 			_speed = getDistance(_player->getPlayerX(), _player->getPlayerY(), _goal.x, _goal.y) * (TIMEMANAGER->getElapsedTime() / 1.5f);
 			_worldTime = TIMEMANAGER->getWorldTime();
-
 		}
 
 		if (_time + _worldTime >= TIMEMANAGER->getWorldTime())
@@ -344,6 +348,37 @@ void IntroDungeon::linearMove()
 
 		_once = true;
 	}
+}
+
+void IntroDungeon::escapeDungeon()
+{
+	if (_player->getPlayerY() >= 2490)
+	{
+		_player->setPlayerPosY(2600);
+		_player->setPlayerUnMove(true);
+
+		if (!_once)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+		}
+
+		if (_alphaValue < 255)
+		{
+			_alphaValue += 3;
+		}
+		else if (_alphaValue > 255)
+		{
+			_alphaValue = 255;
+		}
+
+		if (1.5f + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			SCENEMANAGER->changeScene("worldMap");
+		}
+
+		_once = true;
+	}
+
 }
 
 void IntroDungeon::setWindowsSize(int x, int y, int width, int height)
