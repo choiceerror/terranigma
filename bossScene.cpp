@@ -42,6 +42,13 @@ HRESULT bossScene::init()
 
 	SOUNDMANAGER->addSound("bossSceneBGM", "sound/bossFight.mp3", true, true);
 
+	_moveWorldTime = TIMEMANAGER->getWorldTime();
+
+	for (int i = 0; i < 3; i++)
+	{
+		_moveGoal[i].x = 400 + i * 200;
+		_moveGoal[i].y = 500 + i * 200;
+	}
 	return S_OK;
 }
 
@@ -56,19 +63,34 @@ void bossScene::update()
 	_enemyManager->update();
 	_itemManager->update();
 	bossAppear();
+	
 	movePattern();
 }
 
 void bossScene::render()
 {
 	char str[128];
-	sprintf_s(str, "%f", _enemyManager->getVBoss()[0]->getX());
+	sprintf_s(str, "bossX : %f", _enemyManager->getVBoss()[0]->getX());
+	TextOut(getMemDC(), 100, 200, str, strlen(str));
 
-	TextOut(getMemDC(), 100, 80, str, strlen(str));
+	sprintf_s(str, "bossY : %f", _enemyManager->getVBoss()[0]->getY());
+	TextOut(getMemDC(), 100, 240, str, strlen(str));
 
-	sprintf_s(str, "%f", _enemyManager->getVBoss()[0]->getY());
+	sprintf_s(str, "_rndMove : %d", _rndMove);
+	TextOut(getMemDC(), 100, 260, str, strlen(str));
 
-	TextOut(getMemDC(), 100, 100, str, strlen(str));
+	sprintf_s(str, "moveWorldTime : %f", _moveWorldTime);
+	TextOut(getMemDC(), 100, 280, str, strlen(str));
+
+	for (int i = 0; i < 3; i++)
+	{
+		sprintf_s(str, "_moveGoalX : %f", _moveGoal[i].x);
+		TextOut(getMemDC(), 600, i * 20, str, strlen(str));
+
+		sprintf_s(str, "_moveGoalY : %f", _moveGoal[i].y);
+		TextOut(getMemDC(), 800, i * 20, str, strlen(str));
+	}
+
 	if (_isBossAppear == true || _isOnce[BOSS_APPEAR] == true)
 	{
 		_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
@@ -76,13 +98,13 @@ void bossScene::render()
 	_dungeonBossMap->render(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY());
+
+
 }
 
 void bossScene::bossAppear()
 {
-	//보스와 플레이어간의 거리 구해줌.
-	//_enemyManager->getVBoss()[0]->setTargetDistance(getDistance(_player->getPlayerX(), _player->getPlayerY(), _enemyManager->getVBoss()[0]->getX(), _enemyManager->getVBoss()[0]->getY()));
-
+	
 	if (_player->getPlayerY() <= 900 && _isOnce[BOSS_APPEAR] == false)
 	{
 		_isBossAppear = true;
@@ -90,7 +112,7 @@ void bossScene::bossAppear()
 		_isOnce[BOSS_APPEAR] = true;
 	}
 
-	if (_isBossAppear == true) //보스등장
+	if (_isBossAppear == true && _enemyManager->getVBoss()[0]->getState() == BOSS_STATE_IDLE) //보스등장
 	{
 		_goal.x = GAMESIZEX / 2 + 70;
 		_goal.y = 650;
@@ -101,26 +123,27 @@ void bossScene::bossAppear()
 		_goalAngle = getAngle(_enemyManager->getVBoss()[0]->getX(), _enemyManager->getVBoss()[0]->getY(), _goal.x, _goal.y);
 		//골까지의 거리 구해줌.
 		_goalDistance = getDistance(_enemyManager->getVBoss()[0]->getX(), _enemyManager->getVBoss()[0]->getY(), _goal.x, _goal.y);
-		if (_isOnce[LINEAR] == false)
+		if (_isOnce[LINEAR_APPEAR] == false)
 		{
 			//거속시 선형보간
-			_moveSpeed = _goalDistance * (_elapsedTime / 6.0f);
+			_appearSpeed = _goalDistance * (_elapsedTime / 6.0f);
 			_worldTime = TIMEMANAGER->getWorldTime();
 		}
-		_isOnce[LINEAR] = true;
+		_isOnce[LINEAR_APPEAR] = true;
 
 		//8초전에만 움직임.
 		if (8.0f + _worldTime >= TIMEMANAGER->getWorldTime())
 		{
-			_enemyManager->getVBoss()[0]->setX(_enemyManager->getVBoss()[0]->getX() + cosf(_goalAngle) * _moveSpeed);
-			_enemyManager->getVBoss()[0]->setY(_enemyManager->getVBoss()[0]->getY() + -sinf(_goalAngle) * _moveSpeed);
+			_enemyManager->getVBoss()[0]->setX(_enemyManager->getVBoss()[0]->getX() + cosf(_goalAngle) * _appearSpeed);
+			_enemyManager->getVBoss()[0]->setY(_enemyManager->getVBoss()[0]->getY() + -sinf(_goalAngle) * _appearSpeed);
 		}
 
-		if (_goalDistance <= 50 && _isOnce[CAMERA_LINEAR] == false)
+		if (_goalDistance <= 10 && _isOnce[CAMERA_LINEAR] == false)
 		{
 			_camera->linearKeepMove(_goal.x, _goal.y + 50, 2, 100000);
 			_isOnce[CAMERA_LINEAR] = true; //카메라도 한번만 받기위함.
 			_isBossAppear = false; //도착점에도달했으면 보스 등장하는거 꺼줌.
+			_enemyManager->getVBoss()[0]->setState(BOSS_STATE_MOVE);
 		}
 	}
 
@@ -129,22 +152,47 @@ void bossScene::bossAppear()
 
 void bossScene::movePattern()
 {
+	if (_isBossAppear == false && _enemyManager->getVBoss()[0]->getState() == BOSS_STATE_MOVE)
+	{
+		if (_isOnce[WORLDTIME] == false)
+		{
+			_moveWorldTime = TIMEMANAGER->getWorldTime();
+			_isOnce[WORLDTIME] = true;
+		}
 
-	for (int i = 0; i < 10; i++)
-	{
-		_moveGoal[i].x = RND->getRandomFloat(300.f, 1000.f);
-		_moveGoal[i].y = RND->getRandomFloat(500.f, 700.f);
-	}
-	if (_isBossAppear == false)
-	{
+
+		if (1.0f + _rndMoveWorldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_rndMove = RND->getRandomInt(0, 2);
+
+			_enemyManager->getVBoss()[0]->setMoveAngle(getAngle(_moveGoal[_rndMove].x, _moveGoal[_rndMove].y, _enemyManager->getVBoss()[0]->getX(), _enemyManager->getVBoss()[0]->getY()));
+			//보스와 움직일 위치까지의 거리 구해줌.
+			_enemyManager->getVBoss()[0]->setTargetDistance(getDistance(_moveGoal[_rndMove].x, _moveGoal[_rndMove].y, _enemyManager->getVBoss()[0]->getX(), _enemyManager->getVBoss()[0]->getY()));
+
+			_rndMoveWorldTime = TIMEMANAGER->getWorldTime();
+		}
+
+
+	
 		switch (_enemyManager->getVBoss()[0]->getState())
 		{
 		case BOSS_STATE_MOVE:
-			if (_enemyManager->getVBoss()[0]->getDirection() == BOSS_DIRECTION_LEFT)
+
+			//4초후에 움직여라
+			if (4.0f + _moveWorldTime <= TIMEMANAGER->getWorldTime())
 			{
-				//_enemyManager->getVBoss()[0]->setMoveAngle()
-				//_enemyManager->getVBoss()[0]->setX()
+				if (_isOnce[LINEAR_MOVE] == false)
+				{
+					_moveSpeed = _enemyManager->getVBoss()[0]->getTargetDistance() * (TIMEMANAGER->getElapsedTime() / 0.01f);
+					_isOnce[LINEAR_MOVE] = true;
+				}
+
+				_enemyManager->getVBoss()[0]->setX(_enemyManager->getVBoss()[0]->getX() + cosf(_enemyManager->getVBoss()[0]->getMoveAngle() * _moveSpeed));
+				_enemyManager->getVBoss()[0]->setY(_enemyManager->getVBoss()[0]->getY() + -sinf(_enemyManager->getVBoss()[0]->getMoveAngle() * _moveSpeed));
+			
 			}
+			break;
+			
 		}
 	}
 }

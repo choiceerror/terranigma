@@ -8,9 +8,11 @@
 
 enum ONCE //한번만 받기위함.
 {
-	LINEAR,
+	LINEAR_APPEAR,
 	CAMERA_LINEAR,
 	BOSS_APPEAR,
+	WORLDTIME,
+	LINEAR_MOVE,
 };
 
 class bossScene : public gameNode
@@ -25,16 +27,22 @@ private:
 
 	float _worldTime;
 	bool _isBossAppear; //보스 등장시점 판별해줄 불값
-	bool _isOnce[3]; //업데이트부분에 한번만 받기위함.
+	bool _isOnce[5]; //업데이트부분에 한번만 받기위함.
 	
 	POINTFLOAT _goal;
 	float _goalAngle;
 	float _elapsedTime;
 	float _goalDistance;
-	float _moveSpeed;
+	float _appearSpeed; //등장 스피드
 
-	POINTFLOAT _moveGoal[10];
-	float _moveGoalAngle;
+	POINTFLOAT _moveGoal[3];
+
+	float _moveWorldTime;
+	float _rndMoveWorldTime;
+
+	float _moveSpeed;
+	int _rndMove;
+
 
 public:
 	bossScene();

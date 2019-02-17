@@ -93,7 +93,7 @@ void ui::update()
 	}
 
 	//===============지울것================
-	//_goal = RectMake(_goalX, _goalY, 10, 10);
+	_goal = RectMake(_goalX, _goalY, 20, 20);
 	//
 	//if (KEYMANAGER->isOnceKeyDown('0'))
 	//{
@@ -150,7 +150,7 @@ void ui::render()
 	//sprintf_s(str, "%d", _placeFrameX);
 	//TextOut(getMemDC(), 30, 140, str, strlen(str));
 
-	//Rectangle(getMemDC(), _goal);
+	Rectangle(getMemDC(), _goal);
 }
 
 //윈도우 사이즈조정

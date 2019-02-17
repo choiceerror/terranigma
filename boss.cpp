@@ -17,7 +17,7 @@ HRESULT boss::init(string enemyName, const char * imageName, float x, float y, i
 	_enemy.name = enemyName;
 	_enemy.currentHP = _enemy.maxHP = hp;
 
-	_enemy.state = BOSS_STATE_MOVE;
+	_enemy.state = BOSS_STATE_IDLE;
 
 	int move[] = {0, 1, 2, 3};
 	KEYANIMANAGER->addArrayFrameAnimation(_enemy.name, "move", imageName, move, 4, 4, true);
