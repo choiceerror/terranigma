@@ -29,6 +29,8 @@ public:
 
 	void fake3DHighImage();
 
+	void worldMapIn();
+
 	void setWindowsSize(int x, int y, int width, int height);
 };
 

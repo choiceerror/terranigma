@@ -34,9 +34,13 @@ HRESULT worldMap::init()
 	IMAGEMANAGER->findImage("middle")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("middle2")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
-	_alphaValue = 0;
 
 	_playerWorldMap->setTownManagerAddressLink(_world);
+
+	_alphaValue = 255;
+	_once = false;
+	_worldTime = 0;
+
 	return S_OK;
 }
 
@@ -46,6 +50,7 @@ void worldMap::release()
 
 void worldMap::update()
 {
+	worldMapIn();
 	//_camera->update(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY());
 	_playerWorldMap->update(3);
 
@@ -74,12 +79,10 @@ void worldMap::render()
 
 	if (_mode7->getFlatMode() == false)
 	{
-		IMAGEMANAGER->render("fake3DHigh", getMemDC(), 0, 0);
-		IMAGEMANAGER->findImage("blue")->alphaRender(getMemDC(), 0, 0, 130);
-		IMAGEMANAGER->findImage("middle")->alphaRender(getMemDC(), 0, 95, 150);
-		IMAGEMANAGER->findImage("middle2")->alphaRender(getMemDC(), 0, 95, 100);
+		fake3DHighImage();
 	}
 
+	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 
 	PatBlt(IMAGEMANAGER->findImage("worldMapTile")->getMemDC(), 0, 0, TOTALSIZEX, TOTALSIZEY, NULL);
 	PatBlt(IMAGEMANAGER->findImage("fake3DHigh")->getMemDC(), 0, 0, GAMESIZEX, 80, NULL);
@@ -87,6 +90,25 @@ void worldMap::render()
 
 void worldMap::fake3DHighImage()
 {
+	IMAGEMANAGER->render("fake3DHigh", getMemDC(), 0, 0);
+	IMAGEMANAGER->findImage("blue")->alphaRender(getMemDC(), 0, 0, 130);
+	IMAGEMANAGER->findImage("middle")->alphaRender(getMemDC(), 0, 95, 150);
+	IMAGEMANAGER->findImage("middle2")->alphaRender(getMemDC(), 0, 95, 100);
+}
+
+void worldMap::worldMapIn()
+{
+	if (_alphaValue > 0)
+	{
+		_alphaValue -= 3;
+	}
+
+	if (_alphaValue <= 0)
+	{
+		_alphaValue = 0;
+	}
+	
+
 }
 
 void worldMap::setWindowsSize(int x, int y, int width, int height)

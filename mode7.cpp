@@ -210,15 +210,15 @@ void mode7::render(HDC dc)
 	}
 	
 
-	char str[128];
-	sprintf_s(str, "_far %f _near %f ", _far, _near);
-	TextOut(getMemDC(), 200, 200, str, strlen(str));
-
-	sprintf_s(str, "_line %f", _line);
-	TextOut(getMemDC(), 200, 230, str, strlen(str));
-
-	sprintf_s(str, "_foVHalf %f", _foVHalf);
-	TextOut(getMemDC(), 200, 260, str, strlen(str));
+	//char str[128];
+	//sprintf_s(str, "_far %f _near %f ", _far, _near);
+	//TextOut(getMemDC(), 200, 200, str, strlen(str));
+	//
+	//sprintf_s(str, "_line %f", _line);
+	//TextOut(getMemDC(), 200, 230, str, strlen(str));
+	//
+	//sprintf_s(str, "_foVHalf %f", _foVHalf);
+	//TextOut(getMemDC(), 200, 260, str, strlen(str));
 
 	//sprintf_s(str, "_worldA %f _foVHalf %f ", _worldA* (180 / PI), _foVHalf * (180 / PI));
 	//TextOut(getMemDC(), 200, 280, str, strlen(str));
