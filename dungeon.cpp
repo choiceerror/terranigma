@@ -20,6 +20,7 @@ HRESULT dungeon::init()
 	_camera = new camera;
 	_dungeon = new dungeonMap;
 	_itemManager = new ItemManager;
+	_clockFade = new ClockFadeOut;
 
 	_enemyManager->setPlayerMemoryAddressLink(_player);
 	_player->setEnemyManagerAddressLink(_enemyManager);
@@ -32,10 +33,12 @@ HRESULT dungeon::init()
 	_enemyManager->init();
 	_itemManager->init();
 	_enemyManager->setEnemy();
+	_clockFade->init();
 
 	_camera->init(GAMESIZEX, GAMESIZEY, GAMESIZEX, 3200);
 
-
+	//_clockFade->setClockFadeIn(true);
+	//_clockFade->setClockFadeOut(false);
 	return S_OK;
 }
 
@@ -55,7 +58,7 @@ void dungeon::update()
 	_itemManager->update();
 	itemRandomDrop();
 	playerItemGet();
-
+	_clockFade->update();
 }
 
 void dungeon::render()
@@ -64,7 +67,7 @@ void dungeon::render()
 	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY());
-
+	_clockFade->render();
 	//char str[100];
 	//sprintf_s(str, "%d", _player->getInventory()->getPotionCount());
 	//TextOut(getMemDC(), 120, 120, str, strlen(str));
