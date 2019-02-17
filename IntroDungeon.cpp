@@ -258,6 +258,18 @@ void IntroDungeon::update()
 
 	linearMove();
 
+	if (KEYMANAGER->isOnceKeyDown('9'))
+	{
+		_clock->setClockFadeIn(true);
+
+	}
+	if (KEYMANAGER->isOnceKeyDown('9'))
+	{
+		_clock->setClockFadeIn(true);
+
+	}
+
+
 	_escapeRc = RectMakeCenter(GAMESIZEX / 2 + 20 - _camera->getCameraX(), 1925 - _camera->getCameraY(), 200, 100);
 	_introDungeonPlayerRc = RectMakeCenter(_player->getPlayerX() - _camera->getCameraX(), _player->getPlayerY() + 10 - _camera->getCameraY(), 40, 50);
 }

@@ -28,6 +28,28 @@ HRESULT ClockFadeOut::init()
 		_goalArrive[i] = false;
 	}
 
+	_onceTimeIn = false;
+	_clockWorldTimeIn = 0;
+
+	for (int i = 3; i < 12; ++i)
+	{
+		_clockMagentaPt[i].x = -50;
+		_clockMagentaPt[i].y = -50;
+	}
+
+	_clockMagentaAngle[0] = (PI / 180) * 90;
+	_clockMagentaAngle[1] = (PI / 180) * 360;
+	_clockMagentaAngle[2] = (PI / 180) * 270;
+	_clockMagentaAngle[3] = (PI / 180) * 180;
+
+
+	_clockMagentaPt[0].x = -50;
+	_clockMagentaPt[0].y = -50;
+	_clockMagentaPt[1].x = -50;
+	_clockMagentaPt[1].y = -50;
+	_clockMagentaPt[2].x = -50;
+	_clockMagentaPt[2].y = -50;
+
 	return S_OK;
 }
 
@@ -62,7 +84,7 @@ void ClockFadeOut::update()
 			_clockBlackPt[2].y = GAMESIZEY / 2 + -sinf(_clockBlackAngle[0]) * 1400;
 		}
 
-		if (0.3f + _clockWorldTime <= TIMEMANAGER->getWorldTime() && 0.6f + _clockWorldTime >= TIMEMANAGER->getWorldTime())
+		if (0.3f + _clockWorldTime <= TIMEMANAGER->getWorldTime() && 0.7f + _clockWorldTime >= TIMEMANAGER->getWorldTime())
 		{
 			_clockBlackPt[3].x = GAMESIZEX / 2;
 			_clockBlackPt[3].y = GAMESIZEY / 2;
@@ -74,7 +96,7 @@ void ClockFadeOut::update()
 			_clockBlackAngle[1] -= (PI / 180) * _angleSpeed;
 		}
 
-		if (0.6f + _clockWorldTime <= TIMEMANAGER->getWorldTime() && 0.9f + _clockWorldTime >= TIMEMANAGER->getWorldTime())
+		if (0.6f + _clockWorldTime <= TIMEMANAGER->getWorldTime() && 1.f + _clockWorldTime >= TIMEMANAGER->getWorldTime())
 		{
 			_clockBlackPt[6].x = GAMESIZEX / 2;
 			_clockBlackPt[6].y = GAMESIZEY / 2;
@@ -86,7 +108,7 @@ void ClockFadeOut::update()
 			_clockBlackAngle[2] -= (PI / 180) * _angleSpeed;
 		}
 
-		if (0.9f + _clockWorldTime < TIMEMANAGER->getWorldTime() && 1.25f + _clockWorldTime >= TIMEMANAGER->getWorldTime())
+		if (0.9f + _clockWorldTime < TIMEMANAGER->getWorldTime() && 1.3f + _clockWorldTime >= TIMEMANAGER->getWorldTime())
 		{
 			_clockBlackPt[9].x = GAMESIZEX / 2;
 			_clockBlackPt[9].y = GAMESIZEY / 2;

@@ -37,8 +37,8 @@ HRESULT dungeon::init()
 
 	_camera->init(GAMESIZEX, GAMESIZEY, GAMESIZEX, 3200);
 
-	//_clockFade->setClockFadeIn(true);
-	//_clockFade->setClockFadeOut(false);
+	_clockFade->setClockFadeOut(false);
+	_clockFade->setClockFadeIn(true);
 	return S_OK;
 }
 
