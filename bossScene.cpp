@@ -133,6 +133,7 @@ void bossScene::movePattern()
 	for (int i = 0; i < 10; i++)
 	{
 		_moveGoal[i].x = RND->getRandomFloat(300.f, 1000.f);
+		//_moveGoal[i].y = RND->
 	}
 	if (_isBossAppear == false)
 	{
