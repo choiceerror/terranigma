@@ -15,13 +15,14 @@ player::~player()
 HRESULT player::init()
 {
 	IMAGEMANAGER->addFrameImage("player_obj", "image/player_obj.bmp", 0, 0, 1540, 800, 10, 10, true, RGB(255, 0, 255));
+	IMAGEMANAGER->addFrameImage("player_ui", "image/playerUIFont.bmp", 0, 0, 450, 90, 10, 2, true, RGB(255, 0, 255));
 	_jump = new jump;
 	_dashAttack = new DashAttack;
 	_inventory = new Inventory;
 	_jump->init();
 	_dashAttack->init();
 	_inventory->init();
-	_inventory->inventoryLode();
+	_inventory->inventoryLoad();
 
 	keyFrameInit();
 
@@ -30,6 +31,12 @@ HRESULT player::init()
 	_player.image->setAlpahBlend(true);
 
 	_oldJumpTime = -100;
+
+	_player.HP = 28;
+	_player.maxHP = 28;
+	_player.damage = 10;
+	_player.def = 1;
+	_player.money = 10;
 
 	_player.x = GAMESIZEX / 2;
 	_player.y = GAMESIZEY / 2;
@@ -141,11 +148,9 @@ void player::render(float cameraX, float cameraY)
 	//sprintf_s(str, "%d", _player.direction);
 	//TextOut(getMemDC(), 120, 120, str, strlen(str));
 	//
-	sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
-	TextOut(getMemDC(), 140, 120, str, strlen(str));
-	//
-
-
+	//sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
+	//TextOut(getMemDC(), 140, 120, str, strlen(str));
+	playerUIRender();
 }
 // 캐릭터 프레임 초기값
 void player::keyFrameInit()
@@ -933,3 +938,4 @@ void player::enemyCollision(bool enemyCheck)
 		}
 	}
 }
+
