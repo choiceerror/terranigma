@@ -125,7 +125,7 @@ void PlayerWorldMap::update(int check)
 		break;
 	}
 
-	_playerRc = RectMakeCenter(_x, _y + 20, 30, 30);
+	_playerRc = RectMakeCenter(_x, _y + 13 , 30, 30);
 
 	if (check == 3)
 	{
@@ -145,11 +145,6 @@ void PlayerWorldMap::tileCheck()
 	RECT rc;
 
 	rcCollision = _playerRc;
-
-	//rcCollision.left ;
-	//rcCollision.top += 4;
-	//rcCollision.right -= 4;
-	//rcCollision.bottom -= 4;
 
 	TileX = _x / TileSIZE;
 	TileY = _y / TileSIZE;
