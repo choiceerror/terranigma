@@ -25,17 +25,22 @@ private:
 	float _speed;
 
 	world* _world;
+	POINT tileIndex[2];
 
+
+	int TileX, TileY;
 public:
 	PlayerWorldMap();
 	~PlayerWorldMap();
 
 	HRESULT init();
 	void release();
-	void update();
+	void update(int check);
 	void render(float cameraX, float cameraY);
-
+	void tileCheck();
 	float getPlayerX() { return _x; }
 	float getPlayerY() { return _y; }
+
+	void setTownManagerAddressLink(world* wo) { _world = wo; }
 };
 

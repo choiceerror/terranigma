@@ -27,13 +27,14 @@ HRESULT worldMap::init()
 	_world->init();
 	_playerWorldMap->init();
 	_camera->init(GAMESIZEX, GAMESIZEY, 1920, 1920);
-	_mode7->init(IMAGEMANAGER->findImage("worldMapTile"));
-	_mode7->setMode7Point(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY(), (PI / 180) * 90);
+	//_mode7->init(IMAGEMANAGER->findImage("worldMapTile"));
+	//_mode7->setMode7Point(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY(), (PI / 180) * 90);
 
 	IMAGEMANAGER->findImage("blue")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("middle")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("middle2")->setAlpahBlend(true);
 
+	_playerWorldMap->setTownManagerAddressLink(_world);
 	return S_OK;
 }
 
@@ -44,18 +45,18 @@ void worldMap::release()
 void worldMap::update()
 {
 	_camera->update(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY());
-	_playerWorldMap->update();
+	_playerWorldMap->update(3);
 
-	_mode7->update();
-	_mode7->setMode7Point(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY(), (PI / 180) * 90);
+	//_mode7->update();
+	//_mode7->setMode7Point(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY(), (PI / 180) * 90);
 }
 
 void worldMap::render()
 {
 	_world->render(_camera->getCameraX(), _camera->getCameraY());
-	//IMAGEMANAGER->render("worldMapTile", getMemDC());
-	_mode7->setObjectImage(IMAGEMANAGER->findImage("worldMapTile"));
-	_mode7->render(getMemDC());
+	IMAGEMANAGER->render("worldMapTile", getMemDC());
+	//_mode7->setObjectImage(IMAGEMANAGER->findImage("worldMapTile"));
+	//_mode7->render(getMemDC());
 	fake3DHighImage();
 
 	//BitBlt(IMAGEMANAGER->findImage("fake3DHigh")->getMemDC(), 0, 0, GAMESIZEX, 120, IMAGEMANAGER->findImage("backBuffer")->getMemDC(), 0, GAMESIZEY - 120, SRCCOPY);

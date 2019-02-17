@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "PlayerWorldMap.h"
-
+#include "world.h"
 
 PlayerWorldMap::PlayerWorldMap()
 {
@@ -45,7 +45,7 @@ void PlayerWorldMap::release()
 {
 }
 
-void PlayerWorldMap::update()
+void PlayerWorldMap::update(int check)
 {
 
 	if (KEYMANAGER->isStayKeyDown(VK_LEFT) && !(KEYMANAGER->isStayKeyDown(VK_UP) || KEYMANAGER->isStayKeyDown(VK_DOWN)))
@@ -126,10 +126,104 @@ void PlayerWorldMap::update()
 	}
 
 	_playerRc = RectMakeCenter(_x, _y + 20, 30, 30);
+
+	if (check == 3)
+	{
+		tileCheck();
+	}
 }
 
 void PlayerWorldMap::render(float cameraX, float cameraY)
 {
 	_playerImage->expandAniRenderCenter(getMemDC(), _x - cameraX, _y - cameraY, _ani, 1, 1);
 	Rectangle(getMemDC(), _playerRc);
+}
+
+void PlayerWorldMap::tileCheck()
+{
+	RECT rcCollision;
+	RECT rc;
+
+	rcCollision = _playerRc;
+
+	//rcCollision.left ;
+	//rcCollision.top += 4;
+	//rcCollision.right -= 4;
+	//rcCollision.bottom -= 4;
+
+	TileX = _x / TileSIZE;
+	TileY = _y / TileSIZE;
+
+
+	if (KEYMANAGER->isStayKeyDown(VK_LEFT) && _playerDirection != WORLDMAP_MOVE_LEFT || _playerDirection != WORLDMAP_MOVE_RIGHT)
+	{
+		tileIndex[0].x = TileX - 1;
+		tileIndex[0].y = TileY;
+
+
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_world->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_world->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_x += _speed;
+				}
+			}
+		}
+	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && _playerDirection != WORLDMAP_MOVE_LEFT || _playerDirection != WORLDMAP_MOVE_RIGHT)
+	{
+		tileIndex[0].x = TileX + 1;
+		tileIndex[0].y = TileY;
+
+
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_world->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_world->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_x -= _speed;
+				}
+			}
+		}
+	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_UP) && _playerDirection != WORLDMAP_MOVE_UP || _playerDirection != WORLDMAP_MOVE_DOWN)
+	{
+		tileIndex[0].x = TileX ;
+		tileIndex[0].y = TileY - 1;
+		//tileIndex[1].x = TileX - 1;
+		//tileIndex[1].y = TileY - 1;
+
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_world->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_world->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_y += _speed;
+				}
+			}
+		}
+	}
+
+	if (KEYMANAGER->isStayKeyDown(VK_DOWN) && _playerDirection != WORLDMAP_MOVE_UP || _playerDirection != WORLDMAP_MOVE_DOWN)
+	{
+		tileIndex[0].x = TileX;
+		tileIndex[0].y = TileY + 1;
+
+		for (int i = 0; i < 1; ++i)
+		{
+			if (_world->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			{
+				if (IntersectRect(&rc, &_world->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
+				{
+					_y -= _speed;
+				}
+			}
+		}
+	}
 }
