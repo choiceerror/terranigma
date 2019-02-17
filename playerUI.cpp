@@ -9,7 +9,7 @@ void player::enemyDeathExpGet()
 {
 	for (int i = 0; i < _enemyManager->getVBallMonster().size(); i++)
 	{
-		if (_enemyManager->getVBallMonster()[i]->getCurrentHP == 0)
+		if (_enemyManager->getVBallMonster()[i]->getCurrentHP() == 0)
 		{
 			_player.exp += 3;
 			if (_player.exp >= _player.maxExp)
@@ -20,7 +20,7 @@ void player::enemyDeathExpGet()
 	}
 	for (int i = 0; i < _enemyManager->getVFireMonster().size(); i++)
 	{
-		if (_enemyManager->getVFireMonster()[i]->getCurrentHP == 0)
+		if (_enemyManager->getVFireMonster()[i]->getCurrentHP() == 0)
 		{
 			_player.exp += 3;
 			if (_player.exp >= _player.maxExp)
@@ -31,7 +31,7 @@ void player::enemyDeathExpGet()
 	}
 	for (int i = 0; i < _enemyManager->getVKnightMonster().size(); i++)
 	{
-		if (_enemyManager->getVKnightMonster()[i]->getCurrentHP == 0)
+		if (_enemyManager->getVKnightMonster()[i]->getCurrentHP() == 0)
 		{
 			_player.exp += 4;
 			if (_player.exp >= _player.maxExp)
