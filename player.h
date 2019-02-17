@@ -65,6 +65,9 @@ struct tagPlayer
 	int def;						//방어력
 	int money;						//돈
 	int alphaRender;				//투명도
+	int level;						//플레이어 레벨
+	int exp;						//현재 경험치
+	int maxExp;						//최대 경험치
 };
 
 class player : public gameNode
@@ -102,6 +105,7 @@ private:
 	bool _isWalk;						// 걷는중
 	bool _unMove;						// 플레이어 움직이지 못하게
 
+	bool _death;
 
 	int TileX, TileY;
 
@@ -134,12 +138,14 @@ public:
 	void DoubleKeyIntVoid();
 	//재생에 중복되는 코드 함수화
 	void playerAniName(string targetName, string aniName);
-
+	//적이 때리면 맞는 충돌 및 모션 변경
 	void enemyCollision(bool enemyCheck);
-
-	void playerUI();
-
+	//UI 플레이어 체력이랑 소지금 랜더
 	void playerUIRender();
+	//플레이어 죽을때
+	void playerDeath();
+	//몬스터 잡을때 경험치 얻는 함수
+	void enemyDeathExpGet();
 
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }
@@ -187,8 +193,10 @@ public:
 	int getPlayerHP() { return _player.HP; }
 	int getPlayerStr() { return _player.damage; }
 	int getPlayerDef() { return _player.def; }
+	int getPlayerLevel() { return _player.level; }
 
 	bool getPlayerJump() { return _isJump; }
 	bool getPlayerRun() { return _isRun; }
+	bool getPlayerDeath() { return _death; }
 };
 

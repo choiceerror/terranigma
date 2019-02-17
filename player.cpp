@@ -65,6 +65,7 @@ HRESULT player::init()
 
 	_unMove = false;
 
+	_death = false;
 
 	return S_OK;
 }
@@ -102,10 +103,16 @@ void player::update(bool enemyCheck, int a)
 		_attackMoveStop = false;
 	}
 
-	if ((!(_player.state == PLAYER_ENEMY_ATTACK) || _player.state == PLAYER_IDLE) && !_unMove)
+	if (!_death)
 	{
-		keyInput();
+		enemyCollision(enemyCheck);
+		if ((!(_player.state == PLAYER_ENEMY_ATTACK) || _player.state == PLAYER_IDLE) && !_unMove)
+		{
+			keyInput();
+		}
+		
 	}
+	
 	playerState();
 	_jump->update();
 	_dashAttack->update(&_player.x, &_player.y);
@@ -118,7 +125,7 @@ void player::update(bool enemyCheck, int a)
 	{
 		townCheck();
 	}
-	enemyCollision(enemyCheck);
+	
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 50);
 
 	if (KEYMANAGER->isOnceKeyDown(VK_SHIFT))
@@ -127,12 +134,13 @@ void player::update(bool enemyCheck, int a)
 		SCENEMANAGER->changeScene("ui");
 	}
 
+	playerDeath();
 }
 
 void player::render(float cameraX, float cameraY)
 {
 	_player.image->alphaAniRenderCenter(getMemDC(), _player.x - cameraX, _player.y - cameraY, _player.ani, _player.alphaRender);
-	//Rectangle(getMemDC(), _player.rc);
+	Rectangle(getMemDC(), _player.rc);
 	char str[128];
 	//for (int i = 0; i < 4; i++)
 	//{
@@ -145,8 +153,8 @@ void player::render(float cameraX, float cameraY)
 	////SetTextColor(getMemDC(), RGB(0, 0, 0));
 	//TextOut(getMemDC(), 100, 120, str, strlen(str));
 	//
-	//sprintf_s(str, "%d", _player.direction);
-	//TextOut(getMemDC(), 120, 120, str, strlen(str));
+	sprintf_s(str, "%d", _playerProtect);
+	TextOut(getMemDC(), 120, 120, str, strlen(str));
 	//
 	//sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
 	//TextOut(getMemDC(), 140, 120, str, strlen(str));
@@ -155,6 +163,8 @@ void player::render(float cameraX, float cameraY)
 // 캐릭터 프레임 초기값
 void player::keyFrameInit()
 {
+
+	KEYANIMANAGER->deleteAll();
 	int idleLeft[] = { 0 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "idleLeft", "player", idleLeft, 1, PLAYERFPS, true);
 	int idleRight[] = { 1 };
@@ -868,15 +878,16 @@ void player::enemyCollision(bool enemyCheck)
 			if (!_alphaChange) 	_player.alphaRender = 150;
 			else 	_player.alphaRender = 200;
 
-			if (GetTickCount() - _playerProtectTime >= 1 * 600)
-			{
-				_player.state = PLAYER_IDLE;
-			}
-			if (GetTickCount() - _playerProtectTime >= 1 * 1000)
+			if (GetTickCount() - _playerProtectTime >= 1 * 1300)
 			{
 				_player.alphaRender = 255;
 				_playerProtect = false;
 			}
+			else if (GetTickCount() - _playerProtectTime >= 1 * 600 )
+			{
+				_player.state = PLAYER_IDLE;
+			}
+			
 			if (_player.state == PLAYER_ENEMY_ATTACK)
 			{
 				switch (_player.direction)
@@ -906,10 +917,16 @@ void player::enemyCollision(bool enemyCheck)
 				{
 					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVBallMonster()[i]->getRect()))
 					{
+						if (_playerProtect == false)
+						{
+							_player.HP -= 4 - _player.def;
+							if (_player.HP <= 0) _player.HP = 0;
+						}
 						_playerProtect = true;
 						_alphaChangeTime = GetTickCount();
 						_playerProtectTime = GetTickCount();
 						_player.state = PLAYER_ENEMY_ATTACK;
+						
 					}
 				}
 				for (int i = 0; i < _enemyManager->getVFireMonster().size(); i++)
@@ -917,6 +934,11 @@ void player::enemyCollision(bool enemyCheck)
 					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVFireMonster()[i]->getRect()) ||
 						_enemyManager->getVFireMonster()[i]->getIsAttack())
 					{
+						if (_playerProtect == false)
+						{
+							_player.HP -= 4 - _player.def;
+							if (_player.HP <= 0) _player.HP = 0;
+						}
 						_playerProtect = true;
 						_alphaChangeTime = GetTickCount();
 						_playerProtectTime = GetTickCount();
@@ -928,6 +950,11 @@ void player::enemyCollision(bool enemyCheck)
 					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVKnightMonster()[i]->getRect()) ||
 						IntersectRect(&rc, &_player.rc, &_enemyManager->getVKnightMonster()[i]->getAttackRect()))
 					{
+						if (_playerProtect == false)
+						{
+							_player.HP -= 6 - _player.def;
+							if (_player.HP <= 0) _player.HP = 0;
+						}
 						_playerProtect = true;
 						_alphaChangeTime = GetTickCount();
 						_playerProtectTime = GetTickCount();
@@ -938,4 +965,15 @@ void player::enemyCollision(bool enemyCheck)
 		}
 	}
 }
+
+//플레이어가 피가 0이 되서 죽을때
+void player::playerDeath()
+{
+	if (_player.HP == 0)
+	{
+		_death = true;
+		_player.state = PLAYER_DEATH;
+	}
+}
+
 

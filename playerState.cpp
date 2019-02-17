@@ -239,5 +239,11 @@ void player::playerState()
 			break;
 		}
 		break;
+	case PLAYER_LEVELUP:
+		playerAniName("ark", "levelUp");
+		break;
+	case PLAYER_DEATH:
+		playerAniName("ark", "death");
+		break;
 	}
 }
