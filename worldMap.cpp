@@ -27,12 +27,14 @@ HRESULT worldMap::init()
 	_world->init();
 	_playerWorldMap->init();
 	_camera->init(GAMESIZEX, GAMESIZEY, 1920, 1920);
-	//_mode7->init(IMAGEMANAGER->findImage("worldMapTile"));
-	//_mode7->setMode7Point(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY(), (PI / 180) * 90);
+	_mode7->init(IMAGEMANAGER->findImage("worldMapTile"));
+	_mode7->setMode7Point(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY(), (PI / 180) * 90);
 
 	IMAGEMANAGER->findImage("blue")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("middle")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("middle2")->setAlpahBlend(true);
+	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
+	_alphaValue = 0;
 
 	_playerWorldMap->setTownManagerAddressLink(_world);
 	return S_OK;
@@ -44,20 +46,21 @@ void worldMap::release()
 
 void worldMap::update()
 {
-	_camera->update(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY());
+	//_camera->update(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY());
 	_playerWorldMap->update(3);
 
-	//_mode7->update();
-	//_mode7->setMode7Point(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY(), (PI / 180) * 90);
+	_mode7->update();
+	_mode7->setMode7Point(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY(), (PI / 180) * 90);
 }
 
 void worldMap::render()
 {
 	_world->render(_camera->getCameraX(), _camera->getCameraY());
-	IMAGEMANAGER->render("worldMapTile", getMemDC());
-	//_mode7->setObjectImage(IMAGEMANAGER->findImage("worldMapTile"));
-	//_mode7->render(getMemDC());
-	fake3DHighImage();
+	_playerWorldMap->render(_camera->getCameraX(), _camera->getCameraY());
+	//IMAGEMANAGER->render("worldMapTile", getMemDC());
+	_mode7->setObjectImage(IMAGEMANAGER->findImage("worldMapTile"));
+
+	_mode7->render(getMemDC());
 
 	//BitBlt(IMAGEMANAGER->findImage("fake3DHigh")->getMemDC(), 0, 0, GAMESIZEX, 120, IMAGEMANAGER->findImage("backBuffer")->getMemDC(), 0, GAMESIZEY - 120, SRCCOPY);
 	POINT pt[3];
@@ -77,7 +80,6 @@ void worldMap::render()
 		IMAGEMANAGER->findImage("middle2")->alphaRender(getMemDC(), 0, 95, 100);
 	}
 
-	_playerWorldMap->render(_camera->getCameraX(), _camera->getCameraY());
 
 	PatBlt(IMAGEMANAGER->findImage("worldMapTile")->getMemDC(), 0, 0, TOTALSIZEX, TOTALSIZEY, NULL);
 	PatBlt(IMAGEMANAGER->findImage("fake3DHigh")->getMemDC(), 0, 0, GAMESIZEX, 80, NULL);
@@ -85,8 +87,6 @@ void worldMap::render()
 
 void worldMap::fake3DHighImage()
 {
-	
-
 }
 
 void worldMap::setWindowsSize(int x, int y, int width, int height)

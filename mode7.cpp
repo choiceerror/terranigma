@@ -23,7 +23,7 @@ HRESULT mode7::init(image* img)
 	_foVHalf = PI / 5.0f;
 	_foHHalf = PI / 8.0f;
 
-	_far = 550.0f;
+	_far = 80.f;
 	_near = 0.0f;
 	_line = 90.0f;
 	_mapBitmap = _totalMap->getBitMap();
@@ -37,9 +37,14 @@ HRESULT mode7::init(image* img)
 	_kartPattern = new unsigned int[TOTALSIZEX * TOTALSIZEY];
 
 	
-	_mode7FlatMode = false;
+	_mode7FlatMode = true;
 
 	_once = false;
+
+	_far = 270.f;
+	_near = 5.0f;
+	_line = 305.0f;
+	_foVHalf = 0.76f;
 
 	return S_OK;
 }
@@ -89,8 +94,14 @@ void mode7::update(void)
 		}
 	}
 
+	//평지모드
 	if (_mode7FlatMode)
 	{
+		_far = 295.f;
+		_near = 5.0f;
+		_line = 370.0f;
+		_foVHalf = 0.74f;
+
 		for (int i = 0; i < GAMESIZEX * GAMESIZEY; ++i)
 		{
 			*(_mode7Pattern + i) = MAGENTA;
@@ -132,8 +143,14 @@ void mode7::update(void)
 			}
 		}
 	}
+	//둥근모드
 	else
 	{
+		_far = 855.0f;
+		_near = 15.f;
+		_line = 385.f;
+		_foVHalf = 0.76f;
+
 		for (int i = 0; i < GAMESIZEX * GAMESIZEY; ++i)
 		{
 			*(_mode7Pattern + i) = MAGENTA;
@@ -185,13 +202,27 @@ void mode7::render(HDC dc)
 
 	if (_mode7FlatMode)
 	{
-		_mode7Image->render(dc, 0, - 50);
+		_mode7Image->render(dc, 0, 0);
 	}
 	else
 	{
 		_mode7Image->render(dc, 0, 75);
 	}
 	
+
+	char str[128];
+	sprintf_s(str, "_far %f _near %f ", _far, _near);
+	TextOut(getMemDC(), 200, 200, str, strlen(str));
+
+	sprintf_s(str, "_line %f", _line);
+	TextOut(getMemDC(), 200, 230, str, strlen(str));
+
+	sprintf_s(str, "_foVHalf %f", _foVHalf);
+	TextOut(getMemDC(), 200, 260, str, strlen(str));
+
+	//sprintf_s(str, "_worldA %f _foVHalf %f ", _worldA* (180 / PI), _foVHalf * (180 / PI));
+	//TextOut(getMemDC(), 200, 280, str, strlen(str));
+
 }
 
 void mode7::setMode7Point(float x, float y, float angle)

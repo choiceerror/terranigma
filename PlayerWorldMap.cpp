@@ -34,7 +34,7 @@ HRESULT PlayerWorldMap::init()
 
 	_x = WINSIZEX / 2;
 	_y = WINSIZEY / 2;
-	_speed = 3;
+	_speed = 5.f;
 	_playerRc = RectMakeCenter(_x, _y, 30, 30);
 	_playerDirection = WORLDMAP_IDLE_DOWN;
 	
@@ -136,8 +136,8 @@ void PlayerWorldMap::update(int check)
 
 void PlayerWorldMap::render(float cameraX, float cameraY)
 {
-	_playerImage->expandAniRenderCenter(getMemDC(), _x - cameraX, _y - cameraY, _ani, 1, 1);
-	Rectangle(getMemDC(), _playerRc);
+	_playerImage->expandAniRenderCenter(IMAGEMANAGER->findImage("worldMapTile")->getMemDC(), _x - cameraX, _y - cameraY, _ani, 1, 1);
+	//Rectangle(getMemDC(), _playerRc);
 }
 
 void PlayerWorldMap::tileCheck()

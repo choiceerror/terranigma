@@ -14,6 +14,10 @@ private:
 	camera* _camera;
 	mode7* _mode7;
 
+	int _alphaValue;
+	float _worldTime;
+	bool _once;
+
 public:
 	worldMap();
 	~worldMap();
