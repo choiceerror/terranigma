@@ -536,6 +536,9 @@
     <ClCompile Include="dungeonMap.cpp">
       <Filter>PlayGround\tileMap</Filter>
     </ClCompile>
+    <ClCompile Include="playerUI.cpp">
+      <Filter>PlayGround\player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="windowsAPI.rc">
