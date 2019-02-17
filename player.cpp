@@ -3,6 +3,7 @@
 #include "enemyManager.h"
 #include "dungeonMap.h"
 #include "townMap.h"
+#include "npcManager.h"
 player::player()
 {
 }
@@ -124,6 +125,7 @@ void player::update(bool enemyCheck, int a)
 	else if (a == 2)
 	{
 		townCheck();
+		npcCheck();
 	}
 	
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 50);
@@ -620,8 +622,6 @@ void player::tileCheck()
 			tileIndex[0].x = TileX - 1;
 			tileIndex[0].y = TileY;
 
-			//tileIndex[1].x = TileX - 1;
-			//tileIndex[1].y = TileY + 1;
 		
 		for (int i = 0; i < 1; ++i)
 		{
@@ -640,8 +640,7 @@ void player::tileCheck()
 			tileIndex[0].x = TileX + 1 ;
 			tileIndex[0].y = TileY;
 		
-			//tileIndex[1].x = TileX;
-			//tileIndex[1].y = TileY + 1;
+
 		
 		for (int i = 0; i < 1; ++i)
 		{
@@ -688,88 +687,7 @@ void player::tileCheck()
 			}
 		}
 	}
-	//switch (_player.direction)
-	//{
-	//case LEFT:
-	//
-	//	tileIndex[0].x = TileX - 1;
-	//	tileIndex[0].y = TileY;
-	//	
-	//	tileIndex[1].x = TileX - 1;
-	//	tileIndex[1].y = TileY + 1;
-	//	
-	//	for (int i = 0; i < 2; ++i)
-	//	{
-	//		if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
-	//		{
-	//			if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-	//			{
-	//				_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.right + 15;
-	//			}
-	//		}
-	//	}
-	//
-	//	break;
-	//case UP:
-	//	tileIndex[0].x = TileX;
-	//	tileIndex[0].y = TileY;
-	//
-	//	tileIndex[1].x = TileX;
-	//	tileIndex[1].y = TileY + 1;
-	//
-	//	for (int i = 0; i < 2; ++i)
-	//	{
-	//		if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
-	//		{
-	//			if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-	//			{
-	//				_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.bottom + 4;
-	//			}
-	//		}
-	//	}
-	//
-	//	break;
-	//case RIGHT:
-	//
-	//	tileIndex[0].x = TileX + 1;
-	//	tileIndex[0].y = TileY;
-	//
-	//	tileIndex[1].x = TileX + 1;
-	//	tileIndex[1].y = TileX + 1;
-	//
-	//
-	//	for (int i = 0; i < 2; ++i)
-	//	{
-	//		if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
-	//		{
-	//			if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-	//			{
-	//				_player.x = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.left - 15;
-	//			}
-	//		}
-	//	}
-	//
-	//	break;
-	//case DOWN:
-	//
-	//	tileIndex[0].x = TileX;
-	//	tileIndex[0].y = TileY;
-	//
-	//	tileIndex[1].x = TileX;
-	//	tileIndex[1].y = TileY + 1;
-	//
-	//	for (int i = 0; i < 2; ++i)
-	//	{
-	//		if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
-	//		{
-	//			if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-	//			{
-	//				_player.y = _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc.top - 28;
-	//			}
-	//		}
-	//	}
-	//	break;
-	//}
+	
 }
 
 void player::townCheck()
@@ -793,9 +711,6 @@ void player::townCheck()
 		tileIndex[0].x = TileX - 1;
 		tileIndex[0].y = TileY;
 
-		//tileIndex[1].x = TileX - 1;
-		//tileIndex[1].y = TileY + 1;
-
 		for (int i = 0; i < 1; ++i)
 		{
 			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
@@ -813,8 +728,6 @@ void player::townCheck()
 		tileIndex[0].x = TileX + 1;
 		tileIndex[0].y = TileY;
 
-		//tileIndex[1].x = TileX;
-		//tileIndex[1].y = TileY + 1;
 
 		for (int i = 0; i < 1; ++i)
 		{
@@ -858,6 +771,102 @@ void player::townCheck()
 				{
 					_player.y -= _player.speed;
 				}
+			}
+		}
+	}
+}
+
+void player::npcCheck()
+{
+	RECT rc;
+	for (int i = 0; i < _npcMgr->getVBird().size(); ++i)
+	{
+		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVBird()[i]->getRect()))
+		{
+			if (_player.direction == UP)
+			{
+				_player.y += _player.speed;
+			}
+			else if (_player.direction == DOWN)
+			{
+				_player.y -= _player.speed;
+			}
+			else if (_player.direction == LEFT)
+			{
+				_player.x += _player.speed;
+			}
+			else if (_player.direction == RIGHT)
+			{
+				_player.x -= _player.speed;
+			}
+		}
+	}
+
+	for (int i = 0; i < _npcMgr->getVElder().size(); ++i)
+	{
+		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVElder()[i]->getRect()))
+		{
+			if (_player.direction == UP)
+			{
+				_player.y += _player.speed;
+			}
+			else if (_player.direction == DOWN)
+			{
+				_player.y -= _player.speed;
+			}
+			else if (_player.direction == LEFT)
+			{
+				_player.x += _player.speed;
+			}
+			else if (_player.direction == RIGHT)
+			{
+				_player.x -= _player.speed;
+			}
+		}
+	}
+
+	for (int i = 0; i < _npcMgr->getVElle().size(); ++i)
+	{
+		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVElle()[i]->getRect()))
+		{
+			if (_player.direction == UP)
+			{
+				_player.y += _player.speed;
+			}
+			else if (_player.direction == DOWN)
+			{
+				_player.y -= _player.speed;
+			}
+			else if (_player.direction == LEFT)
+			{
+				_player.x += _player.speed;
+			}
+			else if (_player.direction == RIGHT)
+			{
+				_player.x -= _player.speed;
+			}
+		}
+	}
+
+	for (int i = 0; i < _npcMgr->getVTownHuman().size(); ++i)
+	{
+		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVTownHuman()[i]->getRect()))
+		{
+			if (_player.direction == UP)
+			{
+				_player.y += _player.speed;
+			}
+			else if (_player.direction == DOWN)
+			{
+				_player.y -= _player.speed;
+			}
+			else if (_player.direction == LEFT)
+			{
+				_player.x += _player.speed;
+			}
+			else if (_player.direction == RIGHT)
+			{
+				_player.x -= _player.speed;
 			}
 		}
 	}

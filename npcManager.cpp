@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "npcManager.h"
-
+#include "townMap.h"
 
 npcManager::npcManager()
 {
@@ -42,7 +42,7 @@ void npcManager::release()
 	}
 }
 
-void npcManager::update()
+void npcManager::update(int check)
 {
 	for (_viBird = _vBird.begin(); _viBird != _vBird.end(); _viBird++)
 	{
@@ -59,6 +59,12 @@ void npcManager::update()
 	for (_viTownHuman = _vTownHuman.begin(); _viTownHuman != _vTownHuman.end(); _viTownHuman++)
 	{
 		(*_viTownHuman)->update();
+	}
+
+	if (check == 2)
+	{
+		townCheck();
+		npcCheck();
 	}
 }
 
@@ -172,4 +178,368 @@ void npcManager::aiBirdUpdate()
 
 void npcManager::aiElderUpdate()
 {
+}
+
+void npcManager::townCheck()
+{
+	RECT rc;
+
+	for (int i = 0; i < _vBird.size(); ++i)
+	{
+		RECT Collision = _vBird[i]->getRect();
+
+		TileX = _vBird[i]->getRect().left / TileSIZE;
+		TileY = _vBird[i]->getRect().top / TileSIZE;
+
+
+		if (_vBird[i]->getNPCDirection() == NPC_LEFT)
+		{
+			tileIndex[0].x = TileX;
+			tileIndex[0].y = TileY;
+
+			for (int j = 0; j < 1; ++j)
+			{
+				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL)
+				{
+					if (IntersectRect(&rc, &_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->rc, &Collision))
+					{
+						_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+					}
+				}
+			}
+		}
+
+		if (_vBird[i]->getNPCDirection() == NPC_RIGHT)
+		{
+			tileIndex[0].x = TileX + 1;
+			tileIndex[0].y = TileY;
+
+			for (int j = 0; j < 1; ++j)
+			{
+				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL)
+				{
+					if (IntersectRect(&rc, &_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->rc, &Collision))
+					{
+						_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+					}
+				}
+			}
+		}
+
+		if (_vBird[i]->getNPCDirection() == NPC_UP)
+		{
+			tileIndex[0].x = TileX;
+			tileIndex[0].y = TileY;
+
+			for (int j = 0; j < 1; ++j)
+			{
+				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL)
+				{
+					if (IntersectRect(&rc, &_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->rc, &Collision))
+					{
+						_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+					}
+				}
+			}
+		}
+
+		if (_vBird[i]->getNPCDirection() == NPC_DOWN)
+		{
+			tileIndex[0].x = TileX;
+			tileIndex[0].y = TileY + 1;
+
+			for (int j = 0; j < 1; ++j)
+			{
+				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL)
+				{
+					if (IntersectRect(&rc, &_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->rc, &Collision))
+					{
+						_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+					}
+				}
+			}
+		}
+	}
+}
+
+void npcManager::npcCheck()
+{
+	RECT rc;
+	for (int i = 0; i < _vBird.size(); ++i)
+	{
+		for (int j = 0; j < _vElder.size(); ++j)
+		{
+			if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vElder[j]->getRect()) && _vBird[i]->getNPCDirection() == NPC_DOWN)
+			{
+				_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+			}
+
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vElder[j]->getRect()) && _vBird[i]->getNPCDirection() == NPC_UP)
+			{
+				_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+			}
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vElder[j]->getRect()) && _vBird[i]->getNPCDirection() == NPC_RIGHT)
+			{
+				_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+			}
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vElder[j]->getRect()) && _vBird[i]->getNPCDirection() == NPC_LEFT)
+			{
+				_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+			}
+		}
+
+
+		for (int k = 0; k < _vElle.size(); ++k)
+		{
+			if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vElle[k]->getRect()) && _vBird[i]->getNPCDirection() == NPC_DOWN)
+			{
+				_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+			}
+
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vElle[k]->getRect()) && _vBird[i]->getNPCDirection() == NPC_UP)
+			{
+				_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+			}
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vElle[k]->getRect()) && _vBird[i]->getNPCDirection() == NPC_RIGHT)
+			{
+				_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+			}
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vElle[k]->getRect()) && _vBird[i]->getNPCDirection() == NPC_LEFT)
+			{
+				_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+			}
+		}
+
+		for (int l = 0; l < _vTownHuman.size(); ++l)
+		{
+			if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vTownHuman[l]->getRect()) && _vBird[i]->getNPCDirection() == NPC_DOWN)
+			{
+				_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+			}
+
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vTownHuman[l]->getRect()) && _vBird[i]->getNPCDirection() == NPC_UP)
+			{
+				_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+			}
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vTownHuman[l]->getRect()) && _vBird[i]->getNPCDirection() == NPC_RIGHT)
+			{
+				_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+			}
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vTownHuman[l]->getRect()) && _vBird[i]->getNPCDirection() == NPC_LEFT)
+			{
+				_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+			}
+		}
+
+
+		for (int m = 0; m < _vBird.size(); ++m)
+		{
+			if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vBird[m]->getRect()) && _vBird[i]->getNPCDirection() == NPC_DOWN)
+			{
+				if (i == 0 && m == 1)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 0 && m == 2)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 0 && m == 3)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 1 && m == 0)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 1 && m == 2)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 1 && m == 3)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 2 && m == 0)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 2 && m == 1)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 2 && m == 3)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 3 && m == 0)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 3 && m == 1)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+				else if (i == 3 && m == 2)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() - 2.0f);
+				}
+
+			}
+
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vBird[m]->getRect()) && _vBird[i]->getNPCDirection() == NPC_UP)
+			{
+				if (i == 0 && m == 1)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				if (i == 0 && m == 2)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				if (i == 0 && m == 3)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				else if (i == 1 && m == 0)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				else if (i == 1 && m == 2)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				else if (i == 1 && m == 3)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				else if (i == 2 && m == 0)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				else if (i == 2 && m == 1)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				else if (i == 2 && m == 3)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				else if (i == 3 && m == 0)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				else if (i == 3 && m == 1)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+				else if (i == 3 && m == 2)
+				{
+					_vBird[i]->setNPCPosY(_vBird[i]->getNPCPosY() + 2.0f);
+				}
+			}
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vBird[m]->getRect()) && _vBird[i]->getNPCDirection() == NPC_RIGHT)
+			{
+				if (i == 0 && m == 1)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				if (i == 0 && m == 2)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				if (i == 0 && m == 3)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				else if (i == 1 && m == 0)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				else if (i == 1 && m == 2)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				else if (i == 1 && m == 3)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				else if (i == 2 && m == 0)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				else if (i == 2 && m == 1)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				else if (i == 2 && m == 3)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				else if (i == 3 && m == 0)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				else if (i == 3 && m == 1)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+				else if (i == 3 && m == 2)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() - 2.0f);
+				}
+			}
+			else if (IntersectRect(&rc, &_vBird[i]->getRect(), &_vBird[m]->getRect()) && _vBird[i]->getNPCDirection() == NPC_LEFT)
+			{
+				if (i == 0 && m == 1)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				if (i == 0 && m == 2)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				if (i == 0 && m == 3)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				else if (i == 1 && m == 0)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				else if (i == 1 && m == 2)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				else if (i == 1 && m == 3)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				else if (i == 2 && m == 0)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				else if (i == 2 && m == 1)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				else if (i == 2 && m == 3)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				else if (i == 3 && m == 0)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				else if (i == 3 && m == 1)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+				else if (i == 3 && m == 2)
+				{
+					_vBird[i]->setNPCPosX(_vBird[i]->getNPCPosX() + 2.0f);
+				}
+			}
+		}
+	}
 }

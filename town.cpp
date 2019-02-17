@@ -25,6 +25,9 @@ HRESULT town::init()
 	_town = new townMap;
 	_npcManager = new npcManager;
 
+	_player->setTownManagerAddressLink(_town);
+	_player->setnpcManagerAddressLink(_npcManager);
+	_npcManager->setTownManagerAddressLink(_town);
 
 	_player->init();
 	_town->init();
@@ -37,8 +40,7 @@ HRESULT town::init()
 	_npcManager->setTownHuman(TOWN_GRANDMA, 200, 400);
 	_npcManager->init();
 
-	_player->setTownManagerAddressLink(_town);
-
+	
 	_camera->init(GAMESIZEX, GAMESIZEY, 2560, 2560);
 
 	return S_OK;
@@ -52,7 +54,7 @@ void town::update()
 {
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_player->update(false, 2);
-	_npcManager->update();
+	_npcManager->update(2);
 	_npcManager->aiBirdUpdate();
 }
 

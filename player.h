@@ -14,6 +14,7 @@
 class enemyManager;
 class dungeonMap;
 class townMap;
+class npcManager;
 enum PLAYERSTATE
 {
 	PLAYER_IDLE = 0,			//캐릭터 아이들 상태
@@ -115,6 +116,7 @@ private:
 	enemyManager* _enemyManager;
 	dungeonMap* _dungeon;
 	townMap* _town;
+	npcManager* _npcMgr;
 public:
 	player();
 	~player();
@@ -150,6 +152,7 @@ public:
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }
 	void setTownManagerAddressLink(townMap* to) { _town = to; }
+	void setnpcManagerAddressLink(npcManager* npc) { _npcMgr = npc; }
 	//===================== 콜백 함수 =======================
 
 	//콜백 공격함수
@@ -162,6 +165,7 @@ public:
 	//===================== 타일 검출 =======================
 	void tileCheck();
 	void townCheck();
+	void npcCheck();
 	//===================== 접근자 설정자 =======================
 
 	PLAYERSTATE getPlayerState() { return _player.state; }

@@ -402,16 +402,6 @@ void mapTool::setUp()
 				i * TileSIZE + TileSIZE);
 		}
 	}
-
-	//for (int i = 0; i < TILEY; ++i)
-	//{
-	//	for (int j = 0; j < TILEX; ++j)
-	//	{
-	//		//SetRect(&_tiles[i * TILEX + j].rc, j * TileMainSIZE, i * TileMainSIZE, j * TileMainSIZE + TileMainSIZE, i * TileMainSIZE + TileMainSIZE);
-	//		SetRect(&_vvMap[i][j]->rc, j * TileMainSIZE, i * TileMainSIZE, j * TileMainSIZE + TileMainSIZE, i * TileMainSIZE + TileMainSIZE);
-	//	}
-	//}
-
 }
 
 void mapTool::setMap()
