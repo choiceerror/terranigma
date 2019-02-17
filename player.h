@@ -61,7 +61,7 @@ struct tagPlayer
 	int idX, idY;					//타일 인덱스값
 	int maxHP;						//최대체력
 	int HP;							//현재체력
-	int str;						//공격력
+	int damage;						//공격력
 	int def;						//방어력
 	int money;						//돈
 	int alphaRender;				//투명도
@@ -139,6 +139,8 @@ public:
 
 	void playerUI();
 
+	void playerUIRender();
+
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }
 	void setTownManagerAddressLink(townMap* to) { _town = to; }
@@ -168,6 +170,9 @@ public:
 	void setPlayerPosY(float playerY) { _player.y = playerY; }
 	void setPlayerSpeed(float speed) { _player.speed = speed; }
 	void setPlayerUnMove(bool unMove) { _unMove = unMove; }
+	void setPlayerMoney(int money) { _player.money = money; }
+	void setPlayerDamage(int damage) { _player.damage = damage; }
+	void setPlayerDef(int def) { _player.def = def; }
 
 	RECT getPlayerRc() { return _player.rc; }
 
@@ -180,7 +185,7 @@ public:
 	int getPlayerMoney() { return _player.money; }
 	int getPlayerMaxHP() { return _player.maxHP; }
 	int getPlayerHP() { return _player.HP; }
-	int getPlayerStr() { return _player.str; }
+	int getPlayerStr() { return _player.damage; }
 	int getPlayerDef() { return _player.def; }
 
 	bool getPlayerJump() { return _isJump; }
