@@ -46,7 +46,6 @@ private:
 
 	dungeonMap* _dungeonMap; //던전맵
 
-
 	int _fireBulletSpeed;
 
 	RECT _playerAttackRc; //임의의 공격렉트
@@ -91,6 +90,8 @@ public:
 
 	vector<POINTFLOAT> getVEnemyDeadPoint() { return _vEnemyDeadPoint; }
 	vector<POINTFLOAT>* setVEnemyDeadPoint() { return &_vEnemyDeadPoint; }
+	
+	fireMonsterBullet* getFireMonsterBullet() { return _fireMonsterBullet; }
 
 	void setPlayerMemoryAddressLink(player* player) { _player = player; }
 	void setDungeonMapAddressLink(dungeonMap* map) { _dungeonMap = map; }
