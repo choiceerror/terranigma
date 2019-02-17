@@ -327,8 +327,8 @@ void dungeonMap::tileDraw(float cameraX, float cameraY)
 		}
 	}
 
-	char str[128];
-
-	sprintf_s(str, "오브x:%d 오브y:%d  지형x:%d 지형y:%d", obx, oby, tix, tiy);
-	TextOut(getMemDC(), 600, 500, str, strlen(str));
+	//char str[128];
+	//
+	//sprintf_s(str, "오브x:%d 오브y:%d  지형x:%d 지형y:%d", obx, oby, tix, tiy);
+	//TextOut(getMemDC(), 600, 500, str, strlen(str));
 }

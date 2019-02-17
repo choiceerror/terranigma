@@ -19,8 +19,17 @@ private:
 	dungeonMap* _dungeon;
 	ItemManager* _itemManager;
 
+	RECT _temp;
+	RECT _dungeonDown;
+	RECT _dungeonUp;
+
 	int _rndItemDrop; //아이템 랜덤으로 드랍할것
 	int _rndItemTypeDrop; //아이템 타입 랜덤으로 드랍할것.
+
+	float _worldTime;
+	float _once;
+	int _alphaValue;
+	bool _changeScene;
 
 public:
 	dungeon();
@@ -30,6 +39,8 @@ public:
 	void release();
 	void update();
 	void render();
+
+	void dungeonChange();
 
 	void itemRandomDrop(); //랜덤 아이템드랍
 	void playerItemGet(); //플레이어 아이템 얻는 함수

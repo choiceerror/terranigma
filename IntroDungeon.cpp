@@ -49,6 +49,9 @@ HRESULT IntroDungeon::init()
 	int guardianTalk[] = { 29, 30, 31, 32 };
 	KEYANIMANAGER->addArrayFrameAnimation("guardianAnime", "guardianTalk", "guardian", guardianTalk, 4, 5, true);
 
+	_doorAni = KEYANIMANAGER->findAnimation("doorAnime", "doorClosed");
+	_guardianAni = KEYANIMANAGER->findAnimation("guardianAnime", "guardianClocking");
+
 	_count = 0;
 	_doorDirection = 0;
 	_doorPos.x = GAMESIZEX / 2 - 105;

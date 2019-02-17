@@ -39,6 +39,14 @@ HRESULT dungeon::init()
 
 	_clockFade->setClockFadeOut(false);
 	_clockFade->setClockFadeIn(true);
+
+	_dungeonUp = RectMake(416, 0, 192, 50);
+	_dungeonDown = RectMake(352, 3200 - 278, 320, 64);
+
+	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);     
+	_alphaValue = 0;
+	_changeScene = false;
+
 	return S_OK;
 }
 
@@ -59,18 +67,96 @@ void dungeon::update()
 	itemRandomDrop();
 	playerItemGet();
 	_clockFade->update();
+	dungeonChange();
+
+	
 }
 
 void dungeon::render()
 {
-	_dungeon->render(_camera->getCameraX(), _camera->getCameraY());
-	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
-	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
-	_player->render(_camera->getCameraX(), _camera->getCameraY());
-	_clockFade->render();
-	//char str[100];
-	//sprintf_s(str, "%d", _player->getInventory()->getPotionCount());
-	//TextOut(getMemDC(), 120, 120, str, strlen(str));
+	if (!_changeScene)
+	{
+		_dungeon->render(_camera->getCameraX(), _camera->getCameraY());
+		_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
+		_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
+		_player->render(_camera->getCameraX(), _camera->getCameraY());
+
+		for (int i = 0; i < 2; ++i)
+		{
+			for (int j = 0; j < 6; ++j)
+			{
+				IMAGEMANAGER->findImage("타일맵4")->frameRender(getMemDC(), 416 + 32 * j, i * 32 - _camera->getCameraY(), 14, 3);
+
+				if (i == 0)
+				{
+					IMAGEMANAGER->findImage("타일맵4")->frameRender(getMemDC(), 416 + 32 * j, 2 * 32 - _camera->getCameraY(), 15, 4);
+				}
+			}
+		}
+
+		_clockFade->render();
+		IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
+
+		//Rectangle(getMemDC(), _dungeonDown);
+		//Rectangle(getMemDC(), _dungeonUp);
+
+		//char str[100];
+		//sprintf_s(str, "%d", _player->getInventory()->getPotionCount());
+		//TextOut(getMemDC(), 120, 120, str, strlen(str));
+	}
+}
+
+void dungeon::dungeonChange()
+{
+	_dungeonUp = RectMake(416, 0 , 192, 50);
+	_dungeonDown = RectMake(352, 3200 - 278 , 320, 64);
+
+	//던전 나갈때
+	if (IntersectRect(&_temp, &_player->getPlayerRc(), &_dungeonDown))
+	{
+		_player->setPlayerUnMove(true);
+		
+		if (!_once)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+		}
+
+		if (_alphaValue < 255)
+		{
+			_alphaValue += 4;
+		}
+		if (_alphaValue > 255)
+		{
+			_alphaValue = 255;
+		}
+
+		if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_changeScene = true;
+			SCENEMANAGER->changeScene("introDungeon");
+		}
+
+		_once = true;
+	}
+	//던전 올라갈때
+	if (IntersectRect(&_temp, &_player->getPlayerRc(), &_dungeonUp))
+	{
+		_player->setPlayerUnMove(true);
+		_clockFade->setClockFadeOut(true);
+		if (!_once)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+		}
+		
+		if (1.3f + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_changeScene = true;
+			SCENEMANAGER->changeScene("dungeon2F");
+		}
+
+		_once = true;
+	}
+
 
 }
 
