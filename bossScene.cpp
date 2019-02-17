@@ -133,7 +133,7 @@ void bossScene::movePattern()
 	for (int i = 0; i < 10; i++)
 	{
 		_moveGoal[i].x = RND->getRandomFloat(300.f, 1000.f);
-		//_moveGoal[i].y = RND->
+		_moveGoal[i].y = RND->getRandomFloat(500.f, 700.f);
 	}
 	if (_isBossAppear == false)
 	{
@@ -142,8 +142,8 @@ void bossScene::movePattern()
 		case BOSS_STATE_MOVE:
 			if (_enemyManager->getVBoss()[0]->getDirection() == BOSS_DIRECTION_LEFT)
 			{
-				_enemyManager->getVBoss()[0]->setMoveAngle()
-				_enemyManager->getVBoss()[0]->setX()
+				//_enemyManager->getVBoss()[0]->setMoveAngle()
+				//_enemyManager->getVBoss()[0]->setX()
 			}
 		}
 	}

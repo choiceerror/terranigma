@@ -34,6 +34,7 @@ private:
 	float _moveSpeed;
 
 	POINTFLOAT _moveGoal[10];
+	float _moveGoalAngle;
 
 public:
 	bossScene();
