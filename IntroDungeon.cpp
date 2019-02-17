@@ -23,9 +23,11 @@ HRESULT IntroDungeon::init()
 
 	_camera = new camera;
 	_player = new player;
+	_clock = new ClockFadeOut;
 
 	_camera->init(GAMESIZEX, GAMESIZEY, GAMESIZEX, 2490);
 	_player->init();
+	_clock->init();
 
 	_door = IMAGEMANAGER->findImage("door");
 	_guardian = IMAGEMANAGER->findImage("guardian");
@@ -80,6 +82,7 @@ HRESULT IntroDungeon::init()
 
 	_camera->linearKeepMove(_dungeonPos.x, 2490 - GAMESIZEY / 2, 0.1f, 100000);
 
+	_indunTime = 0;
 	_time = 1.4f;
 	_worldTime = 0;
 	_speed = 0;
@@ -95,7 +98,7 @@ void IntroDungeon::release()
 
 void IntroDungeon::update()
 {
-	
+	_clock->update();
 	_camera->update(0, 0);
 
 	_count++;
@@ -282,12 +285,17 @@ void IntroDungeon::render()
 		IMAGEMANAGER->findImage("player")->expandAniRenderCenter(getMemDC(), _player->getPlayerX() - _camera->getCameraX(),
 			_player->getPlayerY() - _camera->getCameraY(), _player->getPlayerAni(), _playerSizeX, _playerSizeY);
 	}
+
+	_clock->render();
 	//Rectangle(getMemDC(), _escapeRc);
 	//Rectangle(getMemDC(), _introDungeonPlayerRc);
 
 	char str[128];
-	sprintf_s(str, "%d", _dungeonGo);
-	TextOut(getMemDC(), 100, 80, str, strlen(str));
+	//sprintf_s(str, "%d", _dungeonGo);
+	//TextOut(getMemDC(), 100, 80, str, strlen(str));
+
+	sprintf_s(str, "%d", _clock->getClockFadeIn());
+	TextOut(getMemDC(), 100, 100, str, strlen(str));
 
 	//sprintf_s(str, "플레이어X :%f, 플레이어Y : %f", _player->getPlayerX(), _player->getPlayerY());
 	//TextOut(getMemDC(), 120, 100, str, strlen(str));
@@ -312,6 +320,14 @@ void IntroDungeon::linearMove()
 		{
 			_player->setPlayerPosX(_player->getPlayerX() + cosf(_angle)*_speed);
 			_player->setPlayerPosY(_player->getPlayerY() + -sinf(_angle)*_speed);
+		}
+		if (_time + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_clock->setClockFadeOut(true);
+		}
+		if (2.7 + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			SCENEMANAGER->changeScene("dungeon");
 		}
 
 		_once = true;

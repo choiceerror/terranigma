@@ -2,6 +2,7 @@
 #include "gameNode.h"
 #include "player.h"
 #include "camera.h"
+#include "ClockFadeOut.h"
 
 enum GUARDIANDIRECTION
 {
@@ -15,6 +16,7 @@ enum GUARDIANDIRECTION
 class IntroDungeon : public gameNode
 {
 private:
+	ClockFadeOut* _clock;
 	player* _player;
 	camera* _camera;
 	POINT _dungeonPos;
@@ -55,6 +57,9 @@ private:
 	float _angle;
 	bool _isLinear;
 	bool _once;
+
+	float _indunTime;
+
 	
 public:
 	IntroDungeon();

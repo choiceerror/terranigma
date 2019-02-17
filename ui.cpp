@@ -142,9 +142,9 @@ void ui::render()
 	//_clockFade->render();
 
 
-	char str[100];
-	sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
-	TextOut(getMemDC(), 30, 100, str, strlen(str));
+	//char str[100];
+	//sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
+	//TextOut(getMemDC(), 30, 100, str, strlen(str));
 	//sprintf_s(str, "°ñ ÁÂÇ¥ : %d  %d", _goalX, _goalY);
 	//TextOut(getMemDC(), 30, 120, str, strlen(str));
 	//sprintf_s(str, "%d", _placeFrameX);
@@ -938,7 +938,7 @@ void ui::placeChange()
 
 void ui::dataLode()
 {
-	_inventory->inventoryLode();
+	_inventory->inventoryLoad();
 	
 }
 

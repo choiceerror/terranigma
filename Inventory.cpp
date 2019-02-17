@@ -57,6 +57,9 @@ void Inventory::update()
 
 	//인벤토리에 담긴 수
 	itemCount();
+
+	//종료시 초기화
+	inventoryReBooting();
 }
 
 void Inventory::render()
@@ -64,7 +67,6 @@ void Inventory::render()
 	//char str[120];
 	//sprintf_s(str, "%d  %d  %d  %d", _weaponCount, _armorCount, _accessoryCount, _potionCount);
 	//TextOut(getMemDC(), 300, 600, str, strlen(str));
-
 
 }
 
@@ -104,6 +106,11 @@ void Inventory::inventoryReset()
 	_tempArmor = ARMORTYPE::NONE;
 	_tempAccessory = ACCESSORYTYPE::NONE;
 	_tempPorion = POTIONTYPE::NONE;
+
+	
+
+
+
 }
 
 void Inventory::itemMove()
@@ -265,7 +272,7 @@ void Inventory::inventorySave()
 	CloseHandle(file);
 }
 
-void Inventory::inventoryLode()
+void Inventory::inventoryLoad()
 {
 	HANDLE file;
 	DWORD lode;
@@ -279,4 +286,13 @@ void Inventory::inventoryLode()
 	ReadFile(file, _potionInv, sizeof(POTIONTYPE) * POTION_MAX_ARR, &lode, NULL);
 
 	CloseHandle(file);
+}
+
+void Inventory::inventoryReBooting()
+{
+	if (KEYMANAGER->isOnceKeyDown(VK_ESCAPE))
+	{
+		inventoryReset();
+		inventorySave();
+	}
 }

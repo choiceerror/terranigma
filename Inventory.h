@@ -53,8 +53,9 @@ public:
 	void itemCount();
 
 	void inventorySave();
-	void inventoryLode();
+	void inventoryLoad();
 
+	void inventoryReBooting();
 
 	//============================접근자 설정자============================
 
