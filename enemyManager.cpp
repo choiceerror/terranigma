@@ -47,8 +47,11 @@ void enemyManager::update()
 	//에너미들의 타일검출
 	tileCheckObjectCollision();
 
-	//에너미 AI 함수
-	enemyAI();
+	if (_player->getPlayerDeath() == false || _player->getPlayerLevelUP() ==  false)
+	{
+		//에너미 AI 함수
+		enemyAI();
+	}
 
 	//플레이어 공격에 에너미들이 맞을 함수
 	playerAttackEnemyCollision();
@@ -717,7 +720,7 @@ void enemyManager::enemyDead()
 			monster.x = _vBallMonster[i]->getX() - TileSIZE;
 			monster.y = _vBallMonster[i]->getY() - TileSIZE;
 			_vEnemyDeadPoint.push_back(monster);
-
+			_player->setPlayerExp(_player->getPlayerExp() + 4);
 			_vBallMonster.erase(_vBallMonster.begin() + i);
 		}
 		else i++;
@@ -735,7 +738,7 @@ void enemyManager::enemyDead()
 			monster.x = _vFireMonster[i]->getX() - _vFireMonster[i]->getImage()->getFrameWidth();
 			monster.y = _vFireMonster[i]->getY() - _vFireMonster[i]->getImage()->getFrameHeight() / 2;
 			_vEnemyDeadPoint.push_back(monster);
-		
+			_player->setPlayerExp(_player->getPlayerExp() + 5);
 			_vFireMonster.erase(_vFireMonster.begin() + i);
 		}
 		else i++;
@@ -753,7 +756,7 @@ void enemyManager::enemyDead()
 			monster.x = _vKnightMonster[i]->getX() - TileSIZE;
 			monster.y = _vKnightMonster[i]->getY();
 			_vEnemyDeadPoint.push_back(monster);
-		
+			_player->setPlayerExp(_player->getPlayerExp() + 6);
 			_vKnightMonster.erase(_vKnightMonster.begin() + i);
 		}
 		else i++;

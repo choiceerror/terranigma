@@ -267,7 +267,7 @@ void Inventory::inventorySave()
 	WriteFile(file, _weaponInv, sizeof(WEAPONTYPE) * WEAPON_MAX_ARR, &save, NULL);
 	WriteFile(file, _armorInv, sizeof(ARMORTYPE) * ARMOR_MAX_ARR, &save, NULL);
 	WriteFile(file, _accessoryInv, sizeof(ACCESSORYTYPE) * ACCESSORY_MAX_ARR, &save, NULL);
-	WriteFile(file, _potionInv, sizeof(POTIONTYPE) * POTION_MAX_ARR, &save, NULL);
+	WriteFile,(file, _potionInv, sizeof(POTIONTYPE) * POTION_MAX_ARR, &save, NULL);
 
 	CloseHandle(file);
 }

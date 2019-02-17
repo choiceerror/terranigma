@@ -264,9 +264,6 @@
     <ClInclude Include="jump.h">
       <Filter>PlayGround\player\state</Filter>
     </ClInclude>
-    <ClInclude Include="JumpAttack.h">
-      <Filter>PlayGround\player\state</Filter>
-    </ClInclude>
     <ClInclude Include="Armor.h">
       <Filter>PlayGround\item\Armor</Filter>
     </ClInclude>
@@ -332,6 +329,9 @@
     </ClInclude>
     <ClInclude Include="dungeonMap.h">
       <Filter>PlayGround\tileMap</Filter>
+    </ClInclude>
+    <ClInclude Include="JumpAttack.h">
+      <Filter>PlayGround\player\state</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

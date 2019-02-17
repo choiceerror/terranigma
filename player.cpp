@@ -32,12 +32,16 @@ HRESULT player::init()
 	_player.image->setAlpahBlend(true);
 
 	_oldJumpTime = -100;
+	_levelOldTime = 0;
 
 	_player.HP = 28;
 	_player.maxHP = 28;
 	_player.damage = 10;
 	_player.def = 1;
 	_player.money = 10;
+	_player.exp = 0;
+	_player.maxExp = 40;
+	_player.level = 1;
 
 	_player.x = GAMESIZEX / 2;
 	_player.y = GAMESIZEY / 2;
@@ -66,7 +70,7 @@ HRESULT player::init()
 
 	_unMove = false;
 
-	_death = false;
+	_death = _levelUP = false;
 
 	return S_OK;
 }
@@ -78,6 +82,10 @@ void player::release()
 
 void player::update(bool enemyCheck, int a)
 {
+	if (KEYMANAGER->isOnceKeyDown('U'))
+	{
+		_levelUP = true;
+	}
 	if (_player.state == PLAYER_RUN)
 	{
 		_isRun = true;
@@ -104,16 +112,20 @@ void player::update(bool enemyCheck, int a)
 		_attackMoveStop = false;
 	}
 
+	levelUP();
 	if (!_death)
 	{
-		enemyCollision(enemyCheck);
-		if ((!(_player.state == PLAYER_ENEMY_ATTACK) || _player.state == PLAYER_IDLE) && !_unMove)
+		if (!_levelUP)
 		{
-			keyInput();
+			enemyCollision(enemyCheck);
+			if ((!(_player.state == PLAYER_ENEMY_ATTACK) || _player.state == PLAYER_IDLE) && !_unMove)
+			{
+				keyInput();
+			}
 		}
-		
 	}
 	
+
 	playerState();
 	_jump->update();
 	_dashAttack->update(&_player.x, &_player.y);
@@ -136,13 +148,13 @@ void player::update(bool enemyCheck, int a)
 		SCENEMANAGER->changeScene("ui");
 	}
 
-	playerDeath();
+	playerDeath(enemyCheck);
 }
 
 void player::render(float cameraX, float cameraY)
 {
 	_player.image->alphaAniRenderCenter(getMemDC(), _player.x - cameraX, _player.y - cameraY, _player.ani, _player.alphaRender);
-	Rectangle(getMemDC(), _player.rc);
+	//Rectangle(getMemDC(), _player.rc);
 	char str[128];
 	//for (int i = 0; i < 4; i++)
 	//{
@@ -152,15 +164,21 @@ void player::render(float cameraX, float cameraY)
 	//}
 	//
 	//sprintf_s(str, "%d", _player.state);
-	////SetTextColor(getMemDC(), RGB(0, 0, 0));
+	//SetTextColor(getMemDC(), RGB(0, 0, 0));
 	//TextOut(getMemDC(), 100, 120, str, strlen(str));
 	//
-	sprintf_s(str, "%d", _playerProtect);
-	TextOut(getMemDC(), 120, 120, str, strlen(str));
+	
 	//
 	//sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
 	//TextOut(getMemDC(), 140, 120, str, strlen(str));
-	playerUIRender();
+	playerUIRender(); 
+	
+	sprintf_s(str, "%d", _player.exp);
+	TextOut(getMemDC(), 120, 120, str, strlen(str));
+	sprintf_s(str, "%d", _player.maxExp);
+	TextOut(getMemDC(), 140, 120, str, strlen(str));
+	sprintf_s(str, "%d", _levelUP);
+	TextOut(getMemDC(), 160, 120, str, strlen(str));
 }
 // 캐릭터 프레임 초기값
 void player::keyFrameInit()
@@ -212,7 +230,7 @@ void player::keyFrameInit()
 	int jumpDown[] = { 142, 141, 140, 139, 138, 137, 136, 135, 134, 133, 132, 131, 130 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpDown", "player", jumpDown, 11, PLAYERJUMP, false, callBackJump, this);
 	int levelUp[] = { 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "levelUp", "player", levelUp, 11, PLAYERFPS, true);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "levelUp", "player", levelUp, 11, 6, false);
 	int attackLeft[] = { 160, 161, 162, 163 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "attackLeft", "player", attackLeft, 4, PLAYERATTACKFPS, false, callBackAttack, this);
 	int attackRight[] = { 156, 157, 158, 159 };
@@ -640,8 +658,6 @@ void player::tileCheck()
 			tileIndex[0].x = TileX + 1 ;
 			tileIndex[0].y = TileY;
 		
-
-		
 		for (int i = 0; i < 1; ++i)
 		{
 			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
@@ -940,8 +956,22 @@ void player::enemyCollision(bool enemyCheck)
 				}
 				for (int i = 0; i < _enemyManager->getVFireMonster().size(); i++)
 				{
-					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVFireMonster()[i]->getRect()) ||
-						_enemyManager->getVFireMonster()[i]->getIsAttack())
+					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getVFireMonster()[i]->getRect()))
+					{
+						if (_playerProtect == false)
+						{
+							_player.HP -= 3 - _player.def;
+							if (_player.HP <= 0) _player.HP = 0;
+						}
+						_playerProtect = true;
+						_alphaChangeTime = GetTickCount();
+						_playerProtectTime = GetTickCount();
+						_player.state = PLAYER_ENEMY_ATTACK;
+					}
+				}
+				for (int i = 0; i < _enemyManager->getFireMonsterBullet()->getVFireBullet().size(); i++)
+				{
+					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getFireMonsterBullet()->getVFireBullet()[i].rc))
 					{
 						if (_playerProtect == false)
 						{
@@ -976,7 +1006,7 @@ void player::enemyCollision(bool enemyCheck)
 }
 
 //플레이어가 피가 0이 되서 죽을때
-void player::playerDeath()
+void player::playerDeath(bool enemyCheck)
 {
 	if (_player.HP == 0)
 	{
@@ -984,5 +1014,49 @@ void player::playerDeath()
 		_player.state = PLAYER_DEATH;
 	}
 }
+
+void player::levelUP()
+{
+	if (_player.exp >= _player.maxExp)
+	{
+		_player.level += 1;
+		_player.damage += 5;
+		_player.def += 1;
+		_player.HP += 5;
+		_player.maxHP += 5;
+		_player.maxExp += 10;
+		_player.exp = 0;
+		_levelUP = true;
+		_levelOldTime = GetTickCount();
+	}
+
+	if (_levelUP)
+	{
+		_player.state = PLAYER_LEVELUP;
+	}
+
+	if (GetTickCount() - _levelOldTime >= 3 * 1000)
+	{
+		_levelUP = false;
+	}
+}
+
+void player::playerSave()
+{
+	HANDLE file;
+	DWORD save;
+
+	file = CreateFile("saveFile/playerStatus.char", GENERIC_WRITE, NULL, NULL,
+		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	WriteFile(file, _enum, sizeof(tagEnum), &save, NULL);
+
+	CloseHandle(file);
+}
+
+void player::playerLoad()
+{
+}
+
 
 

@@ -78,7 +78,6 @@ private:
 	image* _image;
 	jump* _jump;
 	DashAttack* _dashAttack;
-
 	Inventory* _inventory;
 
 	int _doubleKey[4];					// 키를 2번 눌렀을때 달리게 해주기위한 인트형 변수
@@ -106,7 +105,9 @@ private:
 	bool _isWalk;						// 걷는중
 	bool _unMove;						// 플레이어 움직이지 못하게
 
-	bool _death;
+	bool _death;						//죽을때
+	bool _levelUP;						//레벨업				
+	int _levelOldTime;
 
 	int TileX, TileY;
 
@@ -145,9 +146,13 @@ public:
 	//UI 플레이어 체력이랑 소지금 랜더
 	void playerUIRender();
 	//플레이어 죽을때
-	void playerDeath();
-	//몬스터 잡을때 경험치 얻는 함수
-	void enemyDeathExpGet();
+	void playerDeath(bool enemyCheck);
+	//레벨업시
+	void levelUP();
+	//캐릭터 스텟 저장
+	void playerSave();
+	//캐릭터 스텟 불러오기
+	void playerLoad();
 
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }
@@ -183,6 +188,7 @@ public:
 	void setPlayerMoney(int money) { _player.money = money; }
 	void setPlayerDamage(int damage) { _player.damage = damage; }
 	void setPlayerDef(int def) { _player.def = def; }
+	void setPlayerExp(int exp) { _player.exp = exp; }
 
 	RECT getPlayerRc() { return _player.rc; }
 
@@ -198,9 +204,11 @@ public:
 	int getPlayerStr() { return _player.damage; }
 	int getPlayerDef() { return _player.def; }
 	int getPlayerLevel() { return _player.level; }
+	int getPlayerExp() { return _player.exp; }
 
 	bool getPlayerJump() { return _isJump; }
 	bool getPlayerRun() { return _isRun; }
 	bool getPlayerDeath() { return _death; }
+	bool getPlayerLevelUP() { return _levelUP; }
 };
 
