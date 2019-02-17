@@ -35,7 +35,5 @@ public:
 	void playerItemGet(); //플레이어 아이템 얻는 함수
 
 	void setWindowsSize(int x, int y, int width, int height);
-
-
 };
 

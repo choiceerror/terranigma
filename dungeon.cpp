@@ -195,8 +195,10 @@ void dungeon::playerItemGet()
 	{
 		if (IntersectRect(&temp, &_player->getPlayerRc(), &_itemManager->getVGlod()[i]->getItemRect()))
 		{
+			_player->setPlayerMoney(_player->getPlayerMoney() + _itemManager->getVGlod()[i]->getGoldNum());
 			_itemManager->getVGlod()[i]->setItemIsLive(false);
 		}
+			
 	}
 
 	//포션아이템
@@ -206,6 +208,7 @@ void dungeon::playerItemGet()
 		{
 			_player->getInventory()->pickUpPotion(_itemManager->getVPotion()[i]->getTagPotion());
 			_itemManager->getVPotion()[i]->setItemIsLive(false);
+		
 		}
 	}
 	
