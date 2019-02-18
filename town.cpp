@@ -34,8 +34,8 @@ HRESULT town::init()
 	_npcManager->setTownManagerAddressLink(_town);
 
 	_player->init();
-	//_town->init();
-	_messageSpear->init();
+	_town->init();
+	//_messageSpear->init();
 
 	_npcManager->setBird();
 	_npcManager->setElder();
