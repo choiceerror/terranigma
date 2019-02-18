@@ -165,7 +165,7 @@ void player::update(bool enemyCheck, int a)
 	playerDeath(enemyCheck);
 }
 
-void player::render(float cameraX, float cameraY)
+void player::render(float cameraX, float cameraY, bool uiRender)
 {
 	_player.image->alphaAniRenderCenter(getMemDC(), _player.x - cameraX, _player.y - cameraY, _player.ani, _player.alphaRender);
 	//Rectangle(getMemDC(), _player.rc);
@@ -185,7 +185,7 @@ void player::render(float cameraX, float cameraY)
 	//
 	//sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
 	//TextOut(getMemDC(), 140, 120, str, strlen(str));
-	playerUIRender(); 
+	playerUIRender(uiRender); 
 	
 	sprintf_s(str, "%d", _player.exp);
 	TextOut(getMemDC(), 120, 120, str, strlen(str));

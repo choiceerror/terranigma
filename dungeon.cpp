@@ -81,7 +81,7 @@ void dungeon::render()
 		_dungeon->render(_camera->getCameraX(), _camera->getCameraY());
 		_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 		_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
-		_player->render(_camera->getCameraX(), _camera->getCameraY());
+		_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
 
 		for (int i = 0; i < 2; ++i)
 		{

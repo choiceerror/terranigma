@@ -142,7 +142,7 @@ public:
 	HRESULT init();
 	void release();
 	void update(bool enemyCheck, int a);
-	void render(float cameraX, float cameraY);
+	void render(float cameraX, float cameraY, bool uiRender);
 
 	//각 상태 프레임 입력 초기값 
 	void keyFrameInit();
@@ -161,7 +161,7 @@ public:
 	//적이 때리면 맞는 충돌 및 모션 변경
 	void enemyCollision(bool enemyCheck);
 	//UI 플레이어 체력이랑 소지금 랜더
-	void playerUIRender();
+	void playerUIRender(bool uiRender);
 	//플레이어 죽을때
 	void playerDeath(bool enemyCheck);
 	//레벨업시

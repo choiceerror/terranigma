@@ -69,7 +69,7 @@ void dungeon2F::render()
 	_dungeon2F->render(_camera->getCameraX(), _camera->getCameraY());
 	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
-	_player->render(_camera->getCameraX(), _camera->getCameraY());
+	_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
 	_clockFade->render();
 }
 

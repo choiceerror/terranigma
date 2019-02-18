@@ -75,7 +75,7 @@ void town::update()
 void town::render()
 {
 	_town->render(_camera->getCameraX(), _camera->getCameraY());
-	_player->render(_camera->getCameraX(),_camera->getCameraY());
+	_player->render(_camera->getCameraX(),_camera->getCameraY(), false);
 	_npcManager->render(_camera->getCameraX(), _camera->getCameraY());
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_messageSpear->render();
