@@ -88,14 +88,32 @@ void mapTool::update()
 	{
 		if (PtInRect(&e[0], _ptMouse))
 		{
-			a--;
+			if (a > 0)
+			{
+				a--;
+			}
 		}
 		else if (PtInRect(&e[1], _ptMouse))
 		{
-			a++;
+			if (a < 4)
+			{
+				a++;
+			}
 		}
 	}
-
+	for (int i = 0; i < TILEY; ++i)
+	{
+		for (int j = 0; j < TILEX; ++j)
+		{
+			if (PtInRect(&_vvMap[i][j]->rc, ptMouse2))
+			{
+				f =  _vvMap[i][j]->rc.left / TileSIZE;
+				g = _vvMap[i][j]->rc.top / TileSIZE;
+			}
+		}
+	}
+	
+	
 	viewRc = RectMake(view.x - _camera->getCameraX(), view.y - _camera->getCameraY(), 20, 20);
 }
 
@@ -355,6 +373,11 @@ void mapTool::render()
 		TextOut(getMemDC(), 1300, 650, str, strlen(str));
 	}
 
+	sprintf_s(str, "현재타일지점 : %d  %d",	 f ,g);
+	{
+		TextOut(getMemDC(), 1100, 650, str, strlen(str));
+	}
+
 
 	//sprintf_s(str, "첫타일  x : %d   첫타일 y : %d", _mouseIndex.x, _mouseIndex.y);
 	//TextOut(getMemDC(), 1300, 520, str, strlen(str));
@@ -369,9 +392,6 @@ void mapTool::render()
 	TextOut(getMemDC(), 1100, 530, str, strlen(str));
 	sprintf_s(str, "타일Y개수 : %d", TILEY);
 	TextOut(getMemDC(), 1100, 550, str, strlen(str));
-
-	sprintf_s(str, "저장넘버 : %d  로드넘버 : %d", ee, a);
-	TextOut(getMemDC(), 1100, 650, str, strlen(str));
 
 	if (a == 0)
 	{

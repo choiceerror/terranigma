@@ -58,6 +58,7 @@ private:
 	bool _mouseUp;
 	int ee;
 	int b, c;
+	int f,g;
 	POINTFLOAT view;
 	POINT _mouseIndex;
 
