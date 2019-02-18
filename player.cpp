@@ -1082,15 +1082,17 @@ void player::playerLoad()
 	vector<string> vStr;
 	vStr = _txtData->txtLoad("saveFile/플레이어.txt");
 	
-	_player.HP = (atoi(vStr[0].c_str()));
-	_player.maxHP = (atoi(vStr[1].c_str()));
-	_player.damage = (atoi(vStr[2].c_str()));
-	_player.def = (atoi(vStr[3].c_str()));
-	_player.exp = (atoi(vStr[4].c_str()));
-	_player.maxExp = (atoi(vStr[5].c_str()));
-	_player.money = (atoi(vStr[6].c_str()));
-	_player.level = (atoi(vStr[7].c_str()));
-	
+	if (vStr.size() > 1)
+	{
+		_player.HP = (atoi(vStr[0].c_str()));
+		_player.maxHP = (atoi(vStr[1].c_str()));
+		_player.damage = (atoi(vStr[2].c_str()));
+		_player.def = (atoi(vStr[3].c_str()));
+		_player.exp = (atoi(vStr[4].c_str()));
+		_player.maxExp = (atoi(vStr[5].c_str()));
+		_player.money = (atoi(vStr[6].c_str()));
+		_player.level = (atoi(vStr[7].c_str()));
+	}
 }
 
 

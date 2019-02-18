@@ -33,11 +33,13 @@ HRESULT Elder::init(string npcName, const char* imageName, float x, float y, int
 	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "sitUp", imageName, sitUp, 1, 5, true);
 	int sitDown[] = {0 };
 	KEYANIMANAGER->addArrayFrameAnimation(_npc.name, "sitDown", imageName, sitDown, 1, 5, true);
-	return S_OK;
 
 	_npc.ani = KEYANIMANAGER->findAnimation(_npc.name, "sitDown");
 
 	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 32, 32);
+
+
+	return S_OK;
 }
 
 void Elder::release()

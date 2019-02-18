@@ -21,7 +21,7 @@ HRESULT town::init()
 	IMAGEMANAGER->addFrameImage("townHuman", "image/townHuman.bmp", 700, 250, 14, 5, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 
-	_alphaValue = 0;
+	_alphaValue = 255;
 
 	_player = new player;
 	_camera = new camera;
@@ -50,6 +50,8 @@ HRESULT town::init()
 	_worldTime = 0;
 	_once = false;
 	_worldMapIn = false;
+	_fadeOut = true;
+	
 
 	return S_OK;
 }
@@ -60,6 +62,7 @@ void town::release()
 
 void town::update()
 {
+	townIn();
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_npcManager->update(2);
 	_npcManager->aiBirdUpdate();
@@ -145,4 +148,21 @@ void town::playerSave()
 	vStr.push_back(itoa((int)_player->getPlayerCurrentScene(), temp, 10));
 
 	TXTDATA->txtSave("saveFile/playerScene.scene", vStr);
+}
+
+void town::townIn()
+{
+	if (_fadeOut)
+	{
+		if (_fadeOut > 0)
+		{
+			_alphaValue -= 3;
+		}
+
+		if (_alphaValue < 0)
+		{
+			_alphaValue = 0;
+			_fadeOut = false;
+		}
+	}
 }

@@ -143,7 +143,7 @@ void playGround::fileDelete()
 {
 	deleteFile("saveFile/introDungeon.scene");
 	deleteFile("saveFile/inventory.txt");
-
+	deleteFile("saveFile/플레이어.txt");
 
 
 

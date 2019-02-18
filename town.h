@@ -25,6 +25,8 @@ private:
 
 	bool _worldMapIn;
 
+	bool _fadeOut;
+
 public:
 	town();
 	~town();
@@ -38,5 +40,6 @@ public:
 
 	void worldMapIn();
 	void playerSave();
+	void townIn();
 };
 
