@@ -40,10 +40,6 @@ HRESULT dungeon2F::init()
 
 void dungeon2F::release()
 {
-	SAFE_DELETE(_enemyManager);
-	SAFE_DELETE(_player);
-	SAFE_DELETE(_dungeon2F);
-	SAFE_DELETE(_camera);
 }
 
 void dungeon2F::update()
