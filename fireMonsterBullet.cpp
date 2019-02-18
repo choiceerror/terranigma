@@ -72,7 +72,7 @@ void fireMonsterBullet::move()
 		_viFireBullet->rc = RectMakeCenter(_viFireBullet->x, _viFireBullet->y, _viFireBullet->image->getFrameWidth() / 2, _viFireBullet->image->getFrameHeight() / 4);
 		_viFireBullet->ani->start();
 
-		if ((_range < getDistance(_viFireBullet->x, _viFireBullet->y, _viFireBullet->fireX, _viFireBullet->fireY)) || _viFireBullet->isCollision == true)
+		if ((_range < getDistance(_viFireBullet->x, _viFireBullet->y, _viFireBullet->fireX, _viFireBullet->fireY)) || (_viFireBullet->isCollision == true))
 		{
 			_viFireBullet = _vFireBullet.erase(_viFireBullet);
 		}
@@ -118,11 +118,13 @@ void bossBullet::render(float cameraX, float cameraY)
 
 }
 
-void bossBullet::bossFire(float x, float y, float angle, float speed)
+void bossBullet::bossFire(float x, float y, float angle, float speed, int bulletMax)
 {
-	if (_bulletMax < _vBossBullet.size()) return;
+
 
 	tagFireBullet bossBullet;
+	bossBullet.max = bulletMax;
+	if (bossBullet.max < _vBossBullet.size()) return;
 	bossBullet.image = IMAGEMANAGER->findImage(_imageName);
 	bossBullet.ani = _tempAni;
 	bossBullet.x = bossBullet.fireX = bossBullet.viewX = x;
@@ -133,6 +135,7 @@ void bossBullet::bossFire(float x, float y, float angle, float speed)
 	bossBullet.rc = RectMakeCenter(bossBullet.x, bossBullet.y, bossBullet.image->getFrameWidth(), bossBullet.image->getFrameHeight());
 	bossBullet.isCollision = false;
 	bossBullet.sizeX = bossBullet.sizeY = 2.5f;
+	bossBullet.worldTime = TIMEMANAGER->getWorldTime();
 
 	_vBossBullet.push_back(bossBullet);
 }
@@ -148,8 +151,10 @@ void bossBullet::move()
 		_viBossBullet->rc = RectMakeCenter(_viBossBullet->x, _viBossBullet->y, _viBossBullet->image->getFrameWidth() / 2, _viBossBullet->image->getFrameHeight() / 4);
 		_viBossBullet->ani->start();
 
-		if ((_range < getDistance(_viBossBullet->x, _viBossBullet->y, _viBossBullet->fireX, _viBossBullet->fireY)) || _viBossBullet->isCollision == true)
+		if ((_range < getDistance(_viBossBullet->x, _viBossBullet->y, _viBossBullet->fireX, _viBossBullet->fireY)) || (_viBossBullet->isCollision == true)
+			|| (4.0f + _viBossBullet->worldTime <= TIMEMANAGER->getWorldTime()))
 		{
+			_viBossBullet->worldTime = TIMEMANAGER->getWorldTime();
 			_viBossBullet = _vBossBullet.erase(_viBossBullet);
 		}
 		else _viBossBullet++;

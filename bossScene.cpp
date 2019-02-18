@@ -55,9 +55,28 @@ HRESULT bossScene::init()
 	_goalX = GAMESIZEX / 2 + 70;
 	_goalY = 650;
 	_moveSpeed = 20.f;
-	_bulletPattern = BULLET_PATTERN::BLUE_BULLET; //처음엔 골드총알로
-	_attackPattern = ATTACK_PATTERN::ATTACK_TWO;
-	_bulletSpeed = 7;
+	_bulletPattern = BULLET_PATTERN::GOLD_BULLET; //처음엔 골드총알로
+	_attackPattern = ATTACK_PATTERN::ATTACK_ONE;
+
+	for (int i = 0; i < 3; i++)
+	{
+		_bulletSpeed[i] = 7;
+	}
+
+	//전기이펙트 
+	_shockAttack = new tagShockAttack;
+
+	_shockAttack->x = _enemyManager->getVBoss()[0]->getX();
+	_shockAttack->y = _enemyManager->getVBoss()[0]->getY();
+	_shockAttack->image = IMAGEMANAGER->findImage("shockAttack");
+	_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y, _shockAttack->image->getFrameWidth(), _shockAttack->image->getFrameHeight());
+	int rightShock[] = { 0, 1, 2, 3, 4, 5, 6, 7};
+	KEYANIMANAGER->addArrayFrameAnimation("shock", "rightShock", "shockAttack", rightShock, 8, 5, true);
+
+	int leftShock[] = {15, 14, 13, 12, 11, 10, 9, 8};
+	KEYANIMANAGER->addArrayFrameAnimation("shock", "leftShock", "shockAttack", leftShock, 8, 5, true);
+
+	_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "rightShock");
 
 	return S_OK;
 }
@@ -70,6 +89,7 @@ void bossScene::release()
 	SAFE_DELETE(_camera);
 	SAFE_DELETE(_bossBullet);
 	SAFE_DELETE(_itemManager);
+	SAFE_DELETE(_shockAttack);
 }
 
 void bossScene::update()
@@ -85,6 +105,8 @@ void bossScene::update()
 	movePattern();
 	//보스 공격패턴
 	attackPattern();
+	//보스 전기패턴
+	//shockAttack();
 
 	_bossBullet->update();
 }
@@ -97,10 +119,17 @@ void bossScene::render()
 	}
 	_dungeonBossMap->render(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
-	_player->render(_camera->getCameraX(), _camera->getCameraY());
+	_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
 	_bossBullet->render(_camera->getCameraX(), _camera->getCameraY());
 
-	//char str[128];
+	if (_attackPattern == ATTACK_SHOCK)
+	{
+	_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f , 3.f);
+
+	}
+
+	Rectangle(getMemDC(), _shockAttack->rc.left - _camera->getCameraX(), _shockAttack->rc.top - _camera->getCameraY(), _shockAttack->rc.right - _camera->getCameraX(), _shockAttack->rc.bottom - _camera->getCameraY());
+	char str[128];
 
 	//sprintf_s(str, "_rndMove : %d", _rndMove);
 	//TextOut(getMemDC(), 100, 260, str, strlen(str));
@@ -108,14 +137,26 @@ void bossScene::render()
 	//sprintf_s(str, "moveWorldTime : %f", _moveWorldTime);
 	//TextOut(getMemDC(), 100, 280, str, strlen(str));
 
-	//for (int i = 0; i < 4; i++)
+	//for (int i = 0; i < _bossBullet->getVBossBullet().size(); i++)
 	//{
-	//	sprintf_s(str, "_moveGoalX : %f", _moveGoal[i].x);
-	//	TextOut(getMemDC(), 600, i * 20, str, strlen(str));
+	//	sprintf_s(str, "bulletSize : %d", _bossBullet->getVBossBullet().size());
+	//	TextOut(getMemDC(), 400, 100, str, strlen(str));
 
-	//	sprintf_s(str, "_moveGoalY : %f", _moveGoal[i].y);
-	//	TextOut(getMemDC(), 800, i * 20, str, strlen(str));
 	//}
+	sprintf_s(str, "attackWorldTime[ATTACK_ONE] : %f", _attackWorldTime[ATTACK_ONE]);
+	TextOut(getMemDC(), 400, 100, str, strlen(str));
+
+	sprintf_s(str, "attackWorldTime[ATTACK_TWO] : %f", _attackWorldTime[ATTACK_TWO]);
+	TextOut(getMemDC(), 400, 120, str, strlen(str));
+
+	sprintf_s(str, "attackWorldTime[ATTACK_THREE] : %f", _attackWorldTime[ATTACK_THREE]);
+	TextOut(getMemDC(), 400, 140, str, strlen(str));
+
+	for (int i = 0; i < 4; i++)
+	{
+		sprintf_s(str, "_rndAttack: %d", _rndAttack[i]);
+		TextOut(getMemDC(), 200, 100 + i * 20, str, strlen(str));
+	}
 
 	//sprintf_s(str, "_distance : %f", _enemyManager->getVBoss()[0]->getTargetDistance());
 	//TextOut(getMemDC(), 400, 100, str, strlen(str));
@@ -234,60 +275,66 @@ void bossScene::attackPattern()
 			switch (_bulletPattern)
 			{
 			case BULLET_PATTERN::GOLD_BULLET:
-				(*_bossBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("goldBullet", "gold");
-				_bossBullet->getVBossBullet()[i].ani->start();
+				if (_attackPattern == ATTACK_ONE)
+				{
+					(*_bossBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("goldBullet", "gold");
+				}
 				break;
 			case BULLET_PATTERN::BLUE_BULLET:
-				(*_bossBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("blueBullet", "blue");
-				_bossBullet->getVBossBullet()[i].ani->start();
+				if (_attackPattern == ATTACK_TWO)
+				{
+					(*_bossBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("blueBullet", "blue");
+				}
 				break;
 			case BULLET_PATTERN::RED_BULLET:
-				(*_bossBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("redBullet", "red");
-				_bossBullet->getVBossBullet()[i].ani->start();
+				if (_attackPattern == ATTACK_THREE)
+				{
+					(*_bossBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("redBullet", "red");
+				}
 				break;
 			}
 		}
-
 		POINTFLOAT boss;
 		boss.x = _enemyManager->getVBoss()[0]->getX();
 		boss.y = _enemyManager->getVBoss()[0]->getY();
-
-		_bossBullet->setBulletMax(1);
 
 		switch (_attackPattern)
 		{
 		case ATTACK_ONE:
 
 			//시간마다 공격
-			if (3.0f + _attackWorldTime[ATTACK_ONE] <= TIMEMANAGER->getWorldTime())
+			if (3.0f + _attackWorldTime[ATTACK_ONE] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::GOLD_BULLET)
 			{
-				_rndAttack = RND->getRandomInt(1, 2);
-				_rndAttackType = RND->getRandomInt(1, 2);
-				if (_rndAttackType == 1)
+				_rndAttack[ATTACK_ONE] = RND->getRandomInt(1, 3);
+				_rndAttackType[0] = RND->getRandomInt(1, 2);
+				if (_rndAttackType[0] == 1)
 				{
-					_bossBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed);
-					_bossBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed);
+					_bossBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 1);
+					_bossBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 1);
 				}
-				else if (_rndAttackType == 2)
+				else if (_rndAttackType[0] == 2)
 				{
-					_bossBullet->setBulletMax(3);
-					_bossBullet->bossFire(boss.x - 100, boss.y, (PI / 180) * 270, _bulletSpeed);
-					_bossBullet->bossFire(boss.x - 200, boss.y, (PI / 180) * 270, _bulletSpeed);
-					_bossBullet->bossFire(boss.x + 100, boss.y, (PI / 180) * 270, _bulletSpeed);
-					_bossBullet->bossFire(boss.x + 200, boss.y, (PI / 180) * 270, _bulletSpeed);
+					_bossBullet->bossFire(boss.x - 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+					_bossBullet->bossFire(boss.x - 200, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+					_bossBullet->bossFire(boss.x + 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+					_bossBullet->bossFire(boss.x + 200, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
 
 				}
-			
+
 				//랜덤어택
-				if (_rndAttack == 1)
+				if (_rndAttack[ATTACK_ONE] == 1)
 				{
 					_bulletPattern = BULLET_PATTERN::BLUE_BULLET;
 					_attackPattern = ATTACK_TWO;
 				}
-				else if (_rndAttack == 2)
+				else if (_rndAttack[ATTACK_ONE] == 2)
 				{
 					_bulletPattern = BULLET_PATTERN::RED_BULLET;
 					_attackPattern = ATTACK_THREE;
+				}
+				else if (_rndAttack[ATTACK_ONE] == 3)
+				{
+					_attackPattern = ATTACK_SHOCK;
 				}
 
 				_attackWorldTime[ATTACK_ONE] = TIMEMANAGER->getWorldTime();
@@ -296,24 +343,27 @@ void bossScene::attackPattern()
 		case ATTACK_TWO:
 
 			//시간마다 공격
-			if (3.0f + _attackWorldTime[ATTACK_TWO] <= TIMEMANAGER->getWorldTime())
+			if (3.0f + _attackWorldTime[ATTACK_TWO] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::BLUE_BULLET)
 			{
-				_rndAttack = RND->getRandomInt(1, 2);
-				_rndAttackType = RND->getRandomInt(1, 2);
+				_rndAttack[ATTACK_TWO] = RND->getRandomInt(1, 3);
 
-				_bossBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed);
-				_bossBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed);
-		
+				_bossBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_TWO], 1);
+				_bossBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_TWO], 1);
+
 				//랜덤어택
-				if (_rndAttack == 1)
+				if (_rndAttack[ATTACK_TWO] == 1)
 				{
 					_bulletPattern = BULLET_PATTERN::GOLD_BULLET;
 					_attackPattern = ATTACK_ONE;
 				}
-				else if (_rndAttack == 2)
+				else if (_rndAttack[ATTACK_TWO] == 2)
 				{
 					_bulletPattern = BULLET_PATTERN::RED_BULLET;
 					_attackPattern = ATTACK_THREE;
+				}
+				else if (_rndAttack[ATTACK_ONE] == 3)
+				{
+					_attackPattern = ATTACK_SHOCK;
 				}
 
 				_attackWorldTime[ATTACK_TWO] = TIMEMANAGER->getWorldTime();
@@ -323,41 +373,88 @@ void bossScene::attackPattern()
 			break;
 		case ATTACK_THREE:
 
-			if (3.0f + _attackWorldTime[ATTACK_THREE] <= TIMEMANAGER->getWorldTime())
+			//시간마다 공격
+			if (3.0f + _attackWorldTime[ATTACK_THREE] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::RED_BULLET)
 			{
-				_rndAttack = RND->getRandomInt(1, 2);
-				_rndAttackType = RND->getRandomInt(1, 2);
+				_rndAttack[ATTACK_THREE] = RND->getRandomInt(1, 3);
+				_rndAttackType[1] = RND->getRandomInt(1, 2);
 
-				if (_rndAttackType == 1)
+				if (_rndAttackType[1] == 1)
 				{
-					_bossBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed);
-					_bossBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed);
+					_bossBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 1);
+					_bossBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 1);
 				}
-				else if (_rndAttackType == 2)
+				else if (_rndAttackType[1] == 2)
 				{
-					_bossBullet->setBulletMax(3);
-					_bossBullet->bossFire(boss.x - 100, boss.y, (PI / 180) * 270, _bulletSpeed);
-					_bossBullet->bossFire(boss.x - 200, boss.y - 100, (PI / 180) * 270, _bulletSpeed);
-					_bossBullet->bossFire(boss.x + 100, boss.y, (PI / 180) * 270, _bulletSpeed);
-					_bossBullet->bossFire(boss.x + 200, boss.y - 100, (PI / 180) * 270, _bulletSpeed);
+					_bossBullet->bossFire(boss.x - 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+					_bossBullet->bossFire(boss.x - 200, boss.y - 100, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+					_bossBullet->bossFire(boss.x + 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+					_bossBullet->bossFire(boss.x + 200, boss.y - 100, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
 				}
 
 				//랜덤어택
-				if (_rndAttack == 1)
+				if (_rndAttack[ATTACK_THREE] == 1)
 				{
 					_bulletPattern = BULLET_PATTERN::GOLD_BULLET;
 					_attackPattern = ATTACK_ONE;
 				}
-				else if (_rndAttack == 2)
+				else if (_rndAttack[ATTACK_THREE] == 2)
 				{
 					_bulletPattern = BULLET_PATTERN::BLUE_BULLET;
 					_attackPattern = ATTACK_TWO;
+				}
+				else if (_rndAttack[ATTACK_ONE] == 3)
+				{
+					_attackPattern = ATTACK_SHOCK;
 				}
 
 				_attackWorldTime[ATTACK_THREE] = TIMEMANAGER->getWorldTime();
 			}
 			break;
+		case ATTACK_SHOCK:
+
+			if (3.0f + _attackWorldTime[ATTACK_SHOCK] <= TIMEMANAGER->getWorldTime())
+			{
+				_rndAttack[ATTACK_SHOCK] = RND->getRandomInt(1, 3);
+				_rndAttackType[2] = RND->getRandomInt(1, 2);
+				
+				if (_rndAttackType[2] == 1)
+				{
+					_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "leftShock");
+				}
+				else if (_rndAttackType[2] == 2)
+				{
+					_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "rightShock");
+				}
+
+				//랜덤어택
+				if (_rndAttack[ATTACK_SHOCK] == 1)
+				{
+					_bulletPattern = BULLET_PATTERN::GOLD_BULLET;
+					_attackPattern = ATTACK_ONE;
+				}
+				else if (_rndAttack[ATTACK_SHOCK] == 2)
+				{
+					_bulletPattern = BULLET_PATTERN::BLUE_BULLET;
+					_attackPattern = ATTACK_TWO;
+				}
+				else if (_rndAttack[ATTACK_SHOCK] == 3)
+				{
+					_bulletPattern = BULLET_PATTERN::RED_BULLET;
+					_attackPattern = ATTACK_THREE;
+				}
+				_shockAttack->x = _enemyManager->getVBoss()[0]->getX();
+				_shockAttack->y = _enemyManager->getVBoss()[0]->getY() / 2 + 200;
+				_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y, 10, 300);
+				_shockAttack->ani->start();
+				_attackWorldTime[ATTACK_SHOCK] = TIMEMANAGER->getWorldTime();
+			}
+			break;
+
 		}
+
+
+		//두번째공격이고 파란색총알일때만
 		if (_attackPattern == ATTACK_TWO && _bulletPattern == BULLET_PATTERN::BLUE_BULLET)
 		{
 			for (int i = 0; i < _bossBullet->getVBossBullet().size(); i++)
@@ -376,28 +473,48 @@ void bossScene::attackPattern()
 			{
 				if (_bossBullet->getVBossBullet()[i].y >= _player->getPlayerY())
 				{
-					if (1.0f + _bulletWorldTime >= TIMEMANAGER->getWorldTime())
+					if (1.0f + _bossBullet->getVBossBullet()[i].bulletWorlTime >= TIMEMANAGER->getWorldTime())
 					{
 						(*_bossBullet->setVBossBullet())[i].speed = 0;
 						(*_bossBullet->setVBossBullet())[i].ani->setFPS(30);
 					}
-					else if (1.0f + _bulletWorldTime < TIMEMANAGER->getWorldTime() && 2.f + _bulletWorldTime > TIMEMANAGER->getWorldTime())
+					else if (1.1f + _bossBullet->getVBossBullet()[i].bulletWorlTime <= TIMEMANAGER->getWorldTime() && 2.f + _bossBullet->getVBossBullet()[i].bulletWorlTime > TIMEMANAGER->getWorldTime())
 					{
-						_bulletSpeed = 7;
-						(*_bossBullet->setVBossBullet())[i].speed += 0.2f;
+						(*_bossBullet->setVBossBullet())[i].speed = _bossBullet->getVBossBullet()[i].speed + 0.3f;
 						(*_bossBullet->setVBossBullet())[0].angle = PI2;
 						(*_bossBullet->setVBossBullet())[1].angle = PI;
 					}
-					else if (2.f + _bulletWorldTime <= TIMEMANAGER->getWorldTime())
+					else if (2.f + _bossBullet->getVBossBullet()[i].bulletWorlTime <= TIMEMANAGER->getWorldTime())
 					{
 						(*_bossBullet->setVBossBullet())[i].speed = 7;
 						(*_bossBullet->setVBossBullet())[i].ani->setFPS(7);
-						_bulletWorldTime = TIMEMANAGER->getWorldTime();
+						(*_bossBullet->setVBossBullet())[i].bulletWorlTime = TIMEMANAGER->getWorldTime();
 					}
 				}
 			}
 		}
 	}
+}
+
+void bossScene::shockAttack()
+{
+	//if (_isBossAppear == false && _enemyManager->getVBoss()[0]->getState() == BOSS_STATE_MOVE && 4.0f + _attackWorldTime[ATTACK_NONE] <= TIMEMANAGER->getWorldTime())
+	//{
+	//	if (5.0f + _attackWorldTime[ATTACK_SHOCK] <= TIMEMANAGER->getWorldTime())
+	//	{
+	//		_attackPattern = ATTACK_SHOCK;
+	//		_attackWorldTime[ATTACK_SHOCK] = TIMEMANAGER->getWorldTime();
+	//	}
+
+	//	if (_attackPattern == ATTACK_SHOCK)
+	//	{
+	//		_shockAttack->ani->start();
+	//		_shockAttack->x = _enemyManager->getVBoss()[0]->getX() - 50;
+	//		_shockAttack->y = _enemyManager->getVBoss()[0]->getY() / 2 + 50;
+	//		_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y, _shockAttack->image->getFrameWidth(), _shockAttack->image->getFrameHeight());
+	//	}
+	//}
+
 }
 
 

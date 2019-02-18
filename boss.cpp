@@ -42,6 +42,7 @@ void boss::render(float cameraX, float cameraY)
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
 	_enemy.image->expandAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion, 3.f, 3.f);
+	//Rectangle(getMemDC(), _enemy.rc.left - cameraX, _enemy.rc.top - cameraY, _enemy.rc.right - cameraX, _enemy.rc.bottom - cameraY);
 }
 
 void boss::move()

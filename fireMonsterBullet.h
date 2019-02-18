@@ -18,6 +18,9 @@ struct tagFireBullet
 	animation* ani;
 	POINT tileIndex[8]; //타일인덱스 판별
 	float sizeX, sizeY;
+	int max;
+	float worldTime;
+	float bulletWorlTime;
 };
 
 class fireMonsterBullet : public gameNode
@@ -74,7 +77,7 @@ public:
 	void update();
 	void render(float cameraX, float cameraY);
 
-	void bossFire(float x, float y, float angle, float speed); //보스몬스터 총알발사
+	void bossFire(float x, float y, float angle, float speed, int bulletMax); //보스몬스터 총알발사
 
 	void move(); //이동
 
