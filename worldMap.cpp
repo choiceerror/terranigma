@@ -24,6 +24,7 @@ HRESULT worldMap::init()
 	_world = new world;
 	_camera = new camera;
 	_mode7 = new mode7;
+	_player = new player;
 
 	_world->init();
 	_playerWorldMap->init();
@@ -42,7 +43,10 @@ HRESULT worldMap::init()
 	_once = false;
 	_worldTime = 0;
 
+
 	playerLoad();
+
+	
 
 	return S_OK;
 }
@@ -101,6 +105,11 @@ void worldMap::render()
 
 	PatBlt(IMAGEMANAGER->findImage("worldMapTile")->getMemDC(), 0, 0, TOTALSIZEX, TOTALSIZEY, NULL);
 	PatBlt(IMAGEMANAGER->findImage("fake3DHigh")->getMemDC(), 0, 0, GAMESIZEX, 80, NULL);
+
+	//char str[100];
+	//sprintf_s(str, "%d ", a);
+	//TextOut(getMemDC(), 30, 100, str, strlen(str));
+
 }
 
 void worldMap::fake3DHighImage()
@@ -154,8 +163,22 @@ void worldMap::setWindowsSize(int x, int y, int width, int height)
 
 void worldMap::playerLoad()
 {
+	vector<string> vStr;
+	vStr = TXTDATA->txtLoad("saveFile/playerScene.scene");
 
+	_player->setPlayerCurrentScene((PLAYERSCENE)atoi(vStr[0].c_str()));
 
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::INTRO_DUNGEON)
+	{
+		_playerWorldMap->setPlayerX(520.f);
+		_playerWorldMap->setPlayerY(896.f);
+	}
+
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::TOWN)
+	{
+		_playerWorldMap->setPlayerX(1472.f);
+		_playerWorldMap->setPlayerY(1216.f);
+	}
 
 }
 

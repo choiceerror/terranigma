@@ -112,53 +112,59 @@ void dungeon::dungeonChange()
 	_dungeonDown = RectMake(352, 3200 - 278 , 320, 64);
 
 	//던전 나갈때
-	if (IntersectRect(&_temp, &_player->getPlayerRc(), &_dungeonDown))
+	if (!_changeScene)
 	{
-		_player->setPlayerUnMove(true);
-		
-		if (!_once)
+		if (IntersectRect(&_temp, &_player->getPlayerRc(), &_dungeonDown))
 		{
-			_worldTime = TIMEMANAGER->getWorldTime();
-		}
+			_player->setPlayerUnMove(true);
 
-		if (_alphaValue < 255)
-		{
-			_alphaValue += 4;
-		}
-		if (_alphaValue > 255)
-		{
-			_alphaValue = 255;
-		}
+			if (!_once)
+			{
+				_worldTime = TIMEMANAGER->getWorldTime();
+			}
 
-		if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
-		{
-			_changeScene = true;
-			_player->playerSave();
-			SCENEMANAGER->changeScene("introDungeon");
-		}
+			if (_alphaValue < 255)
+			{
+				_alphaValue += 4;
+			}
+			if (_alphaValue > 255)
+			{
+				_alphaValue = 255;
+			}
 
-		_once = true;
+			if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
+			{
+				_changeScene = true;
+				_player->playerSave();
+				SCENEMANAGER->changeScene("introDungeon");
+			}
+
+			_once = true;
+		}
 	}
+
 	//던전 올라갈때
-	if (IntersectRect(&_temp, &_player->getPlayerRc(), &_dungeonUp))
+	if (!_changeScene)
 	{
-		_player->setPlayerUnMove(true);
-		_clockFade->setClockFadeOut(true);
-		if (!_once)
+		if (IntersectRect(&_temp, &_player->getPlayerRc(), &_dungeonUp))
 		{
-			_worldTime = TIMEMANAGER->getWorldTime();
-		}
-		
-		if (1.3f + _worldTime <= TIMEMANAGER->getWorldTime())
-		{
-			_changeScene = true;
-			_player->playerSave();
-			SCENEMANAGER->changeScene("dungeon2F");
-		}
+			_player->setPlayerUnMove(true);
+			_clockFade->setClockFadeOut(true);
+			if (!_once)
+			{
+				_worldTime = TIMEMANAGER->getWorldTime();
+			}
 
-		_once = true;
+			if (1.3f + _worldTime <= TIMEMANAGER->getWorldTime())
+			{
+				_changeScene = true;
+				_player->playerSave();
+				SCENEMANAGER->changeScene("dungeon2F");
+			}
+
+			_once = true;
+		}
 	}
-
 
 }
 

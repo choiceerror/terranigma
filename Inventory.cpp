@@ -59,7 +59,7 @@ void Inventory::update()
 	itemCount();
 
 	//종료시 초기화
-	inventoryReBooting();
+	//inventoryReBooting();
 }
 
 void Inventory::render()

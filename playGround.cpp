@@ -77,13 +77,18 @@ void playGround::release()
 	//SAFE_DELETE(_introDungeon);
 	//SAFE_DELETE(_dungeon2F);
 	//SAFE_DELETE(_bossScene);
+
 }
 
 
 void playGround::update()
 {
 	gameNode::update();
-	if (KEYMANAGER->isOnceKeyDown(VK_ESCAPE)) PostQuitMessage(0);
+	if (KEYMANAGER->isOnceKeyDown(VK_ESCAPE))
+	{
+		fileDelete();
+		PostQuitMessage(0);
+	}
 
 	if (KEYMANAGER->isOnceKeyDown(VK_F1))
 	{
@@ -132,5 +137,27 @@ void playGround::render()
 	TIMEMANAGER->render(getMemDC());
 	//===========================================================
 	this->getBackBuffer()->render(getHDC(), 0, 0);
+}
+
+void playGround::fileDelete()
+{
+	deleteFile("saveFile/introDungeon.scene");
+	deleteFile("saveFile/inventory.inv");
+
+
+}
+
+void playGround::deleteFile(const char * fileAddress)
+{
+	HANDLE file;
+	DWORD read;
+
+	char str[128];
+	file = CreateFile(fileAddress, GENERIC_WRITE, NULL, NULL,
+		TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	WriteFile(file, str, 128, &read, NULL);
+
+	CloseHandle(file);
 }
 

@@ -41,6 +41,9 @@ public:
 	float getPlayerX() { return _x; }
 	float getPlayerY() { return _y; }
 
+	void setPlayerX(float x) { _x = x; }
+	void setPlayerY(float y) { _y = y; }
+
 	void setTownManagerAddressLink(world* wo) { _world = wo; }
 };
 

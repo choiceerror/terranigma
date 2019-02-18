@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "IntroDungeon.h"
-
+#pragma warning(disable:4996)
 
 IntroDungeon::IntroDungeon()
 {
@@ -92,8 +92,12 @@ HRESULT IntroDungeon::init()
 	_speed = 0;
 	_isLinear = false;
 	_once = false;
+	_twice = false;
 
 	_alphaValue = 0;
+
+
+	introDungeonLoad();
 
 	return S_OK;
 }
@@ -277,6 +281,7 @@ void IntroDungeon::update()
 	}
 
 
+
 	_escapeRc = RectMakeCenter(GAMESIZEX / 2 + 20 - _camera->getCameraX(), 1925 - _camera->getCameraY(), 200, 100);
 	_introDungeonPlayerRc = RectMakeCenter(_player->getPlayerX() - _camera->getCameraX(), _player->getPlayerY() + 10 - _camera->getCameraY(), 40, 50);
 }
@@ -346,6 +351,7 @@ void IntroDungeon::linearMove()
 		}
 		if (2.7 + _worldTime <= TIMEMANAGER->getWorldTime())
 		{
+			introDungeonSave();
 			SCENEMANAGER->changeScene("dungeon");
 		}
 
@@ -388,11 +394,47 @@ void IntroDungeon::escapeDungeon()
 
 void IntroDungeon::playerSave()
 {
+	_player->setPlayerCurrentScene(PLAYERSCENE::INTRO_DUNGEON);
+
+	char temp[128];
+
+	vector<string> vStr;
+
+	vStr.push_back(itoa((int)_player->getPlayerCurrentScene(), temp, 10));
+
+	TXTDATA->txtSave("saveFile/playerScene.scene", vStr);
+}
+
+void IntroDungeon::introDungeonSave()
+{
+	_twice = true;
+
+	char temp[128];
+
+	vector<string> vStr;
+
+	vStr.push_back(itoa((int)_twice, temp, 10));
+
+	TXTDATA->txtSave("saveFile/introDungeon.scene", vStr);
+
+}
+
+void IntroDungeon::introDungeonLoad()
+{
+	vector<string> vStr;
+	vStr = TXTDATA->txtLoad("saveFile/introDungeon.scene");
 	
-
-
-
-
+	_twice = (atoi(vStr[0].c_str()));
+	
+	if (_twice == true)
+	{
+		_count = 300;
+		_guardianDirection = GUARDIAN_CLOCKING;
+		_doorDirection = 1;
+		_guardianOn = true;
+		_playerAccept = true;
+		_player->setPlayerDirection(DOWN);
+	}
 }
 
 void IntroDungeon::setWindowsSize(int x, int y, int width, int height)

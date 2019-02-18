@@ -62,6 +62,8 @@ private:
 	
 	int _alphaValue;
 	
+	bool _twice;
+
 public:
 	IntroDungeon();
 	~IntroDungeon();
@@ -76,6 +78,9 @@ public:
 	void escapeDungeon();
 
 	void playerSave();
+
+	void introDungeonSave();
+	void introDungeonLoad();
 
 	void setWindowsSize(int x, int y, int width, int height);
 

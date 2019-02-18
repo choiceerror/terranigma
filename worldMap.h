@@ -4,11 +4,12 @@
 #include "world.h"
 #include "camera.h"
 #include "mode7.h"
+#include "player.h"
 
 class worldMap : public gameNode
 {
 private:
-
+	player* _player;
 	PlayerWorldMap* _playerWorldMap;
 	world* _world;
 	camera* _camera;
@@ -19,6 +20,7 @@ private:
 	bool _once;
 
 	int _playerPosition;
+
 
 public:
 	worldMap();

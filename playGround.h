@@ -29,6 +29,9 @@ public:
 	virtual void update();
 	virtual void render();
 
+	void fileDelete();
+	void deleteFile(const char* fileAddress);
+
 	playGround();
 	~playGround();
 };
