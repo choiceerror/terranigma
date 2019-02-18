@@ -13,7 +13,6 @@ messageSpear::~messageSpear()
 
 HRESULT messageSpear::init()
 {
-	_count;
 	grandfaMessage();
 	grandmaMessage();
 	birdMessage();
