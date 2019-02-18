@@ -4,6 +4,8 @@
 #include "dungeonMap.h"
 #include "townMap.h"
 #include "npcManager.h"
+#pragma warning(disable:4996)
+
 player::player()
 {
 }
@@ -20,6 +22,7 @@ HRESULT player::init()
 	_jump = new jump;
 	_dashAttack = new DashAttack;
 	_inventory = new Inventory;
+	_txtData = new txtData;
 	_jump->init();
 	_dashAttack->init();
 	_inventory->init();
@@ -72,6 +75,10 @@ HRESULT player::init()
 
 	_death = _levelUP = false;
 
+
+	playerSave();
+	//playerLoad();
+
 	return S_OK;
 }
 
@@ -82,10 +89,6 @@ void player::release()
 
 void player::update(bool enemyCheck, int a)
 {
-	if (KEYMANAGER->isOnceKeyDown('U'))
-	{
-		_levelUP = true;
-	}
 	if (_player.state == PLAYER_RUN)
 	{
 		_isRun = true;
@@ -146,6 +149,15 @@ void player::update(bool enemyCheck, int a)
 	{
 		_inventory->inventorySave();
 		SCENEMANAGER->changeScene("ui");
+	}
+
+	if (KEYMANAGER->isOnceKeyDown('Y'))
+	{
+		playerSave();
+	}
+	if (KEYMANAGER->isOnceKeyDown('U'))
+	{
+		playerLoad();
 	}
 
 	playerDeath(enemyCheck);
@@ -1028,6 +1040,7 @@ void player::levelUP()
 		_player.exp = 0;
 		_levelUP = true;
 		_levelOldTime = GetTickCount();
+	
 	}
 
 	if (_levelUP)
@@ -1043,46 +1056,24 @@ void player::levelUP()
 
 void player::playerSave()
 {
+	char temp[128];
 
-	//if (KEYMANAGER->isOnceKeyDown(VK_F1))
-	//{
-	//	char temp[128];
-	//	vector<string> vStr;
-	//
-	//	//             itoa(현재체력의 정수를 temp에 문자열로 넣는다 10진수로)
-	//	vStr.push_back(itoa(_currentHP, temp, 10));
-	//	vStr.push_back(itoa(_maxHP, temp, 10));
-	//	vStr.push_back(itoa(_ship->GetX(), temp, 10));
-	//	vStr.push_back(itoa(_ship->GetY(), temp, 10));
-	//
-	//	TXTDATA->txtSave("세이브테스트.txt", vStr);
-	//}
-	//if (KEYMANAGER->isOnceKeyDown(VK_F2))
-	//{
-	//	vector<string> vStr;
-	//
-	//	vStr = TXTDATA->txtLoad("세이브테스트.txt");
-	//
-	//	_currentHP = (atoi(vStr[0].c_str()));
-	//	_maxHP = (atoi(vStr[1].c_str()));
-	//	_ship->SetX(atoi(vStr[2].c_str()));
-	//	_ship->SetY(atoi(vStr[3].c_str()));
-	//}
+	vector<string> vStr;
 
+	vStr.push_back(itoa(_player.maxHP, temp, 10));
 
-	//HANDLE file;
-	//DWORD save;
-	//
-	//file = CreateFile("saveFile/playerStatus.char", GENERIC_WRITE, NULL, NULL,
-	//	CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	//
-	//WriteFile(file, _enum, sizeof(tagEnum), &save, NULL);
-	//
-	//CloseHandle(file);
+	_txtData->txtSave("saveFile/플레이어.txt", vStr);
+
 }
 
 void player::playerLoad()
 {
+	vector<string> vStr;
+	vStr = _txtData->txtLoad("saveFile/플레이어.txt");
+	
+	_player.maxHP = (atoi(vStr[0].c_str()));
+
+	
 }
 
 
