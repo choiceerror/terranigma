@@ -54,7 +54,6 @@ HRESULT mapTool::init()
 	for (int i = 0; i < 2; ++i)
 	{
 		tileSelect[i] = RectMakeCenter(1700 + (i * 50), 550, 30, 30);
-		d[i] = RectMakeCenter(1500 + (i * 150), 600, 30, 30);
 		e[i] = RectMakeCenter(1500 + (i * 150), 650, 30, 30);
 	}
 
@@ -87,15 +86,7 @@ void mapTool::update()
 
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
-		if (PtInRect(&d[0], _ptMouse))
-		{
-			ee--;
-		}
-		else if (PtInRect(&d[1], _ptMouse))
-		{
-			ee++;
-		}
-		else if (PtInRect(&e[0], _ptMouse))
+		if (PtInRect(&e[0], _ptMouse))
 		{
 			a--;
 		}
@@ -247,7 +238,6 @@ void mapTool::render()
 	for (int i = 0; i < 2; ++i)
 	{
 		Rectangle(getMemDC(), tileSelect[i]);
-		Rectangle(getMemDC(), d[i]);
 		Rectangle(getMemDC(), e[i]);
 	}
 
@@ -383,39 +373,6 @@ void mapTool::render()
 	sprintf_s(str, "저장넘버 : %d  로드넘버 : %d", ee, a);
 	TextOut(getMemDC(), 1100, 650, str, strlen(str));
 
-
-	sprintf_s(str, "저장");
-	TextOut(getMemDC(), 1700, 595, str, strlen(str));
-
-	sprintf_s(str, "로드");
-	TextOut(getMemDC(), 1700, 645, str, strlen(str));
-
-	if (ee == 0)
-	{
-		sprintf_s(str, "던전");
-		TextOut(getMemDC(), 1530, 595, str, strlen(str));
-	}
-	else if (ee == 1)
-	{
-		sprintf_s(str, "던전2F");
-		TextOut(getMemDC(), 1530, 595, str, strlen(str));
-	}
-	else if (ee == 2)
-	{
-		sprintf_s(str, "보스방");
-		TextOut(getMemDC(), 1530, 595, str, strlen(str));
-	}
-	else if (ee == 3)
-	{
-		sprintf_s(str, "마을");
-		TextOut(getMemDC(), 1530, 595, str, strlen(str));
-	}
-	else if (ee == 4)
-	{
-		sprintf_s(str, "월드맵");
-		TextOut(getMemDC(), 1530, 595, str, strlen(str));
-	}
-
 	if (a == 0)
 	{
 		sprintf_s(str, "던전");
@@ -441,8 +398,6 @@ void mapTool::render()
 		sprintf_s(str, "월드맵");
 		TextOut(getMemDC(), 1530, 645, str, strlen(str));
 	}
-
-
 
 	Rectangle(IMAGEMANAGER->findImage("background")->getMemDC(), viewRc);
 	IMAGEMANAGER->render("background", getMemDC(), 0, 0, 0, 0, 800, WINSIZEY);
@@ -570,23 +525,23 @@ void mapTool::ClickBox()
 		if (PtInRect(&box[0], _ptMouse))
 		{
 			Click = CTRL_SAVE;
-			if (ee == 0)
+			if (a == 0)
 			{
 				save(SaveAndLoad::DUNGEON);
 			}
-			if (ee == 1)
+			if (a == 1)
 			{
 				save(SaveAndLoad::DUNGEON2F);
 			}
-			if (ee == 2)
+			if (a == 2)
 			{
 				save(SaveAndLoad::BOSS);
 			}
-			if (ee == 3)
+			if (a == 3)
 			{
 				save(SaveAndLoad::TOWN);
 			}
-			if (ee == 4)
+			if (a == 4)
 			{
 				save(SaveAndLoad::WORLDMAP);
 			}
