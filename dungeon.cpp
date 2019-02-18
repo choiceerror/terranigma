@@ -61,14 +61,16 @@ void dungeon::release()
 void dungeon::update()
 {
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
-	_player->update(false, 1);
 	_enemyManager->update();
 	_itemManager->update();
 	itemRandomDrop();
 	playerItemGet();
 	_clockFade->update();
 	dungeonChange();
-
+	if (!_changeScene)
+	{
+		_player->update(false, 1);
+	}
 	
 }
 

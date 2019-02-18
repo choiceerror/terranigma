@@ -142,7 +142,9 @@ void playGround::render()
 void playGround::fileDelete()
 {
 	deleteFile("saveFile/introDungeon.scene");
-	deleteFile("saveFile/inventory.inv");
+	deleteFile("saveFile/inventory.txt");
+
+
 
 
 }
@@ -155,8 +157,6 @@ void playGround::deleteFile(const char * fileAddress)
 	char str[128];
 	file = CreateFile(fileAddress, GENERIC_WRITE, NULL, NULL,
 		TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	WriteFile(file, str, 128, &read, NULL);
 
 	CloseHandle(file);
 }

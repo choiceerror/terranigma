@@ -56,12 +56,12 @@ void dungeon2F::release()
 void dungeon2F::update()
 {
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
-	_player->update(false, 1);
 	_enemyManager->update();
 	_itemManager->update();
 	itemRandomDrop();
 	playerItemGet();
 	_clockFade->update();
+	_player->update(false, 1);
 }
 
 void dungeon2F::render()
@@ -77,7 +77,7 @@ void dungeon2F::itemRandomDrop()
 {
 	for (int i = 0; i < _enemyManager->getVEnemyDeadPoint().size(); i++)
 	{
-		_rndItemDrop = RND->getRandomInt(0, 300);
+		_rndItemDrop = RND->getRandomInt(0, 200);
 		_rndItemTypeDrop = RND->getRandomInt(0, 100);
 
 		//40ÆÛÈ®·ü

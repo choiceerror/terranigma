@@ -132,6 +132,9 @@ private:
 	dungeonMap* _dungeon;
 	townMap* _town;
 	npcManager* _npcMgr;
+
+	bool _tileCheck;
+
 public:
 	player();
 	~player();
@@ -226,5 +229,9 @@ public:
 	bool getPlayerRun() { return _isRun; }
 	bool getPlayerDeath() { return _death; }
 	bool getPlayerLevelUP() { return _levelUP; }
+
+	bool getTileCheck() { return _tileCheck; }
+	void setTileCheck(bool torf) { _tileCheck = torf; }
+
 };
 

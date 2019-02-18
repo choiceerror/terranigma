@@ -74,6 +74,7 @@ HRESULT player::init()
 	_unMove = false;
 
 	_death = _levelUP = false;
+	_tileCheck = true;
 
 	playerLoad();
 
@@ -131,14 +132,17 @@ void player::update(bool enemyCheck, int a)
 	_jump->update();
 	_dashAttack->update(&_player.x, &_player.y);
 	_inventory->update();
-	if (a == 1)
+	if (_tileCheck)
 	{
-		tileCheck();
-	}
-	else if (a == 2)
-	{
-		townCheck();
-		npcCheck();
+		if (a == 1)
+		{
+			tileCheck();
+		}
+		else if (a == 2)
+		{
+			townCheck();
+			npcCheck();
+		}
 	}
 	
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 50);

@@ -17,7 +17,13 @@ private:
 
 	npcManager* _npcManager;
 
-	
+	RECT _escape;
+
+	int _alphaValue;
+	bool _once;
+	float _worldTime;
+
+	bool _worldMapIn;
 
 public:
 	town();
@@ -29,5 +35,8 @@ public:
 	void render();
 
 	void setWindowsSize(int x, int y, int width, int height);
+
+	void worldMapIn();
+	void playerSave();
 };
 

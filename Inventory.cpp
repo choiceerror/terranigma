@@ -107,10 +107,6 @@ void Inventory::inventoryReset()
 	_tempAccessory = ACCESSORYTYPE::NONE;
 	_tempPorion = POTIONTYPE::NONE;
 
-	
-
-
-
 }
 
 void Inventory::itemMove()
@@ -261,7 +257,7 @@ void Inventory::inventorySave()
 	HANDLE file;
 	DWORD save;
 
-	file = CreateFile("saveFile/inventory.inv", GENERIC_WRITE, NULL, NULL,
+	file = CreateFile("saveFile/inventory.txt", GENERIC_WRITE, NULL, NULL,
 						CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	WriteFile(file, _weaponInv, sizeof(WEAPONTYPE) * WEAPON_MAX_ARR, &save, NULL);
@@ -277,7 +273,7 @@ void Inventory::inventoryLoad()
 	HANDLE file;
 	DWORD lode;
 
-	file = CreateFile("saveFile/inventory.inv", GENERIC_READ, NULL, NULL,
+	file = CreateFile("saveFile/inventory.txt", GENERIC_READ, NULL, NULL,
 						OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	ReadFile(file, _weaponInv, sizeof(WEAPONTYPE) * WEAPON_MAX_ARR, &lode, NULL);
