@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "worldMap.h"
-
+#pragma warning(disable:4996)
 
 worldMap::worldMap()
 {
@@ -45,7 +45,7 @@ HRESULT worldMap::init()
 	_fadeOut = true;
 	_changeScene = false;
 
-	playerLoad();
+	playerWorldLoad();
 
 	_dungeon = RectMake(512, 832, 32, 64);
 	_town = RectMake(1440, 1248, 64, 64);
@@ -166,10 +166,10 @@ void worldMap::setWindowsSize(int x, int y, int width, int height)
 		SWP_NOZORDER | SWP_NOMOVE);
 }
 
-void worldMap::playerLoad()
+void worldMap::playerWorldLoad()
 {
 	vector<string> vStr;
-	vStr = TXTDATA->txtLoad("saveFile/playerScene.scene");
+	vStr = TXTDATA->txtLoad("saveFile/playerScene.txt");
 
 	_player->setPlayerCurrentScene((PLAYERSCENE)atoi(vStr[0].c_str()));
 
@@ -185,6 +185,19 @@ void worldMap::playerLoad()
 		_playerWorldMap->setPlayerY(1276.f);
 	}
 
+}
+
+void worldMap::playerWorldSave()
+{
+	_player->setPlayerCurrentScene(PLAYERSCENE::INTRO_DUNGEON);
+
+	char temp[128];
+
+	vector<string> vStr;
+
+	vStr.push_back(itoa((int)_player->getPlayerCurrentScene(), temp, 10));
+
+	TXTDATA->txtSave("saveFile/playerScene.txt", vStr);
 }
 
 void worldMap::playerChangeScene()
@@ -210,6 +223,7 @@ void worldMap::playerChangeScene()
 				if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
 				{
 					_changeScene = true;
+					playerWorldSave();
 					SCENEMANAGER->changeScene("town");
 				}
 			}
@@ -233,6 +247,7 @@ void worldMap::playerChangeScene()
 
 					if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
 					{
+						playerWorldSave();
 						SCENEMANAGER->changeScene("introDungeon");
 					}
 				}

@@ -55,7 +55,8 @@ enum class PLAYERSCENE
 	DUNGEON_2F,
 	BOSS,
 	TOWN,
-	UI
+	UI,
+	WORLDMAP
 };
 
 struct tagPlayer
@@ -142,7 +143,7 @@ public:
 	HRESULT init();
 	void release();
 	void update(bool enemyCheck, int a);
-	void render(float cameraX, float cameraY, bool uiRender);
+	void render(float cameraX, float cameraY);
 
 	//각 상태 프레임 입력 초기값 
 	void keyFrameInit();
@@ -161,7 +162,7 @@ public:
 	//적이 때리면 맞는 충돌 및 모션 변경
 	void enemyCollision(bool enemyCheck);
 	//UI 플레이어 체력이랑 소지금 랜더
-	void playerUIRender(bool uiRender);
+	void playerUIRender();
 	//플레이어 죽을때
 	void playerDeath(bool enemyCheck);
 	//레벨업시
@@ -193,7 +194,7 @@ public:
 	PLAYERSTATE getPlayerState() { return _player.state; }
 	PLAYERDIRECTION getPlayerDirection() { return _player.direction; }
 	animation* getPlayerAni() { return _player.ani; }
-	Inventory* getInventory() {return _inventory;}
+	Inventory* getInventory() { return _inventory; }
 
 	void setPlayerState(PLAYERSTATE state) { _player.state = state; }
 	void setPlayerDirection(PLAYERDIRECTION direction) { _player.direction = direction; }

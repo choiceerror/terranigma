@@ -27,7 +27,6 @@ HRESULT town::init()
 	_camera = new camera;
 	_town = new townMap;
 	_npcManager = new npcManager;
-	_messageSpear = new messageSpear;
 
 	_player->setTownManagerAddressLink(_town);
 	_player->setnpcManagerAddressLink(_npcManager);
@@ -35,7 +34,6 @@ HRESULT town::init()
 
 	_player->init();
 	_town->init();
-	//_messageSpear->init();
 
 	_npcManager->setBird();
 	_npcManager->setElder();
@@ -46,14 +44,14 @@ HRESULT town::init()
 	_npcManager->init();
 
 	_escape = RectMake(672, 1856 + 32, 128, 64);
-	
+
 	_camera->init(GAMESIZEX, GAMESIZEY, 1920, 1920);
 
 	_worldTime = 0;
 	_once = false;
 	_worldMapIn = false;
 	_fadeOut = true;
-	
+
 
 	return S_OK;
 }
@@ -75,10 +73,10 @@ void town::update()
 void town::render()
 {
 	_town->render(_camera->getCameraX(), _camera->getCameraY());
-	_player->render(_camera->getCameraX(),_camera->getCameraY(), false);
+	_player->render(_camera->getCameraX(), _camera->getCameraY());
 	_npcManager->render(_camera->getCameraX(), _camera->getCameraY());
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
-	_messageSpear->render();
+
 
 	//Rectangle(getMemDC(), _escape);
 }
@@ -149,7 +147,7 @@ void town::playerSave()
 
 	vStr.push_back(itoa((int)_player->getPlayerCurrentScene(), temp, 10));
 
-	TXTDATA->txtSave("saveFile/playerScene.scene", vStr);
+	TXTDATA->txtSave("saveFile/playerScene.txt", vStr);
 }
 
 void town::townIn()

@@ -42,7 +42,8 @@ public:
 
 	void setWindowsSize(int x, int y, int width, int height);
 
-	void playerLoad();
+	void playerWorldLoad();
+	void playerWorldSave();
 
 	void playerChangeScene();
 };

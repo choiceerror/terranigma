@@ -36,7 +36,6 @@ HRESULT playGround::init()
 	IMAGEMANAGER->addFrameImage("shockAttack", "image/보스공격이펙트.bmp", 1600, 288, 8, 2, true, MAGENTA);
 	EFFECTMANAGER->addEffect("deadEffect", "image/deadEffect2.bmp", 1496, 110, 136, 110, 5, 0.17f, 1000);
 	IMAGEMANAGER->addImage("black", "image/black.bmp", 1024, 768, true, MAGENTA);
-	IMAGEMANAGER->addImage("messageSpear", "image/massageSpear.bmp", 600, 179, true, RGB(255, 0, 255));
 
 
 	_worldMap = new worldMap;
@@ -68,7 +67,7 @@ HRESULT playGround::init()
 void playGround::release()
 {
 	gameNode::release();
-	
+
 	//SAFE_DELETE(_worldMap);
 	//SAFE_DELETE(_ui);
 	//SAFE_DELETE(_town);
@@ -145,9 +144,7 @@ void playGround::fileDelete()
 	deleteFile("saveFile/introDungeon.scene");
 	deleteFile("saveFile/inventory.txt");
 	deleteFile("saveFile/플레이어.txt");
-
-
-
+	deleteFile("saveFile/playerScene.txt");
 }
 
 void playGround::deleteFile(const char * fileAddress)

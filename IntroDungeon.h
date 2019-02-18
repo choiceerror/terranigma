@@ -64,6 +64,8 @@ private:
 	
 	bool _twice;
 
+	bool _changScene;
+
 public:
 	IntroDungeon();
 	~IntroDungeon();
@@ -81,6 +83,7 @@ public:
 
 	void introDungeonSave();
 	void introDungeonLoad();
+	void playerLoad();
 
 	void setWindowsSize(int x, int y, int width, int height);
 

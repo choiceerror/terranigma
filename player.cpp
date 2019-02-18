@@ -126,7 +126,7 @@ void player::update(bool enemyCheck, int a)
 			}
 		}
 	}
-	
+
 
 	playerState();
 	_jump->update();
@@ -144,7 +144,7 @@ void player::update(bool enemyCheck, int a)
 			npcCheck();
 		}
 	}
-	
+
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 50);
 
 	if (KEYMANAGER->isOnceKeyDown(VK_SHIFT))
@@ -165,7 +165,7 @@ void player::update(bool enemyCheck, int a)
 	playerDeath(enemyCheck);
 }
 
-void player::render(float cameraX, float cameraY, bool uiRender)
+void player::render(float cameraX, float cameraY)
 {
 	_player.image->alphaAniRenderCenter(getMemDC(), _player.x - cameraX, _player.y - cameraY, _player.ani, _player.alphaRender);
 	//Rectangle(getMemDC(), _player.rc);
@@ -181,12 +181,12 @@ void player::render(float cameraX, float cameraY, bool uiRender)
 	//SetTextColor(getMemDC(), RGB(0, 0, 0));
 	//TextOut(getMemDC(), 100, 120, str, strlen(str));
 	//
-	
+
 	//
 	//sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
 	//TextOut(getMemDC(), 140, 120, str, strlen(str));
-	playerUIRender(uiRender); 
-	
+	playerUIRender();
+
 	sprintf_s(str, "%d", _player.exp);
 	TextOut(getMemDC(), 120, 120, str, strlen(str));
 	sprintf_s(str, "%d", _player.maxExp);
@@ -316,7 +316,7 @@ void player::keyFrameInit()
 
 	_player.ani = KEYANIMANAGER->findAnimation("ark", "idleLeft");
 
-	
+
 }
 // 키 입력
 void player::keyInput()
@@ -651,10 +651,10 @@ void player::tileCheck()
 
 	if (KEYMANAGER->isStayKeyDown(VK_LEFT) && _player.direction != LEFT || _player.direction != RIGHT)
 	{
-			tileIndex[0].x = TileX - 1;
-			tileIndex[0].y = TileY;
+		tileIndex[0].x = TileX - 1;
+		tileIndex[0].y = TileY;
 
-		
+
 		for (int i = 0; i < 1; ++i)
 		{
 			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
@@ -669,9 +669,9 @@ void player::tileCheck()
 
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && _player.direction != LEFT || _player.direction != RIGHT)
 	{
-			tileIndex[0].x = TileX + 1 ;
-			tileIndex[0].y = TileY;
-		
+		tileIndex[0].x = TileX + 1;
+		tileIndex[0].y = TileY;
+
 		for (int i = 0; i < 1; ++i)
 		{
 			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
@@ -717,7 +717,7 @@ void player::tileCheck()
 			}
 		}
 	}
-	
+
 }
 
 void player::townCheck()
@@ -922,11 +922,11 @@ void player::enemyCollision(bool enemyCheck)
 				_player.alphaRender = 255;
 				_playerProtect = false;
 			}
-			else if (GetTickCount() - _playerProtectTime >= 1 * 600 )
+			else if (GetTickCount() - _playerProtectTime >= 1 * 600)
 			{
 				_player.state = PLAYER_IDLE;
 			}
-			
+
 			if (_player.state == PLAYER_ENEMY_ATTACK)
 			{
 				switch (_player.direction)
@@ -965,7 +965,7 @@ void player::enemyCollision(bool enemyCheck)
 						_alphaChangeTime = GetTickCount();
 						_playerProtectTime = GetTickCount();
 						_player.state = PLAYER_ENEMY_ATTACK;
-						
+
 					}
 				}
 				for (int i = 0; i < _enemyManager->getVFireMonster().size(); i++)
@@ -1044,7 +1044,7 @@ void player::levelUP()
 		_levelUP = true;
 		_levelOldTime = GetTickCount();
 		playerSave();
-	
+
 	}
 
 	if (_levelUP)
@@ -1061,9 +1061,9 @@ void player::levelUP()
 void player::playerSave()
 {
 	char temp[128];
-	
+
 	vector<string> vStr;
-	
+
 	vStr.push_back(itoa(_player.HP, temp, 10));
 	vStr.push_back(itoa(_player.maxHP, temp, 10));
 	vStr.push_back(itoa(_player.damage, temp, 10));
@@ -1072,7 +1072,7 @@ void player::playerSave()
 	vStr.push_back(itoa(_player.maxExp, temp, 10));
 	vStr.push_back(itoa(_player.money, temp, 10));
 	vStr.push_back(itoa(_player.level, temp, 10));
-	
+
 	_txtData->txtSave("saveFile/플레이어.txt", vStr);
 
 }
@@ -1081,8 +1081,8 @@ void player::playerLoad()
 {
 	vector<string> vStr;
 	vStr = _txtData->txtLoad("saveFile/플레이어.txt");
-	
-	if (vStr.size() > 1)
+
+	if (vStr.size() > 5)
 	{
 		_player.HP = (atoi(vStr[0].c_str()));
 		_player.maxHP = (atoi(vStr[1].c_str()));
