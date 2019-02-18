@@ -68,15 +68,15 @@ void playGround::release()
 {
 	gameNode::release();
 	
-	SAFE_DELETE(_worldMap);
-	SAFE_DELETE(_ui);
-	SAFE_DELETE(_town);
-	SAFE_DELETE(_intro);
-	SAFE_DELETE(_mapTool);
-	SAFE_DELETE(_dungeon);
-	SAFE_DELETE(_introDungeon);
-	SAFE_DELETE(_dungeon2F);
-	SAFE_DELETE(_bossScene);
+	//SAFE_DELETE(_worldMap);
+	//SAFE_DELETE(_ui);
+	//SAFE_DELETE(_town);
+	//SAFE_DELETE(_intro);
+	//SAFE_DELETE(_mapTool);
+	//SAFE_DELETE(_dungeon);
+	//SAFE_DELETE(_introDungeon);
+	//SAFE_DELETE(_dungeon2F);
+	//SAFE_DELETE(_bossScene);
 }
 
 

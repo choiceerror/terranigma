@@ -68,7 +68,7 @@ void worldMap::render()
 	_playerWorldMap->render(_camera->getCameraX(), _camera->getCameraY());
 	//IMAGEMANAGER->render("worldMapTile", getMemDC());
 	_mode7->setObjectImage(IMAGEMANAGER->findImage("worldMapTile"));
-
+	
 	_mode7->render(getMemDC());
 
 	//BitBlt(IMAGEMANAGER->findImage("fake3DHigh")->getMemDC(), 0, 0, GAMESIZEX, 120, IMAGEMANAGER->findImage("backBuffer")->getMemDC(), 0, GAMESIZEY - 120, SRCCOPY);
