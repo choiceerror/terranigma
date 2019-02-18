@@ -23,6 +23,9 @@ private:
 	bossScene*   _bossScene;
 	IntroDungeon* _introDungeon;
 
+	image* _image;
+
+
 public:
 	virtual HRESULT init();
 	virtual void release();

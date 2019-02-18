@@ -13,8 +13,12 @@ mapTool::~mapTool()
 
 HRESULT mapTool::init()
 {
-
-
+	_image = IMAGEMANAGER->addFrameImage("타일맵4", "tileimage\\terranigma4.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
+	_image2 = IMAGEMANAGER->addFrameImage("타일맵", "tileimage\\terranigma3.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
+	_image3 = IMAGEMANAGER->addFrameImage("타일맵2", "tileimage\\terranigma2.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
+	_image4 = IMAGEMANAGER->addFrameImage("townTile", "tileimage\\townTile.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
+	_image5 = IMAGEMANAGER->addFrameImage("worldTile", "tileimage\\worldTile2.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
+	_image6 = IMAGEMANAGER->addFrameImage("bossTile", "tileimage\\bossTile.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("backMap", "image/mapToolbackground.bmp", 1920, 800, true, MAGENTA);
 	setUp();
 
@@ -26,14 +30,19 @@ HRESULT mapTool::init()
 
 	view.x = 0;
 	view.y = 0;
-
+//====== 이미지 위치 세팅======//
+	_image->SetX(1800);
+	_image2->SetX(1800);
+	_image3->SetX(1800);
+	_image4->SetX(1800);
+	_image5->SetX(1800);
+	_image6->SetX(1800);
+//============================//
 	viewRc = RectMake(view.x, view.y, 5, 5);
 
-	_mapEnd.x = 1000;
+	_mapEnd.x = 855;
 	num = 2;
 	tilenum = 7;
-	ee = 0;
-
 	for (int i = 0; i < 5; ++i)
 	{
 		box[i] = RectMakeCenter(900 + (i * 150), 750, 120, 50);
@@ -63,7 +72,7 @@ HRESULT mapTool::init()
 
 	for (int i = 0; i < 6; ++i)
 	{
-		tileMoveBox[i] = RectMakeCenter(WINSIZEX - 30, 20 + (i * 40), 30, 30);
+		tileMoveBox[i] = RectMakeCenter(WINSIZEX - 16, 16 + (i * 32), 30, 30);
 	}
 
 	check = false;
@@ -84,13 +93,10 @@ void mapTool::update()
 	ptMouse2.x = _ptMouse.x + _camera->getCameraX();
 	ptMouse2.y = _ptMouse.y + _camera->getCameraY();
 
-
-
 	_camera->update(view.x, view.y);
 	viewMove();
 	mapSize();
 	tileDrag();
-
 
 	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
 	{
@@ -115,13 +121,13 @@ void mapTool::update()
 		{
 			if (PtInRect(&_vvMap[i][j]->rc, ptMouse2))
 			{		
-					f = _vvMap[i][j]->rc.left / TileSIZE;
-					g = _vvMap[i][j]->rc.top / TileSIZE;
+
+					x = _vvMap[i][j]->rc.left / TileSIZE;
+					y = _vvMap[i][j]->rc.top / TileSIZE;
 			}
 		}
 	}
-	
-	
+	tileimgMove();
 	viewRc = RectMake(view.x - _camera->getCameraX(), view.y - _camera->getCameraY(), 20, 20);
 }
 
@@ -133,27 +139,27 @@ void mapTool::render()
 
 	if (tilenum == 0)
 	{
-		IMAGEMANAGER->render("타일맵4", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("타일맵4")->GetWidth(), 0);
+	_image->render(getMemDC(), _image->GetX() - _mapSpeed, 0);	
 	}
 	else if (tilenum == 1)
 	{
-		IMAGEMANAGER->render("타일맵", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("타일맵")->GetWidth(), 0);
+		_image2->render(getMemDC(), _image2->GetX() - _mapSpeed, 0);
 	}
 	else if (tilenum == 2)
 	{
-		IMAGEMANAGER->render("타일맵2", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("타일맵2")->GetWidth(), 0);
+		_image3->render(getMemDC(), _image3->GetX() - _mapSpeed, 0);
 	}
 	else if (tilenum == 3)
 	{
-		IMAGEMANAGER->render("townTile", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("townTile")->GetWidth(), 0);
+		_image4->render(getMemDC(), _image4->GetX() - _mapSpeed, 0);
 	}
 	else if (tilenum == 4)
 	{
-		IMAGEMANAGER->render("worldTile", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("worldTile")->GetWidth(), 0);
+		_image5->render(getMemDC(), _image5->GetX() - _mapSpeed, 0);
 	}
 	else if (tilenum == 5)
 	{
-		IMAGEMANAGER->render("bossTile", getMemDC(), WINSIZEX - IMAGEMANAGER->findImage("bossTile")->GetWidth(), 0);
+		_image6->render(getMemDC(), _image6->GetX() - _mapSpeed, 0);
 	}
 	//지형
 	for (int i = 0; i < TILEY; ++i)
@@ -272,6 +278,8 @@ void mapTool::render()
 	{
 		Rectangle(getMemDC(), tileMoveBox[i]);
 	}
+			
+	
 
 	IMAGEMANAGER->render("save", getMemDC(), box[0].left, box[0].top);
 	IMAGEMANAGER->render("load", getMemDC(), box[1].left, box[1].top);
@@ -386,7 +394,7 @@ void mapTool::render()
 		TextOut(getMemDC(), 1300, 650, str, strlen(str));
 	}
 
-	sprintf_s(str, "현재타일지점 : %d  %d",	 f ,g);
+	sprintf_s(str, "현재타일지점 : %d  %d",	 x ,y);
 	{
 		TextOut(getMemDC(), 1100, 650, str, strlen(str));
 	}
@@ -431,6 +439,27 @@ void mapTool::render()
 		sprintf_s(str, "월드맵");
 		TextOut(getMemDC(), 1530, 645, str, strlen(str));
 	}
+	
+	sprintf_s(str, "맵 스피드 : %f" , _mapSpeed);
+	TextOut(getMemDC(), 930, 605, str, strlen(str));
+
+	sprintf_s(str, "월드 타임 : %f", _worldTime);
+	TextOut(getMemDC(), 930, 635, str, strlen(str));
+
+
+	sprintf_s(str, "일립스 타임 : %f", _elapsedTime);
+	TextOut(getMemDC(), 930, 665, str, strlen(str));
+
+
+	sprintf_s(str, "앵글 : %f", _mapAngle);
+	TextOut(getMemDC(), 930, 695, str, strlen(str));
+
+
+	sprintf_s(str, "거리 : %f", _mapDistance);
+	TextOut(getMemDC(), 930, 725, str, strlen(str));
+	
+	//sprintf_s(str, "num : %d  %d  %d  %d  %d  %d",   num1,num2,num3,num4,num5,num6);
+	//TextOut(getMemDC(), 1130, 600, str, strlen(str));
 
 	Rectangle(IMAGEMANAGER->findImage("background")->getMemDC(), viewRc);
 	IMAGEMANAGER->render("background", getMemDC(), 0, 0, 0, 0, 800, WINSIZEY);
@@ -1324,6 +1353,169 @@ void mapTool::tileLeftDrag()
 	}
 }
 
+void mapTool::tileimgMove()
+{
+	_mapAngle = getAngle(1800, 0, _mapEnd.x, _mapEnd.y);
+	_mapDistance = getDistance(1800, 0, _mapEnd.x, _mapEnd.y);
+
+//===================맨 위 타일 ======================//
+	if (tilenum == 0)
+	{
+		num1++;
+		if (num1 < 2)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+			_elapsedTime = TIMEMANAGER->getElapsedTime();
+			_mapSpeed = _mapDistance * (_elapsedTime / 1.0f);
+		}
+		if (1.0f + _worldTime >= TIMEMANAGER->getWorldTime())
+		{
+			_image->SetX(_image->GetX() + cosf(_mapAngle) * _mapSpeed);
+			_image->SetY(_image->GetY() + -sinf(_mapAngle) * _mapSpeed);
+			tileMoveBox[0].left -= _mapSpeed;
+			tileMoveBox[0].right -= _mapSpeed;
+		}
+	}
+	else
+	{
+		num1 = 0;
+		_image->SetX(1800);
+		tileMoveBox[0].left = WINSIZEX - 32;
+		tileMoveBox[0].right = WINSIZEX;
+	}
+//=============== 2번 타일 =======================//
+	if (tilenum == 1)
+	{
+		num2++;
+		if (num2 < 2)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+			_elapsedTime = TIMEMANAGER->getElapsedTime();
+			_mapSpeed = _mapDistance * (_elapsedTime / 1.0f);
+		}
+
+		if (1.0f + _worldTime >= TIMEMANAGER->getWorldTime())
+		{
+			_image2->SetX(_image2->GetX() + cosf(_mapAngle) * _mapSpeed);
+			_image2->SetY(_image2->GetY() + -sinf(_mapAngle) * _mapSpeed);
+			tileMoveBox[1].left -= _mapSpeed;
+			tileMoveBox[1].right -= _mapSpeed;
+		}
+	}
+	else
+	{
+		num2 = 0;
+		_image2->SetX(1800);
+		tileMoveBox[1].left = WINSIZEX - 32;
+		tileMoveBox[1].right = WINSIZEX;
+	}
+//===================3번 타일======================//
+	if (tilenum == 2)
+	{
+		num3++;
+		if (num3 < 2)
+		{
+			_worldTime= TIMEMANAGER->getWorldTime();
+			_elapsedTime = TIMEMANAGER->getElapsedTime();
+			_mapSpeed = _mapDistance * (_elapsedTime / 1.0f);
+		}
+
+		if (1.0f + _worldTime >= TIMEMANAGER->getWorldTime())
+		{
+			_image3->SetX(_image3->GetX() + cosf(_mapAngle) * _mapSpeed);
+			_image3->SetY(_image3->GetY() + -sinf(_mapAngle) * _mapSpeed);
+			tileMoveBox[2].left -= _mapSpeed;
+			tileMoveBox[2].right -= _mapSpeed;
+		}
+	}
+	else
+	{
+		num3 = 0;
+		_image3->SetX(1800);
+		tileMoveBox[2].left = WINSIZEX - 32;
+		tileMoveBox[2].right = WINSIZEX;
+	}
+//========================4번 타일 ==================//
+	if (tilenum == 3)
+	{
+		num4++;
+		if (num4 < 2)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+			_elapsedTime = TIMEMANAGER->getElapsedTime();
+			_mapSpeed = _mapDistance * (_elapsedTime / 1.0f);
+		}
+
+		if (1.0f + _worldTime >= TIMEMANAGER->getWorldTime())
+		{
+			_image4->SetX(_image4->GetX() + cosf(_mapAngle) * _mapSpeed);
+			_image4->SetY(_image4->GetY() + -sinf(_mapAngle) * _mapSpeed);
+			tileMoveBox[3].left -= _mapSpeed;
+			tileMoveBox[3].right -= _mapSpeed;
+		}
+	}
+	else
+	{
+		num4 = 0;
+		_image4->SetX(1800);
+		tileMoveBox[3].left = WINSIZEX - 32;
+		tileMoveBox[3].right = WINSIZEX;
+	}
+
+	//========================5번 타일 ==========================//
+	if (tilenum == 4)
+	{
+		num5++;
+		if (num5 < 2)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+			_elapsedTime = TIMEMANAGER->getElapsedTime();
+			_mapSpeed = _mapDistance * (_elapsedTime / 1.0f);
+		}
+
+		if (1.0f + _worldTime >= TIMEMANAGER->getWorldTime())
+		{
+			_image5->SetX(_image5->GetX() + cosf(_mapAngle) * _mapSpeed);
+			_image5->SetY(_image5->GetY() + -sinf(_mapAngle) * _mapSpeed);
+			tileMoveBox[4].left -= _mapSpeed;
+			tileMoveBox[4].right -= _mapSpeed;
+		}
+	}
+	else
+	{
+		num5 = 0;
+		_image5->SetX(1800);
+		tileMoveBox[4].left = WINSIZEX - 32;
+		tileMoveBox[4].right = WINSIZEX;
+	}
+// ==========================6번 타일 ========================//
+	if (tilenum == 5)
+	{
+		num6++;
+		if (num6 < 2)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+			_elapsedTime = TIMEMANAGER->getElapsedTime();
+			_mapSpeed = _mapDistance * (_elapsedTime / 1.0f);
+		}
+
+		if (1.0f + _worldTime >= TIMEMANAGER->getWorldTime())
+		{
+			_image6->SetX(_image6->GetX() + cosf(_mapAngle) * _mapSpeed);
+			_image6->SetY(_image6->GetY() + -sinf(_mapAngle) * _mapSpeed);
+			tileMoveBox[5].left -= _mapSpeed;
+			tileMoveBox[5].right -= _mapSpeed;
+		}
+	}
+	else
+	{
+		num6 = 0;
+		_image6->SetX(1800);
+		tileMoveBox[5].left = WINSIZEX - 32;
+		tileMoveBox[5].right = WINSIZEX;
+	}
+ }
+	
 TERRAIN mapTool::terrainSelect(int frameX, int frameY)
 {
 	if (frameX == 0 && frameY == 4)
