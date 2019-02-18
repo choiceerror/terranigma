@@ -33,7 +33,7 @@ HRESULT bossScene::init()
 	_itemManager->init();
 	_enemyManager->setEnemy();
 	_player->setPlayerPosX(1280 / 2 - 50);
-	_player->setPlayerPosY(2500);
+	_player->setPlayerPosY(1000);
 
 	_camera->init(GAMESIZEX, GAMESIZEY, 1280, 2560);
 
@@ -44,11 +44,12 @@ HRESULT bossScene::init()
 
 	_moveWorldTime = TIMEMANAGER->getWorldTime();
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 4; i++)
 	{
-		_moveGoal[i].x = 400 + i * 200;
-		_moveGoal[i].y = 500 + i * 200;
+		_moveGoal[i].x = 600 + i * 20;
+		_moveGoal[i].y = 600 + i * 20;
 	}
+	_moveSpeed = 10.f;
 	return S_OK;
 }
 
@@ -63,18 +64,14 @@ void bossScene::update()
 	_enemyManager->update();
 	_itemManager->update();
 	bossAppear();
-	
+
 	movePattern();
 }
 
 void bossScene::render()
 {
 	char str[128];
-	sprintf_s(str, "bossX : %f", _enemyManager->getVBoss()[0]->getX());
-	TextOut(getMemDC(), 100, 200, str, strlen(str));
 
-	sprintf_s(str, "bossY : %f", _enemyManager->getVBoss()[0]->getY());
-	TextOut(getMemDC(), 100, 240, str, strlen(str));
 
 	sprintf_s(str, "_rndMove : %d", _rndMove);
 	TextOut(getMemDC(), 100, 260, str, strlen(str));
@@ -82,7 +79,7 @@ void bossScene::render()
 	sprintf_s(str, "moveWorldTime : %f", _moveWorldTime);
 	TextOut(getMemDC(), 100, 280, str, strlen(str));
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		sprintf_s(str, "_moveGoalX : %f", _moveGoal[i].x);
 		TextOut(getMemDC(), 600, i * 20, str, strlen(str));
@@ -91,6 +88,8 @@ void bossScene::render()
 		TextOut(getMemDC(), 800, i * 20, str, strlen(str));
 	}
 
+
+
 	if (_isBossAppear == true || _isOnce[BOSS_APPEAR] == true)
 	{
 		_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
@@ -98,13 +97,21 @@ void bossScene::render()
 	_dungeonBossMap->render(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY());
+	sprintf_s(str, "_distance : %f", _enemyManager->getVBoss()[0]->getTargetDistance());
+	TextOut(getMemDC(), 400, 100, str, strlen(str));
+
+	sprintf_s(str, "bossX : %f", _enemyManager->getVBoss()[0]->getX());
+	TextOut(getMemDC(), 100, 200, str, strlen(str));
+
+	sprintf_s(str, "bossY : %f", _enemyManager->getVBoss()[0]->getY());
+	TextOut(getMemDC(), 100, 240, str, strlen(str));
 
 
 }
 
 void bossScene::bossAppear()
 {
-	
+
 	if (_player->getPlayerY() <= 900 && _isOnce[BOSS_APPEAR] == false)
 	{
 		_isBossAppear = true;
@@ -161,19 +168,6 @@ void bossScene::movePattern()
 		}
 
 
-		if (1.0f + _rndMoveWorldTime <= TIMEMANAGER->getWorldTime())
-		{
-			_rndMove = RND->getRandomInt(0, 2);
-
-			_enemyManager->getVBoss()[0]->setMoveAngle(getAngle(_moveGoal[_rndMove].x, _moveGoal[_rndMove].y, _enemyManager->getVBoss()[0]->getX(), _enemyManager->getVBoss()[0]->getY()));
-			//보스와 움직일 위치까지의 거리 구해줌.
-			_enemyManager->getVBoss()[0]->setTargetDistance(getDistance(_moveGoal[_rndMove].x, _moveGoal[_rndMove].y, _enemyManager->getVBoss()[0]->getX(), _enemyManager->getVBoss()[0]->getY()));
-
-			_rndMoveWorldTime = TIMEMANAGER->getWorldTime();
-		}
-
-
-	
 		switch (_enemyManager->getVBoss()[0]->getState())
 		{
 		case BOSS_STATE_MOVE:
@@ -181,18 +175,35 @@ void bossScene::movePattern()
 			//4초후에 움직여라
 			if (4.0f + _moveWorldTime <= TIMEMANAGER->getWorldTime())
 			{
-				if (_isOnce[LINEAR_MOVE] == false)
+
+				if (2.0f + _rndMoveWorldTime[0] <= TIMEMANAGER->getWorldTime())
 				{
-					_moveSpeed = _enemyManager->getVBoss()[0]->getTargetDistance() * (TIMEMANAGER->getElapsedTime() / 0.01f);
-					_isOnce[LINEAR_MOVE] = true;
+					_rndMove = RND->getRandomInt(0, 3);
+
+					_rndMoveWorldTime[0] = TIMEMANAGER->getWorldTime();
 				}
 
-				_enemyManager->getVBoss()[0]->setX(_enemyManager->getVBoss()[0]->getX() + cosf(_enemyManager->getVBoss()[0]->getMoveAngle() * _moveSpeed));
-				_enemyManager->getVBoss()[0]->setY(_enemyManager->getVBoss()[0]->getY() + -sinf(_enemyManager->getVBoss()[0]->getMoveAngle() * _moveSpeed));
-			
+				if (_enemyManager->getVBoss()[0]->getTargetDistance() > _moveSpeed)
+				{
+					_enemyManager->getVBoss()[0]->setX(_enemyManager->getVBoss()[0]->getX() + cosf(_enemyManager->getVBoss()[0]->getMoveAngle() * _moveSpeed));
+					_enemyManager->getVBoss()[0]->setY(_enemyManager->getVBoss()[0]->getY() + -sinf(_enemyManager->getVBoss()[0]->getMoveAngle() * _moveSpeed));
+				}
+				else
+				{
+					_enemyManager->getVBoss()[0]->setX(_goalX);
+					_enemyManager->getVBoss()[0]->setY(_goalY);
+				}
+
+
+				_goalX = _moveGoal[_rndMove].x;
+				_goalY = _moveGoal[_rndMove].y;
+
+				_enemyManager->getVBoss()[0]->setMoveAngle(getAngle(_moveGoal[_rndMove].x, _moveGoal[_rndMove].y, _enemyManager->getVBoss()[0]->getX(), _enemyManager->getVBoss()[0]->getY()));
+				//보스와 움직일 위치까지의 거리 구해줌.
+				_enemyManager->getVBoss()[0]->setTargetDistance(getDistance(_moveGoal[_rndMove].x, _moveGoal[_rndMove].y, _enemyManager->getVBoss()[0]->getX(), _enemyManager->getVBoss()[0]->getY()));
 			}
 			break;
-			
+
 		}
 	}
 }
