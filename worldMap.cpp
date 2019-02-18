@@ -18,6 +18,7 @@ HRESULT worldMap::init()
 	IMAGEMANAGER->addImage("blue", "image/fake3DBlue.bmp",1024,120,true,MAGENTA);
 	IMAGEMANAGER->addImage("middle", "image/middle.bmp", 1024, 50, true, MAGENTA);
 	IMAGEMANAGER->addImage("middle2", "image/middle2.bmp", 1024, 50, true, MAGENTA);
+	IMAGEMANAGER->addImage("sky", "image/worldMapSky.bmp", 1920, 1920, true, MAGENTA);
 
 	_playerWorldMap = new PlayerWorldMap;
 	_world = new world;
@@ -60,31 +61,39 @@ void worldMap::update()
 
 	_mode7->update();
 	_mode7->setMode7Point(_playerWorldMap->getPlayerX(), _playerWorldMap->getPlayerY(), (PI / 180) * 90);
+
+	if (_mode7->getFlatMode() == false)
+	{
+		_world->setFlatMode(false);
+	}
+	else
+	{
+		_world->setFlatMode(true);
+	}
 }
 
 void worldMap::render()
 {
-	_world->render(_camera->getCameraX(), _camera->getCameraY());
+	if (_mode7->getFlatMode() == true)
+	{
+		IMAGEMANAGER->render("sky", getMemDC());
+	}
+	_world->render(_playerWorldMap->getPlayerX() - 512, _playerWorldMap->getPlayerY() - 400);
 	_playerWorldMap->render(_camera->getCameraX(), _camera->getCameraY());
+
 	//IMAGEMANAGER->render("worldMapTile", getMemDC());
+
 	_mode7->setObjectImage(IMAGEMANAGER->findImage("worldMapTile"));
-	
 	_mode7->render(getMemDC());
 
 	//BitBlt(IMAGEMANAGER->findImage("fake3DHigh")->getMemDC(), 0, 0, GAMESIZEX, 120, IMAGEMANAGER->findImage("backBuffer")->getMemDC(), 0, GAMESIZEY - 120, SRCCOPY);
-	POINT pt[3];
-	pt[0].x = 0;
-	pt[1].x = 1024;
-	pt[2].x = 0;
-	pt[0].y = 120;
-	pt[1].y = 120;
-	pt[2].y = 0;
-	PlgBlt(IMAGEMANAGER->findImage("fake3DHigh")->getMemDC(), pt, IMAGEMANAGER->findImage("backBuffer")->getMemDC(), 0, GAMESIZEY -120, 1024, 120, NULL, 0, 0);
+	
 
 	if (_mode7->getFlatMode() == false)
 	{
 		fake3DHighImage();
 	}
+	
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 
@@ -94,6 +103,14 @@ void worldMap::render()
 
 void worldMap::fake3DHighImage()
 {
+	POINT pt[3];
+	pt[0].x = 0;
+	pt[1].x = 1024;
+	pt[2].x = 0;
+	pt[0].y = 120;
+	pt[1].y = 120;
+	pt[2].y = 0;
+	PlgBlt(IMAGEMANAGER->findImage("fake3DHigh")->getMemDC(), pt, IMAGEMANAGER->findImage("backBuffer")->getMemDC(), 0, GAMESIZEY - 120, 1024, 120, NULL, 0, 0);
 	IMAGEMANAGER->render("fake3DHigh", getMemDC(), 0, 0);
 	IMAGEMANAGER->findImage("blue")->alphaRender(getMemDC(), 0, 0, 130);
 	IMAGEMANAGER->findImage("middle")->alphaRender(getMemDC(), 0, 95, 150);

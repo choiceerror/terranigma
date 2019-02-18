@@ -5,6 +5,7 @@
 #include "dungeonMap.h"
 #include "camera.h"
 #include "ItemManager.h"
+#include "ClockFadeOut.h"
 
 class dungeon2F : public gameNode
 {
@@ -12,7 +13,7 @@ private:
 	enemyManager* _enemyManager;
 	player* _player;
 	camera* _camera;
-
+	ClockFadeOut* _clockFade;
 	dungeonMap* _dungeon2F;
 	ItemManager* _itemManager;
 

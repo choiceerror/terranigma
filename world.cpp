@@ -15,6 +15,7 @@ HRESULT world::init()
 {
 	IMAGEMANAGER->addImage("worldMapTile", 1920, 1920);
 	load();
+	_flatMode = false;
 	return S_OK;
 }
 
@@ -28,53 +29,96 @@ void world::update()
 
 void world::render(float cameraX, float cameraY)
 {
-	for (int i = 0; i < TILEY; ++i)
+	if (!_flatMode)
 	{
-		for (int j = 0; j < TILEX; ++j)
+		for (int i = 0; i < TILEY; ++i)
 		{
-			//if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
-			//if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
-			//if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
-			//if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
-
-			if ((_vvMap[i][j]->a == 4))
+			for (int j = 0; j < TILEX; ++j)
 			{
-				IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("worldMapTile")->getMemDC() ,
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+				if (_vvMap[i][j]->rc.left - cameraX + 332 < 0) continue;
+				if (_vvMap[i][j]->rc.left - cameraX > 1300) continue;
+				if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
+				if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
+
+				if ((_vvMap[i][j]->a == 4))
+				{
+					IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("worldMapTile")->getMemDC(),
+						_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
+						_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+				}
+			}
+		}
+
+		////오브젝트
+		for (int i = 0; i < TILEY; ++i)
+		{
+			for (int j = 0; j < TILEX; ++j)
+			{
+				if (_vvMap[i][j]->obj == OBJ_NONE) continue;
+
+				if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
+				if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
+				if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
+				if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
+
+				if (_vvMap[i][j]->a == 4)
+				{
+					IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("worldMapTile")->getMemDC(),
+						_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
+						_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+				}
+
 			}
 		}
 	}
-
-	////오브젝트
-	for (int i = 0; i < TILEY; ++i)
+	else
 	{
-		for (int j = 0; j < TILEX; ++j)
+		for (int i = 0; i < TILEY; ++i)
 		{
-			if (_vvMap[i][j]->obj == OBJ_NONE) continue;
-
-			//if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
-			//if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
-			//if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
-			//if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
-
-
-			if (_vvMap[i][j]->a == 4)
+			for (int j = 0; j < TILEX; ++j)
 			{
-				IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("worldMapTile")->getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
-			}
+				//if (_vvMap[i][j]->rc.left - cameraX + 332 < 0) continue;
+				//if (_vvMap[i][j]->rc.left - cameraX > 1300) continue;
+				//if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
+				//if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
 
+				if ((_vvMap[i][j]->a == 4))
+				{
+					IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("worldMapTile")->getMemDC(),
+						_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
+						_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+				}
+			}
+		}
+
+		////오브젝트
+		for (int i = 0; i < TILEY; ++i)
+		{
+			for (int j = 0; j < TILEX; ++j)
+			{
+				if (_vvMap[i][j]->obj == OBJ_NONE) continue;
+
+				//if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
+				//if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
+				//if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
+				//if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
+
+				if (_vvMap[i][j]->a == 4)
+				{
+					IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("worldMapTile")->getMemDC(),
+						_vvMap[i][j]->rc.left, _vvMap[i][j]->rc.top,
+						_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+				}
+
+			}
 		}
 	}
-
 	
 
-	char str[128];
-
-	sprintf_s(str, "오브x:%d 오브y:%d  지형x:%d 지형y:%d", obx, oby, tix, tiy);
-	TextOut(getMemDC(), 600, 500, str, strlen(str));
+	//char str[128];
+	//
+	//sprintf_s(str, "오브x:%d 오브y:%d  지형x:%d 지형y:%d", obx, oby, tix, tiy);
+	//TextOut(getMemDC(), 600, 500, str, strlen(str));
 }
 
 void world::load()

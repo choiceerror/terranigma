@@ -79,7 +79,7 @@ public:
 	void roomPointSetting();
 	void placeChange();
 
-	void dataLode();
+	void dataLoad();
 	void itemSetting();
 	void itemDraw();
 };

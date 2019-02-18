@@ -28,7 +28,7 @@ HRESULT ui::init()
 	_inventory->init();
 
 	
-	dataLode();
+	dataLoad();
 
 	//아이템 셋팅
 	roomPointSetting();
@@ -936,7 +936,7 @@ void ui::placeChange()
 	}
 }
 
-void ui::dataLode()
+void ui::dataLoad()
 {
 	_inventory->inventoryLoad();
 	

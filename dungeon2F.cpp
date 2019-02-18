@@ -20,6 +20,7 @@ HRESULT dungeon2F::init()
 	_camera = new camera;
 	_dungeon2F = new dungeonMap;
 	_itemManager = new ItemManager;
+	_clockFade = new ClockFadeOut;
 
 	_enemyManager->setPlayerMemoryAddressLink(_player);
 	_player->setEnemyManagerAddressLink(_enemyManager);
@@ -32,8 +33,12 @@ HRESULT dungeon2F::init()
 	_enemyManager->init();
 	_itemManager->init();
 	_enemyManager->setEnemy();
+	_clockFade->init();
 
 	_camera->init(GAMESIZEX, GAMESIZEY, 2240, 1600);
+
+	_clockFade->setClockFadeOut(false);
+	_clockFade->setClockFadeIn(true);
 
 	return S_OK;
 }
@@ -44,6 +49,8 @@ void dungeon2F::release()
 	SAFE_DELETE(_player);
 	SAFE_DELETE(_dungeon2F);
 	SAFE_DELETE(_camera);
+	SAFE_DELETE(_itemManager);
+	SAFE_DELETE(_clockFade);
 }
 
 void dungeon2F::update()
@@ -54,6 +61,7 @@ void dungeon2F::update()
 	_itemManager->update();
 	itemRandomDrop();
 	playerItemGet();
+	_clockFade->update();
 }
 
 void dungeon2F::render()
@@ -62,6 +70,7 @@ void dungeon2F::render()
 	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY());
+	_clockFade->render();
 }
 
 void dungeon2F::itemRandomDrop()

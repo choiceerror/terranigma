@@ -17,6 +17,8 @@ private:
 	int obx;
 	int oby;
 
+	bool _flatMode;
+
 public:
 	world();
 	~world();
@@ -34,5 +36,7 @@ public:
 
 	tagTile* getTile(int x, int y) { return _vvMap[y][x]; }
 	DWORD getAttr(int x, int y) { return _attribute[x + y * TILEX]; }
+
+	void setFlatMode(bool torf) { _flatMode = torf; }
 };
 
