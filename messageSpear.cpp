@@ -13,62 +13,14 @@ messageSpear::~messageSpear()
 
 HRESULT messageSpear::init()
 {
-	sprintf_s(_grandfa, "할아버지");
-	sprintf_s(_grandfaTitle, "타이틀");
-	sprintf_s(_grandfaMessage, "메세지");
-
-	INIDATA->addData(_grandfa, _grandfaTitle, _grandfaMessage);
-	INIDATA->iniSave("messageFile/할아버지.txt");
-
-	sprintf_s(_grandma, "할머니");
-	sprintf_s(_grandmaTitle, "타이틀");
-	sprintf_s(_grandmaMessage, "메세지");
-
-	INIDATA->addData(_grandma, _grandmaTitle, _grandmaMessage);
-	INIDATA->iniSave("messageFile/할머니.txt");
-
-	sprintf_s(_bird, "꼬꼬");
-	sprintf_s(_birdTitle, "타이틀");
-	sprintf_s(_birdMessage, "메세지");
-
-	INIDATA->addData(_bird, _birdTitle, _birdMessage);
-	INIDATA->iniSave("messageFile/꼬꼬.txt");
-
-	sprintf_s(_elder, "장로할아범");
-	sprintf_s(_elderTitle, "타이틀");
-	sprintf_s(_elderMessage, "메세지");
-
-	INIDATA->addData(_elder, _elderTitle, _elderMessage);
-	INIDATA->iniSave("messageFile/장로할아범.txt");
-
-	sprintf_s(_elle, "엘");
-	sprintf_s(_elleTitle, "타이틀");
-	sprintf_s(_elleMessage, "메세지");
-
-	INIDATA->addData(_elle, _elleTitle, _elleMessage);
-	INIDATA->iniSave("messageFile/엘.txt");
-
-	sprintf_s(_maid, "메이드");
-	sprintf_s(_maidTitle, "타이틀");
-	sprintf_s(_maidMessage, "메세지");
-
-	INIDATA->addData(_maid, _maidTitle, _maidMessage);
-	INIDATA->iniSave("messageFile/메이드.txt");
-
-	sprintf_s(_fishMan, "낚시꾼");
-	sprintf_s(_fishManTitle, "타이틀");
-	sprintf_s(_fishManMessage, "메세지");
-
-	INIDATA->addData(_fishMan, _fishManTitle, _fishManMessage);
-	INIDATA->iniSave("messageFile/할아버지.txt");
-
-	sprintf_s(_townMan, "마을사람");
-	sprintf_s(_townManTitle, "타이틀");
-	sprintf_s(_townManMessage, "메세지");
-
-	INIDATA->addData(_townMan, _townManTitle, _townManMessage);
-	INIDATA->iniSave("messageFile/할아버지.txt");
-
+	_count;
+	grandfaMessage();
+	grandmaMessage();
+	birdMessage();
+	elderMessage();
+	elleMessage();
+	fishManMessage();
+	maidMessage();
 	return S_OK;
 }
 
@@ -83,13 +35,16 @@ void messageSpear::update()
 
 void messageSpear::render()
 {
+	vector<string> vStr;
+
 	if (KEYMANAGER->isStayKeyDown('V'))
 	{
 		HFONT font;
 		HFONT oldFont;
 		font = CreateFont(30, 20, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
 		oldFont = (HFONT)SelectObject(getMemDC(), font);
-		TextOut(getMemDC(), 100, 100, INIDATA->loadDataString("messageFile/할아버지.txt", _grandfa, _grandfaTitle), strlen(INIDATA->loadDataString("messageFile/할아버지.txt", _grandfa, _grandfaTitle)));
+		vStr = TXTDATA->txtLoad("messageFile/할아버지.txt");
+		TextOut(getMemDC(), 100, 100, vStr[0].c_str(), strlen(vStr[0].c_str()));
 		SelectObject(getMemDC(), oldFont);
 		DeleteObject(font);
 	}
@@ -97,29 +52,91 @@ void messageSpear::render()
 
 void messageSpear::grandfaMessage()
 {
-	
+	string message[2];
+	vector<string> vStr;
+
+	message[0] = "대사";
+	message[1] = "";
+
+	vStr.push_back(message[0]);
+	vStr.push_back(message[1]);
+	TXTDATA->txtSave("messageFile/할아버지.txt", vStr);
 }
 
 void messageSpear::grandmaMessage()
 {
+	string message[2];
+	vector<string> vStr;
+
+	message[0] = "대사";
+	message[1] = "";
+
+	vStr.push_back(message[0]);
+	vStr.push_back(message[1]);
+	TXTDATA->txtSave("messageFile/할머니.txt", vStr);
 }
 
 void messageSpear::birdMessage()
 {
+	string message[2];
+	vector<string> vStr;
+
+	message[0] = "대사";
+	message[1] = "";
+
+	vStr.push_back(message[0]);
+	vStr.push_back(message[1]);
+	TXTDATA->txtSave("messageFile/꼬꼬.txt", vStr);
 }
 
 void messageSpear::elderMessage()
 {
+	string message[2];
+	vector<string> vStr;
+
+	message[0] = "대사";
+	message[1] = "";
+
+	vStr.push_back(message[0]);
+	vStr.push_back(message[1]);
+	TXTDATA->txtSave("messageFile/장로할아범.txt", vStr);
 }
 
 void messageSpear::elleMessage()
 {
+	string message[2];
+	vector<string> vStr;
+
+	message[0] = "대사";
+	message[1] = "";
+
+	vStr.push_back(message[0]);
+	vStr.push_back(message[1]);
+	TXTDATA->txtSave("messageFile/엘.txt", vStr);
 }
 
 void messageSpear::fishManMessage()
 {
+	string message[2];
+	vector<string> vStr;
+
+	message[0] = "대사";
+	message[1] = "";
+
+	vStr.push_back(message[0]);
+	vStr.push_back(message[1]);
+	TXTDATA->txtSave("messageFile/낚시꾼.txt", vStr);
 }
 
 void messageSpear::maidMessage()
 {
+	string message[2];
+	vector<string> vStr;
+
+	message[0] = "대사";
+	message[1] = "";
+
+	vStr.push_back(message[0]);
+	vStr.push_back(message[1]);
+	TXTDATA->txtSave("messageFile/메이드.txt", vStr);
 }
