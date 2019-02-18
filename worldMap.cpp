@@ -46,6 +46,10 @@ HRESULT worldMap::init()
 
 void worldMap::release()
 {
+	SAFE_DELETE(_playerWorldMap);
+	SAFE_DELETE(_world);
+	SAFE_DELETE(_camera);
+	SAFE_DELETE(_mode7);
 }
 
 void worldMap::update()
