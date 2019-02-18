@@ -27,6 +27,7 @@ private:
 	world* _world;
 	POINT tileIndex[2];
 
+	bool _move;
 
 	int TileX, TileY;
 public:
@@ -45,5 +46,12 @@ public:
 	void setPlayerY(float y) { _y = y; }
 
 	void setTownManagerAddressLink(world* wo) { _world = wo; }
+
+	RECT getPlayerRect() { return _playerRc; }
+
+	bool getPlayerMove() { return _move; }
+	void setPlayerMove(bool torf) { _move = torf; }
+
+	void setPlayerDirection(PLAYERWORLDMAP pl) { _playerDirection = pl; }
 };
 

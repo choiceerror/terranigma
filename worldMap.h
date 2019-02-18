@@ -15,12 +15,17 @@ private:
 	camera* _camera;
 	mode7* _mode7;
 
+	RECT _town;
+	RECT _dungeon;
+
 	int _alphaValue;
 	float _worldTime;
 	bool _once;
 
 	int _playerPosition;
 
+	bool _changeScene;
+	bool _fadeOut;
 
 public:
 	worldMap();
@@ -38,5 +43,7 @@ public:
 	void setWindowsSize(int x, int y, int width, int height);
 
 	void playerLoad();
+
+	void playerChangeScene();
 };
 

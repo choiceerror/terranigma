@@ -37,6 +37,7 @@ HRESULT PlayerWorldMap::init()
 	_speed = 5.f;
 	_playerRc = RectMakeCenter(_x, _y, 30, 30);
 	_playerDirection = WORLDMAP_IDLE_DOWN;
+	_move = true;
 	
 	_ani = KEYANIMANAGER->findAnimation("ark", "worldMapIdleDown");
 	return S_OK;
@@ -48,48 +49,49 @@ void PlayerWorldMap::release()
 
 void PlayerWorldMap::update(int check)
 {
-
-	if (KEYMANAGER->isStayKeyDown(VK_LEFT) && !(KEYMANAGER->isStayKeyDown(VK_UP) || KEYMANAGER->isStayKeyDown(VK_DOWN)))
+	if (_move)
 	{
-		if (_x > 0)
+		if (KEYMANAGER->isStayKeyDown(VK_LEFT) && !(KEYMANAGER->isStayKeyDown(VK_UP) || KEYMANAGER->isStayKeyDown(VK_DOWN)))
 		{
-			_x -= _speed;
+			if (_x > 0)
+			{
+				_x -= _speed;
+			}
+			_playerDirection = WORLDMAP_MOVE_LEFT;
 		}
-		_playerDirection = WORLDMAP_MOVE_LEFT;
-	}
-	else if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && !(KEYMANAGER->isStayKeyDown(VK_UP) || KEYMANAGER->isStayKeyDown(VK_DOWN)))
-	{
-		if (_x < 1920)
+		else if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && !(KEYMANAGER->isStayKeyDown(VK_UP) || KEYMANAGER->isStayKeyDown(VK_DOWN)))
 		{
-			_x += _speed;
+			if (_x < 1920)
+			{
+				_x += _speed;
+			}
+			_playerDirection = WORLDMAP_MOVE_RIGHT;
 		}
-		_playerDirection = WORLDMAP_MOVE_RIGHT;
-	}
-	else if (KEYMANAGER->isStayKeyDown(VK_UP) && !(KEYMANAGER->isStayKeyDown(VK_LEFT) || KEYMANAGER->isStayKeyDown(VK_RIGHT)))
-	{
-		if (_y > 0)
+		else if (KEYMANAGER->isStayKeyDown(VK_UP) && !(KEYMANAGER->isStayKeyDown(VK_LEFT) || KEYMANAGER->isStayKeyDown(VK_RIGHT)))
 		{
-			_y -= _speed;
+			if (_y > 0)
+			{
+				_y -= _speed;
+			}
+			_playerDirection = WORLDMAP_MOVE_UP;
 		}
-		_playerDirection = WORLDMAP_MOVE_UP;
-	}
-	else if (KEYMANAGER->isStayKeyDown(VK_DOWN) && !(KEYMANAGER->isStayKeyDown(VK_LEFT) || KEYMANAGER->isStayKeyDown(VK_RIGHT)))
-	{
-		if (_y < 1920)
+		else if (KEYMANAGER->isStayKeyDown(VK_DOWN) && !(KEYMANAGER->isStayKeyDown(VK_LEFT) || KEYMANAGER->isStayKeyDown(VK_RIGHT)))
 		{
-			_y += _speed;
+			if (_y < 1920)
+			{
+				_y += _speed;
+			}
+			_playerDirection = WORLDMAP_MOVE_DOWN;
 		}
-		_playerDirection = WORLDMAP_MOVE_DOWN;
-	}
 
-	if (KEYMANAGER->isOnceKeyUp(VK_LEFT) && _playerDirection == WORLDMAP_MOVE_LEFT) 	_playerDirection = WORLDMAP_IDLE_LEFT;
+		if (KEYMANAGER->isOnceKeyUp(VK_LEFT) && _playerDirection == WORLDMAP_MOVE_LEFT) 	_playerDirection = WORLDMAP_IDLE_LEFT;
 
-	if (KEYMANAGER->isOnceKeyUp(VK_RIGHT) && _playerDirection == WORLDMAP_MOVE_RIGHT) 	_playerDirection = WORLDMAP_IDLE_RIGHT;
-	
-	if (KEYMANAGER->isOnceKeyUp(VK_UP) && _playerDirection == WORLDMAP_MOVE_UP) 	_playerDirection = WORLDMAP_IDLE_UP;
-	
-	if (KEYMANAGER->isOnceKeyUp(VK_DOWN) && _playerDirection == WORLDMAP_MOVE_DOWN) 	_playerDirection = WORLDMAP_IDLE_DOWN;
+		if (KEYMANAGER->isOnceKeyUp(VK_RIGHT) && _playerDirection == WORLDMAP_MOVE_RIGHT) 	_playerDirection = WORLDMAP_IDLE_RIGHT;
 
+		if (KEYMANAGER->isOnceKeyUp(VK_UP) && _playerDirection == WORLDMAP_MOVE_UP) 	_playerDirection = WORLDMAP_IDLE_UP;
+
+		if (KEYMANAGER->isOnceKeyUp(VK_DOWN) && _playerDirection == WORLDMAP_MOVE_DOWN) 	_playerDirection = WORLDMAP_IDLE_DOWN;
+	}
 	switch (_playerDirection)
 	{
 	case WORLDMAP_IDLE_LEFT:

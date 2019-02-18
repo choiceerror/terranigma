@@ -42,11 +42,13 @@ HRESULT worldMap::init()
 	_alphaValue = 255;
 	_once = false;
 	_worldTime = 0;
-
+	_fadeOut = true;
+	_changeScene = false;
 
 	playerLoad();
 
-	
+	_dungeon = RectMake(512, 832, 32, 64);
+	_town = RectMake(1440, 1248, 64, 64);
 
 	return S_OK;
 }
@@ -76,6 +78,7 @@ void worldMap::update()
 	{
 		_world->setFlatMode(true);
 	}
+	playerChangeScene();
 }
 
 void worldMap::render()
@@ -130,17 +133,19 @@ void worldMap::fake3DHighImage()
 
 void worldMap::worldMapIn()
 {
-	if (_alphaValue > 0)
+	if (_fadeOut)
 	{
-		_alphaValue -= 3;
-	}
+		if (_alphaValue > 0)
+		{
+			_alphaValue -= 3;
+		}
 
-	if (_alphaValue <= 0)
-	{
-		_alphaValue = 0;
+		if (_alphaValue <= 0)
+		{
+			_alphaValue = 0;
+			_fadeOut = false;
+		}
 	}
-	
-
 }
 
 void worldMap::setWindowsSize(int x, int y, int width, int height)
@@ -177,9 +182,63 @@ void worldMap::playerLoad()
 	if (_player->getPlayerCurrentScene() == PLAYERSCENE::TOWN)
 	{
 		_playerWorldMap->setPlayerX(1472.f);
-		_playerWorldMap->setPlayerY(1216.f);
+		_playerWorldMap->setPlayerY(1276.f);
 	}
 
+}
+
+void worldMap::playerChangeScene()
+{
+	if (!_fadeOut)
+	{
+		RECT temp;
+
+		//마을
+		if (IntersectRect(&temp, &_playerWorldMap->getPlayerRect(), &_town))
+		{
+			if (KEYMANAGER->isOnceKeyDown('X'))
+			{
+				_playerWorldMap->setPlayerMove(false);
+				_worldTime = TIMEMANAGER->getWorldTime();
+				_playerWorldMap->setPlayerDirection(WORLDMAP_IDLE_UP);
+			}
+
+			if (_playerWorldMap->getPlayerMove() == false)
+			{
+				_alphaValue += 4;
+
+				if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
+				{
+					_changeScene = true;
+					SCENEMANAGER->changeScene("town");
+				}
+			}
+		}
+
+		if (!_changeScene)
+		{
+			//던전
+			if (IntersectRect(&temp, &_playerWorldMap->getPlayerRect(), &_dungeon))
+			{
+				if (KEYMANAGER->isOnceKeyDown('X'))
+				{
+					_playerWorldMap->setPlayerMove(false);
+					_worldTime = TIMEMANAGER->getWorldTime();
+					_playerWorldMap->setPlayerDirection(WORLDMAP_IDLE_UP);
+				}
+
+				if (_playerWorldMap->getPlayerMove() == false)
+				{
+					_alphaValue += 4;
+
+					if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
+					{
+						SCENEMANAGER->changeScene("introDungeon");
+					}
+				}
+			}
+		}
+	}
 }
 
 

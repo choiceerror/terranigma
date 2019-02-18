@@ -111,6 +111,12 @@ void IntroDungeon::update()
 	_clock->update();
 	_camera->update(0, 0);
 
+	if (_twice)
+	{
+		_camera->setCameraX(0);
+		_camera->setCameraY(2490 -GAMESIZEY);
+	}
+
 	_count++;
 	if(_count < 250)
 	{
