@@ -376,11 +376,22 @@ void IntroDungeon::escapeDungeon()
 
 		if (1.5f + _worldTime <= TIMEMANAGER->getWorldTime())
 		{
+			playerSave();
+
 			SCENEMANAGER->changeScene("worldMap");
 		}
 
 		_once = true;
 	}
+
+}
+
+void IntroDungeon::playerSave()
+{
+	
+
+
+
 
 }
 

@@ -47,6 +47,17 @@ enum PLAYERDIRECTION
 	DOWN
 };
 
+enum class PLAYERSCENE
+{
+	NONE,
+	INTRO_DUNGEON,
+	DUNGEON_1F,
+	DUNGEON_2F,
+	BOSS,
+	TOWN,
+	UI
+};
+
 struct tagPlayer
 {
 	RECT rc;						//캐릭터 렉트
@@ -70,6 +81,7 @@ struct tagPlayer
 	int level;						//플레이어 레벨
 	int exp;						//현재 경험치
 	int maxExp;						//최대 경험치
+	PLAYERSCENE currentScene;				//현재 씬
 };
 
 class player : public gameNode
@@ -191,6 +203,7 @@ public:
 	void setPlayerDamage(int damage) { _player.damage = damage; }
 	void setPlayerDef(int def) { _player.def = def; }
 	void setPlayerExp(int exp) { _player.exp = exp; }
+	void setPlayerCurrentScene(PLAYERSCENE num) { _player.currentScene = num; }
 
 	RECT getPlayerRc() { return _player.rc; }
 
@@ -207,6 +220,7 @@ public:
 	int getPlayerDef() { return _player.def; }
 	int getPlayerLevel() { return _player.level; }
 	int getPlayerExp() { return _player.exp; }
+	PLAYERSCENE getPlayerCurrentScene() { return _player.currentScene; }
 
 	bool getPlayerJump() { return _isJump; }
 	bool getPlayerRun() { return _isRun; }

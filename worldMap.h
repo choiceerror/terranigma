@@ -18,6 +18,8 @@ private:
 	float _worldTime;
 	bool _once;
 
+	int _playerPosition;
+
 public:
 	worldMap();
 	~worldMap();
@@ -32,5 +34,7 @@ public:
 	void worldMapIn();
 
 	void setWindowsSize(int x, int y, int width, int height);
+
+	void playerLoad();
 };
 

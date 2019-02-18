@@ -75,6 +75,8 @@ public:
 
 	void escapeDungeon();
 
+	void playerSave();
+
 	void setWindowsSize(int x, int y, int width, int height);
 
 	void setPlayerAccept(bool playerAccept) { _playerAccept = playerAccept; }

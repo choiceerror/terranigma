@@ -42,6 +42,8 @@ HRESULT worldMap::init()
 	_once = false;
 	_worldTime = 0;
 
+	playerLoad();
+
 	return S_OK;
 }
 
@@ -148,6 +150,13 @@ void worldMap::setWindowsSize(int x, int y, int width, int height)
 		(winRect.right - winRect.left),
 		(winRect.bottom - winRect.top),
 		SWP_NOZORDER | SWP_NOMOVE);
+}
+
+void worldMap::playerLoad()
+{
+
+
+
 }
 
 
