@@ -75,9 +75,7 @@ HRESULT player::init()
 
 	_death = _levelUP = false;
 
-
-	playerSave();
-	//playerLoad();
+	playerLoad();
 
 	return S_OK;
 }
@@ -1038,8 +1036,10 @@ void player::levelUP()
 		_player.maxHP += 5;
 		_player.maxExp += 10;
 		_player.exp = 0;
+		_player.money = _player.money;
 		_levelUP = true;
 		_levelOldTime = GetTickCount();
+		playerSave();
 	
 	}
 
@@ -1057,11 +1057,18 @@ void player::levelUP()
 void player::playerSave()
 {
 	char temp[128];
-
+	
 	vector<string> vStr;
-
+	
+	vStr.push_back(itoa(_player.HP, temp, 10));
 	vStr.push_back(itoa(_player.maxHP, temp, 10));
-
+	vStr.push_back(itoa(_player.damage, temp, 10));
+	vStr.push_back(itoa(_player.def, temp, 10));
+	vStr.push_back(itoa(_player.exp, temp, 10));
+	vStr.push_back(itoa(_player.maxExp, temp, 10));
+	vStr.push_back(itoa(_player.money, temp, 10));
+	vStr.push_back(itoa(_player.level, temp, 10));
+	
 	_txtData->txtSave("saveFile/플레이어.txt", vStr);
 
 }
@@ -1071,8 +1078,14 @@ void player::playerLoad()
 	vector<string> vStr;
 	vStr = _txtData->txtLoad("saveFile/플레이어.txt");
 	
-	_player.maxHP = (atoi(vStr[0].c_str()));
-
+	_player.HP = (atoi(vStr[0].c_str()));
+	_player.maxHP = (atoi(vStr[1].c_str()));
+	_player.damage = (atoi(vStr[2].c_str()));
+	_player.def = (atoi(vStr[3].c_str()));
+	_player.exp = (atoi(vStr[4].c_str()));
+	_player.maxExp = (atoi(vStr[5].c_str()));
+	_player.money = (atoi(vStr[6].c_str()));
+	_player.level = (atoi(vStr[7].c_str()));
 	
 }
 

@@ -133,6 +133,7 @@ void dungeon::dungeonChange()
 		if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
 		{
 			_changeScene = true;
+			_player->playerSave();
 			SCENEMANAGER->changeScene("introDungeon");
 		}
 
@@ -151,6 +152,7 @@ void dungeon::dungeonChange()
 		if (1.3f + _worldTime <= TIMEMANAGER->getWorldTime())
 		{
 			_changeScene = true;
+			_player->playerSave();
 			SCENEMANAGER->changeScene("dungeon2F");
 		}
 

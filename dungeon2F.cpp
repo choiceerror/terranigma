@@ -194,6 +194,7 @@ void dungeon2F::playerItemGet()
 	{
 		if (IntersectRect(&temp, &_player->getPlayerRc(), &_itemManager->getVGlod()[i]->getItemRect()))
 		{
+			_player->setPlayerMoney(_player->getPlayerMoney() + _itemManager->getVGlod()[i]->getGoldNum());
 			_itemManager->getVGlod()[i]->setItemIsLive(false);
 		}
 	}
