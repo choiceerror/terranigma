@@ -384,7 +384,7 @@ void bossScene::attackPattern()
 					else if (1.0f + _bulletWorldTime < TIMEMANAGER->getWorldTime() && 2.f + _bulletWorldTime > TIMEMANAGER->getWorldTime())
 					{
 						_bulletSpeed = 7;
-						(*_bossBullet->setVBossBullet())[i].speed += 0.3f;
+						(*_bossBullet->setVBossBullet())[i].speed += 0.2f;
 						(*_bossBullet->setVBossBullet())[0].angle = PI2;
 						(*_bossBullet->setVBossBullet())[1].angle = PI;
 					}
