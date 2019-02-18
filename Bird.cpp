@@ -65,7 +65,7 @@ void Bird::update()
 
 void Bird::render(float cameraX, float cameraY)
 {
-	Rectangle(getMemDC(), _npc.rc);
+	//Rectangle(getMemDC(), _npc.rc);
 	//_npc.image->aniRender(getMemDC(), _npc.x - cameraX, _npc.y - cameraY, _npc.ani);
 	_npc.image->expandAniRenderCenter(getMemDC(), _npc.x - cameraX, _npc.y - cameraY, _npc.ani, 2, 2);
 }

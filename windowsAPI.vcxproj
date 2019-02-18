@@ -23,7 +23,7 @@
     <ProjectGuid>{BE5C2545-DA5C-402F-8068-3E1EDF185C1C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>windowsAPI</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -192,6 +192,7 @@
     <ClInclude Include="MapNode.h" />
     <ClInclude Include="mapTool.h" />
     <ClInclude Include="intro.h" />
+    <ClInclude Include="messageSpear.h" />
     <ClInclude Include="mode7.h" />
     <ClInclude Include="npc.h" />
     <ClInclude Include="npcManager.h" />
@@ -264,6 +265,7 @@
     <ClCompile Include="loadingScene.cpp" />
     <ClCompile Include="mapTool.cpp" />
     <ClCompile Include="intro.cpp" />
+    <ClCompile Include="messageSpear.cpp" />
     <ClCompile Include="mode7.cpp" />
     <ClCompile Include="npc.cpp" />
     <ClCompile Include="npcManager.cpp" />

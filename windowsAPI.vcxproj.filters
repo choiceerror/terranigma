@@ -333,6 +333,9 @@
     <ClInclude Include="JumpAttack.h">
       <Filter>PlayGround\player\state</Filter>
     </ClInclude>
+    <ClInclude Include="messageSpear.h">
+      <Filter>PlayGround\npc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -538,6 +541,9 @@
     </ClCompile>
     <ClCompile Include="playerUI.cpp">
       <Filter>PlayGround\player</Filter>
+    </ClCompile>
+    <ClCompile Include="messageSpear.cpp">
+      <Filter>PlayGround\npc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
