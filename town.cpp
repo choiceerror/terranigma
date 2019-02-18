@@ -27,13 +27,15 @@ HRESULT town::init()
 	_camera = new camera;
 	_town = new townMap;
 	_npcManager = new npcManager;
+	_messageSpear = new messageSpear;
 
 	_player->setTownManagerAddressLink(_town);
 	_player->setnpcManagerAddressLink(_npcManager);
 	_npcManager->setTownManagerAddressLink(_town);
 
 	_player->init();
-	_town->init();
+	//_town->init();
+	_messageSpear->init();
 
 	_npcManager->setBird();
 	_npcManager->setElder();
@@ -76,7 +78,7 @@ void town::render()
 	_player->render(_camera->getCameraX(),_camera->getCameraY());
 	_npcManager->render(_camera->getCameraX(), _camera->getCameraY());
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
-
+	_messageSpear->render();
 
 	//Rectangle(getMemDC(), _escape);
 }

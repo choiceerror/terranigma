@@ -5,7 +5,7 @@
 #include "townMap.h"
 #include "npcManager.h"
 #include "randomFunction.h"
-
+#include "messageSpear.h"
 
 
 class town : public gameNode
@@ -16,6 +16,8 @@ private:
 	townMap* _town;
 
 	npcManager* _npcManager;
+	
+	messageSpear* _messageSpear;
 
 	RECT _escape;
 
