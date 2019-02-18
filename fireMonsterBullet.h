@@ -17,6 +17,7 @@ struct tagFireBullet
 	bool isCollision;
 	animation* ani;
 	POINT tileIndex[8]; //타일인덱스 판별
+	float sizeX, sizeY;
 };
 
 class fireMonsterBullet : public gameNode
@@ -82,6 +83,9 @@ public:
 	BULLETATTACKPATTERN getPattern() { return _pattern; }
 	void setPattern(BULLETATTACKPATTERN pattern) { _pattern = pattern; }
 
+
+	int getBulletMax() {return _bulletMax;}
+	void setBulletMax(int max) {_bulletMax = max;}
 	//접근자 설정자
 	vector<tagFireBullet> getVBossBullet() { return _vBossBullet; }
 	vector<tagFireBullet>* setVBossBullet() { return &_vBossBullet; }

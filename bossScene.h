@@ -5,6 +5,7 @@
 #include "dungeonMap.h"
 #include "camera.h"
 #include "ItemManager.h"
+#include "fireMonsterBullet.h"
 
 enum ONCE //한번만 받기위함.
 {
@@ -12,6 +13,22 @@ enum ONCE //한번만 받기위함.
 	CAMERA_LINEAR,
 	BOSS_APPEAR,
 	WORLDTIME,
+};
+
+enum class BULLET_PATTERN
+{
+	NONE,
+	GOLD_BULLET,
+	BLUE_BULLET,
+	RED_BULLET,
+};
+
+enum ATTACK_PATTERN
+{
+	ATTACK_NONE,
+	ATTACK_ONE,
+	ATTACK_TWO,
+	ATTACK_THREE,
 
 };
 
@@ -24,12 +41,15 @@ private:
 
 	dungeonMap* _dungeonBossMap;
 	ItemManager* _itemManager;
+	bossBullet* _bossBullet;
+	BULLET_PATTERN _bulletPattern; //총알 나가는 종류
+	ATTACK_PATTERN _attackPattern; //공격종류
 
 	float _worldTime;
 	bool _isBossAppear; //보스 등장시점 판별해줄 불값
 	bool _isOnce[4]; //업데이트부분에 한번만 받기위함.
 	
-	POINTFLOAT _goal;
+	POINTFLOAT _appearGoal;
 	float _goalAngle;
 	float _elapsedTime;
 	float _goalDistance;
@@ -40,11 +60,16 @@ private:
 	float _goalX;
 	float _goalY;
 	float _moveWorldTime;
-	float _rndMoveWorldTime[2];
+	float _rndMoveWorldTime;
+	float _attackWorldTime[4];
+	float _bulletWorldTime;
+
+	int _rndAttack; //3개중에 한개나갈타입
+	int _rndAttackType; //1개 어택중에 다르게 나갈타입.
 
 	float _moveSpeed;
 	int _rndMove;
-
+	float _bulletSpeed;
 
 public:
 	bossScene();
@@ -57,6 +82,7 @@ public:
 
 	void bossAppear(); //보스 등장
 	void movePattern(); //보스 무브패턴
+	void attackPattern(); //보스 공격패턴
 
 	void setWindowsSize(int x, int y, int width, int height);
 };

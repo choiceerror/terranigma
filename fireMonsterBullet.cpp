@@ -86,11 +86,11 @@ HRESULT bossBullet::init(const char * imageName, float range, int bulletMax)
 	_range = range;
 	_bulletMax = bulletMax;
 	int goldBullet[] = { 0, 1, 2, 3 };
-	KEYANIMANAGER->addArrayFrameAnimation("goldBullet", "gold", _imageName, goldBullet, 4, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation("goldBullet", "gold", _imageName, goldBullet, 4, 7, true);
 	int blueBullet[] = { 4, 5, 6, 7 };
-	KEYANIMANAGER->addArrayFrameAnimation("blueBullet", "blue", _imageName, blueBullet, 4, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation("blueBullet", "blue", _imageName, blueBullet, 4, 7, true);
 	int redBullet[] = { 8, 9, 10, 11 };
-	KEYANIMANAGER->addArrayFrameAnimation("redBullet", "red", _imageName, redBullet, 4, 5, true);
+	KEYANIMANAGER->addArrayFrameAnimation("redBullet", "red", _imageName, redBullet, 4, 7, true);
 
 	_tempAni = KEYANIMANAGER->findAnimation("goldBullet", "gold");
 	return S_OK;
@@ -107,6 +107,15 @@ void bossBullet::update()
 
 void bossBullet::render(float cameraX, float cameraY)
 {
+	for (_viBossBullet = _vBossBullet.begin(); _viBossBullet != _vBossBullet.end(); _viBossBullet++)
+	{
+		//카메라 좌표에따라 가상좌표 계산
+		_viBossBullet->viewX = _viBossBullet->x - cameraX;
+		_viBossBullet->viewY = _viBossBullet->y - cameraY;
+		_viBossBullet->image->expandAniRenderCenter(getMemDC(), _viBossBullet->viewX, _viBossBullet->viewY, _viBossBullet->ani, _viBossBullet->sizeX, _viBossBullet->sizeY);
+		//Rectangle(getMemDC(), _viFireBullet->rc);
+	}
+
 }
 
 void bossBullet::bossFire(float x, float y, float angle, float speed)
@@ -123,6 +132,7 @@ void bossBullet::bossFire(float x, float y, float angle, float speed)
 	bossBullet.radius = bossBullet.image->getFrameWidth() / 2;
 	bossBullet.rc = RectMakeCenter(bossBullet.x, bossBullet.y, bossBullet.image->getFrameWidth(), bossBullet.image->getFrameHeight());
 	bossBullet.isCollision = false;
+	bossBullet.sizeX = bossBullet.sizeY = 2.5f;
 
 	_vBossBullet.push_back(bossBullet);
 }
