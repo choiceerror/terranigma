@@ -29,8 +29,12 @@ private:
 	POINT _leftLastDrag;
 	POINT _leftSubtraction;
 
+	POINT _mapEnd;
+
 	RECT box[5];
 	RECT tileBox[6];
+
+	RECT tileMoveBox[6];
 
 	RECT viewRc;
 	RECT rc;

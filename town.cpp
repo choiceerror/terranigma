@@ -41,7 +41,7 @@ HRESULT town::init()
 	_npcManager->init();
 
 	
-	_camera->init(GAMESIZEX, GAMESIZEY, 2560, 2560);
+	_camera->init(GAMESIZEX, GAMESIZEY, 1920, 1920);
 
 	return S_OK;
 }

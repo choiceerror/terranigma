@@ -13,6 +13,9 @@ mapTool::~mapTool()
 
 HRESULT mapTool::init()
 {
+
+
+	IMAGEMANAGER->addImage("backMap", "image/mapToolbackground.bmp", 1920, 800, true, MAGENTA);
 	setUp();
 
 	_camera = new camera;
@@ -26,9 +29,9 @@ HRESULT mapTool::init()
 
 	viewRc = RectMake(view.x, view.y, 5, 5);
 
-
+	_mapEnd.x = 1000;
 	num = 2;
-	tilenum = 0;
+	tilenum = 7;
 	ee = 0;
 
 	for (int i = 0; i < 5; ++i)
@@ -57,6 +60,11 @@ HRESULT mapTool::init()
 		e[i] = RectMakeCenter(1500 + (i * 150), 650, 30, 30);
 	}
 
+
+	for (int i = 0; i < 6; ++i)
+	{
+		tileMoveBox[i] = RectMakeCenter(WINSIZEX - 30, 20 + (i * 40), 30, 30);
+	}
 
 	check = false;
 	_leftDragMode = false;
@@ -106,9 +114,9 @@ void mapTool::update()
 		for (int j = 0; j < TILEX; ++j)
 		{
 			if (PtInRect(&_vvMap[i][j]->rc, ptMouse2))
-			{
-				f =  _vvMap[i][j]->rc.left / TileSIZE;
-				g = _vvMap[i][j]->rc.top / TileSIZE;
+			{		
+					f = _vvMap[i][j]->rc.left / TileSIZE;
+					g = _vvMap[i][j]->rc.top / TileSIZE;
 			}
 		}
 	}
@@ -121,6 +129,7 @@ void mapTool::render()
 {
 	PatBlt(IMAGEMANAGER->findImage("background")->getMemDC(), 0, 0, WINSIZEX, WINSIZEY, WHITENESS);
 
+	//IMAGEMANAGER->render("backMap", getMemDC());
 
 	if (tilenum == 0)
 	{
@@ -259,6 +268,10 @@ void mapTool::render()
 		Rectangle(getMemDC(), e[i]);
 	}
 
+	for (int i = 0; i < 6; ++i)
+	{
+		Rectangle(getMemDC(), tileMoveBox[i]);
+	}
 
 	IMAGEMANAGER->render("save", getMemDC(), box[0].left, box[0].top);
 	IMAGEMANAGER->render("load", getMemDC(), box[1].left, box[1].top);
@@ -421,6 +434,7 @@ void mapTool::render()
 
 	Rectangle(IMAGEMANAGER->findImage("background")->getMemDC(), viewRc);
 	IMAGEMANAGER->render("background", getMemDC(), 0, 0, 0, 0, 800, WINSIZEY);
+
 }
 
 void mapTool::setUp()
@@ -607,15 +621,38 @@ void mapTool::ClickBox()
 			Click = CTRL_ERASER;
 			num = 4;
 		}
-		else if (PtInRect(&tileSelect[0], _ptMouse) && tilenum > 0)
+		//else if (PtInRect(&tileSelect[0], _ptMouse) && tilenum > 0)
+		//{
+		//	tilenum--;
+		//}
+		//else if (PtInRect(&tileSelect[1], _ptMouse) && tilenum < 5)
+		//{
+		//	tilenum++;
+		//}
+		else if (PtInRect(&tileMoveBox[0], _ptMouse))
 		{
-			tilenum--;
+			tilenum = 0;
 		}
-		else if (PtInRect(&tileSelect[1], _ptMouse) && tilenum < 5)
+		else if (PtInRect(&tileMoveBox[1], _ptMouse))
 		{
-			tilenum++;
+			tilenum = 1;
 		}
-
+		else if (PtInRect(&tileMoveBox[2], _ptMouse))
+		{
+			tilenum = 2;
+		}
+		else if (PtInRect(&tileMoveBox[3], _ptMouse))
+		{
+			tilenum = 3;
+		}
+		else if (PtInRect(&tileMoveBox[4], _ptMouse))
+		{
+			tilenum = 4;
+		}
+		else if (PtInRect(&tileMoveBox[5], _ptMouse))
+		{
+			tilenum = 5;
+		}
 	}
 
 	if (KEYMANAGER->isStayKeyDown(VK_LBUTTON))
