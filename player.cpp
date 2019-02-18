@@ -1043,15 +1043,42 @@ void player::levelUP()
 
 void player::playerSave()
 {
-	HANDLE file;
-	DWORD save;
 
-	file = CreateFile("saveFile/playerStatus.char", GENERIC_WRITE, NULL, NULL,
-		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	//if (KEYMANAGER->isOnceKeyDown(VK_F1))
+	//{
+	//	char temp[128];
+	//	vector<string> vStr;
+	//
+	//	//             itoa(현재체력의 정수를 temp에 문자열로 넣는다 10진수로)
+	//	vStr.push_back(itoa(_currentHP, temp, 10));
+	//	vStr.push_back(itoa(_maxHP, temp, 10));
+	//	vStr.push_back(itoa(_ship->GetX(), temp, 10));
+	//	vStr.push_back(itoa(_ship->GetY(), temp, 10));
+	//
+	//	TXTDATA->txtSave("세이브테스트.txt", vStr);
+	//}
+	//if (KEYMANAGER->isOnceKeyDown(VK_F2))
+	//{
+	//	vector<string> vStr;
+	//
+	//	vStr = TXTDATA->txtLoad("세이브테스트.txt");
+	//
+	//	_currentHP = (atoi(vStr[0].c_str()));
+	//	_maxHP = (atoi(vStr[1].c_str()));
+	//	_ship->SetX(atoi(vStr[2].c_str()));
+	//	_ship->SetY(atoi(vStr[3].c_str()));
+	//}
 
-	WriteFile(file, _enum, sizeof(tagEnum), &save, NULL);
 
-	CloseHandle(file);
+	//HANDLE file;
+	//DWORD save;
+	//
+	//file = CreateFile("saveFile/playerStatus.char", GENERIC_WRITE, NULL, NULL,
+	//	CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	//
+	//WriteFile(file, _enum, sizeof(tagEnum), &save, NULL);
+	//
+	//CloseHandle(file);
 }
 
 void player::playerLoad()
