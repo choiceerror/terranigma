@@ -55,6 +55,10 @@ HRESULT bossScene::init()
 
 void bossScene::release()
 {
+	SAFE_DELETE(_enemyManager);
+	SAFE_DELETE(_player);
+	SAFE_DELETE(_dungeonBossMap);
+	SAFE_DELETE(_camera);
 }
 
 void bossScene::update()

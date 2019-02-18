@@ -29,6 +29,8 @@ HRESULT mapTool::init()
 
 	num = 2;
 	tilenum = 0;
+	ee = 0;
+
 	for (int i = 0; i < 5; ++i)
 	{
 		box[i] = RectMakeCenter(900 + (i * 150), 750, 120, 50);
@@ -52,7 +54,11 @@ HRESULT mapTool::init()
 	for (int i = 0; i < 2; ++i)
 	{
 		tileSelect[i] = RectMakeCenter(1700 + (i * 50), 550, 30, 30);
+		d[i] = RectMakeCenter(1500 + (i * 150), 600, 30, 30);
+		e[i] = RectMakeCenter(1500 + (i * 150), 650, 30, 30);
 	}
+
+
 	check = false;
 	_leftDragMode = false;
 
@@ -78,6 +84,26 @@ void mapTool::update()
 	mapSize();
 	tileDrag();
 
+
+	if (KEYMANAGER->isOnceKeyDown(VK_LBUTTON))
+	{
+		if (PtInRect(&d[0], _ptMouse))
+		{
+			ee--;
+		}
+		else if (PtInRect(&d[1], _ptMouse))
+		{
+			ee++;
+		}
+		else if (PtInRect(&e[0], _ptMouse))
+		{
+			a--;
+		}
+		else if (PtInRect(&e[1], _ptMouse))
+		{
+			a++;
+		}
+	}
 
 	viewRc = RectMake(view.x - _camera->getCameraX(), view.y - _camera->getCameraY(), 20, 20);
 }
@@ -221,7 +247,11 @@ void mapTool::render()
 	for (int i = 0; i < 2; ++i)
 	{
 		Rectangle(getMemDC(), tileSelect[i]);
+		Rectangle(getMemDC(), d[i]);
+		Rectangle(getMemDC(), e[i]);
 	}
+
+
 	IMAGEMANAGER->render("save", getMemDC(), box[0].left, box[0].top);
 	IMAGEMANAGER->render("load", getMemDC(), box[1].left, box[1].top);
 	IMAGEMANAGER->render("terrain", getMemDC(), box[2].left, box[2].top);
@@ -336,26 +366,85 @@ void mapTool::render()
 	}
 
 
-	sprintf_s(str, "첫타일  x : %d   첫타일 y : %d", _mouseIndex.x, _mouseIndex.y);
-	TextOut(getMemDC(), 1300, 520, str, strlen(str));
-
-	sprintf_s(str, "마지막타일 x : %d   마지막타일 y : %d", _tileBox.lastX, _tileBox.lastY);
-	TextOut(getMemDC(), 1300, 550, str, strlen(str));
-
-	sprintf_s(str, "뺀 타일 x : %d   뺀 타일 y : %d", abs(_tileBox.q), abs(_tileBox.w));
-	TextOut(getMemDC(), 1300, 580, str, strlen(str));
+	//sprintf_s(str, "첫타일  x : %d   첫타일 y : %d", _mouseIndex.x, _mouseIndex.y);
+	//TextOut(getMemDC(), 1300, 520, str, strlen(str));
+	//
+	//sprintf_s(str, "마지막타일 x : %d   마지막타일 y : %d", _tileBox.lastX, _tileBox.lastY);
+	//TextOut(getMemDC(), 1300, 550, str, strlen(str));
+	//
+	//sprintf_s(str, "뺀 타일 x : %d   뺀 타일 y : %d", abs(_tileBox.q), abs(_tileBox.w));
+	//TextOut(getMemDC(), 1300, 580, str, strlen(str));
 
 	sprintf_s(str, "타일X개수 : %d", TILEX);
 	TextOut(getMemDC(), 1100, 530, str, strlen(str));
 	sprintf_s(str, "타일Y개수 : %d", TILEY);
 	TextOut(getMemDC(), 1100, 550, str, strlen(str));
 
+	sprintf_s(str, "저장넘버 : %d  로드넘버 : %d", ee, a);
+	TextOut(getMemDC(), 1100, 650, str, strlen(str));
+
+
+	sprintf_s(str, "저장");
+	TextOut(getMemDC(), 1700, 595, str, strlen(str));
+
+	sprintf_s(str, "로드");
+	TextOut(getMemDC(), 1700, 645, str, strlen(str));
+
+	if (ee == 0)
+	{
+		sprintf_s(str, "던전");
+		TextOut(getMemDC(), 1530, 595, str, strlen(str));
+	}
+	else if (ee == 1)
+	{
+		sprintf_s(str, "던전2F");
+		TextOut(getMemDC(), 1530, 595, str, strlen(str));
+	}
+	else if (ee == 2)
+	{
+		sprintf_s(str, "보스방");
+		TextOut(getMemDC(), 1530, 595, str, strlen(str));
+	}
+	else if (ee == 3)
+	{
+		sprintf_s(str, "마을");
+		TextOut(getMemDC(), 1530, 595, str, strlen(str));
+	}
+	else if (ee == 4)
+	{
+		sprintf_s(str, "월드맵");
+		TextOut(getMemDC(), 1530, 595, str, strlen(str));
+	}
+
+	if (a == 0)
+	{
+		sprintf_s(str, "던전");
+		TextOut(getMemDC(), 1530, 645, str, strlen(str));
+	}
+	else if (a == 1)
+	{
+		sprintf_s(str, "던전2F");
+		TextOut(getMemDC(), 1530, 645, str, strlen(str));
+	}
+	else if (a == 2)
+	{
+		sprintf_s(str, "보스방");
+		TextOut(getMemDC(), 1530, 645, str, strlen(str));
+	}
+	else if (a == 3)
+	{
+		sprintf_s(str, "마을");
+		TextOut(getMemDC(), 1530, 645, str, strlen(str));
+	}
+	else if (a == 4)
+	{
+		sprintf_s(str, "월드맵");
+		TextOut(getMemDC(), 1530, 645, str, strlen(str));
+	}
+
+
 
 	Rectangle(IMAGEMANAGER->findImage("background")->getMemDC(), viewRc);
-
-
-
-
 	IMAGEMANAGER->render("background", getMemDC(), 0, 0, 0, 0, 800, WINSIZEY);
 }
 
@@ -374,9 +463,9 @@ void mapTool::setUp()
 		for (int j = 0; j < TILEX; ++j)
 		{
 			tagTile* _tile = new tagTile;
-			_tile->a = 2;
-			_tile->FrameX = 12;
-			_tile->FrameY = 4;
+			_tile->a = 0;
+			_tile->FrameX = 0;
+			_tile->FrameY = 15;
 			_tile->objFrameX = 0;
 			_tile->objFrameY = 0;
 			_tile->terrain = terrainSelect(_tile->FrameX, _tile->FrameY);
@@ -481,13 +570,51 @@ void mapTool::ClickBox()
 		if (PtInRect(&box[0], _ptMouse))
 		{
 			Click = CTRL_SAVE;
-			save();
+			if (ee == 0)
+			{
+				save(SaveAndLoad::DUNGEON);
+			}
+			if (ee == 1)
+			{
+				save(SaveAndLoad::DUNGEON2F);
+			}
+			if (ee == 2)
+			{
+				save(SaveAndLoad::BOSS);
+			}
+			if (ee == 3)
+			{
+				save(SaveAndLoad::TOWN);
+			}
+			if (ee == 4)
+			{
+				save(SaveAndLoad::WORLDMAP);
+			}
 			num = 0;
 		}
 		else if (PtInRect(&box[1], _ptMouse))
 		{
 			Click = CTRL_LOAD;
-			load();
+			if (a == 0)
+			{
+				load(SaveAndLoad::DUNGEON);
+			}
+			if (a == 1)
+			{
+				load(SaveAndLoad::DUNGEON2F);
+			}
+			if (a == 2)
+			{
+				load(SaveAndLoad::BOSS);
+			}
+			if (a == 3)
+			{
+				load(SaveAndLoad::TOWN);
+			}
+			if (a == 4)
+			{
+				load(SaveAndLoad::WORLDMAP);
+			}
 			num = 1;
 		}
 		else if (PtInRect(&box[2], _ptMouse))
@@ -522,109 +649,541 @@ void mapTool::ClickBox()
 	}
 }
 
-void mapTool::save()
+void mapTool::save(SaveAndLoad saveNum)
 {
-	HANDLE file2;
-	DWORD save2;
-	char mapSize[128];
-	sprintf_s(mapSize, "%d,%d", TILEX, TILEY);
-	file2 = CreateFile("saveFile\\worldSize.map", GENERIC_WRITE, NULL, NULL,
-		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	WriteFile(file2, mapSize, strlen(mapSize), &save2, NULL);
-
-	CloseHandle(file2);
-
-	tagTile* _tiles = new tagTile[TILEX * TILEY];
-	for (int i = 0; i < TILEY; i++)
+	if (saveNum == SaveAndLoad::DUNGEON)
 	{
-		for (int j = 0; j < TILEX; j++)
+		HANDLE file2;
+		DWORD save2;
+		char mapSize[128];
+		sprintf_s(mapSize, "%d,%d", TILEX, TILEY);
+		file2 = CreateFile("saveFile\\dungeonSize.map", GENERIC_WRITE, NULL, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		WriteFile(file2, mapSize, strlen(mapSize), &save2, NULL);
+
+		CloseHandle(file2);
+
+		tagTile* _tiles = new tagTile[TILEX * TILEY];
+		for (int i = 0; i < TILEY; i++)
 		{
-			_tiles[j + i * TILEX] = *_vvMap[i][j];
+			for (int j = 0; j < TILEX; j++)
+			{
+				_tiles[j + i * TILEX] = *_vvMap[i][j];
+			}
 		}
+
+		HANDLE file;
+		DWORD save;
+
+		file = CreateFile("saveFile\\dungeonSave.map", GENERIC_WRITE, NULL, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &save, NULL);
+
+		CloseHandle(file);
+
+		delete[] _tiles;
 	}
 
-	HANDLE file;
-	DWORD save;
+	else if (saveNum == SaveAndLoad::DUNGEON2F)
+	{
+		HANDLE file2;
+		DWORD save2;
+		char mapSize[128];
+		sprintf_s(mapSize, "%d,%d", TILEX, TILEY);
+		file2 = CreateFile("saveFile\\dungeon2FSize.map", GENERIC_WRITE, NULL, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	file = CreateFile("saveFile\\worldSave.map", GENERIC_WRITE, NULL, NULL,
-		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		WriteFile(file2, mapSize, strlen(mapSize), &save2, NULL);
 
-	WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &save, NULL);
+		CloseHandle(file2);
 
-	CloseHandle(file);
+		tagTile* _tiles = new tagTile[TILEX * TILEY];
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				_tiles[j + i * TILEX] = *_vvMap[i][j];
+			}
+		}
 
-	delete[] _tiles;
+		HANDLE file;
+		DWORD save;
+
+		file = CreateFile("saveFile\\dungeon2FSave.map", GENERIC_WRITE, NULL, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &save, NULL);
+
+		CloseHandle(file);
+
+		delete[] _tiles;
+	}
+
+	else if (saveNum == SaveAndLoad::BOSS)
+	{
+		HANDLE file2;
+		DWORD save2;
+		char mapSize[128];
+		sprintf_s(mapSize, "%d,%d", TILEX, TILEY);
+		file2 = CreateFile("saveFile\\bossSize.map", GENERIC_WRITE, NULL, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		WriteFile(file2, mapSize, strlen(mapSize), &save2, NULL);
+
+		CloseHandle(file2);
+
+		tagTile* _tiles = new tagTile[TILEX * TILEY];
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				_tiles[j + i * TILEX] = *_vvMap[i][j];
+			}
+		}
+
+		HANDLE file;
+		DWORD save;
+
+		file = CreateFile("saveFile\\bossSave.map", GENERIC_WRITE, NULL, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &save, NULL);
+
+		CloseHandle(file);
+
+		delete[] _tiles;
+	}
+	else if (saveNum == SaveAndLoad::TOWN)
+	{
+		HANDLE file2;
+		DWORD save2;
+		char mapSize[128];
+		sprintf_s(mapSize, "%d,%d", TILEX, TILEY);
+		file2 = CreateFile("saveFile\\townSize.map", GENERIC_WRITE, NULL, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		WriteFile(file2, mapSize, strlen(mapSize), &save2, NULL);
+
+		CloseHandle(file2);
+
+		tagTile* _tiles = new tagTile[TILEX * TILEY];
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				_tiles[j + i * TILEX] = *_vvMap[i][j];
+			}
+		}
+
+		HANDLE file;
+		DWORD save;
+
+		file = CreateFile("saveFile\\townSave.map", GENERIC_WRITE, NULL, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &save, NULL);
+
+		CloseHandle(file);
+
+		delete[] _tiles;
+	}
+	else if (saveNum == SaveAndLoad::WORLDMAP)
+	{
+		HANDLE file2;
+		DWORD save2;
+		char mapSize[128];
+		sprintf_s(mapSize, "%d,%d", TILEX, TILEY);
+		file2 = CreateFile("saveFile\\worldSize.map", GENERIC_WRITE, NULL, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		WriteFile(file2, mapSize, strlen(mapSize), &save2, NULL);
+
+		CloseHandle(file2);
+
+		tagTile* _tiles = new tagTile[TILEX * TILEY];
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				_tiles[j + i * TILEX] = *_vvMap[i][j];
+			}
+		}
+
+		HANDLE file;
+		DWORD save;
+
+		file = CreateFile("saveFile\\worldSave.map", GENERIC_WRITE, NULL, NULL,
+			CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		WriteFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &save, NULL);
+
+		CloseHandle(file);
+
+		delete[] _tiles;
+	}
 }
 
-void mapTool::load()
+void mapTool::load(SaveAndLoad loadNum)
 {
-	for (int i = 0; i < TILEY; i++)
+	if (loadNum == SaveAndLoad::DUNGEON)
 	{
-		for (int j = 0; j < TILEX; j++)
+		for (int i = 0; i < TILEY; i++)
 		{
-			//SAFE_DELETE(_vvMap[i][j]);
+			for (int j = 0; j < TILEX; j++)
+			{
+				//SAFE_DELETE(_vvMap[i][j]);
+			}
+			_vvMap[i].clear();
 		}
-		_vvMap[i].clear();
+		_vvMap.clear();
+
+		HANDLE file2;
+		DWORD read2;
+		char mapSize[128];
+
+		file2 = CreateFile("saveFile\\dungeonSize.map", GENERIC_READ, NULL, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		ReadFile(file2, mapSize, 128, &read2, NULL);
+		CloseHandle(file2);
+
+		string sizeX, sizeY;
+		bool x = true;
+		for (int i = 0; i < strlen(mapSize); i++)
+		{
+			if (mapSize[i] == ',')
+			{
+				x = false;
+				continue;
+			}
+			if (mapSize[i] == NULL) break;
+			if (x)
+			{
+				sizeX += mapSize[i];
+			}
+			else
+			{
+				sizeY += mapSize[i];
+			}
+		}
+
+
+		TILEX = stoi(sizeX);
+		TILEY = stoi(sizeY);
+		_vvMap.resize(TILEY);
+
+
+		for (int i = 0; i < TILEY; i++)
+		{
+			_vvMap[i].resize(TILEX);
+		}
+		tagTile* _tiles = new tagTile[TILEX * TILEY];
+		HANDLE file;
+		DWORD read;
+
+		file = CreateFile("saveFile\\dungeonSave.map", GENERIC_READ, NULL, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
+
+
+		CloseHandle(file);
+
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				_vvMap[i][j] = &_tiles[j + i * TILEX];
+			}
+		}
 	}
-	_vvMap.clear();
 
-	HANDLE file2;
-	DWORD read2;
-	char mapSize[128];
-
-	file2 = CreateFile("saveFile\\worldSize.map", GENERIC_READ, NULL, NULL,
-		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	ReadFile(file2, mapSize, 128, &read2, NULL);
-	CloseHandle(file2);
-
-	string sizeX, sizeY;
-	bool x = true;
-	for (int i = 0; i < strlen(mapSize); i++)
+	else if (loadNum == SaveAndLoad::DUNGEON2F)
 	{
-		if (mapSize[i] == ',')
+		for (int i = 0; i < TILEY; i++)
 		{
-			x = false;
-			continue;
+			for (int j = 0; j < TILEX; j++)
+			{
+				//SAFE_DELETE(_vvMap[i][j]);
+			}
+			_vvMap[i].clear();
 		}
-		if (mapSize[i] == NULL) break;
-		if (x)
+		_vvMap.clear();
+
+		HANDLE file2;
+		DWORD read2;
+		char mapSize[128];
+
+		file2 = CreateFile("saveFile\\dungeon2FSize.map", GENERIC_READ, NULL, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		ReadFile(file2, mapSize, 128, &read2, NULL);
+		CloseHandle(file2);
+
+		string sizeX, sizeY;
+		bool x = true;
+		for (int i = 0; i < strlen(mapSize); i++)
 		{
-			sizeX += mapSize[i];
+			if (mapSize[i] == ',')
+			{
+				x = false;
+				continue;
+			}
+			if (mapSize[i] == NULL) break;
+			if (x)
+			{
+				sizeX += mapSize[i];
+			}
+			else
+			{
+				sizeY += mapSize[i];
+			}
 		}
-		else
+
+
+		TILEX = stoi(sizeX);
+		TILEY = stoi(sizeY);
+		_vvMap.resize(TILEY);
+
+
+		for (int i = 0; i < TILEY; i++)
 		{
-			sizeY += mapSize[i];
+			_vvMap[i].resize(TILEX);
+		}
+		tagTile* _tiles = new tagTile[TILEX * TILEY];
+		HANDLE file;
+		DWORD read;
+
+		file = CreateFile("saveFile\\dungeon2FSave.map", GENERIC_READ, NULL, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
+
+
+		CloseHandle(file);
+
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				_vvMap[i][j] = &_tiles[j + i * TILEX];
+			}
 		}
 	}
 
-
-	TILEX = stoi(sizeX);
-	TILEY = stoi(sizeY);
-	_vvMap.resize(TILEY);
-
-
-	for (int i = 0; i < TILEY; i++)
+	else if (loadNum == SaveAndLoad::BOSS)
 	{
-		_vvMap[i].resize(TILEX);
-	}
-	tagTile* _tiles = new tagTile[TILEX * TILEY];
-	HANDLE file;
-	DWORD read;
-
-	file = CreateFile("saveFile\\worldSave.map", GENERIC_READ, NULL, NULL,
-		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
-
-
-	CloseHandle(file);
-
-	for (int i = 0; i < TILEY; i++)
-	{
-		for (int j = 0; j < TILEX; j++)
+		for (int i = 0; i < TILEY; i++)
 		{
-			_vvMap[i][j] = &_tiles[j + i * TILEX];
+			for (int j = 0; j < TILEX; j++)
+			{
+				//SAFE_DELETE(_vvMap[i][j]);
+			}
+			_vvMap[i].clear();
+		}
+		_vvMap.clear();
+
+		HANDLE file2;
+		DWORD read2;
+		char mapSize[128];
+
+		file2 = CreateFile("saveFile\\bossSize.map", GENERIC_READ, NULL, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		ReadFile(file2, mapSize, 128, &read2, NULL);
+		CloseHandle(file2);
+
+		string sizeX, sizeY;
+		bool x = true;
+		for (int i = 0; i < strlen(mapSize); i++)
+		{
+			if (mapSize[i] == ',')
+			{
+				x = false;
+				continue;
+			}
+			if (mapSize[i] == NULL) break;
+			if (x)
+			{
+				sizeX += mapSize[i];
+			}
+			else
+			{
+				sizeY += mapSize[i];
+			}
+		}
+
+
+		TILEX = stoi(sizeX);
+		TILEY = stoi(sizeY);
+		_vvMap.resize(TILEY);
+
+
+		for (int i = 0; i < TILEY; i++)
+		{
+			_vvMap[i].resize(TILEX);
+		}
+		tagTile* _tiles = new tagTile[TILEX * TILEY];
+		HANDLE file;
+		DWORD read;
+
+		file = CreateFile("saveFile\\bossSave.map", GENERIC_READ, NULL, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
+
+
+		CloseHandle(file);
+
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				_vvMap[i][j] = &_tiles[j + i * TILEX];
+			}
+		}
+	}
+
+	else if (loadNum == SaveAndLoad::TOWN)
+	{
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				//SAFE_DELETE(_vvMap[i][j]);
+			}
+			_vvMap[i].clear();
+		}
+		_vvMap.clear();
+
+		HANDLE file2;
+		DWORD read2;
+		char mapSize[128];
+
+		file2 = CreateFile("saveFile\\townSize.map", GENERIC_READ, NULL, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		ReadFile(file2, mapSize, 128, &read2, NULL);
+		CloseHandle(file2);
+
+		string sizeX, sizeY;
+		bool x = true;
+		for (int i = 0; i < strlen(mapSize); i++)
+		{
+			if (mapSize[i] == ',')
+			{
+				x = false;
+				continue;
+			}
+			if (mapSize[i] == NULL) break;
+			if (x)
+			{
+				sizeX += mapSize[i];
+			}
+			else
+			{
+				sizeY += mapSize[i];
+			}
+		}
+
+
+		TILEX = stoi(sizeX);
+		TILEY = stoi(sizeY);
+		_vvMap.resize(TILEY);
+
+
+		for (int i = 0; i < TILEY; i++)
+		{
+			_vvMap[i].resize(TILEX);
+		}
+		tagTile* _tiles = new tagTile[TILEX * TILEY];
+		HANDLE file;
+		DWORD read;
+
+		file = CreateFile("saveFile\\townSave.map", GENERIC_READ, NULL, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
+
+
+		CloseHandle(file);
+
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				_vvMap[i][j] = &_tiles[j + i * TILEX];
+			}
+		}
+	}
+
+	else if (loadNum == SaveAndLoad::WORLDMAP)
+	{
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				//SAFE_DELETE(_vvMap[i][j]);
+			}
+			_vvMap[i].clear();
+		}
+		_vvMap.clear();
+
+		HANDLE file2;
+		DWORD read2;
+		char mapSize[128];
+
+		file2 = CreateFile("saveFile\\worldSize.map", GENERIC_READ, NULL, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		ReadFile(file2, mapSize, 128, &read2, NULL);
+		CloseHandle(file2);
+
+		string sizeX, sizeY;
+		bool x = true;
+		for (int i = 0; i < strlen(mapSize); i++)
+		{
+			if (mapSize[i] == ',')
+			{
+				x = false;
+				continue;
+			}
+			if (mapSize[i] == NULL) break;
+			if (x)
+			{
+				sizeX += mapSize[i];
+			}
+			else
+			{
+				sizeY += mapSize[i];
+			}
+		}
+
+
+		TILEX = stoi(sizeX);
+		TILEY = stoi(sizeY);
+		_vvMap.resize(TILEY);
+
+
+		for (int i = 0; i < TILEY; i++)
+		{
+			_vvMap[i].resize(TILEX);
+		}
+		tagTile* _tiles = new tagTile[TILEX * TILEY];
+		HANDLE file;
+		DWORD read;
+
+		file = CreateFile("saveFile\\worldSave.map", GENERIC_READ, NULL, NULL,
+			OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+		ReadFile(file, _tiles, sizeof(tagTile) * TILEX * TILEY, &read, NULL);
+
+
+		CloseHandle(file);
+
+		for (int i = 0; i < TILEY; i++)
+		{
+			for (int j = 0; j < TILEX; j++)
+			{
+				_vvMap[i][j] = &_tiles[j + i * TILEX];
+			}
 		}
 	}
 }
@@ -795,9 +1354,9 @@ void mapTool::mapSize()
 			for (int i = 0; i < TILEY; ++i)
 			{
 				tagTile* _tile = new tagTile;
-				_tile->a = 2;
-				_tile->FrameX = 12;
-				_tile->FrameY = 4;
+				_tile->a = 0;
+				_tile->FrameX = 0;
+				_tile->FrameY = 15;
 				_tile->objFrameX = 0;
 				_tile->objFrameY = 0;
 				_tile->terrain = terrainSelect(_tile->FrameX, _tile->FrameY);
@@ -827,9 +1386,9 @@ void mapTool::mapSize()
 			for (int i = 0; i < TILEX; i++)
 			{
 				tagTile* _tile = new tagTile;
-				_tile->a = 2;
-				_tile->FrameX = 12;
-				_tile->FrameY = 4;
+				_tile->a = 0;
+				_tile->FrameX = 0;
+				_tile->FrameY = 15;
 				_tile->objFrameX = 0;
 				_tile->objFrameY = 0;
 				_tile->terrain = terrainSelect(_tile->FrameX, _tile->FrameY);

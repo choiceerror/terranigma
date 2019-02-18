@@ -3,6 +3,15 @@
 #include <vector>
 #include "camera.h"
 #include "MapNode.h"
+
+enum class SaveAndLoad
+{
+	DUNGEON,
+	DUNGEON2F,
+	BOSS,
+	TOWN,
+	WORLDMAP
+};
 class mapTool : public gameNode
 {
 private:
@@ -25,7 +34,7 @@ private:
 
 	RECT viewRc;
 	RECT rc;
-
+	SaveAndLoad _SaveAndLoad;
 	camera* _camera;
 
 
@@ -33,6 +42,8 @@ private:
 
 	RECT tileSelect[2];
 
+	RECT d[2];
+	RECT e[2];
 	unsigned int TILEX;
 	unsigned int TILEY;
 
@@ -43,9 +54,9 @@ private:
 	int tilenum;
 
 	bool check;
-
+	int a;
 	bool _mouseUp;
-
+	int ee;
 	int b, c;
 	POINTFLOAT view;
 	POINT _mouseIndex;
@@ -67,8 +78,8 @@ public:
 	void setUp();
 	void setMap();
 	void ClickBox();
-	void save();
-	void load();
+	void save(SaveAndLoad saveNum);
+	void load(SaveAndLoad loadNum);
 	void viewMove();
 	void tileDrag();
 	void tileLeftDrag();
