@@ -299,6 +299,7 @@ void dungeonMap::tileDraw(float cameraX, float cameraY)
 		for (int j = 0; j < TILEX; ++j)
 		{
 			if (_vvMap[i][j]->obj == OBJ_NONE) continue;
+
 			if (_vvMap[i][j]->rc.left - cameraX + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.left - cameraX > 1024) continue;
 			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
@@ -347,10 +348,10 @@ void dungeonMap::tileDraw(float cameraX, float cameraY)
 void dungeonMap::fireAni()
 {
 	_count++;
-	if (_count % 12 == 0)
+	if (_count % 8 == 0)
 	{
 		_index++;
-		if (_index > 4) _index = 0;
+		if (_index > 3) _index = 0;
 
 		_count = 0;
 	}

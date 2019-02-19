@@ -1580,7 +1580,7 @@ OBJECT mapTool::objSelect(int frameX, int frameY)
 			{
 				return OBJ_SHIRT;
 			}
-			else if (tilenum == 5 && frameX == 0 && frameY == 0)
+			else if (tilenum == 5 && frameX == 1 && frameY == 0)
 			{
 				return OBJ_FIRE;
 			}

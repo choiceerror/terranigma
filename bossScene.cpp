@@ -106,7 +106,7 @@ void bossScene::update()
 	_player->update(false, 1);
 	_itemManager->update();
 	_enemyManager->update();
-
+	_dungeonBossMap->update();
 	if (_enemyManager->getVBoss()[0]->getCurrentHP() > 0)
 	{
 		//보스 등장
