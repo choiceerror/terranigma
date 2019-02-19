@@ -165,15 +165,10 @@ void townMap::load()
 			_attribute[j + i * TILEX] = NULL;
 			_vvMap[i][j] = &_tiles[j + i * TILEX];
 
-			if (_vvMap[i][j]->obj == OBJ_WALL && _vvMap[i][j]->obj == OBJ_WATER)
-			{
-				_attribute[j + i * TILEX] |= ATTR_UNMOVE;
-			}
-			//if (_vvMap[i][j]->obj == OBJ_WATER)
-			//{
-			//	_attribute[j + i * TILEX] |= ATTR_UNMOVE;
-			//}
+			if (_vvMap[i][j]->obj == OBJ_WALL) _attribute[j + i * TILEX] |= ATTR_UNMOVE;
+			if (_vvMap[i][j]->obj == OBJ_WATER) _attribute[j + i * TILEX] |= ATTR_UNMOVE;
 
+				
 		}
 	}
 	CloseHandle(file);
@@ -187,7 +182,7 @@ void townMap::tileDraw()
 void townMap::riverMove()
 {
 	_count++;
-	if (_count % 8 == 0)
+	if (_count % 12 == 0)
 	{
 		_index++;
 		if (_index > 20) _index = 18;

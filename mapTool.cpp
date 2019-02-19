@@ -1557,9 +1557,9 @@ void mapTool::tileimgMove()
 	
 TERRAIN mapTool::terrainSelect(int frameX, int frameY)
 {
-	if (frameX == 0 && frameY == 4)
+	if (tilenum == 3 && frameX == 19 && frameY == 1)
 
-		return TR_TILE_ONE;
+		return TR_WATER;
 }
 
 OBJECT mapTool::objSelect(int frameX, int frameY)
