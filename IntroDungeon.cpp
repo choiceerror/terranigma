@@ -96,6 +96,8 @@ HRESULT IntroDungeon::init()
 
 	_alphaValue = 0;
 	_changScene = false;
+	_changScene2 = false;
+	_alphaBlend = false;
 
 	introDungeonLoad();
 	playerLoad();
@@ -114,7 +116,7 @@ void IntroDungeon::update()
 {
 	_clock->update();
 	_camera->update(0, 0);
-
+	alphaBlend();
 	if (_twice)
 	{
 		_camera->setCameraX(0);
@@ -290,10 +292,13 @@ void IntroDungeon::update()
 			_clock->setClockFadeIn(true);
 
 		}
-
-		_escapeRc = RectMakeCenter(GAMESIZEX / 2 + 20 - _camera->getCameraX(), 1925 - _camera->getCameraY(), 200, 100);
-		_introDungeonPlayerRc = RectMakeCenter(_player->getPlayerX() - _camera->getCameraX(), _player->getPlayerY() + 10 - _camera->getCameraY(), 40, 50);
+		if (!_changScene2)
+		{
+			_escapeRc = RectMakeCenter(GAMESIZEX / 2 + 20 - _camera->getCameraX(), 1925 - _camera->getCameraY(), 200, 100);
+			_introDungeonPlayerRc = RectMakeCenter(_player->getPlayerX() - _camera->getCameraX(), _player->getPlayerY() + 10 - _camera->getCameraY(), 40, 50);
+		}
 	}
+
 }
 
 void IntroDungeon::render()
@@ -394,7 +399,7 @@ void IntroDungeon::escapeDungeon()
 		if (1.5f + _worldTime <= TIMEMANAGER->getWorldTime())
 		{
 			playerSave();
-
+			_changScene2 = true;
 			SCENEMANAGER->changeScene("worldMap");
 		}
 
@@ -426,13 +431,13 @@ void IntroDungeon::introDungeonSave()
 
 	vStr.push_back(itoa((int)_twice, temp, 10));
 
-	TXTDATA->txtSave("saveFile/introDungeon.scene", vStr);
+	TXTDATA->txtSave("saveFile/introDungeon.txt", vStr);
 }
 
 void IntroDungeon::introDungeonLoad()
 {
 	vector<string> vStr;
-	vStr = TXTDATA->txtLoad("saveFile/introDungeon.scene");
+	vStr = TXTDATA->txtLoad("saveFile/introDungeon.txt");
 	_twice = (atoi(vStr[0].c_str()));
 
 	if (_twice == true)
@@ -442,6 +447,9 @@ void IntroDungeon::introDungeonLoad()
 		_doorDirection = 1;
 		_guardianOn = true;
 		_playerAccept = true;
+
+		_alphaValue = 255;
+		_alphaBlend = true;
 	}
 }
 
@@ -461,6 +469,21 @@ void IntroDungeon::playerLoad()
 	{
 		_player->setPlayerDirection(DOWN);
 		_player->setPlayerPosY(_player->getPlayerY() - 150);
+	}
+}
+
+void IntroDungeon::alphaBlend()
+{
+	if (_alphaBlend)
+	{
+		if (_alphaValue > 0)
+		{
+			_alphaValue -= 3;
+		}
+		else if (_alphaValue <= 0)
+		{
+			_alphaBlend = false;
+		}
 	}
 }
 

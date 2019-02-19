@@ -63,8 +63,10 @@ private:
 	int _alphaValue;
 	
 	bool _twice;
+	bool _alphaBlend;
 
 	bool _changScene;
+	bool _changScene2;
 
 public:
 	IntroDungeon();
@@ -84,6 +86,7 @@ public:
 	void introDungeonSave();
 	void introDungeonLoad();
 	void playerLoad();
+	void alphaBlend();
 
 	void setWindowsSize(int x, int y, int width, int height);
 

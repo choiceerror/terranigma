@@ -89,7 +89,7 @@ void gameNode::render()
 
 void gameNode::fileDelete()
 {
-	deleteFile("saveFile/introDungeon.scene");
+	deleteFile("saveFile/introDungeon.txt");
 	deleteFile("saveFile/inventory.txt");
 	deleteFile("saveFile/플레이어.txt");
 	deleteFile("saveFile/playerScene.txt");

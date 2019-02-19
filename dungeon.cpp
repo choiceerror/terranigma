@@ -100,11 +100,27 @@ void dungeon::render()
 				}
 			}
 		}
+		for (int i = 0; i < 5; ++i)
+		{
+			for (int j = 0; j < 10; ++j)
+			{
+				if (i == 0)
+				{
+					IMAGEMANAGER->findImage("타일맵2")->frameRender(getMemDC(), 352 + 32 * j,2976 + i * 32 - _camera->getCameraY(), 7, 13);
+				}
+				if (i != 0)
+				{
+					IMAGEMANAGER->findImage("타일맵2")->frameRender(getMemDC(), 352 + 32 * j, 2976 + i * 32 - _camera->getCameraY(), 7, 14);
+				}
+			}
+		}
+
+
 
 		_clockFade->render();
 		IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 
-		//Rectangle(getMemDC(), _dungeonDown);
+		Rectangle(getMemDC(), _dungeonDown);
 		//Rectangle(getMemDC(), _dungeonUp);
 
 		//char str[100];
@@ -116,7 +132,7 @@ void dungeon::render()
 void dungeon::dungeonChange()
 {
 	_dungeonUp = RectMake(416, 0, 192, 50);
-	_dungeonDown = RectMake(352, 3200 - 278, 320, 64);
+	_dungeonDown = RectMake(352, 3200 - 180, 320, 64);
 
 	//던전 나갈때
 	if (!_changeScene)
@@ -125,11 +141,16 @@ void dungeon::dungeonChange()
 		{
 			_player->setPlayerUnMove(true);
 
+			if (_player->getPlayerY() < _dungeonDown.top)
+			{
+				_player->setPlayerPosY(_player->getPlayerY() + 3);
+			}
+
 			if (!_once)
 			{
 				_worldTime = TIMEMANAGER->getWorldTime();
 			}
-
+	
 			if (_alphaValue < 255)
 			{
 				_alphaValue += 4;
@@ -138,7 +159,7 @@ void dungeon::dungeonChange()
 			{
 				_alphaValue = 255;
 			}
-
+	
 			if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
 			{
 				_changeScene = true;
@@ -146,7 +167,7 @@ void dungeon::dungeonChange()
 				playerSceneSave();
 				SCENEMANAGER->changeScene("introDungeon");
 			}
-
+	
 			_once = true;
 		}
 	}
@@ -194,17 +215,26 @@ void dungeon::playerSceneLoad()
 {
 	vector<string> vStr;
 	vStr = TXTDATA->txtLoad("saveFile/playerScene.txt");
+	if (vStr.size() > 4)
+	{
+		_player->setPlayerCurrentScene((PLAYERSCENE)atoi(vStr[0].c_str()));
+	}
+	else
+	{
+		_player->setPlayerCurrentScene(PLAYERSCENE::INTRO_DUNGEON);
+	}
 
-	_player->setPlayerCurrentScene((PLAYERSCENE)atoi(vStr[0].c_str()));
 
 	if (_player->getPlayerCurrentScene() == PLAYERSCENE::INTRO_DUNGEON)
 	{
-		_player->setPlayerPosX(480);
+		_player->setPlayerDirection(UP);
+		_player->setPlayerPosX(500);
 		_player->setPlayerPosY(2816);
 	}
 
 	if (_player->getPlayerCurrentScene() == PLAYERSCENE::DUNGEON_2F)
 	{
+		_player->setPlayerDirection(DOWN);
 		_player->setPlayerPosX(992);
 		_player->setPlayerPosY(1440);
 	}
