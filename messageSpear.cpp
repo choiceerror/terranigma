@@ -22,7 +22,10 @@ HRESULT messageSpear::init()
 	maidMessage();
 	guardianMessage();
 	
-	_talkCount = _talkCount2 = 2;
+	_talkCount = _talkCount2 = 0;
+
+	_birdTalk = _elderTalk = _elleTalk = _maidTalk = false;
+	_grandfaTalk = _grandmaTalk = _fishManTalk = _townManTalk = _guardianTalk = false;
 
 	_texOldTime = GetTickCount();
 
@@ -40,31 +43,18 @@ void messageSpear::update()
 
 void messageSpear::render()
 {
-	
-
-	if (KEYMANAGER->isStayKeyDown('V'))
+	if (KEYMANAGER->isOnceKeyDown('1'))
 	{
-		vector<string> vStr;
-	//if (GetTickCount() - _texOldTime >= 300) 
-	//{
-	//	if (vStr[0].size() > _talkCount)
-	//	{
-	//		_talkCount += 2;
-	//	}
-	//	else if (vStr[1].size() > _talkCount2)
-	//	{
-	//		_talkCount2 += 2;
-	//	}
-	//}
-		IMAGEMANAGER->findImage("messageSpear")->expandRender(getMemDC(), 0, GAMESIZEY / 2 + 80, 0, 0, 1.7, 1.7);
-		_font = CreateFont(40, 25, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
-		_oldFont = (HFONT)SelectObject(getMemDC(), _font);
-		vStr = TXTDATA->txtLoad("messageFile/할아버지.txt");
-		TextOut(getMemDC(), 80, 500, vStr[0].c_str(), _talkCount);
-		TextOut(getMemDC(), 80, 550, vStr[1].c_str(), _talkCount2);
+		if(!_grandfaTalk) _grandfaTalk = true;
+		else _grandfaTalk = false;
 	}
-	SelectObject(getMemDC(), _oldFont);
-	DeleteObject(_font);
+	if (KEYMANAGER->isOnceKeyDown('2'))
+	{
+		if (!_grandmaTalk) _grandmaTalk = true;
+		else _grandmaTalk = false;
+	}
+	messageRender("messageFile/할아버지.txt", _grandfaTalk, 8 , 26 );
+	messageRender("messageFile/할머니.txt", _grandmaTalk, 33, 34);
 }
 
 void messageSpear::grandfaMessage()
@@ -73,11 +63,13 @@ void messageSpear::grandfaMessage()
 	
 	vector<string> vStr;
 
-	message[0] = "뭐냐  아크";
-	message[1] = "다신  여기  오지  말라니깐!";
+
+	message[0].assign("뭐냐  아크");
+	message[1].assign("다신  여기  오지  말라니깐!");
 
 	vStr.push_back(message[0]);
 	vStr.push_back(message[1]);
+
 	TXTDATA->txtSave("messageFile/할아버지.txt", vStr);
 }
 
@@ -112,7 +104,7 @@ void messageSpear::elderMessage()
 	string message[2];
 	vector<string> vStr;
 
-	message[0] = "장로 :";
+	message[0] = "....";
 	message[1] = "넌  왜  그렇게  항상  말썽이냐?";
 
 	vStr.push_back(message[0]);
@@ -125,7 +117,7 @@ void messageSpear::elleMessage()
 	string message[2];
 	vector<string> vStr;
 
-	message[0] = "엘";
+	message[0] = "아크야 탑이..";
 	message[1] = "무서워..  안좋은  예감이  들어..";
 
 	vStr.push_back(message[0]);
@@ -164,12 +156,13 @@ void messageSpear::guardianMessage()
 	string message[8];
 	vector<string> vStr;
 
-	message[0] = "타워문 대가리";
-	message[1] = "나는  가디언이다";
-	message[2] = "이  타워안에는  층이";
-	message[3] = "세개로 되어있다.";
-	message[4] = "시련을  극복하여";
-	message[5] = "세계를  조절하는   힘을  얻어라!";
+	
+	message[0] = "나는  가디언이다";
+	message[1] = "이  타워안에는  층이";
+	message[2] = "세개로 되어있다.";
+	message[3] = "시련을  극복하여";
+	message[4] = "세계를  조절하는   힘을  얻어라!";
+	message[5] = "이것이 너의 운명이다!";
 
 	vStr.push_back(message[0]);
 	vStr.push_back(message[1]);
@@ -179,4 +172,33 @@ void messageSpear::guardianMessage()
 	vStr.push_back(message[5]);
 
 	TXTDATA->txtSave("messageFile/가디언.txt", vStr);
+}
+
+void messageSpear::messageRender(const char* txtName, bool messageBool, int timeNum, int timeNum2)
+{
+	vector<string> vStr;
+	_font = CreateFont(35, 25, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
+	_oldFont = (HFONT)SelectObject(getMemDC(), _font);
+	vStr = TXTDATA->txtLoad(txtName);
+
+	if (messageBool)
+	{
+		if (GetTickCount() - _texOldTime >= 1 * 100)
+		{
+			if (timeNum >= _talkCount)
+			{
+				_talkCount += 2;
+			}
+			else if (timeNum2 >= _talkCount2)
+			{
+				_talkCount2 += 2;
+			}
+			_texOldTime = GetTickCount();
+		}
+		IMAGEMANAGER->findImage("messageSpear")->expandRender(getMemDC(), 0, GAMESIZEY / 2 + 80, 0, 0, 1.7, 1.7);
+		TextOut(getMemDC(), 70, 550, vStr[0].c_str(), _talkCount);
+		TextOut(getMemDC(), 70, 600, vStr[1].c_str(), _talkCount2);
+	}
+	SelectObject(getMemDC(), _oldFont);
+	DeleteObject(_font);
 }

@@ -2,6 +2,7 @@
 #include "gameNode.h"
 
 
+
 class messageSpear : public gameNode
 {
 private:
@@ -12,6 +13,8 @@ private:
 	int _talkCount, _talkCount2;
 
 	int _texOldTime;
+
+	int a;
 
 	bool _birdTalk, _elderTalk, _elleTalk, _maidTalk,
 		_grandfaTalk, _grandmaTalk, _fishManTalk, _townManTalk, _guardianTalk; 
@@ -31,7 +34,8 @@ public:
 	void elleMessage();
 	void fishManMessage();
 	void maidMessage();
-	void guardianMessage();
+	void guardianMessage(); 
 
+	void messageRender(const char* txtName, bool messageBool, int timeNum, int timeNum2);
 };
 
