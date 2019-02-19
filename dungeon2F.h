@@ -17,8 +17,28 @@ private:
 	dungeonMap* _dungeon2F;
 	ItemManager* _itemManager;
 
+	RECT _dungeonUp;
+	RECT _dungeonDown;
+
+	POINT _goal;
+
+	float _speed;
+	float _distance;
+	float _angle;
+
 	int _rndItemDrop; //아이템 랜덤으로 드랍할것
 	int _rndItemTypeDrop; //아이템 타입 랜덤으로 드랍할것.
+
+
+	bool _once;
+	bool _sceneChange;
+	float _worldTime;
+
+	bool _dungeonDownBool;
+	bool _dungeonUpBool;
+
+
+
 public:
 	dungeon2F();
 	~dungeon2F();
@@ -30,6 +50,8 @@ public:
 
 	void playerSceneSave();
 	void playerSceneLoad();
+
+	void dungeonChange();
 
 	void itemRandomDrop(); //랜덤 아이템드랍
 	void playerItemGet(); //플레이어 아이템 얻는 함수

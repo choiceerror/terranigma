@@ -35,10 +35,28 @@ HRESULT dungeon2F::init()
 	_enemyManager->setEnemy();
 	_clockFade->init();
 
+	_goal.x = 1000.f;
+	_goal.y = 30.f;
+
 	_camera->init(GAMESIZEX, GAMESIZEY, 2240, 1600);
 
 	_clockFade->setClockFadeOut(false);
 	_clockFade->setClockFadeIn(true);
+
+	_dungeonUp = RectMake(832, 96 , 64, 64);
+	_dungeonDown = RectMake(928 , 1568 , 192, 32);
+
+	_player->setPlayerDirection(UP);
+	_player->setPlayerPosX(1020);
+	_player->setPlayerPosY(1460);
+
+	_sceneChange = false;
+	_worldTime = 0;
+	_once = false;
+	_dungeonDownBool = false;
+	_dungeonUpBool = false;
+
+	playerSceneLoad();
 
 	return S_OK;
 }
@@ -63,9 +81,12 @@ void dungeon2F::update()
 	_clockFade->update();
 
 
-
 	//==============¹Ø¿¡ ÀÛ¼º ±ÝÁö===============
-	_player->update(false, 1);
+	dungeonChange();
+	if (!_sceneChange)
+	{
+		_player->update(false, 1);
+	}
 }
 
 void dungeon2F::render()
@@ -74,6 +95,22 @@ void dungeon2F::render()
 	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
+
+	for (int i = 0; i < 5; ++i)
+	{
+		for (int j = 0; j < 2; ++j)
+		{
+			if (i == 0)
+			{
+				IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê2")->frameRender(getMemDC(), 896 - _camera->getCameraX(), 32 - _camera->getCameraY(), 7, 15);
+			}
+			else
+			{
+				IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê")->frameRender(getMemDC(), 896 + 32*j - _camera->getCameraX(), 32 + 32*i - _camera->getCameraY(), 24 + j, 8 + i);
+			}
+		}
+	}
+
 	_clockFade->render();
 }
 
@@ -113,17 +150,95 @@ void dungeon2F::playerSceneLoad()
 
 	if (_player->getPlayerCurrentScene() == PLAYERSCENE::DUNGEON_1F)
 	{
-		//_playerWorldMap->setPlayerX(520.f);
-		//_playerWorldMap->setPlayerY(896.f);
+		_player->setPlayerDirection(UP);
+		_player->setPlayerPosX(1020);
+		_player->setPlayerPosY(1460);
 	}
 
 	if (_player->getPlayerCurrentScene() == PLAYERSCENE::BOSS)
 	{
-		//_playerWorldMap->setPlayerX(1472.f);
-		//_playerWorldMap->setPlayerY(1276.f);
+		_player->setPlayerDirection(DOWN);
+		_player->setPlayerPosX(832);
+		_player->setPlayerPosY(192);
 	}
 
 	CloseHandle(file);
+}
+
+void dungeon2F::dungeonChange()
+{
+	RECT temp;
+
+	//º¸½º·ë°¥¶§
+	if (IntersectRect(&temp, &_player->getPlayerRc(), &_dungeonUp))
+	{
+		_dungeonUpBool = true;
+	}
+	if (_dungeonUpBool)
+	{
+		if (!_once)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+			_angle = getAngle(_player->getPlayerX(), _player->getPlayerY(), _goal.x, _goal.y);
+			_distance = getDistance(_player->getPlayerX(), _player->getPlayerY(), _goal.x, _goal.y);
+			_speed = _distance * (TIMEMANAGER->getElapsedTime() / 3.3f);
+		}
+		
+
+		_clockFade->setClockFadeOut(true);
+
+		_player->setTileCheck(false);
+		_player->setPlayerUnMove(true);
+		_player->setPlayerDirection(UP);
+		_player->setPlayerPosX(_player->getPlayerX() + cosf(_angle) * _speed);
+		_player->setPlayerPosY(_player->getPlayerY() - sinf(_angle) * _speed);
+
+
+
+		if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			playerSceneSave();
+			_sceneChange = true;
+			SCENEMANAGER->changeScene("bossScene");
+		}
+
+		_once = true;
+	}
+
+
+	if (!_sceneChange)
+	{
+		//1Ãþ°¥¶§
+		if (IntersectRect(&temp, &_player->getPlayerRc(), &_dungeonDown))
+		{
+			_dungeonDownBool = true;
+		}
+
+		if (_dungeonDownBool)
+		{
+			_player->setTileCheck(false);
+			_player->setPlayerUnMove(true);
+			_player->setPlayerDirection(DOWN);
+			_player->setPlayerPosY(_player->getPlayerY() + 3);
+
+			if (!_once)
+			{
+				_worldTime = TIMEMANAGER->getWorldTime();
+			}
+			_clockFade->setClockFadeOut(true);
+
+
+			if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
+			{
+				playerSceneSave();
+				_sceneChange = true;
+				SCENEMANAGER->changeScene("dungeon");
+			}
+
+			_once = true;
+		}
+	}
+
 }
 
 void dungeon2F::itemRandomDrop()

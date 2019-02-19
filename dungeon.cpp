@@ -88,7 +88,6 @@ void dungeon::update()
 	{
 		_player->update(false, 1);
 	}
-
 }
 
 void dungeon::render()
@@ -305,8 +304,8 @@ void dungeon::playerSceneLoad()
 	if (_player->getPlayerCurrentScene() == PLAYERSCENE::DUNGEON_2F)
 	{
 		_player->setPlayerDirection(DOWN);
-		_player->setPlayerPosX(992);
-		_player->setPlayerPosY(1440);
+		_player->setPlayerPosX(500);
+		_player->setPlayerPosY(224);
 	}
 
 	CloseHandle(file);
