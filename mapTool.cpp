@@ -543,9 +543,9 @@ void mapTool::setMap()
 				{
 					if (Click == CTRL_TERRAINDRAW)
 					{
-						for (int k = 0; k < abs(_tileBox.q) + 1; ++k)
+						for (int k = 0; k < abs(_tileBox.subtractionX) + 1; ++k)
 						{
-							for (int l = 0; l < abs(_tileBox.w) + 1; ++l)
+							for (int l = 0; l < abs(_tileBox.subtractionY) + 1; ++l)
 							{
 								_vvMap[i + l][j + k]->FrameX = _tileBox.x + k;
 								_vvMap[i + l][j + k]->FrameY = _tileBox.y + l;
@@ -556,9 +556,9 @@ void mapTool::setMap()
 					}
 					else if (Click == CTRL_OBJDRAW)
 					{
-						for (int k = 0; k < abs(_tileBox.q) + 1; ++k)
+						for (int k = 0; k < abs(_tileBox.subtractionX) + 1; ++k)
 						{
-							for (int l = 0; l < abs(_tileBox.w) + 1; ++l)
+							for (int l = 0; l < abs(_tileBox.subtractionY) + 1; ++l)
 							{
 								_vvMap[i + l][j + k]->objFrameX = _tileBox.x + k;
 								_vvMap[i + l][j + k]->objFrameY = _tileBox.y + l;
@@ -1308,11 +1308,11 @@ void mapTool::tileDrag()
 
 
 	}
-	_tileBox.q = abs(_tileBox.lastX) - abs(_tileBox.x);
-	_tileBox.w = abs(_tileBox.lastY) - abs(_tileBox.y);
+	_tileBox.subtractionX = abs(_tileBox.lastX) - abs(_tileBox.x);
+	_tileBox.subtractionY = abs(_tileBox.lastY) - abs(_tileBox.y);
 
-	abs(_tileBox.q);
-	abs(_tileBox.w);
+	abs(_tileBox.subtractionX);
+	abs(_tileBox.subtractionY);
 
 
 	if (_tileBox.x == _tileBox.lastX)

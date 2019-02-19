@@ -71,8 +71,8 @@ struct tilebox
 	int lastY;
 
 	// 마지막 - 첫타일 뺀 변수
-	int q;
-	int w;
+	int subtractionX;
+	int subtractionY;
 
 
 
