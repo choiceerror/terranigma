@@ -22,6 +22,9 @@ HRESULT messageSpear::init()
 	maidMessage();
 	guardianMessage();
 	
+	_talkCount = _talkCount2 = 2;
+
+	_texOldTime = GetTickCount();
 
 	return S_OK;
 }
@@ -37,16 +40,28 @@ void messageSpear::update()
 
 void messageSpear::render()
 {
-	vector<string> vStr;
+	
 
 	if (KEYMANAGER->isStayKeyDown('V'))
 	{
+		vector<string> vStr;
+	//if (GetTickCount() - _texOldTime >= 300) 
+	//{
+	//	if (vStr[0].size() > _talkCount)
+	//	{
+	//		_talkCount += 2;
+	//	}
+	//	else if (vStr[1].size() > _talkCount2)
+	//	{
+	//		_talkCount2 += 2;
+	//	}
+	//}
 		IMAGEMANAGER->findImage("messageSpear")->expandRender(getMemDC(), 0, GAMESIZEY / 2 + 80, 0, 0, 1.7, 1.7);
 		_font = CreateFont(40, 25, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
 		_oldFont = (HFONT)SelectObject(getMemDC(), _font);
 		vStr = TXTDATA->txtLoad("messageFile/할아버지.txt");
-		TextOut(getMemDC(), 80, 500, vStr[0].c_str(), strlen(vStr[0].c_str()));
-		TextOut(getMemDC(), 80, 550, vStr[1].c_str(), strlen(vStr[1].c_str()));
+		TextOut(getMemDC(), 80, 500, vStr[0].c_str(), _talkCount);
+		TextOut(getMemDC(), 80, 550, vStr[1].c_str(), _talkCount2);
 	}
 	SelectObject(getMemDC(), _oldFont);
 	DeleteObject(_font);
@@ -58,7 +73,7 @@ void messageSpear::grandfaMessage()
 	
 	vector<string> vStr;
 
-	message[0] = "뭐냐  ark";
+	message[0] = "뭐냐  아크";
 	message[1] = "다신  여기  오지  말라니깐!";
 
 	vStr.push_back(message[0]);
@@ -71,7 +86,7 @@ void messageSpear::grandmaMessage()
 	string message[2];
 	vector<string> vStr;
 
-	message[0] = "ark야  탑에는  절대  가지  말거라";
+	message[0] = "아크야  탑에는  절대  가지  말거라";
 	message[1] = "위험한  몬스터들이  도사리고  있단다.";
 
 	vStr.push_back(message[0]);
@@ -151,12 +166,10 @@ void messageSpear::guardianMessage()
 
 	message[0] = "타워문 대가리";
 	message[1] = "나는  가디언이다";
-	message[2] = "용건이  무엇이냐?";
-	message[3] = "이  타워안에는  층이";
-	message[4] = "세개로 되어있다.";
-	message[5] = "시련을  극복하여";
-	message[6] = "세계를  조절하는   힘을  얻어라!";
-	message[7] = "이것이  너의  운명이다!";
+	message[2] = "이  타워안에는  층이";
+	message[3] = "세개로 되어있다.";
+	message[4] = "시련을  극복하여";
+	message[5] = "세계를  조절하는   힘을  얻어라!";
 
 	vStr.push_back(message[0]);
 	vStr.push_back(message[1]);
@@ -164,7 +177,6 @@ void messageSpear::guardianMessage()
 	vStr.push_back(message[3]);
 	vStr.push_back(message[4]);
 	vStr.push_back(message[5]);
-	vStr.push_back(message[6]);
-	vStr.push_back(message[7]);
+
 	TXTDATA->txtSave("messageFile/가디언.txt", vStr);
 }

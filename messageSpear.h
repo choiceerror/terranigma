@@ -11,6 +11,8 @@ private:
 
 	int _talkCount, _talkCount2;
 
+	int _texOldTime;
+
 	bool _birdTalk, _elderTalk, _elleTalk, _maidTalk,
 		_grandfaTalk, _grandmaTalk, _fishManTalk, _townManTalk, _guardianTalk; 
 public:
