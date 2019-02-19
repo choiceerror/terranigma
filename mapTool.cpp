@@ -182,37 +182,37 @@ void mapTool::render()
 			if (_vvMap[i][j]->rc.top - _camera->getCameraY() + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - _camera->getCameraY() > 800) continue;
 
-			if (_vvMap[i][j]->a == 0)
+			if (_vvMap[i][j]->selectTile == 0)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê4", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
-			else if ((_vvMap[i][j]->a == 1))
+			else if ((_vvMap[i][j]->selectTile == 1))
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
-			else if ((_vvMap[i][j]->a == 2))
+			else if ((_vvMap[i][j]->selectTile == 2))
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê2", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
-			else if ((_vvMap[i][j]->a == 3))
+			else if ((_vvMap[i][j]->selectTile == 3))
 			{
 				IMAGEMANAGER->frameRender("townTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
-			else if ((_vvMap[i][j]->a == 4))
+			else if ((_vvMap[i][j]->selectTile == 4))
 			{
 				IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
-			else if ((_vvMap[i][j]->a == 5))
+			else if ((_vvMap[i][j]->selectTile == 5))
 			{
 				IMAGEMANAGER->frameRender("bossTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
@@ -233,37 +233,37 @@ void mapTool::render()
 			if (_vvMap[i][j]->rc.top - _camera->getCameraY() + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - _camera->getCameraY() > 800) continue;
 
-			if (_vvMap[i][j]->a == 0)
+			if (_vvMap[i][j]->selectTile == 0)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê4", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
-			else if (_vvMap[i][j]->a == 1)
+			else if (_vvMap[i][j]->selectTile == 1)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
-			else if (_vvMap[i][j]->a == 2)
+			else if (_vvMap[i][j]->selectTile == 2)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê2", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
-			else if (_vvMap[i][j]->a == 3)
+			else if (_vvMap[i][j]->selectTile == 3)
 			{
 				IMAGEMANAGER->frameRender("townTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
-			else if (_vvMap[i][j]->a == 4)
+			else if (_vvMap[i][j]->selectTile == 4)
 			{
 				IMAGEMANAGER->frameRender("worldTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
-			else if (_vvMap[i][j]->a == 5)
+			else if (_vvMap[i][j]->selectTile == 5)
 			{
 				IMAGEMANAGER->frameRender("bossTile", IMAGEMANAGER->findImage("background")->getMemDC(),
 					_vvMap[i][j]->rc.left - _camera->getCameraX(), _vvMap[i][j]->rc.top - _camera->getCameraY(),
@@ -481,7 +481,7 @@ void mapTool::setUp()
 		for (int j = 0; j < TILEX; ++j)
 		{
 			tagTile* _tile = new tagTile;
-			_tile->a = 0;
+			_tile->selectTile = 0;
 			_tile->FrameX = 0;
 			_tile->FrameY = 15;
 			_tile->objFrameX = 0;
@@ -527,14 +527,14 @@ void mapTool::setMap()
 					{
 						pTile->FrameX = _tileBox.x;
 						pTile->FrameY = _tileBox.y;
-						pTile->a = tilenum;
+						pTile->selectTile = tilenum;
 						pTile->terrain = terrainSelect(_tileBox.x, _tileBox.y);
 					}
 					else if (Click == CTRL_OBJDRAW)
 					{
 						pTile->objFrameX = _tileBox.x;
 						pTile->objFrameY = _tileBox.y;
-						pTile->a = tilenum;
+						pTile->selectTile = tilenum;
 						pTile->obj = objSelect(_tileBox.x, _tileBox.y);
 					}
 				}
@@ -549,7 +549,7 @@ void mapTool::setMap()
 							{
 								_vvMap[i + l][j + k]->FrameX = _tileBox.x + k;
 								_vvMap[i + l][j + k]->FrameY = _tileBox.y + l;
-								_vvMap[i + l][j + k]->a = tilenum;
+								_vvMap[i + l][j + k]->selectTile = tilenum;
 								_vvMap[i + l][j + k]->terrain = terrainSelect(_tileBox.x + k, _tileBox.y + l);
 							}
 						}
@@ -562,7 +562,7 @@ void mapTool::setMap()
 							{
 								_vvMap[i + l][j + k]->objFrameX = _tileBox.x + k;
 								_vvMap[i + l][j + k]->objFrameY = _tileBox.y + l;
-								_vvMap[i + l][j + k]->a = tilenum;
+								_vvMap[i + l][j + k]->selectTile = tilenum;
 								_vvMap[i + l][j + k]->obj = objSelect(_tileBox.x + k, _tileBox.y + l);
 							}
 						}
@@ -1338,14 +1338,14 @@ void mapTool::tileLeftDrag()
 				{
 					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->FrameX = _tileBox.x;
 					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->FrameY = _tileBox.y;
-					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->a = tilenum;
+					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->selectTile = tilenum;
 					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->terrain = terrainSelect(_tileBox.x, _tileBox.y);
 				}
 				else if (Click == CTRL_OBJDRAW)
 				{
 					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->objFrameX = _tileBox.x;
 					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->objFrameY = _tileBox.y;
-					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->a = tilenum;
+					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->selectTile = tilenum;
 					_vvMap[i + _leftStartDrag.y][j + _leftStartDrag.x]->obj = objSelect(_tileBox.x, _tileBox.y);
 				}
 			}
@@ -1612,7 +1612,7 @@ void mapTool::mapSize()
 			for (int i = 0; i < TILEY; ++i)
 			{
 				tagTile* _tile = new tagTile;
-				_tile->a = 0;
+				_tile->selectTile = 0;
 				_tile->FrameX = 0;
 				_tile->FrameY = 15;
 				_tile->objFrameX = 0;
@@ -1644,7 +1644,7 @@ void mapTool::mapSize()
 			for (int i = 0; i < TILEX; i++)
 			{
 				tagTile* _tile = new tagTile;
-				_tile->a = 0;
+				_tile->selectTile = 0;
 				_tile->FrameX = 0;
 				_tile->FrameY = 15;
 				_tile->objFrameX = 0;

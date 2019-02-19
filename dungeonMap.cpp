@@ -266,25 +266,25 @@ void dungeonMap::tileDraw(float cameraX, float cameraY)
 			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
 
-			if (_vvMap[i][j]->a == 0)
+			if (_vvMap[i][j]->selectTile == 0)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê4", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
-			else if (_vvMap[i][j]->a == 1)
+			else if (_vvMap[i][j]->selectTile == 1)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
-			else if (_vvMap[i][j]->a == 2)
+			else if (_vvMap[i][j]->selectTile == 2)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê2", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
-			else if (_vvMap[i][j]->a == 5)
+			else if (_vvMap[i][j]->selectTile == 5)
 			{
 					IMAGEMANAGER->frameRender("bossTile", getMemDC(),
 						_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
@@ -305,25 +305,25 @@ void dungeonMap::tileDraw(float cameraX, float cameraY)
 			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
 
-			if (_vvMap[i][j]->a == 0)
+			if (_vvMap[i][j]->selectTile == 0)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê4", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
-			else if (_vvMap[i][j]->a == 1)
+			else if (_vvMap[i][j]->selectTile == 1)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
-			else if (_vvMap[i][j]->a == 2)
+			else if (_vvMap[i][j]->selectTile == 2)
 			{
 				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê2", getMemDC(),
 					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
 					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
 			}
-			else if (_vvMap[i][j]->a == 5)
+			else if (_vvMap[i][j]->selectTile == 5)
 			{
 				if (_vvMap[i][j]->obj != OBJ_FIRE)
 				{

@@ -48,7 +48,7 @@ struct tagTile
 	OBJECT obj; //오브젝트
 	int objFrameX; //오브젝트 번호
 	int objFrameY;
-	int a;
+	int selectTile;
 };
 
 
