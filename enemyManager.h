@@ -13,7 +13,7 @@ enum ENEMYINFO
 	BALLMONSTER_HP = 50,
 	FIREMONSTER_HP = 30,
 	KNIGHTMONSTER_HP = 100,
-	BOSS_HP = 3000,
+	BOSS_HP = 2000,
 };
 
 class player;
@@ -52,6 +52,7 @@ private:
 
 	int _rndMove[3];
 
+	bool _isOnce;
 	RECT _objectRc; //몬스터들 못가게 막기위한 임시렉트
 
 public:

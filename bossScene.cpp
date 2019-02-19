@@ -106,58 +106,69 @@ void bossScene::update()
 	_player->update(false, 1);
 	_itemManager->update();
 	_enemyManager->update();
-	//보스 등장
-	bossAppear();
-	//보스 무브패턴
-	movePattern();
-	//보스 공격패턴
-	attackPattern();
 
-	if (_bulletPattern == BULLET_PATTERN::GOLD_BULLET || _bulletPattern == BULLET_PATTERN::BLUE_BULLET || _bulletPattern == BULLET_PATTERN::RED_BULLET)
+	if (_enemyManager->getVBoss()[0]->getCurrentHP() > 0)
 	{
-		_goldBullet->update();
-		_blueBullet->update();
-		_redBullet->update();
-	}
+		//보스 등장
+		bossAppear();
+		//보스 무브패턴
+		movePattern();
+		//보스 공격패턴
+		attackPattern();
 
-	if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
-	{
-		_rgbBullet->update();
-	}
+		if (_bulletPattern == BULLET_PATTERN::GOLD_BULLET || _bulletPattern == BULLET_PATTERN::BLUE_BULLET || _bulletPattern == BULLET_PATTERN::RED_BULLET)
+		{
+			_goldBullet->update();
+			_blueBullet->update();
+			_redBullet->update();
+		}
 
+		if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+		{
+			_rgbBullet->update();
+		}
+	}
 }
 
 void bossScene::render()
 {
-	if (_isBossAppear == true || _isOnce[BOSS_APPEAR] == true)
+	if (_enemyManager->getVBoss()[0]->getCurrentHP() > 0)
 	{
-		_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
+		if (_isBossAppear == true || _isOnce[BOSS_APPEAR] == true)
+		{
+			_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
+		}
 	}
+
 	_dungeonBossMap->render(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
 
-	if (_bulletPattern == BULLET_PATTERN::GOLD_BULLET || _bulletPattern == BULLET_PATTERN::BLUE_BULLET || _bulletPattern == BULLET_PATTERN::RED_BULLET)
+	if (_enemyManager->getVBoss()[0]->getCurrentHP() > 0)
 	{
-		_goldBullet->render(_camera->getCameraX(), _camera->getCameraY());
-		_blueBullet->render(_camera->getCameraX(), _camera->getCameraY());
-		_redBullet->render(_camera->getCameraX(), _camera->getCameraY());
-	}
+		if (_bulletPattern == BULLET_PATTERN::GOLD_BULLET || _bulletPattern == BULLET_PATTERN::BLUE_BULLET || _bulletPattern == BULLET_PATTERN::RED_BULLET)
+		{
+			_goldBullet->render(_camera->getCameraX(), _camera->getCameraY());
+			_blueBullet->render(_camera->getCameraX(), _camera->getCameraY());
+			_redBullet->render(_camera->getCameraX(), _camera->getCameraY());
+		}
 
-	if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
-	{
-		_rgbBullet->render(_camera->getCameraX(), _camera->getCameraY());
-	}
+		if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+		{
+			_rgbBullet->render(_camera->getCameraX(), _camera->getCameraY());
+		}
 
-	if (_attackPattern == ATTACK_SHOCK)
-	{
-		_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
-	}
+		if (_attackPattern == ATTACK_SHOCK)
+		{
+			_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
+		}
 
-	if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
-	{
-		_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
+		if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+		{
+			_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
+		}
 	}
+	
 	//Rectangle(getMemDC(), _shockAttack->rc2.left - _camera->getCameraX(), _shockAttack->rc2.top - _camera->getCameraY(), _shockAttack->rc2.right - _camera->getCameraX(), _shockAttack->rc2.bottom - _camera->getCameraY());
 	//Rectangle(getMemDC(), _shockAttack->rc.left - _camera->getCameraX(), _shockAttack->rc.top - _camera->getCameraY(), _shockAttack->rc.right - _camera->getCameraX(), _shockAttack->rc.bottom - _camera->getCameraY());
 	char str[128];

@@ -686,7 +686,6 @@ void enemyManager::fireMonsterBulletFireCollision(int num)
 		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[7].x = _fireMonsterBullet->getVFireBullet()[i].idX + 1;
 		(*_fireMonsterBullet->setVFireBullet())[i].tileIndex[7].y = _fireMonsterBullet->getVFireBullet()[i].idY + 1;
 
-
 		RECT temp;
 		for (int j = 0; j < 8; j++)
 		{
@@ -782,7 +781,12 @@ void enemyManager::enemyDead()
 	{
 		if (_vBoss[0]->getCurrentHP() <= 0.0f)
 		{
-			EFFECTMANAGER->play("bossDeadEffect", _vBoss[0]->getViewX(), _vBoss[0]->getViewY());
+			//erase 뻑나서 이런식으로 처리함.
+			if (_isOnce == false)
+			{
+				EFFECTMANAGER->play("bossDeadEffect", _vBoss[0]->getViewX(), _vBoss[0]->getViewY());
+				_isOnce = true;
+			}
 			//_vBoss.erase(_vBoss.begin());
 		}
 	}
