@@ -45,7 +45,7 @@ HRESULT town::init()
 	_npcManager->setElder();
 	_npcManager->setElle();
 	_npcManager->setTownHuman(TOWN_FISHMAN, 870, 870);
-	_npcManager->setTownHuman(TOWN_GRANDFA, 200, 500);
+	_npcManager->setTownHuman(TOWN_GRANDFA, 200, 600);
 	_npcManager->setTownHuman(TOWN_GRANDMA, 200, 400);
 	_npcManager->init();
 

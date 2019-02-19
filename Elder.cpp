@@ -51,7 +51,7 @@ void Elder::update()
 	npc::update();
 	elderState();
 
-	_npc.rc = RectMakeCenter(_npc.x, _npc.y, 32, 32);
+	_npc.rc = RectMakeCenter(_npc.x, _npc.y + 10, 32, 62);
 }
 
 void Elder::render(float cameraX, float cameraY)
