@@ -326,11 +326,11 @@ void IntroDungeon::render()
 	//Rectangle(getMemDC(), _introDungeonPlayerRc);
 
 	char str[128];
-	//sprintf_s(str, "%d", _dungeonGo);
-	//TextOut(getMemDC(), 100, 80, str, strlen(str));
+	sprintf_s(str, "%d", _twice);
+	TextOut(getMemDC(), 100, 280, str, strlen(str));
 
-	sprintf_s(str, "%d", _clock->getClockFadeIn());
-	TextOut(getMemDC(), 100, 100, str, strlen(str));
+	//sprintf_s(str, "%d", _clock->getClockFadeIn());
+	//TextOut(getMemDC(), 100, 100, str, strlen(str));
 
 	//sprintf_s(str, "플레이어X :%f, 플레이어Y : %f", _player->getPlayerX(), _player->getPlayerY());
 	//TextOut(getMemDC(), 120, 100, str, strlen(str));

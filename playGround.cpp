@@ -77,7 +77,6 @@ void playGround::release()
 	//SAFE_DELETE(_introDungeon);
 	//SAFE_DELETE(_dungeon2F);
 	//SAFE_DELETE(_bossScene);
-
 }
 
 
@@ -86,7 +85,7 @@ void playGround::update()
 	gameNode::update();
 	if (KEYMANAGER->isOnceKeyDown(VK_ESCAPE))
 	{
-		fileDelete();
+		//fileDelete();
 		PostQuitMessage(0);
 	}
 
@@ -141,21 +140,21 @@ void playGround::render()
 
 void playGround::fileDelete()
 {
-	deleteFile("saveFile/introDungeon.scene");
-	deleteFile("saveFile/inventory.txt");
-	deleteFile("saveFile/플레이어.txt");
-	deleteFile("saveFile/playerScene.txt");
+	//deleteFile("saveFile/introDungeon.scene");
+	//deleteFile("saveFile/inventory.txt");
+	//deleteFile("saveFile/플레이어.txt");
+	//deleteFile("saveFile/playerScene.txt");
 }
 
 void playGround::deleteFile(const char * fileAddress)
 {
-	HANDLE file;
-	DWORD read;
-
-	char str[128];
-	file = CreateFile(fileAddress, GENERIC_WRITE, NULL, NULL,
-		TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	CloseHandle(file);
+	//HANDLE file;
+	//DWORD read;
+	//
+	//char str[128];
+	//file = CreateFile(fileAddress, GENERIC_WRITE, NULL, NULL,
+	//	TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	//
+	//CloseHandle(file);
 }
 

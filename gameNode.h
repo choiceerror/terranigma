@@ -23,6 +23,9 @@ public:
 	virtual void update();
 	virtual void render();
 
+	void fileDelete();
+	void deleteFile(const char* fileAddress);
+
 	LRESULT MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 	
 	image* getBackBuffer() { return _backBuffer; }

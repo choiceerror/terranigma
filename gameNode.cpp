@@ -87,6 +87,26 @@ void gameNode::render()
 {
 }
 
+void gameNode::fileDelete()
+{
+	deleteFile("saveFile/introDungeon.scene");
+	deleteFile("saveFile/inventory.txt");
+	deleteFile("saveFile/플레이어.txt");
+	deleteFile("saveFile/playerScene.txt");
+}
+
+void gameNode::deleteFile(const char * fileAddress)
+{
+	HANDLE file;
+	DWORD read;
+
+	char str[128];
+	file = CreateFile(fileAddress, GENERIC_WRITE, NULL, NULL,
+		TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	CloseHandle(file);
+}
+
 LRESULT gameNode::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;		
@@ -104,6 +124,7 @@ LRESULT gameNode::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPara
 		break;
 
 		case WM_DESTROY:
+			fileDelete();
 			PostQuitMessage(0);
 		return 0;
 	}
