@@ -28,10 +28,20 @@ HRESULT messageSpear::init()
 
 	_pageFrameX = 0;
 
+	_pageOn = false;
+
 	_birdTalk = _elderTalk = _elleTalk = _maidTalk = false;
 	_grandfaTalk = _grandmaTalk = _fishManTalk = _townManTalk = _guardianTalk = false;
 
 	_texOldTime = GetTickCount();
+
+	_playerKey = _guardianPageNext = false;
+
+	_guardianTalkCount[0] = _guardianTalkCount[1] = 0;
+
+	_pageNext = 0;
+
+
 
 	return S_OK;
 }
@@ -54,6 +64,7 @@ void messageSpear::render()
 		{
 			_once = true;
 			_grandfaTalk = false;
+			_pageOn = false;
 		}
 			
 	}
@@ -64,6 +75,7 @@ void messageSpear::render()
 		{
 			_once = true;
 			_grandmaTalk = false;
+			_pageOn = false;
 		}
 	}
 	if (KEYMANAGER->isOnceKeyDown('3'))
@@ -73,6 +85,7 @@ void messageSpear::render()
 		{
 			_once = true;
 			_elleTalk = false;
+			_pageOn = false;
 		}
 	}
 	if (KEYMANAGER->isOnceKeyDown('4'))
@@ -83,6 +96,7 @@ void messageSpear::render()
 		{
 			_once = true;
 			_birdTalk = false;
+			_pageOn = false;
 		}
 	}
 	if (KEYMANAGER->isOnceKeyDown('5'))
@@ -92,13 +106,16 @@ void messageSpear::render()
 		{
 			_once = true;
 			_fishManTalk = false;
+			_pageOn = false;
 		}
 	}
-	messageRender("messageFile/할아버지.txt", _grandfaTalk, 8 , 26);
-	messageRender("messageFile/할머니.txt", _grandmaTalk, 33, 34);
-	messageRender("messageFile/엘.txt", _elleTalk, 14, 31);
-	messageRender("messageFile/꼬꼬.txt", _birdTalk, 14, 6);
-	messageRender("messageFile/낚시꾼.txt", _fishManTalk, 33, 34);
+	messageRender("messageFile/할아버지.txt", _grandfaTalk, 8 , 26, 0);
+	messageRender("messageFile/할머니.txt", _grandmaTalk, 33, 34, 0);
+	messageRender("messageFile/엘.txt", _elleTalk, 14, 31, 1);
+	messageRender("messageFile/꼬꼬.txt", _birdTalk, 14, 6, 0);
+	messageRender("messageFile/낚시꾼.txt", _fishManTalk, 23, 15, 0);
+	messageRender("messageFile/장로할아범.txt", _elderTalk, 33, 34, 2);
+	messageRender("messageFile/메이드.txt", _maidTalk, 33, 34, 0);
 
 
 	if (_once)
@@ -106,6 +123,29 @@ void messageSpear::render()
 		_talkCount = _talkCount2 = 0;
 		_once = false;
 	}
+
+	
+	
+
+	if (KEYMANAGER->isOnceKeyDown('B'))
+	{
+		if (!_playerKey) _playerKey = true;
+		else
+		{
+			
+			_playerKey = false;
+		}
+	}
+	if (KEYMANAGER->isOnceKeyDown('S'))
+	{
+		_guardianPageNext = true;
+	}
+	guardianMessageRender(_playerKey, _guardianPageNext);
+	_guardianPageNext = false;
+
+	//char str[128];
+	//sprintf_s(str, "%d", _guardianPageNext);
+	//TextOut(getMemDC(), 100, 100, str, strlen(str));
 
 }
 
@@ -169,7 +209,7 @@ void messageSpear::elleMessage()
 	string message[2];
 	vector<string> vStr;
 
-	message[0] = "아크야  탑이..";
+	message[0] = "아크..탑이..";
 	message[1] = "무서워..  안좋은  예감이  들어..";
 
 	vStr.push_back(message[0]);
@@ -182,7 +222,7 @@ void messageSpear::fishManMessage()
 	string message[2];
 	vector<string> vStr;
 
-	message[0] = "....";
+	message[0] = "오늘은  잡고  말겠어..!";
 	message[1] = "나와랏  잉어킹!";
 
 	vStr.push_back(message[0]);
@@ -211,10 +251,10 @@ void messageSpear::guardianMessage()
 	
 	message[0] = "나는  가디언이다";
 	message[1] = "이  타워안에는  층이";
-	message[2] = "세개로 되어있다.";
+	message[2] = "층이 3개로 나뉘어져 있다";
 	message[3] = "시련을  극복하여";
 	message[4] = "세계를  조절하는   힘을  얻어라!";
-	message[5] = "이것이 너의 운명이다!";
+	message[5] = "이것이  너의  운명이다!!";
 
 	vStr.push_back(message[0]);
 	vStr.push_back(message[1]);
@@ -226,9 +266,8 @@ void messageSpear::guardianMessage()
 	TXTDATA->txtSave("messageFile/가디언.txt", vStr);
 }
 
-void messageSpear::messageRender(const char* txtName, bool messageBool, int timeNum, int timeNum2)
+void messageSpear::messageRender(const char* txtName, bool messageBool, int timeNum, int timeNum2, int nameTrue)
 {
-	
 
 	if (messageBool)
 	{
@@ -248,14 +287,163 @@ void messageSpear::messageRender(const char* txtName, bool messageBool, int time
 			}
 			else
 			{
-				IMAGEMANAGER->findImage("talkPage")->expandRender(getMemDC(), GAMESIZEX - 100, GAMESIZEY - 100, _pageFrameX, 0, 1.5, 1.5);
+				_pageOn = true;
 			}
 			_texOldTime = GetTickCount();
+
+			if (_pageFrameX < 2)
+			{
+				_pageFrameX++;
+			}
+			else _pageFrameX = 0;
 		}
 		IMAGEMANAGER->findImage("messageSpear")->expandRender(getMemDC(), 0, GAMESIZEY / 2 + 80, 0, 0, 1.7, 1.7);
-		TextOut(getMemDC(), 70, 550, vStr[0].c_str(), _talkCount);
-		TextOut(getMemDC(), 70, 600, vStr[1].c_str(), _talkCount2);
+		TextOut(getMemDC(), 70, 570, vStr[0].c_str(), _talkCount);
+		TextOut(getMemDC(), 70, 620, vStr[1].c_str(), _talkCount2);
+		if (_pageOn)
+		{
+			IMAGEMANAGER->findImage("talkPage")->expandRender(getMemDC(), GAMESIZEX - 100, GAMESIZEY - 100, _pageFrameX, 0, 1.5, 1.5);
+		}
+
+		string name;
+
+		SetTextColor(getMemDC(), RGB(204, 215, 27));
+		switch (nameTrue)
+		{
+		case 0:
+			break;
+		case 1:
+		
+			name = "엘 :";
+			TextOut(getMemDC(), 70, 500, name.c_str(), strlen(name.c_str()));
+			break;
+		case 2:
+			name = "장로할아범 :";
+			TextOut(getMemDC(), 70, 500, name.c_str(), strlen(name.c_str()));
+			break;
+		case 3:
+			name = "아크 :";
+			TextOut(getMemDC(), 70, 500, name.c_str(), strlen(name.c_str()));
+			break;
+		}
+		SetTextColor(getMemDC(), RGB(255, 255, 255));
+
 		SelectObject(getMemDC(), _oldFont);
 		DeleteObject(_font);
+	}
+}
+void messageSpear::guardianMessageRender(bool guardian ,bool playerKey)
+{
+	if (guardian == true)
+	{
+		vector<string> vStr;
+		_font = CreateFont(35, 25, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
+		_oldFont = (HFONT)SelectObject(getMemDC(), _font);
+		vStr = TXTDATA->txtLoad("messageFile/가디언.txt");
+
+		_sizeNum[0] = 25;
+		_sizeNum[1] = 23;
+		_sizeNum[2] = 15;
+		_sizeNum[3] = 19;
+		_sizeNum[4] = 14;
+		_sizeNum[5] = 15;
+		_sizeNum[6] = 31;
+		_sizeNum[7] = 21;
+
+		if (GetTickCount() - _texOldTime >= 1 * 100)
+		{
+			if (_sizeNum[_num] >= _guardianTalkCount[0])
+			{
+				_guardianTalkCount[0] += 2;
+			}
+			else if (_sizeNum[_num + 1] >= _guardianTalkCount[1])
+			{
+				_guardianTalkCount[1] += 2;
+			}
+			else
+			{
+				_pageOn = true;
+			}
+			_texOldTime = GetTickCount();
+
+			if (_pageFrameX < 2)
+			{
+				_pageFrameX++;
+			}
+			else _pageFrameX = 0;
+		}
+
+		bool _playerKey = playerKey;
+		if (_playerKey && _pageOn)
+		{
+			if (_pageNext < 4)
+			{
+				_pageNext++;
+			}
+			else _pageNext = 0;
+			if (_num < 6)
+			{
+				_num += 2;
+			}
+			else
+			{
+				_num = 0;
+				_guardianTalkCount[0] = _guardianTalkCount[1] = 0;
+				_pageOn = false;
+				_pageNext = 0;
+			}
+			_pageOn = false;
+			_guardianTalkCount[0] = _guardianTalkCount[1] = 0;
+		}
+		string playerTalk[3];
+		if(_pageNext != 0)
+		{ 
+			IMAGEMANAGER->findImage("messageSpear")->expandRender(getMemDC(), 0, GAMESIZEY / 2 + 80, 0, 0, 1.7, 1.7);
+		}
+		else
+		{
+			IMAGEMANAGER->findImage("messageSpear")->expandRender(getMemDC(), 0, 0, 0, 0, 1.7, 1.7);
+		}
+
+		switch (_pageNext)
+		{
+		case 0:
+			playerTalk[0] = "아크 :";
+			playerTalk[1] = "우와..  엄청큰  대가리다!";
+			playerTalk[2] = "어이  뭐라고  말좀  해봐";
+			SetTextColor(getMemDC(), RGB(204, 215, 27));
+			TextOut(getMemDC(), 70, 50, playerTalk[0].c_str(), strlen(playerTalk[0].c_str()));
+			SetTextColor(getMemDC(), RGB(255, 255, 255));
+			TextOut(getMemDC(), 70, 120, playerTalk[1].c_str(), _guardianTalkCount[0]);
+			TextOut(getMemDC(), 70, 170, playerTalk[2].c_str(), _guardianTalkCount[1]);
+			break;
+		case 1:
+			TextOut(getMemDC(), 70, 570, vStr[0].c_str(), _guardianTalkCount[0]);
+			TextOut(getMemDC(), 70, 620, vStr[1].c_str(), _guardianTalkCount[1]);
+			break;
+		case 2:
+			TextOut(getMemDC(), 70, 570, vStr[2].c_str(), _guardianTalkCount[0]);
+			TextOut(getMemDC(), 70, 620, vStr[3].c_str(), _guardianTalkCount[1]);
+			break;
+		case 3:
+			TextOut(getMemDC(), 70, 570, vStr[4].c_str(), _guardianTalkCount[0]);
+			TextOut(getMemDC(), 70, 620, vStr[5].c_str(), _guardianTalkCount[1]);
+			break;
+		}
+
+
+		if (_pageOn)
+		{
+			IMAGEMANAGER->findImage("talkPage")->expandRender(getMemDC(), GAMESIZEX - 100, GAMESIZEY - 100, _pageFrameX, 0, 1.5, 1.5);
+		}
+
+		string name;
+		name = "가디언대가리 :";
+		SetTextColor(getMemDC(), RGB(204, 215, 27));
+		if (_pageNext != 0)
+		{
+			TextOut(getMemDC(), 70, 500, name.c_str(), strlen(name.c_str()));
+		}
+		SetTextColor(getMemDC(), RGB(255, 255, 255));
 	}
 }

@@ -18,8 +18,15 @@ private:
 
 	bool _once;
 
+	bool _pageOn;
+
 	bool _birdTalk, _elderTalk, _elleTalk, _maidTalk,
 		_grandfaTalk, _grandmaTalk, _fishManTalk, _townManTalk, _guardianTalk; 
+
+	int _guardianTalkCount[2], _pageNext = 0;
+	int _sizeNum[8], _num = 0;
+	bool _playerKey, _guardianPageNext;
+
 public:
 	messageSpear();
 	~messageSpear();
@@ -38,6 +45,12 @@ public:
 	void maidMessage();
 	void guardianMessage(); 
 
-	void messageRender(const char* txtName, bool messageBool, int timeNum, int timeNum2);
+	void messageRender(const char* txtName, bool messageBool, int timeNum, int timeNum2, int nameTrue);
+	void guardianMessageRender(bool guardian, bool playeyKey);
+
+public:
+	
+	void getPlayerKey(bool playerKey) { _playerKey = playerKey; }
+	void getGuardianPageNext(bool pageNext) { _guardianPageNext = pageNext;  }
 };
 
