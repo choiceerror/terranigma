@@ -17,6 +17,7 @@ HRESULT boss::init(string enemyName, const char * imageName, float x, float y, i
 	_enemy.name = enemyName;
 	_enemy.currentHP = _enemy.maxHP = hp;
 
+	_attackCount = 0;
 	_enemy.state = BOSS_STATE_IDLE;
 
 	int move[] = {0, 1, 2, 3};
@@ -35,6 +36,7 @@ void boss::update()
 {
 	enemy::update();
 	move();
+	_enemy.rc = RectMakeCenter(_enemy.x, _enemy.y, _enemy.image->getFrameWidth(), _enemy.image->getFrameHeight() + 100);
 }
 
 void boss::render(float cameraX, float cameraY)
@@ -42,7 +44,7 @@ void boss::render(float cameraX, float cameraY)
 	_enemy.viewX = _enemy.x - cameraX;
 	_enemy.viewY = _enemy.y - cameraY;
 	_enemy.image->expandAniRenderCenter(getMemDC(), _enemy.viewX, _enemy.viewY, _enemy.motion, 3.f, 3.f);
-	//Rectangle(getMemDC(), _enemy.rc.left - cameraX, _enemy.rc.top - cameraY, _enemy.rc.right - cameraX, _enemy.rc.bottom - cameraY);
+	Rectangle(getMemDC(), _enemy.rc.left - cameraX, _enemy.rc.top - cameraY, _enemy.rc.right - cameraX, _enemy.rc.bottom - cameraY);
 }
 
 void boss::move()
@@ -54,6 +56,16 @@ void boss::move()
 		_enemy.motion = KEYANIMANAGER->findAnimation(_enemy.name, "move");
 		_enemy.motion->start();
 		break;
+	}
+
+	if (_enemy.isHit == true)
+	{
+		_attackCount++;
+		if (_attackCount >= 30)
+		{
+			_enemy.isHit = false;
+			_attackCount = 0;
+		}
 	}
 
 }

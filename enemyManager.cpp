@@ -37,6 +37,7 @@ void enemyManager::release()
 	{
 		SAFE_DELETE((*_viKnightMonster));
 	}
+	SAFE_DELETE(_vBoss[0]);
 }
 
 void enemyManager::update()
@@ -44,8 +45,11 @@ void enemyManager::update()
 	//업데이트 모음 함수
 	updateCollection();
 
-	//에너미들의 타일검출
-	tileCheckObjectCollision();
+	if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR || _dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::SECOND_FLOOR)
+	{
+		//에너미들의 타일검출
+		tileCheckObjectCollision();
+	}
 
 	if (_player->getPlayerDeath() == false || _player->getPlayerLevelUP() ==  false)
 	{
@@ -148,10 +152,7 @@ void enemyManager::updateCollection()
 	else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
 	{
 		//보스 업데이트
-		for (_viBoss = _vBoss.begin(); _viBoss != _vBoss.end(); _viBoss++)
-		{
-			(*_viBoss)->update();
-		}
+		_vBoss[0]->update();
 	}
 
 }
@@ -185,10 +186,7 @@ void enemyManager::drawAll(float cameraX, float cameraY)
 	else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
 	{
 		//보스 랜더링
-		for (_viBoss = _vBoss.begin(); _viBoss != _vBoss.end(); _viBoss++)
-		{
-			(*_viBoss)->render(cameraX, cameraY);
-		}
+		_vBoss[0]->render(cameraX, cameraY);
 	}
 }
 
@@ -548,84 +546,98 @@ void enemyManager::playerAttackEnemyCollision()
 	case PLAYER_COMBINATION:
 
 		RECT temp;
-
-		//공몬스터
-		for (int i = 0; i < _vBallMonster.size(); i++)
+		if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR || _dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::SECOND_FLOOR)
 		{
-			if (IntersectRect(&temp, &_playerAttackRc, &_vBallMonster[i]->getRect()) && _vBallMonster[i]->getIsHit() == false)
+			//공몬스터
+			for (int i = 0; i < _vBallMonster.size(); i++)
 			{
-				_vBallMonster[i]->setIsHit(true);
-				_vBallMonster[i]->setCurrentHP(_vBallMonster[i]->getCurrentHP() - _player->getPlayerStr());
-				if (_player->getPlayerDirection() == LEFT)
+				if (IntersectRect(&temp, &_playerAttackRc, &_vBallMonster[i]->getRect()) && _vBallMonster[i]->getIsHit() == false)
 				{
-					_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 2);
+					_vBallMonster[i]->setIsHit(true);
+					_vBallMonster[i]->setCurrentHP(_vBallMonster[i]->getCurrentHP() - _player->getPlayerStr());
+					if (_player->getPlayerDirection() == LEFT)
+					{
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 2);
+					}
+					else if (_player->getPlayerDirection() == RIGHT)
+					{
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 2);
+					}
+					else if (_player->getPlayerDirection() == UP)
+					{
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 2);
+					}
+					else if (_player->getPlayerDirection() == DOWN)
+					{
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 2);
+					}
 				}
-				else if (_player->getPlayerDirection() == RIGHT)
+			}
+
+			//불몬스터
+			for (int i = 0; i < _vFireMonster.size(); i++)
+			{
+				if (IntersectRect(&temp, &_playerAttackRc, &_vFireMonster[i]->getRect()) && _vFireMonster[i]->getIsHit() == false)
 				{
-					_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 2);
+					_vFireMonster[i]->setIsHit(true);
+					_vFireMonster[i]->setCurrentHP(_vFireMonster[i]->getCurrentHP() - _player->getPlayerStr());
+					if (_player->getPlayerDirection() == LEFT)
+					{
+						_vFireMonster[i]->setX(_vFireMonster[i]->getX() - 2);
+					}
+					else if (_player->getPlayerDirection() == RIGHT)
+					{
+						_vFireMonster[i]->setX(_vFireMonster[i]->getX() + 2);
+					}
+					else if (_player->getPlayerDirection() == UP)
+					{
+						_vFireMonster[i]->setY(_vFireMonster[i]->getY() - 2);
+					}
+					else if (_player->getPlayerDirection() == DOWN)
+					{
+						_vFireMonster[i]->setY(_vFireMonster[i]->getY() + 2);
+					}
 				}
-				else if (_player->getPlayerDirection() == UP)
+			}
+
+			//기사몬스터
+			for (int i = 0; i < _vKnightMonster.size(); i++)
+			{
+				if (IntersectRect(&temp, &_playerAttackRc, &_vKnightMonster[i]->getRect()) && _vKnightMonster[i]->getIsHit() == false)
 				{
-					_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 2);
-				}
-				else if (_player->getPlayerDirection() == DOWN)
-				{
-					_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 2);
+					_vKnightMonster[i]->setCurrentHP(_vKnightMonster[i]->getCurrentHP() - _player->getPlayerStr());
+					_vKnightMonster[i]->setIsHit(true);
+					if (_player->getPlayerDirection() == LEFT)
+					{
+						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() - 2);
+					}
+					else if (_player->getPlayerDirection() == RIGHT)
+					{
+						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() + 2);
+					}
+					else if (_player->getPlayerDirection() == UP)
+					{
+						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() - 2);
+					}
+					else if (_player->getPlayerDirection() == DOWN)
+					{
+						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() + 2);
+					}
 				}
 			}
 		}
 
-		//불몬스터
-		for (int i = 0; i < _vFireMonster.size(); i++)
+		//보스층일때만
+		else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
 		{
-			if (IntersectRect(&temp, &_playerAttackRc, &_vFireMonster[i]->getRect()) && _vFireMonster[i]->getIsHit() == false)
+			if (IntersectRect(&temp, &_playerAttackRc, &_vBoss[0]->getRect()) && _vBoss[0]->getIsHit() == false)
 			{
-				_vFireMonster[i]->setIsHit(true);
-				_vFireMonster[i]->setCurrentHP(_vFireMonster[i]->getCurrentHP() - _player->getPlayerStr());
-				if (_player->getPlayerDirection() == LEFT)
-				{
-					_vFireMonster[i]->setX(_vFireMonster[i]->getX() - 2);
-				}
-				else if (_player->getPlayerDirection() == RIGHT)
-				{
-					_vFireMonster[i]->setX(_vFireMonster[i]->getX() + 2);
-				}
-				else if (_player->getPlayerDirection() == UP)
-				{
-					_vFireMonster[i]->setY(_vFireMonster[i]->getY() - 2);
-				}
-				else if (_player->getPlayerDirection() == DOWN)
-				{
-					_vFireMonster[i]->setY(_vFireMonster[i]->getY() + 2);
-				}
+				_vBoss[0]->setIsHit(true);
+				_vBoss[0]->setCurrentHP(_vBoss[0]->getCurrentHP() - _player->getPlayerStr());
 			}
 		}
 
-		//기사몬스터
-		for (int i = 0; i < _vKnightMonster.size(); i++)
-		{
-			if (IntersectRect(&temp, &_playerAttackRc, &_vKnightMonster[i]->getRect()) && _vKnightMonster[i]->getIsHit() == false)
-			{
-				_vKnightMonster[i]->setCurrentHP(_vKnightMonster[i]->getCurrentHP() - _player->getPlayerStr());
-				_vKnightMonster[i]->setIsHit(true);
-				if (_player->getPlayerDirection() == LEFT)
-				{
-					_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() - 2);
-				}
-				else if (_player->getPlayerDirection() == RIGHT)
-				{
-					_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() + 2);
-				}
-				else if (_player->getPlayerDirection() == UP)
-				{
-					_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() - 2);
-				}
-				else if (_player->getPlayerDirection() == DOWN)
-				{
-					_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() + 2);
-				}
-			}
-		}
+
 		break;
 	}
 }
@@ -708,58 +720,71 @@ void enemyManager::fireMonsterBulletFireCollision(int num)
 //에너미들이 죽을함수
 void enemyManager::enemyDead()
 {
-	//공몬스터
-	for (int i = 0; i < _vBallMonster.size();)
+	if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR || _dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::SECOND_FLOOR)
 	{
-		if (_vBallMonster[i]->getCurrentHP() <= 0.0f)
+		//공몬스터
+		for (int i = 0; i < _vBallMonster.size();)
 		{
-			EFFECTMANAGER->play("deadEffect", _vBallMonster[i]->getViewX(), _vBallMonster[i]->getViewY());
+			if (_vBallMonster[i]->getCurrentHP() <= 0.0f)
+			{
+				EFFECTMANAGER->play("deadEffect", _vBallMonster[i]->getViewX(), _vBallMonster[i]->getViewY());
 
-			//몬스터죽으면 몬스터위치 받고 푸시백
-			POINTFLOAT monster;
-			monster.x = _vBallMonster[i]->getX() - TileSIZE;
-			monster.y = _vBallMonster[i]->getY() - TileSIZE;
-			_vEnemyDeadPoint.push_back(monster);
-			_player->setPlayerExp(_player->getPlayerExp() + 4);
-			_vBallMonster.erase(_vBallMonster.begin() + i);
+				//몬스터죽으면 몬스터위치 받고 푸시백
+				POINTFLOAT monster;
+				monster.x = _vBallMonster[i]->getX() - TileSIZE;
+				monster.y = _vBallMonster[i]->getY() - TileSIZE;
+				_vEnemyDeadPoint.push_back(monster);
+				_player->setPlayerExp(_player->getPlayerExp() + 4);
+				_vBallMonster.erase(_vBallMonster.begin() + i);
+			}
+			else i++;
 		}
-		else i++;
+
+		//불몬스터
+		for (int i = 0; i < _vFireMonster.size();)
+		{
+			if (_vFireMonster[i]->getCurrentHP() <= 0.0f)
+			{
+				EFFECTMANAGER->play("deadEffect", _vFireMonster[i]->getViewX(), _vFireMonster[i]->getViewY());
+
+				//몬스터죽으면 몬스터위치 받고 푸시백
+				POINTFLOAT monster;
+				monster.x = _vFireMonster[i]->getX() - _vFireMonster[i]->getImage()->getFrameWidth();
+				monster.y = _vFireMonster[i]->getY() - _vFireMonster[i]->getImage()->getFrameHeight() / 2;
+				_vEnemyDeadPoint.push_back(monster);
+				_player->setPlayerExp(_player->getPlayerExp() + 5);
+				_vFireMonster.erase(_vFireMonster.begin() + i);
+			}
+			else i++;
+		}
+
+		//기사몬스터
+		for (int i = 0; i < _vKnightMonster.size();)
+		{
+			if (_vKnightMonster[i]->getCurrentHP() <= 0.0f)
+			{
+				EFFECTMANAGER->play("deadEffect", _vKnightMonster[i]->getViewX(), _vKnightMonster[i]->getViewY());
+
+				//몬스터죽으면 몬스터위치 받고 푸시백
+				POINTFLOAT monster;
+				monster.x = _vKnightMonster[i]->getX() - TileSIZE;
+				monster.y = _vKnightMonster[i]->getY();
+				_vEnemyDeadPoint.push_back(monster);
+				_player->setPlayerExp(_player->getPlayerExp() + 6);
+				_vKnightMonster.erase(_vKnightMonster.begin() + i);
+			}
+			else i++;
+		}
 	}
 
-	//불몬스터
-	for (int i = 0; i < _vFireMonster.size();)
+	//보스층일때만
+	if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
 	{
-		if (_vFireMonster[i]->getCurrentHP() <= 0.0f)
+		if (_vBoss[0]->getCurrentHP() <= 0.0f)
 		{
-			EFFECTMANAGER->play("deadEffect", _vFireMonster[i]->getViewX(), _vFireMonster[i]->getViewY());
-
-			//몬스터죽으면 몬스터위치 받고 푸시백
-			POINTFLOAT monster;
-			monster.x = _vFireMonster[i]->getX() - _vFireMonster[i]->getImage()->getFrameWidth();
-			monster.y = _vFireMonster[i]->getY() - _vFireMonster[i]->getImage()->getFrameHeight() / 2;
-			_vEnemyDeadPoint.push_back(monster);
-			_player->setPlayerExp(_player->getPlayerExp() + 5);
-			_vFireMonster.erase(_vFireMonster.begin() + i);
+			EFFECTMANAGER->play("bossDeadEffect", _vBoss[0]->getViewX(), _vBoss[0]->getViewY());
+			//_vBoss.erase(_vBoss.begin());
 		}
-		else i++;
-	}
-
-	//기사몬스터
-	for (int i = 0; i < _vKnightMonster.size();)
-	{
-		if (_vKnightMonster[i]->getCurrentHP() <= 0.0f)
-		{
-			EFFECTMANAGER->play("deadEffect", _vKnightMonster[i]->getViewX(), _vKnightMonster[i]->getViewY());
-
-			//몬스터죽으면 몬스터위치 받고 푸시백
-			POINTFLOAT monster;
-			monster.x = _vKnightMonster[i]->getX() - TileSIZE;
-			monster.y = _vKnightMonster[i]->getY();
-			_vEnemyDeadPoint.push_back(monster);
-			_player->setPlayerExp(_player->getPlayerExp() + 6);
-			_vKnightMonster.erase(_vKnightMonster.begin() + i);
-		}
-		else i++;
 	}
 
 }

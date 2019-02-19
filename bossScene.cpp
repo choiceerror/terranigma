@@ -26,6 +26,7 @@ HRESULT bossScene::init()
 	_blueBullet = new bossBullet;
 	_redBullet = new bossBullet;
 	_rgbBullet = new bossBullet;
+	_shockAttack = new tagShockAttack;
 
 	_enemyManager->setPlayerMemoryAddressLink(_player);
 	_player->setEnemyManagerAddressLink(_enemyManager);
@@ -35,7 +36,7 @@ HRESULT bossScene::init()
 	_dungeonBossMap->setDungeonFloor(DUNGEON_FLOOR::BOSS_FLOOR);
 	_dungeonBossMap->init(_dungeonBossMap->getDungeonFloor());
 	_player->init();
-	_enemyManager->init();
+	//_enemyManager->init();
 	_itemManager->init();
 	_goldBullet->init("bossBullet", GAMESIZEY, 1);
 	_blueBullet->init("bossBullet", GAMESIZEY, 1);
@@ -70,8 +71,6 @@ HRESULT bossScene::init()
 	}
 
 	//전기이펙트 
-	_shockAttack = new tagShockAttack;
-
 	_shockAttack->x = _enemyManager->getVBoss()[0]->getX();
 	_shockAttack->y = _enemyManager->getVBoss()[0]->getY();
 	_shockAttack->image = IMAGEMANAGER->findImage("shockAttack");
@@ -105,9 +104,8 @@ void bossScene::update()
 {
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_player->update(false, 1);
-	_enemyManager->update();
 	_itemManager->update();
-
+	_enemyManager->update();
 	//보스 등장
 	bossAppear();
 	//보스 무브패턴
@@ -126,6 +124,7 @@ void bossScene::update()
 	{
 		_rgbBullet->update();
 	}
+
 }
 
 void bossScene::render()
@@ -166,7 +165,7 @@ void bossScene::render()
 	//sprintf_s(str, "_rndMove : %d", _rndMove);
 	//TextOut(getMemDC(), 100, 260, str, strlen(str));
 
-	//sprintf_s(str, "moveWorldTime : %f", _moveWorldTime);
+	//sprintf_s(str, "hp : %d", _enemyManager->getVBoss()[0]->getCurrentHP());
 	//TextOut(getMemDC(), 100, 280, str, strlen(str));
 
 	//for (int i = 0; i < _bossBullet->getVBossBullet().size(); i++)
@@ -304,9 +303,9 @@ void bossScene::attackPattern()
 	{
 		if (_bulletPattern != BULLET_PATTERN::RGB_BULLET)
 		{
+			//총알 나갈종류 정하기
 			for (int i = 0; i < _goldBullet->getVBossBullet().size(); i++)
 			{
-				//총알 나갈종류 정하기
 				if (_attackPattern == ATTACK_ONE)
 				{
 					_bulletPattern = BULLET_PATTERN::GOLD_BULLET;
@@ -334,7 +333,6 @@ void bossScene::attackPattern()
 		{
 			for (int i = 0; i < _rgbBullet->getVBossBullet().size(); i++)
 			{
-
 				if (_attackPattern == ATTACK_ONE)
 				{
 					(*_rgbBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("goldBullet", "gold");

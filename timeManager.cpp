@@ -39,7 +39,7 @@ void timeManager::render(HDC hdc)
 	string frameRate;
 
 	//텍스트 색깔 변경
-	SetTextColor(hdc, RGB(0, 0, 0));
+	SetTextColor(hdc, RGB(255, 255, 255));
 	//폰트 배경색 제어 함수
 	//투명   : TRANSPARENT
 	//불투명 : OPAQUE
