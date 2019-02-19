@@ -14,7 +14,9 @@ private:
 
 	int _texOldTime;
 
-	int a;
+	int _pageFrameX;
+
+	bool _once;
 
 	bool _birdTalk, _elderTalk, _elleTalk, _maidTalk,
 		_grandfaTalk, _grandmaTalk, _fishManTalk, _townManTalk, _guardianTalk; 

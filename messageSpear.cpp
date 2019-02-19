@@ -13,16 +13,20 @@ messageSpear::~messageSpear()
 
 HRESULT messageSpear::init()
 {
-	grandfaMessage();
-	grandmaMessage();
-	birdMessage();
-	elderMessage();
-	elleMessage();
-	fishManMessage();
-	maidMessage();
-	guardianMessage();
+	//grandfaMessage();
+	//grandmaMessage();
+	//birdMessage();
+	//elderMessage();
+	//elleMessage();
+	//fishManMessage();
+	//maidMessage();
+	//guardianMessage();
 	
+	_once = false;
+
 	_talkCount = _talkCount2 = 0;
+
+	_pageFrameX = 0;
 
 	_birdTalk = _elderTalk = _elleTalk = _maidTalk = false;
 	_grandfaTalk = _grandmaTalk = _fishManTalk = _townManTalk = _guardianTalk = false;
@@ -46,15 +50,63 @@ void messageSpear::render()
 	if (KEYMANAGER->isOnceKeyDown('1'))
 	{
 		if(!_grandfaTalk) _grandfaTalk = true;
-		else _grandfaTalk = false;
+		else
+		{
+			_once = true;
+			_grandfaTalk = false;
+		}
+			
 	}
 	if (KEYMANAGER->isOnceKeyDown('2'))
 	{
 		if (!_grandmaTalk) _grandmaTalk = true;
-		else _grandmaTalk = false;
+		else
+		{
+			_once = true;
+			_grandmaTalk = false;
+		}
 	}
-	messageRender("messageFile/할아버지.txt", _grandfaTalk, 8 , 26 );
+	if (KEYMANAGER->isOnceKeyDown('3'))
+	{
+		if (!_elleTalk) _elleTalk = true;
+		else
+		{
+			_once = true;
+			_elleTalk = false;
+		}
+	}
+	if (KEYMANAGER->isOnceKeyDown('4'))
+	{
+		if (!_birdTalk) _birdTalk = true;
+		
+		else 
+		{
+			_once = true;
+			_birdTalk = false;
+		}
+	}
+	if (KEYMANAGER->isOnceKeyDown('5'))
+	{
+		if (!_fishManTalk) _fishManTalk = true;
+		else
+		{
+			_once = true;
+			_fishManTalk = false;
+		}
+	}
+	messageRender("messageFile/할아버지.txt", _grandfaTalk, 8 , 26);
 	messageRender("messageFile/할머니.txt", _grandmaTalk, 33, 34);
+	messageRender("messageFile/엘.txt", _elleTalk, 14, 31);
+	messageRender("messageFile/꼬꼬.txt", _birdTalk, 14, 6);
+	messageRender("messageFile/낚시꾼.txt", _fishManTalk, 33, 34);
+
+
+	if (_once)
+	{
+		_talkCount = _talkCount2 = 0;
+		_once = false;
+	}
+
 }
 
 void messageSpear::grandfaMessage()
@@ -117,7 +169,7 @@ void messageSpear::elleMessage()
 	string message[2];
 	vector<string> vStr;
 
-	message[0] = "아크야 탑이..";
+	message[0] = "아크야  탑이..";
 	message[1] = "무서워..  안좋은  예감이  들어..";
 
 	vStr.push_back(message[0]);
@@ -176,13 +228,14 @@ void messageSpear::guardianMessage()
 
 void messageSpear::messageRender(const char* txtName, bool messageBool, int timeNum, int timeNum2)
 {
-	vector<string> vStr;
-	_font = CreateFont(35, 25, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
-	_oldFont = (HFONT)SelectObject(getMemDC(), _font);
-	vStr = TXTDATA->txtLoad(txtName);
+	
 
 	if (messageBool)
 	{
+		vector<string> vStr;
+		_font = CreateFont(35, 25, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
+		_oldFont = (HFONT)SelectObject(getMemDC(), _font);
+		vStr = TXTDATA->txtLoad(txtName);
 		if (GetTickCount() - _texOldTime >= 1 * 100)
 		{
 			if (timeNum >= _talkCount)
@@ -193,12 +246,16 @@ void messageSpear::messageRender(const char* txtName, bool messageBool, int time
 			{
 				_talkCount2 += 2;
 			}
+			else
+			{
+				IMAGEMANAGER->findImage("talkPage")->expandRender(getMemDC(), GAMESIZEX - 100, GAMESIZEY - 100, _pageFrameX, 0, 1.5, 1.5);
+			}
 			_texOldTime = GetTickCount();
 		}
 		IMAGEMANAGER->findImage("messageSpear")->expandRender(getMemDC(), 0, GAMESIZEY / 2 + 80, 0, 0, 1.7, 1.7);
 		TextOut(getMemDC(), 70, 550, vStr[0].c_str(), _talkCount);
 		TextOut(getMemDC(), 70, 600, vStr[1].c_str(), _talkCount2);
+		SelectObject(getMemDC(), _oldFont);
+		DeleteObject(_font);
 	}
-	SelectObject(getMemDC(), _oldFont);
-	DeleteObject(_font);
 }
