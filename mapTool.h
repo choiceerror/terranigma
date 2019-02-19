@@ -38,7 +38,7 @@ private:
 	RECT sizeButton[4];
 	RECT tileSelect[2];
 	RECT d[2];
-	RECT e[2];
+	RECT SelectMap[2];
 
 	image* _image;
 	image* _image2;
@@ -58,12 +58,9 @@ private:
 
 	int num;
 	int tilenum;
-	float tt;
 	bool check;
-	int a;
+	int selectNumber;
 	bool _mouseUp;
-	int ee;
-	int b, c;
 	//현재 마우스가 위치한 타일의 번호
 	int x, y;
 
