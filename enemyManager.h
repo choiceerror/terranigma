@@ -13,7 +13,7 @@ enum ENEMYINFO
 	BALLMONSTER_HP = 50,
 	FIREMONSTER_HP = 30,
 	KNIGHTMONSTER_HP = 100,
-	BOSS_HP = 2000,
+	BOSS_HP = 10,
 };
 
 enum ONCE //한번만 받기위함.
@@ -88,7 +88,7 @@ private:
 
 	float _worldTime;
 	bool _isBossAppear; //보스 등장시점 판별해줄 불값
-	bool _isOnce[4]; //업데이트부분에 한번만 받기위함.
+	bool _isOnce[5]; //업데이트부분에 한번만 받기위함.
 
 	POINTFLOAT _appearGoal;
 	float _goalAngle;
@@ -121,7 +121,7 @@ private:
 
 	int _rndMove[4];
 
-	//bool _isOnce;
+
 	RECT _objectRc; //몬스터들 못가게 막기위한 임시렉트
 
 public:

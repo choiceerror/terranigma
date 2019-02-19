@@ -106,7 +106,7 @@ void enemyManager::update()
 	}
 
 	//보스층일때만
-	if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
+	if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR && _vBoss[0]->getCurrentHP() > 0)
 	{
 		//보스 등장
 		bossAppear();
@@ -219,7 +219,7 @@ void enemyManager::updateCollection()
 		//파이어몬스터 총알 업데이트
 		_fireMonsterBullet->update();
 	}
-	else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
+	else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR && _vBoss[0]->getCurrentHP() > 0)
 	{
 		//보스 업데이트
 		_vBoss[0]->update();
@@ -253,7 +253,7 @@ void enemyManager::drawAll(float cameraX, float cameraY)
 			_fireMonsterBullet->render(cameraX, cameraY);
 		}
 	}
-	else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
+	else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR && _vBoss[0]->getCurrentHP() > 0)
 	{
 		if (_isBossAppear == true || _isOnce[BOSS_APPEAR] == true)
 		{
@@ -632,19 +632,19 @@ void enemyManager::playerAttackEnemyCollision()
 					_vBallMonster[i]->setCurrentHP(_vBallMonster[i]->getCurrentHP() - _player->getPlayerStr());
 					if (_player->getPlayerDirection() == LEFT)
 					{
-						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 2);
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() - 10);
 					}
 					else if (_player->getPlayerDirection() == RIGHT)
 					{
-						_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 2);
+						_vBallMonster[i]->setX(_vBallMonster[i]->getX() + 10);
 					}
 					else if (_player->getPlayerDirection() == UP)
 					{
-						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 2);
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() - 10);
 					}
 					else if (_player->getPlayerDirection() == DOWN)
 					{
-						_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 2);
+						_vBallMonster[i]->setY(_vBallMonster[i]->getY() + 10);
 					}
 				}
 			}
@@ -658,19 +658,19 @@ void enemyManager::playerAttackEnemyCollision()
 					_vFireMonster[i]->setCurrentHP(_vFireMonster[i]->getCurrentHP() - _player->getPlayerStr());
 					if (_player->getPlayerDirection() == LEFT)
 					{
-						_vFireMonster[i]->setX(_vFireMonster[i]->getX() - 2);
+						_vFireMonster[i]->setX(_vFireMonster[i]->getX() - 10);
 					}
 					else if (_player->getPlayerDirection() == RIGHT)
 					{
-						_vFireMonster[i]->setX(_vFireMonster[i]->getX() + 2);
+						_vFireMonster[i]->setX(_vFireMonster[i]->getX() + 10);
 					}
 					else if (_player->getPlayerDirection() == UP)
 					{
-						_vFireMonster[i]->setY(_vFireMonster[i]->getY() - 2);
+						_vFireMonster[i]->setY(_vFireMonster[i]->getY() - 10);
 					}
 					else if (_player->getPlayerDirection() == DOWN)
 					{
-						_vFireMonster[i]->setY(_vFireMonster[i]->getY() + 2);
+						_vFireMonster[i]->setY(_vFireMonster[i]->getY() + 10);
 					}
 				}
 			}
@@ -684,19 +684,19 @@ void enemyManager::playerAttackEnemyCollision()
 					_vKnightMonster[i]->setIsHit(true);
 					if (_player->getPlayerDirection() == LEFT)
 					{
-						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() - 2);
+						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() - 10);
 					}
 					else if (_player->getPlayerDirection() == RIGHT)
 					{
-						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() + 2);
+						_vKnightMonster[i]->setX(_vKnightMonster[i]->getX() + 10);
 					}
 					else if (_player->getPlayerDirection() == UP)
 					{
-						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() - 2);
+						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() - 10);
 					}
 					else if (_player->getPlayerDirection() == DOWN)
 					{
-						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() + 2);
+						_vKnightMonster[i]->setY(_vKnightMonster[i]->getY() + 10);
 					}
 				}
 			}
@@ -857,10 +857,10 @@ void enemyManager::enemyDead()
 		if (_vBoss[0]->getCurrentHP() <= 0.0f)
 		{
 			//erase 뻑나서 이런식으로 처리함.
-			//if (_isOnce == false)
+			if (_isOnce[4] == false)
 			{
 				EFFECTMANAGER->play("bossDeadEffect", _vBoss[0]->getViewX(), _vBoss[0]->getViewY());
-				//_isOnce = true;
+				_isOnce[4] = true;
 			}
 			//_vBoss.erase(_vBoss.begin());
 		}
@@ -1539,8 +1539,8 @@ void enemyManager::bossAttackPattern()
 		boss.x = _vBoss[0]->getX();
 		boss.y = _vBoss[0]->getY();
 
-		//체력 1000이하일때만 패턴다르게
-		if (_vBoss[0]->getCurrentHP() <= 1000)
+		//체력 100이하일때만 패턴다르게
+		if (_vBoss[0]->getCurrentHP() <= 100)
 		{
 			_bulletPattern = BULLET_PATTERN::RGB_BULLET;
 
@@ -1647,8 +1647,8 @@ void enemyManager::bossAttackPattern()
 
 		}
 
-		//체력이 1000이상일때만
-		else if (_vBoss[0]->getCurrentHP() > 1000)
+		//체력이 100이상일때만
+		else if (_vBoss[0]->getCurrentHP() > 100)
 		{
 			switch (_attackPattern)
 			{
@@ -1904,25 +1904,28 @@ void enemyManager::bossAttackPattern()
 
 void enemyManager::bossBulletDraw(float cameraX, float cameraY)
 {
-	if (_bulletPattern == BULLET_PATTERN::GOLD_BULLET || _bulletPattern == BULLET_PATTERN::BLUE_BULLET || _bulletPattern == BULLET_PATTERN::RED_BULLET)
+	if (_vBoss[0]->getCurrentHP() > 0)
 	{
-		_goldBullet->render(cameraX, cameraY);
-		_blueBullet->render(cameraX, cameraY);
-		_redBullet->render(cameraX, cameraY);
-	}
-	else if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
-	{
-		_rgbBullet->render(cameraX, cameraY);
-	}
+		if (_bulletPattern == BULLET_PATTERN::GOLD_BULLET || _bulletPattern == BULLET_PATTERN::BLUE_BULLET || _bulletPattern == BULLET_PATTERN::RED_BULLET)
+		{
+			_goldBullet->render(cameraX, cameraY);
+			_blueBullet->render(cameraX, cameraY);
+			_redBullet->render(cameraX, cameraY);
+		}
+		else if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+		{
+			_rgbBullet->render(cameraX, cameraY);
+		}
 
-	if (_attackPattern == ATTACK_SHOCK)
-	{
-		_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
-	}
+		if (_attackPattern == ATTACK_SHOCK)
+		{
+			_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
+		}
 
-	if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
-	{
-		_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
+		if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+		{
+			_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
+		}
 	}
 }
 
