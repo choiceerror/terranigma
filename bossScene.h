@@ -20,6 +20,7 @@ enum class BULLET_PATTERN
 	GOLD_BULLET,
 	BLUE_BULLET,
 	RED_BULLET,
+	RGB_BULLET,
 };
 
 enum ATTACK_PATTERN
@@ -34,6 +35,7 @@ enum ATTACK_PATTERN
 struct tagShockAttack
 {
 	RECT rc;
+	RECT rc2;
 	float x, y;
 	image* image;
 	animation* ani;
@@ -48,7 +50,10 @@ private:
 
 	dungeonMap* _dungeonBossMap;
 	ItemManager* _itemManager;
-	bossBullet* _bossBullet;
+	bossBullet* _goldBullet; //골드총알
+	bossBullet* _blueBullet; //블루총알
+	bossBullet* _redBullet; //레드총알
+	bossBullet* _rgbBullet; //세개다 합친총알
 	BULLET_PATTERN _bulletPattern; //총알 나가는 종류
 	ATTACK_PATTERN _attackPattern; //공격종류
 
@@ -57,7 +62,7 @@ private:
 	float _worldTime;
 	bool _isBossAppear; //보스 등장시점 판별해줄 불값
 	bool _isOnce[4]; //업데이트부분에 한번만 받기위함.
-	
+
 	POINTFLOAT _appearGoal;
 	float _goalAngle;
 	float _elapsedTime;
@@ -91,7 +96,6 @@ public:
 	void bossAppear(); //보스 등장
 	void movePattern(); //보스 무브패턴
 	void attackPattern(); //보스 총알공격패턴
-	void shockAttack(); //전기공격
 
 	void setWindowsSize(int x, int y, int width, int height);
 };

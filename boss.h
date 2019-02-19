@@ -2,6 +2,8 @@
 #include "enemy.h"
 class boss : public enemy
 {
+private:
+	int _attackCount;
 public:
 	boss();
 	~boss();
@@ -12,6 +14,7 @@ public:
 	virtual void render(float cameraX, float cameraY);
 
 	void move();
+	bool countAttack();
 
 public:
 	//접근자 설정자 모음

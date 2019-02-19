@@ -4,8 +4,6 @@ class fireMonster : public enemy
 {
 private:
 	int _fireCount; //발사카운트
-	float _viewX;
-	float _viewY;
 public:
 	fireMonster();
 	~fireMonster();

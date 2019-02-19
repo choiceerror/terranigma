@@ -121,7 +121,6 @@ void bossBullet::render(float cameraX, float cameraY)
 void bossBullet::bossFire(float x, float y, float angle, float speed, int bulletMax)
 {
 
-
 	tagFireBullet bossBullet;
 	bossBullet.max = bulletMax;
 	if (bossBullet.max < _vBossBullet.size()) return;

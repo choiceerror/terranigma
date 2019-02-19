@@ -57,3 +57,16 @@ void boss::move()
 	}
 
 }
+
+bool boss::countAttack()
+{
+	_attackCount++;
+	if (_attackCount % 50 == 0)
+	{
+		_attackCount = 0;
+		return true;
+	}
+
+	return false;
+}
+
