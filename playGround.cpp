@@ -37,6 +37,7 @@ HRESULT playGround::init()
 	EFFECTMANAGER->addEffect("deadEffect", "image/deadEffect2.bmp", 1496, 110, 136, 110, 5, 0.17f, 1000);
 	IMAGEMANAGER->addImage("black", "image/black.bmp", 1024, 768, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("messageSpear", "image/massageSpear.bmp", 600, 179, 1, 1, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("talkPage", "image/talkPageNext.bmp", 75, 30, 3, 1, true, MAGENTA);
 
 
 	_worldMap = new worldMap;
