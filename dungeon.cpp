@@ -316,7 +316,7 @@ void dungeon::itemRandomDrop()
 {
 	for (int i = 0; i < _enemyManager->getVEnemyDeadPoint().size(); i++)
 	{
-		_rndItemDrop = RND->getRandomInt(0, 300);
+		_rndItemDrop = RND->getRandomInt(0, 200);
 		_rndItemTypeDrop = RND->getRandomInt(0, 100);
 
 		//40ÆÛÈ®·ü
