@@ -15,9 +15,52 @@ enemyManager::~enemyManager()
 HRESULT enemyManager::init()
 {
 	_fireMonsterBullet = new fireMonsterBullet;
+	_goldBullet = new bossBullet;
+	_blueBullet = new bossBullet;
+	_redBullet = new bossBullet;
+	_rgbBullet = new bossBullet;
+	_shockAttack = new tagShockAttack;
+
+	//====================== 보스 관련 =======================
+	_goldBullet->init("bossBullet", GAMESIZEY, 1);
+	_blueBullet->init("bossBullet", GAMESIZEY, 1);
+	_redBullet->init("bossBullet", GAMESIZEY, 1);
+	_rgbBullet->init("bossBullet", GAMESIZEY, 1);
+
+	_worldTime = TIMEMANAGER->getWorldTime();
+	_moveWorldTime = TIMEMANAGER->getWorldTime();
+	_isBossAppear = false;
+
+	for (int i = 0; i < 4; i++)
+	{
+		_moveGoal[i].x = 400 + i * 150;
+		_moveGoal[i].y = 600 + i * 80;
+	}
+	_goalX = GAMESIZEX / 2 + 70;
+	_goalY = 650;
+	_moveSpeed = 20.f;
+	_bulletPattern = BULLET_PATTERN::GOLD_BULLET; //처음엔 골드총알로
+	_attackPattern = ATTACK_PATTERN::ATTACK_ONE;
+
+	for (int i = 0; i < 3; i++)
+	{
+		_bulletSpeed[i] = 7;
+	}
+
+	//전기이펙트 
+	_shockAttack->image = IMAGEMANAGER->findImage("shockAttack");
+	_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y, _shockAttack->image->getFrameWidth(), _shockAttack->image->getFrameHeight());
+	int rightShock[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
+	KEYANIMANAGER->addArrayFrameAnimation("shock", "rightShock", "shockAttack", rightShock, 8, 5, true);
+
+	int leftShock[] = { 15, 14, 13, 12, 11, 10, 9, 8 };
+	KEYANIMANAGER->addArrayFrameAnimation("shock", "leftShock", "shockAttack", leftShock, 8, 5, true);
+
+	_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "rightShock");
+	//====================== 보스 관련 =======================
+
 	_fireMonsterBullet->init("fireMonster", GAMESIZEX / 2, 10);
 	_fireBulletSpeed = 5;
-
 	_objectRc = RectMake(80, 355, 160, 125);
 	return S_OK;
 }
@@ -25,6 +68,11 @@ HRESULT enemyManager::init()
 void enemyManager::release()
 {
 	SAFE_DELETE(_fireMonsterBullet);
+	SAFE_DELETE(_goldBullet);
+	SAFE_DELETE(_blueBullet);
+	SAFE_DELETE(_redBullet);
+	SAFE_DELETE(_rgbBullet);
+	SAFE_DELETE(_shockAttack);
 	for (_viBallMonster = _vBallMonster.begin(); _viBallMonster != _vBallMonster.end(); _viBallMonster++)
 	{
 		SAFE_DELETE((*_viBallMonster));
@@ -51,10 +99,32 @@ void enemyManager::update()
 		tileCheckObjectCollision();
 	}
 
-	if (_player->getPlayerDeath() == false || _player->getPlayerLevelUP() ==  false)
+	if (_player->getPlayerDeath() == false || _player->getPlayerLevelUP() == false)
 	{
 		//에너미 AI 함수
 		enemyAI();
+	}
+
+	//보스층일때만
+	if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
+	{
+		//보스 등장
+		bossAppear();
+		//보스 무브패턴
+		bossMovePattern();
+		//보스 공격패턴
+		bossAttackPattern();
+
+		if (_bulletPattern == BULLET_PATTERN::GOLD_BULLET || _bulletPattern == BULLET_PATTERN::BLUE_BULLET || _bulletPattern == BULLET_PATTERN::RED_BULLET)
+		{
+			_goldBullet->update();
+			_blueBullet->update();
+			_redBullet->update();
+		}
+		else if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+		{
+			_rgbBullet->update();
+		}
 	}
 
 	//플레이어 공격에 에너미들이 맞을 함수
@@ -73,7 +143,7 @@ void enemyManager::render(float cameraX, float cameraY)
 
 	//char str[128];
 
-	for (int i = 0; i < _vKnightMonster.size(); i++)
+	//for (int i = 0; i < _vKnightMonster.size(); i++)
 	{
 		//sprintf_s(str, "distance : %f", _vKnightMonster[i]->getTargetDistance());
 		//TextOut(getMemDC(), 100, 200 + i * 20, str, strlen(str));
@@ -98,7 +168,7 @@ void enemyManager::render(float cameraX, float cameraY)
 		//TextOut(getMemDC(), 300, 200 + i * 20, str, strlen(str));
 	}
 
-	for (int i = 0; i < _vBallMonster.size(); i++)
+	//for (int i = 0; i < _vBallMonster.size(); i++)
 	{
 		//sprintf_s(str, "targetDistance : %f", _vBallMonster[i]->getTargetDistance());
 		//TextOut(getMemDC(), 600, 100 + i * 20, str, strlen(str));
@@ -185,8 +255,11 @@ void enemyManager::drawAll(float cameraX, float cameraY)
 	}
 	else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
 	{
-		//보스 랜더링
-		_vBoss[0]->render(cameraX, cameraY);
+		if (_isBossAppear == true || _isOnce[BOSS_APPEAR] == true)
+		{
+			//보스 랜더링
+			_vBoss[0]->render(cameraX, cameraY);
+		}
 	}
 }
 
@@ -248,6 +321,8 @@ void enemyManager::setEnemy()
 		boss* bs;
 		bs = new boss;
 
+		_shockAttack->x = bs->getX();
+		_shockAttack->y = bs->getY();
 		bs->init("boss", "boss", GAMESIZEX / 2 + 70, 1600, 0, 0, BOSS_HP);
 		_vBoss.push_back(bs);
 	}
@@ -697,7 +772,7 @@ void enemyManager::fireMonsterBulletFireCollision(int num)
 				(*_fireMonsterBullet->setVFireBullet())[i].isCollision = true;
 				break;
 			}
-			
+
 		}
 
 		(*_fireMonsterBullet->setVFireBullet())[i].tileCollisionRc = RectMakeCenter(_fireMonsterBullet->getVFireBullet()[i].x, _fireMonsterBullet->getVFireBullet()[i].y, _fireMonsterBullet->getVFireBullet()[i].image->getFrameWidth(), _fireMonsterBullet->getVFireBullet()[i].image->getFrameHeight());
@@ -782,10 +857,10 @@ void enemyManager::enemyDead()
 		if (_vBoss[0]->getCurrentHP() <= 0.0f)
 		{
 			//erase 뻑나서 이런식으로 처리함.
-			if (_isOnce == false)
+			//if (_isOnce == false)
 			{
 				EFFECTMANAGER->play("bossDeadEffect", _vBoss[0]->getViewX(), _vBoss[0]->getViewY());
-				_isOnce = true;
+				//_isOnce = true;
 			}
 			//_vBoss.erase(_vBoss.begin());
 		}
@@ -949,7 +1024,7 @@ void enemyManager::tileCheckObjectCollision()
 						}
 						break;
 					}
-				
+
 				}
 				else if (_vBallMonster[i]->getIsAttack() == true && _vBallMonster[i]->getState() != BALLMONSTER_STATE_IDLE)
 				{
@@ -1304,6 +1379,550 @@ void enemyManager::tileCheckObjectCollision()
 		}
 		_vKnightMonster[i]->setTileCollisionRect(RectMakeCenter(_vKnightMonster[i]->getX(), _vKnightMonster[i]->getY() + 50, _vKnightMonster[i]->getImage()->getFrameWidth() - 240, _vKnightMonster[i]->getImage()->getFrameHeight() - 180)); //타일깎음
 
+	}
+}
+
+//보스 등장
+void enemyManager::bossAppear()
+{
+	if (_player->getPlayerY() <= 900 && _isOnce[BOSS_APPEAR] == false)
+	{
+		_isBossAppear = true;
+		SOUNDMANAGER->play("bossSceneBGM");
+		_isOnce[BOSS_APPEAR] = true;
+	}
+
+	if (_isBossAppear == true && _vBoss[0]->getState() == BOSS_STATE_IDLE) //보스등장
+	{
+		_appearGoal.x = GAMESIZEX / 2 + 70;
+		_appearGoal.y = 650;
+
+		_elapsedTime = TIMEMANAGER->getElapsedTime();
+
+		//골까지의 각도를 구해주고
+		_goalAngle = getAngle(_vBoss[0]->getX(), _vBoss[0]->getY(), _appearGoal.x, _appearGoal.y);
+		//골까지의 거리 구해줌.
+		_goalDistance = getDistance(_vBoss[0]->getX(), _vBoss[0]->getY(), _appearGoal.x, _appearGoal.y);
+
+		if (_isOnce[LINEAR_APPEAR] == false)
+		{
+			//거속시 선형보간
+			_appearSpeed = _goalDistance * (_elapsedTime / 6.0f);
+			_worldTime = TIMEMANAGER->getWorldTime();
+		}
+		_isOnce[LINEAR_APPEAR] = true; //선형보간도 한번만 받기위함.
+
+		//8초전에만 움직임.
+		if (8.0f + _worldTime >= TIMEMANAGER->getWorldTime())
+		{
+			_vBoss[0]->setX(_vBoss[0]->getX() + cosf(_goalAngle) * _appearSpeed);
+			_vBoss[0]->setY(_vBoss[0]->getY() + -sinf(_goalAngle) * _appearSpeed);
+		}
+
+		if (_goalDistance <= 10 && _isOnce[CAMERA_LINEAR] == false)
+		{
+			_camera->linearKeepMove(_appearGoal.x, _appearGoal.y + 50, 2, 100000);
+			_isOnce[CAMERA_LINEAR] = true; //카메라도 한번만 받기위함.
+			_isBossAppear = false; //도착점에도달했으면 보스 등장하는거 꺼줌.
+			_vBoss[0]->setState(BOSS_STATE_MOVE);
+		}
+	}
+}
+
+//보스 무브 패턴
+void enemyManager::bossMovePattern()
+{
+	//보스가 다 등장하고 움직인 상태라면
+	if (_isBossAppear == false && _vBoss[0]->getState() == BOSS_STATE_MOVE)
+	{
+		if (_isOnce[WORLDTIME] == false)
+		{
+			_moveWorldTime = TIMEMANAGER->getWorldTime();
+			_attackWorldTime[ATTACK_NONE] = TIMEMANAGER->getWorldTime();
+			_isOnce[WORLDTIME] = true;
+		}
+
+		switch (_vBoss[0]->getState())
+		{
+		case BOSS_STATE_MOVE:
+
+			//4초후에 움직여라
+			if (4.0f + _moveWorldTime <= TIMEMANAGER->getWorldTime())
+			{
+				if (2.0f + _rndMoveWorldTime <= TIMEMANAGER->getWorldTime())
+				{
+					_rndMove[BOSS] = RND->getRandomInt(0, 3);
+
+					_rndMoveWorldTime = TIMEMANAGER->getWorldTime();
+				}
+
+				if (_vBoss[0]->getTargetDistance() > 2)
+				{
+					_vBoss[0]->setX(_vBoss[0]->getX() + cosf(_vBoss[0]->getMoveAngle() * _moveSpeed));
+					_vBoss[0]->setY(_vBoss[0]->getY() + -sinf(_vBoss[0]->getMoveAngle() * _moveSpeed));
+				}
+				else
+				{
+					_vBoss[0]->setX(_goalX);
+					_vBoss[0]->setY(_goalY);
+				}
+
+				_goalX = _moveGoal[_rndMove[BOSS]].x;
+				_goalY = _moveGoal[_rndMove[BOSS]].y;
+
+				//각도와 거리는 갱신
+				_vBoss[0]->setMoveAngle(getAngle(_moveGoal[_rndMove[BOSS]].x, _moveGoal[_rndMove[BOSS]].y, _vBoss[0]->getX(), _vBoss[0]->getY()));
+				_vBoss[0]->setTargetDistance(getDistance(_moveGoal[_rndMove[BOSS]].x, _moveGoal[_rndMove[BOSS]].y, _vBoss[0]->getX(), _vBoss[0]->getY()));
+
+			}
+			break;
+
+		}
+	}
+}
+
+//보스 공격 패턴
+void enemyManager::bossAttackPattern()
+{
+	if (_isBossAppear == false && _vBoss[0]->getState() == BOSS_STATE_MOVE && 4.0f + _attackWorldTime[ATTACK_NONE] <= TIMEMANAGER->getWorldTime())
+	{
+		if (_bulletPattern != BULLET_PATTERN::RGB_BULLET)
+		{
+			//총알 나갈종류 정하기
+			for (int i = 0; i < _goldBullet->getVBossBullet().size(); i++)
+			{
+				if (_attackPattern == ATTACK_ONE)
+				{
+					_bulletPattern = BULLET_PATTERN::GOLD_BULLET;
+					(*_goldBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("goldBullet", "gold");
+				}
+			}
+			for (int i = 0; i < _blueBullet->getVBossBullet().size(); i++)
+			{
+				if (_attackPattern == ATTACK_TWO)
+				{
+					_bulletPattern = BULLET_PATTERN::BLUE_BULLET;
+					(*_blueBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("blueBullet", "blue");
+				}
+			}
+			for (int i = 0; i < _redBullet->getVBossBullet().size(); i++)
+			{
+				if (_attackPattern == ATTACK_THREE)
+				{
+					_bulletPattern = BULLET_PATTERN::RED_BULLET;
+					(*_redBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("redBullet", "red");
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < _rgbBullet->getVBossBullet().size(); i++)
+			{
+				if (_attackPattern == ATTACK_ONE)
+				{
+					(*_rgbBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("goldBullet", "gold");
+				}
+
+				else if (_attackPattern == ATTACK_TWO)
+				{
+					(*_rgbBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("blueBullet", "blue");
+				}
+
+				else if (_attackPattern == ATTACK_THREE)
+				{
+					(*_rgbBullet->setVBossBullet())[i].ani = KEYANIMANAGER->findAnimation("redBullet", "red");
+				}
+			}
+		}
+
+		POINTFLOAT boss;
+		boss.x = _vBoss[0]->getX();
+		boss.y = _vBoss[0]->getY();
+
+		//체력 1000이하일때만 패턴다르게
+		if (_vBoss[0]->getCurrentHP() <= 1000)
+		{
+			_bulletPattern = BULLET_PATTERN::RGB_BULLET;
+
+			for (int i = 0; i < 4; i++)
+			{
+				_rndAttack[i] = RND->getRandomInt(1, 3);
+				if (i <= 2) _rndAttackType[i] = RND->getRandomInt(1, 2);
+			}
+
+			if (_rndAttack[ATTACK_ONE] == 1) _attackPattern = ATTACK_TWO;
+			else if (_rndAttack[ATTACK_ONE] == 2) _attackPattern = ATTACK_THREE;
+
+			if (_rndAttack[ATTACK_TWO] == 1) _attackPattern = ATTACK_ONE;
+			else if (_rndAttack[ATTACK_TWO] == 2) _attackPattern = ATTACK_THREE;
+
+			if (_rndAttack[ATTACK_THREE] == 1) _attackPattern = ATTACK_ONE;
+			else if (_rndAttack[ATTACK_THREE] == 2) _attackPattern = ATTACK_TWO;
+
+			switch (_attackPattern)
+			{
+			case ATTACK_ONE:
+
+				//시간마다 공격
+				if (3.0f + _attackWorldTime[ATTACK_ONE] <= TIMEMANAGER->getWorldTime())
+				{
+					if (_rndAttackType[0] == 1)
+					{
+						_rgbBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 1);
+						_rgbBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 1);
+					}
+					else if (_rndAttackType[0] == 2)
+					{
+						_rgbBullet->bossFire(boss.x - 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+						_rgbBullet->bossFire(boss.x - 200, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+						_rgbBullet->bossFire(boss.x + 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+						_rgbBullet->bossFire(boss.x + 200, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+
+					}
+
+					_attackWorldTime[ATTACK_ONE] = TIMEMANAGER->getWorldTime();
+				}
+				break;
+			case ATTACK_TWO:
+
+				//시간마다 공격
+				if (3.0f + _attackWorldTime[ATTACK_TWO] <= TIMEMANAGER->getWorldTime())
+				{
+					_rgbBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_TWO], 1);
+					_rgbBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_TWO], 1);
+
+					_attackWorldTime[ATTACK_TWO] = TIMEMANAGER->getWorldTime();
+				}
+
+				break;
+			case ATTACK_THREE:
+
+				//시간마다 공격
+				if (3.0f + _attackWorldTime[ATTACK_THREE] <= TIMEMANAGER->getWorldTime())
+				{
+					if (_rndAttackType[1] == 1)
+					{
+						_rgbBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 1);
+						_rgbBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 1);
+					}
+					else if (_rndAttackType[1] == 2)
+					{
+						_rgbBullet->bossFire(boss.x - 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+						_rgbBullet->bossFire(boss.x - 200, boss.y - 100, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+						_rgbBullet->bossFire(boss.x + 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+						_rgbBullet->bossFire(boss.x + 200, boss.y - 100, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+					}
+
+					_attackWorldTime[ATTACK_THREE] = TIMEMANAGER->getWorldTime();
+				}
+				break;
+
+			}
+
+			if (0.1f + _attackWorldTime[ATTACK_SHOCK] >= TIMEMANAGER->getWorldTime())
+			{
+				if (_rndAttackType[2] == 1)
+				{
+					_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "leftShock");
+				}
+				else if (_rndAttackType[2] == 2)
+				{
+					_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "rightShock");
+				}
+
+				_shockAttack->x = _vBoss[0]->getX() - 70;
+				_shockAttack->y = _vBoss[0]->getY() / 2 + 200;
+				_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y, 10, 300);
+				_shockAttack->rc2 = RectMakeCenter(_shockAttack->x + 140, _shockAttack->y, 10, 300);
+
+				_shockAttack->ani->start();
+
+			}
+			else
+			{
+				_shockAttack->rc = RectMakeCenter(NULL, NULL, NULL, NULL);
+				_shockAttack->rc2 = RectMakeCenter(NULL, NULL, NULL, NULL);
+				_attackWorldTime[ATTACK_SHOCK] = TIMEMANAGER->getWorldTime();
+			}
+
+		}
+
+		//체력이 1000이상일때만
+		else if (_vBoss[0]->getCurrentHP() > 1000)
+		{
+			switch (_attackPattern)
+			{
+			case ATTACK_ONE:
+
+				//시간마다 공격
+				if (3.0f + _attackWorldTime[ATTACK_ONE] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::GOLD_BULLET)
+				{
+					_rndAttack[ATTACK_ONE] = RND->getRandomInt(1, 3);
+					_rndAttackType[0] = RND->getRandomInt(1, 2);
+
+					if (_rndAttackType[0] == 1)
+					{
+						_goldBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 1);
+						_goldBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 1);
+					}
+					else if (_rndAttackType[0] == 2)
+					{
+						_goldBullet->bossFire(boss.x - 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+						_goldBullet->bossFire(boss.x - 200, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+						_goldBullet->bossFire(boss.x + 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+						_goldBullet->bossFire(boss.x + 200, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_ONE], 3);
+
+					}
+
+					//랜덤어택
+					if (_rndAttack[ATTACK_ONE] == 1)
+					{
+						_bulletPattern = BULLET_PATTERN::BLUE_BULLET;
+						_attackPattern = ATTACK_TWO;
+					}
+					else if (_rndAttack[ATTACK_ONE] == 2)
+					{
+						_bulletPattern = BULLET_PATTERN::RED_BULLET;
+						_attackPattern = ATTACK_THREE;
+					}
+					else if (_rndAttack[ATTACK_ONE] == 3)
+					{
+						_attackPattern = ATTACK_SHOCK;
+					}
+
+					_attackWorldTime[ATTACK_ONE] = TIMEMANAGER->getWorldTime();
+				}
+				break;
+			case ATTACK_TWO:
+
+				//시간마다 공격
+				if (3.0f + _attackWorldTime[ATTACK_TWO] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::BLUE_BULLET)
+				{
+					_rndAttack[ATTACK_TWO] = RND->getRandomInt(1, 3);
+
+					_blueBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_TWO], 1);
+					_blueBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_TWO], 1);
+
+					//랜덤어택
+					if (_rndAttack[ATTACK_TWO] == 1)
+					{
+						_bulletPattern = BULLET_PATTERN::GOLD_BULLET;
+						_attackPattern = ATTACK_ONE;
+					}
+					else if (_rndAttack[ATTACK_TWO] == 2)
+					{
+						_bulletPattern = BULLET_PATTERN::RED_BULLET;
+						_attackPattern = ATTACK_THREE;
+					}
+					else if (_rndAttack[ATTACK_ONE] == 3)
+					{
+						_attackPattern = ATTACK_SHOCK;
+					}
+
+					_attackWorldTime[ATTACK_TWO] = TIMEMANAGER->getWorldTime();
+
+				}
+
+				break;
+			case ATTACK_THREE:
+
+				//시간마다 공격
+				if (3.0f + _attackWorldTime[ATTACK_THREE] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::RED_BULLET)
+				{
+					_rndAttack[ATTACK_THREE] = RND->getRandomInt(1, 3);
+					_rndAttackType[1] = RND->getRandomInt(1, 2);
+
+					if (_rndAttackType[1] == 1)
+					{
+						_redBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 1);
+						_redBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 1);
+					}
+					else if (_rndAttackType[1] == 2)
+					{
+						_redBullet->bossFire(boss.x - 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+						_redBullet->bossFire(boss.x - 200, boss.y - 100, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+						_redBullet->bossFire(boss.x + 100, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+						_redBullet->bossFire(boss.x + 200, boss.y - 100, (PI / 180) * 270, _bulletSpeed[ATTACK_THREE], 3);
+					}
+
+					//랜덤어택
+					if (_rndAttack[ATTACK_THREE] == 1)
+					{
+						_bulletPattern = BULLET_PATTERN::GOLD_BULLET;
+						_attackPattern = ATTACK_ONE;
+					}
+					else if (_rndAttack[ATTACK_THREE] == 2)
+					{
+						_bulletPattern = BULLET_PATTERN::BLUE_BULLET;
+						_attackPattern = ATTACK_TWO;
+					}
+					else if (_rndAttack[ATTACK_ONE] == 3)
+					{
+						_attackPattern = ATTACK_SHOCK;
+					}
+
+					_attackWorldTime[ATTACK_THREE] = TIMEMANAGER->getWorldTime();
+				}
+				break;
+			case ATTACK_SHOCK:
+
+				if (_vBoss[0]->countAttack() == true)
+				{
+					_rndAttack[ATTACK_SHOCK] = RND->getRandomInt(1, 3);
+					_rndAttackType[2] = RND->getRandomInt(1, 2);
+
+					if (_rndAttackType[2] == 1)
+					{
+						_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "leftShock");
+					}
+					else if (_rndAttackType[2] == 2)
+					{
+						_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "rightShock");
+					}
+
+					//랜덤어택
+					if (_rndAttack[ATTACK_SHOCK] == 1)
+					{
+						_bulletPattern = BULLET_PATTERN::GOLD_BULLET;
+						_attackPattern = ATTACK_ONE;
+					}
+					else if (_rndAttack[ATTACK_SHOCK] == 2)
+					{
+						_bulletPattern = BULLET_PATTERN::BLUE_BULLET;
+						_attackPattern = ATTACK_TWO;
+					}
+					else if (_rndAttack[ATTACK_SHOCK] == 3)
+					{
+						_bulletPattern = BULLET_PATTERN::RED_BULLET;
+						_attackPattern = ATTACK_THREE;
+					}
+					_shockAttack->x = _vBoss[0]->getX();
+					_shockAttack->y = _vBoss[0]->getY() / 2 + 200;
+					_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y, 10, 300);
+					_shockAttack->ani->start();
+
+				}
+				else
+				{
+					_shockAttack->rc = RectMakeCenter(NULL, NULL, NULL, NULL);
+				}
+				break;
+
+			}
+		}
+
+		//두번째공격이고 파란색총알일때나 세가지 섞은총알일때만
+		if ((_attackPattern == ATTACK_TWO && _bulletPattern == BULLET_PATTERN::BLUE_BULLET) || (_bulletPattern == BULLET_PATTERN::RGB_BULLET))
+		{
+			//블루총알일때만
+			if (_bulletPattern == BULLET_PATTERN::BLUE_BULLET)
+			{
+				for (int i = 0; i < _blueBullet->getVBossBullet().size(); i++)
+				{
+					//두번째공격일때만 각도꺾음.
+					if (_blueBullet->getVBossBullet()[i].y >= _player->getPlayerY())
+					{
+						(*_blueBullet->setVBossBullet())[0].angle = PI2;
+						(*_blueBullet->setVBossBullet())[1].angle = PI;
+					}
+				}
+			}
+			//세가지 다 섞은총알일때만
+			else if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+			{
+				for (int i = 0; i < _rgbBullet->getVBossBullet().size(); i++)
+				{
+					if (_rgbBullet->getVBossBullet()[i].y >= _player->getPlayerY())
+					{
+						(*_rgbBullet->setVBossBullet())[0].angle = PI2;
+						(*_rgbBullet->setVBossBullet())[1].angle = PI;
+					}
+				}
+			}
+		}
+		//세번째 공격이고 레드총알이거나 세가지 섞은총알일때만
+		if ((_attackPattern == ATTACK_THREE && _bulletPattern == BULLET_PATTERN::RED_BULLET) || (_bulletPattern == BULLET_PATTERN::RGB_BULLET))
+		{
+			//레드총알
+			if (_bulletPattern == BULLET_PATTERN::RED_BULLET)
+			{
+				for (int i = 0; i < _redBullet->getVBossBullet().size(); i++)
+				{
+					if (_redBullet->getVBossBullet()[i].y >= _player->getPlayerY())
+					{
+						if (0.7f + _redBullet->getVBossBullet()[i].bulletWorlTime >= TIMEMANAGER->getWorldTime())
+						{
+							(*_redBullet->setVBossBullet())[i].speed = 0;
+							(*_redBullet->setVBossBullet())[i].ani->setFPS(30);
+						}
+						else if (0.8f + _redBullet->getVBossBullet()[i].bulletWorlTime <= TIMEMANAGER->getWorldTime() && 1.8f + _redBullet->getVBossBullet()[i].bulletWorlTime > TIMEMANAGER->getWorldTime())
+						{
+							(*_redBullet->setVBossBullet())[i].speed = _redBullet->getVBossBullet()[i].speed + 0.3f;
+							(*_redBullet->setVBossBullet())[0].angle = PI2;
+							(*_redBullet->setVBossBullet())[1].angle = PI;
+						}
+						else if (1.8f + _redBullet->getVBossBullet()[i].bulletWorlTime <= TIMEMANAGER->getWorldTime())
+						{
+							(*_redBullet->setVBossBullet())[i].speed = 7;
+							(*_redBullet->setVBossBullet())[i].ani->setFPS(7);
+							(*_redBullet->setVBossBullet())[i].bulletWorlTime = TIMEMANAGER->getWorldTime();
+						}
+					}
+				}
+			}
+			//세가지다 섞은총알
+			else if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+			{
+				for (int i = 0; i < _rgbBullet->getVBossBullet().size(); i++)
+				{
+					if (_rgbBullet->getVBossBullet()[i].y >= _player->getPlayerY())
+					{
+						if (0.7f + _rgbBullet->getVBossBullet()[i].bulletWorlTime >= TIMEMANAGER->getWorldTime())
+						{
+							(*_rgbBullet->setVBossBullet())[i].speed = 0;
+							(*_rgbBullet->setVBossBullet())[i].ani->setFPS(30);
+						}
+						else if (0.8f + _rgbBullet->getVBossBullet()[i].bulletWorlTime <= TIMEMANAGER->getWorldTime() && 1.8f + _rgbBullet->getVBossBullet()[i].bulletWorlTime > TIMEMANAGER->getWorldTime())
+						{
+							(*_rgbBullet->setVBossBullet())[i].speed = _rgbBullet->getVBossBullet()[i].speed + 0.5f;
+							(*_rgbBullet->setVBossBullet())[0].angle = PI2;
+							(*_rgbBullet->setVBossBullet())[1].angle = PI;
+						}
+						else if (1.8f + _rgbBullet->getVBossBullet()[i].bulletWorlTime <= TIMEMANAGER->getWorldTime())
+						{
+							(*_rgbBullet->setVBossBullet())[i].speed = 7;
+							(*_rgbBullet->setVBossBullet())[i].ani->setFPS(7);
+							(*_rgbBullet->setVBossBullet())[i].bulletWorlTime = TIMEMANAGER->getWorldTime();
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
+
+void enemyManager::bossBulletDraw(float cameraX, float cameraY)
+{
+	if (_bulletPattern == BULLET_PATTERN::GOLD_BULLET || _bulletPattern == BULLET_PATTERN::BLUE_BULLET || _bulletPattern == BULLET_PATTERN::RED_BULLET)
+	{
+		_goldBullet->render(cameraX, cameraY);
+		_blueBullet->render(cameraX, cameraY);
+		_redBullet->render(cameraX, cameraY);
+	}
+	else if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+	{
+		_rgbBullet->render(cameraX, cameraY);
+	}
+
+	if (_attackPattern == ATTACK_SHOCK)
+	{
+		_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
+	}
+
+	if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+	{
+		_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
 	}
 }
 
