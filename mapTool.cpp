@@ -1572,12 +1572,10 @@ OBJECT mapTool::objSelect(int frameX, int frameY)
 
 				return OBJ_WALL;
 
-			//else if (tilenum == 3 && frameX == 18 && frameY == 1)
-			//{
-			//	return OBJ_WATER;
-			//}
-			
-			
+			else if (tilenum == 3 && frameX == 18 && frameY == 1)
+			{
+				return OBJ_WATER;
+			}
 		}
 	}
 }

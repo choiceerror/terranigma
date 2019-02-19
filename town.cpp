@@ -75,15 +75,13 @@ void town::release()
 
 void town::update()
 {
+	_town->update();
 	townIn();
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_npcManager->update(2);
 	_npcManager->aiBirdUpdate();
 	worldMapIn();
 	houseCollision();
-	riverMove();
-
-
 
 	//==============¹Ø¿¡ ÀÛ¼º ±ÝÁö===============
 	_player->update(false, 2);
@@ -111,16 +109,6 @@ void town::render()
 			IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->alphaFrameRender(getMemDC(), 960 + 32 * j - _camera->getCameraX(), 1408 + 32 * i - _camera->getCameraY(), 21 + j, 5 + i, _bedAlpha);
 		}
 	}
-
-	for (int i = 0; i < 58; ++i)
-	{
-		for (int j = 0; j < 3; ++j)
-		{
-			IMAGEMANAGER->findImage("townTile")->frameRender(getMemDC(), 1504 + 32 * j - _camera->getCameraX(), 32 + 32 * i - _camera->getCameraY(), 18, 1);
-
-		}
-	}
-
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_messageSpear->render();
@@ -261,21 +249,6 @@ void town::townIn()
 			_alphaValue = 0;
 			_fadeOut = false;
 		}
-	}
-}
-
-void town::riverMove()
-{
-	_count++;
-	if (_count % 1 == 0)
-	{
-
-		_index++;
-		IMAGEMANAGER->findImage("townTile")->SetFrameX(_index);
-
-		if (_index > 21) _index = 18;
-
-		_count = 0;
 	}
 }
 

@@ -13,7 +13,13 @@ townMap::~townMap()
 
 HRESULT townMap::init()
 {
+	
+	_image = IMAGEMANAGER->findImage("townTile");
+
+	_index = 18;
 	load();
+
+
 	return S_OK;
 }
 
@@ -23,6 +29,7 @@ void townMap::release()
 
 void townMap::update()
 {
+	riverMove();
 }
 
 void townMap::render(float cameraX, float cameraY)
@@ -73,10 +80,19 @@ void townMap::render(float cameraX, float cameraY)
 
 			if (_vvMap[i][j]->a == 3)
 			{
-				IMAGEMANAGER->frameRender("townTile", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+				if (_vvMap[i][j]->obj != OBJ_WATER)
+				{
+					IMAGEMANAGER->frameRender("townTile", getMemDC(),
+						_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+						_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+				}
+				if (_vvMap[i][j]->obj == OBJ_WATER)
+				{
+					_image->frameRender(getMemDC(), _vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY, _index, 1);
+				}
 			}
+
+			
 
 		}
 	}
@@ -149,11 +165,14 @@ void townMap::load()
 			_attribute[j + i * TILEX] = NULL;
 			_vvMap[i][j] = &_tiles[j + i * TILEX];
 
-			if (_vvMap[i][j]->obj == OBJ_WALL)
+			if (_vvMap[i][j]->obj == OBJ_WALL && _vvMap[i][j]->obj == OBJ_WATER)
 			{
 				_attribute[j + i * TILEX] |= ATTR_UNMOVE;
 			}
-
+			//if (_vvMap[i][j]->obj == OBJ_WATER)
+			//{
+			//	_attribute[j + i * TILEX] |= ATTR_UNMOVE;
+			//}
 
 		}
 	}
@@ -163,4 +182,17 @@ void townMap::load()
 
 void townMap::tileDraw()
 {
+}
+
+void townMap::riverMove()
+{
+	_count++;
+	if (_count % 8 == 0)
+	{
+		_index++;
+		if (_index > 20) _index = 18;
+
+		_count = 0;
+	}
+
 }

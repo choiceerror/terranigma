@@ -13,11 +13,15 @@ private:
 
 	DWORD* _attribute;
 
+	image* _image;
+
 	int tix;
 	int tiy;
 	int obx;
 	int oby;
 
+	int _index;
+	int _count;
 public:
 	townMap();
 	~townMap();
@@ -28,7 +32,7 @@ public:
 	void render(float cameraX, float cameraY);
 	void load();
 	void tileDraw();
-
+	void riverMove();
 	unsigned int getTileX() { return TILEX; }
 	unsigned int getTileY() { return TILEY; }
 
