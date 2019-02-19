@@ -13,6 +13,8 @@ dungeonMap::~dungeonMap()
 
 HRESULT dungeonMap::init(DUNGEON_FLOOR floor)
 {
+	_image = IMAGEMANAGER->findImage("bossTile");
+	_index = 0;
 	load(floor);
 
 	return S_OK;
@@ -24,6 +26,7 @@ void dungeonMap::release()
 
 void dungeonMap::update()
 {
+	fireAni();
 }
 
 void dungeonMap::render(float cameraX, float cameraY)
@@ -235,6 +238,7 @@ void dungeonMap::load(DUNGEON_FLOOR floor)
 				{
 					_attribute[j + i * TILEX] |= ATTR_UNMOVE;
 				}
+				if (_vvMap[i][j]->obj == OBJ_FIRE) _attribute[j + i * TILEX] |= ATTR_UNMOVE;
 			}
 		}
 		CloseHandle(file);
@@ -282,9 +286,9 @@ void dungeonMap::tileDraw(float cameraX, float cameraY)
 			}
 			else if (_vvMap[i][j]->a == 5)
 			{
-				IMAGEMANAGER->frameRender("bossTile", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+					IMAGEMANAGER->frameRender("bossTile", getMemDC(),
+						_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+						_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
 			}
 		}
 	}
@@ -320,9 +324,16 @@ void dungeonMap::tileDraw(float cameraX, float cameraY)
 			}
 			else if (_vvMap[i][j]->a == 5)
 			{
-				IMAGEMANAGER->frameRender("bossTile", getMemDC(),
-					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
-					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+				if (_vvMap[i][j]->obj != OBJ_FIRE)
+				{
+					IMAGEMANAGER->frameRender("bossTile", getMemDC(),
+						_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+						_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+				}
+				if (_vvMap[i][j]->obj == OBJ_FIRE)
+				{
+					_image->frameRender(getMemDC(), _vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY, 0, _index);
+				}
 			}
 		}
 	}
@@ -331,4 +342,16 @@ void dungeonMap::tileDraw(float cameraX, float cameraY)
 	//
 	//sprintf_s(str, "오브x:%d 오브y:%d  지형x:%d 지형y:%d", obx, oby, tix, tiy);
 	//TextOut(getMemDC(), 600, 500, str, strlen(str));
+}
+
+void dungeonMap::fireAni()
+{
+	_count++;
+	if (_count % 12 == 0)
+	{
+		_index++;
+		if (_index > 4) _index = 0;
+
+		_count = 0;
+	}
 }

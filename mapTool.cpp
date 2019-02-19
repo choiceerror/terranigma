@@ -1568,14 +1568,24 @@ OBJECT mapTool::objSelect(int frameX, int frameY)
 	{
 		for (int j = 0; j < basicTileY; ++j)
 		{
-			if (frameX == i && frameY == j)
+			//if (frameX == i && frameY == j)
+			//
+			//	return OBJ_WALL;
 
-				return OBJ_WALL;
-
-			else if (tilenum == 3 && frameX == 18 && frameY == 1)
+			if (tilenum == 3 && frameX == 18 && frameY == 1)
 			{
 				return OBJ_WATER;
 			}
+			else if (tilenum == 3 && frameX == 18 && frameY == 0)
+			{
+				return OBJ_SHIRT;
+			}
+			else if (tilenum == 5 && frameX == 0 && frameY == 0)
+			{
+				return OBJ_FIRE;
+			}
+			else
+				return OBJ_WALL;
 		}
 	}
 }

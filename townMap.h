@@ -22,6 +22,9 @@ private:
 
 	int _index;
 	int _count;
+
+	int _index2;
+	int _count2;
 public:
 	townMap();
 	~townMap();
@@ -33,6 +36,7 @@ public:
 	void load();
 	void tileDraw();
 	void riverMove();
+	void shirtMove();
 	unsigned int getTileX() { return TILEX; }
 	unsigned int getTileY() { return TILEY; }
 

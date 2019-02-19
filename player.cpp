@@ -657,7 +657,7 @@ void player::tileCheck()
 
 		for (int i = 0; i < 1; ++i)
 		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_FIRE)
 			{
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
@@ -674,7 +674,7 @@ void player::tileCheck()
 
 		for (int i = 0; i < 1; ++i)
 		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_FIRE)
 			{
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
@@ -691,7 +691,7 @@ void player::tileCheck()
 
 		for (int i = 0; i < 1; ++i)
 		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_FIRE)
 			{
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
@@ -708,7 +708,7 @@ void player::tileCheck()
 
 		for (int i = 0; i < 1; ++i)
 		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL)
+			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_FIRE)
 			{
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
@@ -743,7 +743,8 @@ void player::townCheck()
 
 		for (int i = 0; i < 1; ++i)
 		{
-			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WATER)
+			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WATER
+				|| _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_SHIRT)
 			{
 				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
@@ -761,7 +762,8 @@ void player::townCheck()
 
 		for (int i = 0; i < 1; ++i)
 		{
-			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WATER)
+			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WATER
+				|| _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_SHIRT)
 			{
 				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
@@ -778,7 +780,8 @@ void player::townCheck()
 
 		for (int i = 0; i < 1; ++i)
 		{
-			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WATER)
+			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WATER
+				|| _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_SHIRT)
 			{
 				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
@@ -795,7 +798,8 @@ void player::townCheck()
 
 		for (int i = 0; i < 1; ++i)
 		{
-			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WATER)
+			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WATER
+				|| _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_SHIRT)
 			{
 				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{

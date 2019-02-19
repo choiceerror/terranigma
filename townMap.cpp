@@ -17,6 +17,7 @@ HRESULT townMap::init()
 	_image = IMAGEMANAGER->findImage("townTile");
 
 	_index = 18;
+	_index2 = 18;
 	load();
 
 
@@ -30,6 +31,7 @@ void townMap::release()
 void townMap::update()
 {
 	riverMove();
+	shirtMove();
 }
 
 void townMap::render(float cameraX, float cameraY)
@@ -80,7 +82,7 @@ void townMap::render(float cameraX, float cameraY)
 
 			if (_vvMap[i][j]->a == 3)
 			{
-				if (_vvMap[i][j]->obj != OBJ_WATER)
+				if (_vvMap[i][j]->obj != OBJ_WATER && _vvMap[i][j]->obj != OBJ_SHIRT)
 				{
 					IMAGEMANAGER->frameRender("townTile", getMemDC(),
 						_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
@@ -89,6 +91,10 @@ void townMap::render(float cameraX, float cameraY)
 				if (_vvMap[i][j]->obj == OBJ_WATER)
 				{
 					_image->frameRender(getMemDC(), _vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY, _index, 1);
+				}
+				if (_vvMap[i][j]->obj == OBJ_SHIRT)
+				{
+					_image->frameRender(getMemDC(), _vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY, _index2, 0);
 				}
 			}
 
@@ -188,6 +194,19 @@ void townMap::riverMove()
 		if (_index > 20) _index = 18;
 
 		_count = 0;
+	}
+
+}
+
+void townMap::shirtMove()
+{
+	_count2++;
+	if (_count2 % 12 == 0)
+	{
+		_index2++;
+		if (_index2 > 21) _index2 = 18;
+
+		_count2 = 0;
 	}
 
 }

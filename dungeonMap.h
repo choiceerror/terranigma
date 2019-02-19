@@ -19,6 +19,8 @@ private:
 	unsigned int TILEX;
 	unsigned int TILEY;
 
+	image* _image;
+
 	DWORD* _attribute;
 	DUNGEON_FLOOR _dungeonFloor; //´øÀüÃþ¼ö
 
@@ -26,6 +28,9 @@ private:
 	int tiy;
 	int obx;
 	int oby;
+
+	int _index;
+	int _count;
 
 public:
 	dungeonMap();
@@ -37,7 +42,7 @@ public:
 	void render(float cameraX, float cameraY);
 	void load(DUNGEON_FLOOR floor);
 	void tileDraw(float cameraX, float cameraY);
-
+	void fireAni();
 	unsigned int getTileX() { return TILEX; }
 	unsigned int getTileY() { return TILEY; }
 
