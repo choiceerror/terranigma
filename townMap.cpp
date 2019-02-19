@@ -36,6 +36,13 @@ void townMap::render(float cameraX, float cameraY)
 			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
 
+			if ((_vvMap[i][j]->a == 0))
+			{
+				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê4", getMemDC(),
+					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+					_vvMap[i][j]->FrameX, _vvMap[i][j]->FrameY);
+			}
+
 			if ((_vvMap[i][j]->a == 3))
 			{
 				IMAGEMANAGER->frameRender("townTile", getMemDC(),
@@ -57,6 +64,12 @@ void townMap::render(float cameraX, float cameraY)
 			if (_vvMap[i][j]->rc.top - cameraY + 32 < 0) continue;
 			if (_vvMap[i][j]->rc.top - cameraY > 768) continue;
 
+			if (_vvMap[i][j]->a == 0)
+			{
+				IMAGEMANAGER->frameRender("Å¸ÀÏ¸Ê4", getMemDC(),
+					_vvMap[i][j]->rc.left - cameraX, _vvMap[i][j]->rc.top - cameraY,
+					_vvMap[i][j]->objFrameX, _vvMap[i][j]->objFrameY);
+			}
 
 			if (_vvMap[i][j]->a == 3)
 			{

@@ -20,6 +20,7 @@ private:
 	messageSpear* _messageSpear;
 
 	RECT _escape;
+	RECT _house;
 
 	int _alphaValue;
 	bool _once;
@@ -28,6 +29,10 @@ private:
 	bool _worldMapIn;
 
 	bool _fadeOut;
+
+	int _houseAlpha;
+	int _bedAlpha;
+	bool _houseAlphaBlend;
 
 public:
 	town();
@@ -43,5 +48,6 @@ public:
 	void worldMapIn();
 	void playerSave();
 	void townIn();
+	void houseCollision();
 };
 

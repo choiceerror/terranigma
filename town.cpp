@@ -20,8 +20,12 @@ HRESULT town::init()
 	IMAGEMANAGER->addFrameImage("elder", "image/Àå·Î.bmp", 330, 40, 11, 1, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("townHuman", "image/townHuman.bmp", 700, 250, 14, 5, true, RGB(255, 0, 255));
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
+	IMAGEMANAGER->findImage("townTile")->setAlpahBlend(true);
+	IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->setAlpahBlend(true);
 
 	_alphaValue = 255;
+	_houseAlpha = 255;
+	_bedAlpha = 0;
 
 	_player = new player;
 	_camera = new camera;
@@ -53,6 +57,12 @@ HRESULT town::init()
 	_once = false;
 	_worldMapIn = false;
 	_fadeOut = true;
+	_houseAlphaBlend = false;
+
+	_house = RectMake(672, 1280, 352, 256);
+
+	_player->setPlayerPosX(704);
+	_player->setPlayerPosY(1792);
 
 
 	return S_OK;
@@ -69,6 +79,7 @@ void town::update()
 	_npcManager->update(2);
 	_npcManager->aiBirdUpdate();
 	worldMapIn();
+	houseCollision();
 	_player->update(false, 2);
 }
 
@@ -77,6 +88,27 @@ void town::render()
 	_town->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY(), false);
 	_npcManager->render(_camera->getCameraX(), _camera->getCameraY());
+
+	for (int i = 0; i < 7; ++i)
+	{
+		for (int j = 0; j < 11; ++j)
+		{
+			IMAGEMANAGER->findImage("townTile")->alphaFrameRender(getMemDC(), 672 + 32 * j - _camera->getCameraX(), 1280 + 32 * i - _camera->getCameraY(), 1 + j, 4 + i, _houseAlpha);
+		}
+	}
+
+	for (int i = 0; i < 2; ++i)
+	{
+		for (int j = 0; j < 2; ++j)
+		{
+			IMAGEMANAGER->findImage("townTile")->alphaFrameRender(getMemDC(), 704 + 32 * j - _camera->getCameraX(), 1504 + 32 * i - _camera->getCameraY(), 2 + j, 11 + i, _houseAlpha);
+			IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->alphaFrameRender(getMemDC(), 960 + 32 * j - _camera->getCameraX(), 1408 + 32 * i - _camera->getCameraY(), 21 + j, 5 + i, _bedAlpha);
+		}
+	}
+
+
+	
+
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_messageSpear->render();
 
@@ -166,6 +198,68 @@ void town::townIn()
 		{
 			_alphaValue = 0;
 			_fadeOut = false;
+		}
+	}
+}
+
+void town::houseCollision()
+{
+	RECT temp;
+
+	if (IntersectRect(&temp, &_player->getPlayerRc(), &_house))
+	{
+		_houseAlphaBlend = true;
+	}
+	else
+	{
+		_houseAlphaBlend = false;
+	}
+
+	if (_houseAlphaBlend)
+	{
+		if (_houseAlpha > 0)
+		{
+			_houseAlpha -= 5;
+		}
+
+		if (_houseAlpha < 0)
+		{
+			_houseAlpha = 0;
+		}
+
+		if (_bedAlpha < 255)
+		{
+			_bedAlpha += 5;
+		}
+
+		if (_bedAlpha >= 255)
+		{
+			_bedAlpha = 255;
+		}
+
+
+	}
+	else
+	{
+		if (_houseAlpha < 255)
+		{
+			_houseAlpha += 5;
+		}
+
+		if (_houseAlpha >= 255)
+		{
+			_houseAlpha = 255;
+		}
+
+
+		if (_bedAlpha > 0)
+		{
+			_bedAlpha -= 5;
+		}
+
+		if (_bedAlpha < 0)
+		{
+			_bedAlpha = 0;
 		}
 	}
 }
