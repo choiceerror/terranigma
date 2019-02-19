@@ -25,6 +25,7 @@ HRESULT IntroDungeon::init()
 	_camera = new camera;
 	_player = new player;
 	_clock = new ClockFadeOut;
+	_messageSpear = new messageSpear;
 
 	_camera->init(GAMESIZEX, GAMESIZEY, GAMESIZEX, 2490);
 	_player->init();
@@ -98,6 +99,7 @@ HRESULT IntroDungeon::init()
 	_changScene = false;
 	_changScene2 = false;
 	_alphaBlend = false;
+	_playerTalkKey = false;
 
 	introDungeonLoad();
 	//playerLoad();
@@ -154,7 +156,10 @@ void IntroDungeon::update()
 		}
 	}
 
-
+	if (KEYMANAGER->isOnceKeyDown('Z'))
+	{
+		_playerTalkKey = true;
+	}
 
 	if (KEYMANAGER->isOnceKeyDown('Q'))
 	{
@@ -346,6 +351,12 @@ void IntroDungeon::render()
 
 	//sprintf_s(str, "플레이어X :%f, 플레이어Y : %f", _player->getPlayerX(), _player->getPlayerY());
 	//TextOut(getMemDC(), 120, 100, str, strlen(str));
+
+	if (_guardianOn)
+	{
+		_messageSpear->guardianMessageRender(1, _playerTalkKey);
+		_playerTalkKey = false;
+	}
 }
 
 void IntroDungeon::linearMove()

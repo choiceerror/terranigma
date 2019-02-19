@@ -3,6 +3,7 @@
 #include "player.h"
 #include "camera.h"
 #include "ClockFadeOut.h"
+#include "messageSpear.h"
 
 enum GUARDIANDIRECTION
 {
@@ -27,6 +28,7 @@ private:
 	POINT _doorPos;
 	image* _guardian;
 	animation* _guardianAni;
+	messageSpear* _messageSpear;
 
 	RECT _escapeRc;
 	bool _escape;
@@ -67,6 +69,8 @@ private:
 
 	bool _changScene;
 	bool _changScene2;
+
+	bool _playerTalkKey;
 
 public:
 	IntroDungeon();
