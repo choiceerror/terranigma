@@ -106,12 +106,8 @@ void town::render()
 		}
 	}
 
-
-	
-
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_messageSpear->render();
-
 
 	//Rectangle(getMemDC(), _escape);
 }

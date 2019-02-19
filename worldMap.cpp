@@ -45,10 +45,10 @@ HRESULT worldMap::init()
 	_fadeOut = true;
 	_changeScene = false;
 
-	playerWorldLoad();
-
 	_dungeon = RectMake(512, 832, 32, 64);
 	_town = RectMake(1440, 1248, 64, 64);
+
+	playerWorldLoad();
 
 	return S_OK;
 }
@@ -171,7 +171,15 @@ void worldMap::playerWorldLoad()
 	vector<string> vStr;
 	vStr = TXTDATA->txtLoad("saveFile/playerScene.txt");
 
-	_player->setPlayerCurrentScene((PLAYERSCENE)atoi(vStr[0].c_str()));
+	if (vStr.size() > 5)
+	{
+		_player->setPlayerCurrentScene((PLAYERSCENE)atoi(vStr[0].c_str()));
+	}
+	else
+	{
+		_player->setPlayerCurrentScene(PLAYERSCENE::TOWN);
+	}
+
 
 	if (_player->getPlayerCurrentScene() == PLAYERSCENE::INTRO_DUNGEON)
 	{
