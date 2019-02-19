@@ -30,6 +30,8 @@ private:
 	float _once;
 	int _alphaValue;
 	bool _changeScene;
+	bool _dungeonUpbool;
+	bool _dungeonDownbool;
 
 public:
 	dungeon();

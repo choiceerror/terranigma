@@ -50,6 +50,9 @@ HRESULT dungeon::init()
 	_worldTime = 0;
 	_once = false;
 
+	_dungeonUpbool = false;
+	_dungeonDownbool = false;
+
 	playerSceneLoad();
 
 	return S_OK;
@@ -139,61 +142,75 @@ void dungeon::dungeonChange()
 	{
 		if (IntersectRect(&_temp, &_player->getPlayerRc(), &_dungeonDown))
 		{
-			_player->setPlayerUnMove(true);
-
-			if (_player->getPlayerY() < _dungeonDown.top)
-			{
-				_player->setPlayerPosY(_player->getPlayerY() + 3);
-			}
-
-			if (!_once)
-			{
-				_worldTime = TIMEMANAGER->getWorldTime();
-			}
-	
-			if (_alphaValue < 255)
-			{
-				_alphaValue += 4;
-			}
-			if (_alphaValue > 255)
-			{
-				_alphaValue = 255;
-			}
-	
-			if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
-			{
-				_changeScene = true;
-				_player->playerSave();
-				playerSceneSave();
-				SCENEMANAGER->changeScene("introDungeon");
-			}
-	
-			_once = true;
+			_dungeonDownbool = true;
 		}
 	}
+
+	if (_dungeonDownbool)
+	{
+		_player->setPlayerUnMove(true);
+
+		if (_player->getPlayerY() < _dungeonDown.top)
+		{
+			_player->setPlayerPosY(_player->getPlayerY() + 3);
+		}
+
+		if (!_once)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+		}
+
+		if (_alphaValue < 255)
+		{
+			_alphaValue += 4;
+		}
+		if (_alphaValue > 255)
+		{
+			_alphaValue = 255;
+		}
+
+		if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_changeScene = true;
+			_player->playerSave();
+			playerSceneSave();
+			SCENEMANAGER->changeScene("introDungeon");
+		}
+
+		_once = true;
+	}
+
 
 	//던전 올라갈때
 	if (!_changeScene)
 	{
 		if (IntersectRect(&_temp, &_player->getPlayerRc(), &_dungeonUp))
 		{
-			_player->setPlayerUnMove(true);
-			_clockFade->setClockFadeOut(true);
-			if (!_once)
-			{
-				_worldTime = TIMEMANAGER->getWorldTime();
-			}
-
-			if (1.3f + _worldTime <= TIMEMANAGER->getWorldTime())
-			{
-				_changeScene = true;
-				_player->playerSave();
-				playerSceneSave();
-				SCENEMANAGER->changeScene("dungeon2F");
-			}
-
-			_once = true;
+			_dungeonUpbool = true;
 		}
+	}
+
+	if (_dungeonUpbool)
+	{
+		_player->setTileCheck(false);
+		_player->setPlayerUnMove(true);
+		_clockFade->setClockFadeOut(true);
+		_player->setPlayerPosY(_player->getPlayerY() - 3);
+
+		if (!_once)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+		}
+
+		if (1.3f + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_changeScene = true;
+			_player->playerSave();
+			playerSceneSave();
+			SCENEMANAGER->changeScene("dungeon2F");
+		}
+
+		_once = true;
 	}
 
 }
