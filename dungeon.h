@@ -46,6 +46,7 @@ public:
 	void playerSceneSave();
 	void playerSceneLoad();
 
+
 	void itemRandomDrop(); //랜덤 아이템드랍
 	void playerItemGet(); //플레이어 아이템 얻는 함수
 

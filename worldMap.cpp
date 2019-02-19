@@ -48,7 +48,11 @@ HRESULT worldMap::init()
 	_dungeon = RectMake(512, 832, 32, 64);
 	_town = RectMake(1440, 1248, 64, 64);
 
-	playerWorldLoad();
+	_playerWorldMap->setPlayerX(1472.f);
+	_playerWorldMap->setPlayerY(1276.f);
+
+	//playerWorldLoad();
+	playerSceneLoad();
 
 	return S_OK;
 }
@@ -110,7 +114,7 @@ void worldMap::render()
 	PatBlt(IMAGEMANAGER->findImage("fake3DHigh")->getMemDC(), 0, 0, GAMESIZEX, 80, NULL);
 
 	//char str[100];
-	//sprintf_s(str, "%d ", a);
+	//sprintf_s(str, "%f ", a);
 	//TextOut(getMemDC(), 30, 100, str, strlen(str));
 
 }
@@ -171,7 +175,7 @@ void worldMap::playerWorldLoad()
 	vector<string> vStr;
 	vStr = TXTDATA->txtLoad("saveFile/playerScene.txt");
 
-	if (vStr.size() > 5)
+	if (vStr.size() == 1)
 	{
 		_player->setPlayerCurrentScene((PLAYERSCENE)atoi(vStr[0].c_str()));
 	}
@@ -179,7 +183,6 @@ void worldMap::playerWorldLoad()
 	{
 		_player->setPlayerCurrentScene(PLAYERSCENE::TOWN);
 	}
-
 
 	if (_player->getPlayerCurrentScene() == PLAYERSCENE::INTRO_DUNGEON)
 	{
@@ -192,7 +195,6 @@ void worldMap::playerWorldLoad()
 		_playerWorldMap->setPlayerX(1472.f);
 		_playerWorldMap->setPlayerY(1276.f);
 	}
-
 }
 
 void worldMap::playerWorldSave()
@@ -231,7 +233,8 @@ void worldMap::playerChangeScene()
 				if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
 				{
 					_changeScene = true;
-					playerWorldSave();
+					playerSceneSave();
+					//playerWorldSave();
 					SCENEMANAGER->changeScene("town");
 				}
 			}
@@ -255,13 +258,63 @@ void worldMap::playerChangeScene()
 
 					if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
 					{
-						playerWorldSave();
+						playerSceneSave();
+						//playerWorldSave();
 						SCENEMANAGER->changeScene("introDungeon");
 					}
 				}
 			}
 		}
 	}
+}
+
+void worldMap::playerSceneSave()
+{
+	HANDLE file;
+	DWORD save;
+
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	_player->setPlayerCurrentScene(PLAYERSCENE::WORLDMAP);
+
+	int scene = (int)_player->getPlayerCurrentScene();
+
+	WriteFile(file, &scene, sizeof(int), &save, NULL);
+
+	CloseHandle(file);
+}
+
+void worldMap::playerSceneLoad()
+{
+	HANDLE file;
+	DWORD load;
+
+	int scene;
+
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, &scene, sizeof(int), &load, NULL);
+
+	if (scene > 7)
+	{
+		scene = (int)PLAYERSCENE::TOWN;
+	}
+
+	_player->setPlayerCurrentScene((PLAYERSCENE)scene);
+
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::INTRO_DUNGEON)
+	{
+		_playerWorldMap->setPlayerX(520.f);
+		_playerWorldMap->setPlayerY(896.f);
+	}
+
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::TOWN)
+	{
+		_playerWorldMap->setPlayerX(1472.f);
+		_playerWorldMap->setPlayerY(1276.f);
+	}
+
+	CloseHandle(file);
 }
 
 

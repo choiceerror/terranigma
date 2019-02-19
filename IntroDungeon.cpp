@@ -100,8 +100,8 @@ HRESULT IntroDungeon::init()
 	_alphaBlend = false;
 
 	introDungeonLoad();
-	playerLoad();
-
+	//playerLoad();
+	playerSceneLoad();
 	return S_OK;
 }
 
@@ -277,6 +277,13 @@ void IntroDungeon::update()
 		}
 	}
 
+
+
+
+
+
+
+	//==============밑에 작성 금지===============
 	linearMove();
 	if (!_changScene)
 	{
@@ -368,6 +375,7 @@ void IntroDungeon::linearMove()
 		{
 			_changScene = true;
 			introDungeonSave();
+			playerSceneSave();
 			SCENEMANAGER->changeScene("dungeon");
 		}
 
@@ -398,7 +406,8 @@ void IntroDungeon::escapeDungeon()
 
 		if (1.5f + _worldTime <= TIMEMANAGER->getWorldTime())
 		{
-			playerSave();
+			playerSceneSave();
+			//playerSave();
 			_changScene2 = true;
 			SCENEMANAGER->changeScene("worldMap");
 		}
@@ -419,6 +428,56 @@ void IntroDungeon::playerSave()
 	vStr.push_back(itoa((int)_player->getPlayerCurrentScene(), temp, 10));
 
 	TXTDATA->txtSave("saveFile/playerScene.txt", vStr);
+}
+
+void IntroDungeon::playerSceneSave()
+{
+	HANDLE file;
+	DWORD save;
+
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	_player->setPlayerCurrentScene(PLAYERSCENE::INTRO_DUNGEON);
+
+	int scene = (int)_player->getPlayerCurrentScene();
+
+	WriteFile(file, &scene, sizeof(int), &save, NULL);
+
+	CloseHandle(file);
+}
+
+void IntroDungeon::playerSceneLoad()
+{
+	HANDLE file;
+	DWORD load;
+
+	int scene;
+
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, &scene, sizeof(int), &load, NULL);
+
+	if (scene > 7)
+	{
+		scene = (int)PLAYERSCENE::WORLDMAP;
+	}
+
+	_player->setPlayerCurrentScene((PLAYERSCENE)scene);
+
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::DUNGEON_1F)
+	{
+		_player->setPlayerDirection(DOWN);
+		_player->setPlayerPosY(_player->getPlayerY() - 150);
+	}
+
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::WORLDMAP)
+	{
+		_player->setPlayerDirection(UP);
+		_player->setPlayerPosY(_player->getPlayerY());
+	}
+
+	CloseHandle(file);
+
 }
 
 void IntroDungeon::introDungeonSave()

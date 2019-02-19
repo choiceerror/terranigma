@@ -46,5 +46,9 @@ public:
 	void playerWorldSave();
 
 	void playerChangeScene();
+
+	void playerSceneSave();
+	void playerSceneLoad();
+
 };
 

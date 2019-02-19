@@ -61,6 +61,10 @@ void dungeon2F::update()
 	itemRandomDrop();
 	playerItemGet();
 	_clockFade->update();
+
+
+
+	//==============밑에 작성 금지===============
 	_player->update(false, 1);
 }
 
@@ -71,6 +75,55 @@ void dungeon2F::render()
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
 	_clockFade->render();
+}
+
+void dungeon2F::playerSceneSave()
+{
+	HANDLE file;
+	DWORD save;
+
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	_player->setPlayerCurrentScene(PLAYERSCENE::DUNGEON_2F);
+
+	int scene = (int)_player->getPlayerCurrentScene();
+
+	WriteFile(file, &scene, sizeof(int), &save, NULL);
+
+	CloseHandle(file);
+}
+
+void dungeon2F::playerSceneLoad()
+{
+	HANDLE file;
+	DWORD load;
+
+	int scene;
+
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, &scene, sizeof(int), &load, NULL);
+
+	if (scene > 7)
+	{
+		scene = (int)PLAYERSCENE::DUNGEON_1F;
+	}
+
+	_player->setPlayerCurrentScene((PLAYERSCENE)scene);
+
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::DUNGEON_1F)
+	{
+		//_playerWorldMap->setPlayerX(520.f);
+		//_playerWorldMap->setPlayerY(896.f);
+	}
+
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::BOSS)
+	{
+		//_playerWorldMap->setPlayerX(1472.f);
+		//_playerWorldMap->setPlayerY(1276.f);
+	}
+
+	CloseHandle(file);
 }
 
 void dungeon2F::itemRandomDrop()

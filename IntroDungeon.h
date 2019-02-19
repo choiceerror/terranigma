@@ -83,6 +83,9 @@ public:
 
 	void playerSave();
 
+	void playerSceneSave();
+	void playerSceneLoad();
+
 	void introDungeonSave();
 	void introDungeonLoad();
 	void playerLoad();

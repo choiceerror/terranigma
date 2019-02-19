@@ -18,7 +18,7 @@ private:
 	image* _image;
 
 	npcManager* _npcManager;
-	
+
 	messageSpear* _messageSpear;
 
 	RECT _escape;
@@ -51,9 +51,11 @@ public:
 	void setWindowsSize(int x, int y, int width, int height);
 
 	void worldMapIn();
-	void playerSave();
 	void townIn();
-	void houseCollision();
 	void riverMove();
+	void houseCollision();
+	void playerSceneSave();
+	void playerSceneLoad();
+
 };
 

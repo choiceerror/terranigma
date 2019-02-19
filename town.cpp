@@ -22,6 +22,7 @@ HRESULT town::init()
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("townTile")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->setAlpahBlend(true);
+
 	_alphaValue = 255;
 	_houseAlpha = 255;
 	_bedAlpha = 0;
@@ -63,6 +64,7 @@ HRESULT town::init()
 	_player->setPlayerPosX(704);
 	_player->setPlayerPosY(1792);
 
+	playerSceneLoad();
 
 	return S_OK;
 }
@@ -79,10 +81,12 @@ void town::update()
 	_npcManager->aiBirdUpdate();
 	worldMapIn();
 	houseCollision();
-	_player->update(false, 2);
 	riverMove();
 
 
+
+	//==============¹Ø¿¡ ÀÛ¼º ±ÝÁö===============
+	_player->update(false, 2);
 }
 
 void town::render()
@@ -112,10 +116,12 @@ void town::render()
 	{
 		for (int j = 0; j < 3; ++j)
 		{
-			IMAGEMANAGER->findImage("townTile")->frameRender(getMemDC(), 1504 + 32 * j - _camera->getCameraX(),32 + 32 * i - _camera->getCameraY(), 18, 1);
-			
+			IMAGEMANAGER->findImage("townTile")->frameRender(getMemDC(), 1504 + 32 * j - _camera->getCameraX(), 32 + 32 * i - _camera->getCameraY(), 18, 1);
+
 		}
 	}
+
+
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_messageSpear->render();
 
@@ -152,7 +158,21 @@ void town::worldMapIn()
 	{
 		_player->setTileCheck(false);
 
-		_alphaValue += 3;
+		if (_fadeOut && _alphaValue < 255)
+		{
+			_alphaValue += 6;
+		}
+
+		if (!_fadeOut && _alphaValue < 255)
+		{
+			_alphaValue += 3;
+		}
+
+		if (_alphaValue > 255)
+		{
+			_alphaValue = 255;
+		}
+
 
 		_player->setPlayerDirection(DOWN);
 
@@ -168,7 +188,7 @@ void town::worldMapIn()
 		if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
 		{
 
-			playerSave();
+			playerSceneSave();
 
 			SCENEMANAGER->changeScene("worldMap");
 		}
@@ -178,17 +198,53 @@ void town::worldMapIn()
 	}
 }
 
-void town::playerSave()
+void town::playerSceneSave()
 {
 	_player->setPlayerCurrentScene(PLAYERSCENE::TOWN);
 
-	char temp[128];
+	int scene = (int)_player->getPlayerCurrentScene();
 
-	vector<string> vStr;
+	HANDLE file;
+	DWORD save;
 
-	vStr.push_back(itoa((int)_player->getPlayerCurrentScene(), temp, 10));
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	TXTDATA->txtSave("saveFile/playerScene.txt", vStr);
+	WriteFile(file, &scene, sizeof(int), &save, NULL);
+
+	CloseHandle(file);
+}
+
+void town::playerSceneLoad()
+{
+	HANDLE file;
+	DWORD load;
+	int scene;
+
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, &scene, sizeof(int), &load, NULL);
+
+	if (scene > 7)
+	{
+		scene = (int)PLAYERSCENE::TOWN;
+	}
+
+	_player->setPlayerCurrentScene((PLAYERSCENE)scene);
+
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::WORLDMAP)
+	{
+		_player->setPlayerDirection(UP);
+		_player->setPlayerPosX(704);
+		_player->setPlayerPosY(1792);
+	}
+
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::TOWN)
+	{
+		_player->setPlayerPosX(990);
+		_player->setPlayerPosY(1408);
+	}
+
+	CloseHandle(file);
 }
 
 void town::townIn()
@@ -205,6 +261,21 @@ void town::townIn()
 			_alphaValue = 0;
 			_fadeOut = false;
 		}
+	}
+}
+
+void town::riverMove()
+{
+	_count++;
+	if (_count % 1 == 0)
+	{
+
+		_index++;
+		IMAGEMANAGER->findImage("townTile")->SetFrameX(_index);
+
+		if (_index > 21) _index = 18;
+
+		_count = 0;
 	}
 }
 
@@ -268,20 +339,4 @@ void town::houseCollision()
 			_bedAlpha = 0;
 		}
 	}
-}
-
-void town::riverMove()
-{
-	_count++;
-	if (_count % 1 == 0)
-	{
-
-		_index++;
-		IMAGEMANAGER->findImage("townTile")->SetFrameX(_index);
-
-		if (_index > 21) _index = 18;
-
-		_count = 0;
-	}
-	
 }
