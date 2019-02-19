@@ -15,6 +15,8 @@ private:
 	camera* _camera;
 	townMap* _town;
 
+	image* _image;
+
 	npcManager* _npcManager;
 	
 	messageSpear* _messageSpear;
@@ -34,6 +36,9 @@ private:
 	int _bedAlpha;
 	bool _houseAlphaBlend;
 
+	int _index;
+	int _count;
+
 public:
 	town();
 	~town();
@@ -49,5 +54,6 @@ public:
 	void playerSave();
 	void townIn();
 	void houseCollision();
+	void riverMove();
 };
 

@@ -22,7 +22,6 @@ HRESULT town::init()
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("townTile")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->setAlpahBlend(true);
-
 	_alphaValue = 255;
 	_houseAlpha = 255;
 	_bedAlpha = 0;
@@ -81,6 +80,9 @@ void town::update()
 	worldMapIn();
 	houseCollision();
 	_player->update(false, 2);
+	riverMove();
+
+
 }
 
 void town::render()
@@ -106,6 +108,14 @@ void town::render()
 		}
 	}
 
+	for (int i = 0; i < 58; ++i)
+	{
+		for (int j = 0; j < 3; ++j)
+		{
+			IMAGEMANAGER->findImage("townTile")->frameRender(getMemDC(), 1504 + 32 * j - _camera->getCameraX(),32 + 32 * i - _camera->getCameraY(), 18, 1);
+			
+		}
+	}
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_messageSpear->render();
 
@@ -258,4 +268,20 @@ void town::houseCollision()
 			_bedAlpha = 0;
 		}
 	}
+}
+
+void town::riverMove()
+{
+	_count++;
+	if (_count % 1 == 0)
+	{
+
+		_index++;
+		IMAGEMANAGER->findImage("townTile")->SetFrameX(_index);
+
+		if (_index > 21) _index = 18;
+
+		_count = 0;
+	}
+	
 }

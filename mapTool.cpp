@@ -69,7 +69,6 @@ HRESULT mapTool::init()
 
 	for (int i = 0; i < 2; ++i)
 	{
-		tileSelect[i] = RectMakeCenter(1700 + (i * 50), 550, 30, 30);
 		SelectMap[i] = RectMakeCenter(1500 + (i * 150), 650, 30, 30);
 	}
 
@@ -275,11 +274,6 @@ void mapTool::render()
 
 
 	//==========================체크 박스 =====================================//
-	for (int i = 0; i < 2; ++i)
-	{
-		Rectangle(getMemDC(), tileSelect[i]);
-
-	}
 
 	for (int i = 0; i < 6; ++i)
 	{
@@ -287,7 +281,6 @@ void mapTool::render()
 	}
 			
 	
-
 	IMAGEMANAGER->render("save", getMemDC(), box[0].left, box[0].top);
 	IMAGEMANAGER->render("load", getMemDC(), box[1].left, box[1].top);
 	IMAGEMANAGER->render("terrain", getMemDC(), box[2].left, box[2].top);
@@ -403,23 +396,23 @@ void mapTool::render()
 
 	sprintf_s(str, "현재타일지점 : %d  %d",	 x ,y);
 	{
-		TextOut(getMemDC(), 1100, 650, str, strlen(str));
+		TextOut(getMemDC(), 1000, 580, str, strlen(str));
 	}
 
 
 	//sprintf_s(str, "첫타일  x : %d   첫타일 y : %d", _mouseIndex.x, _mouseIndex.y);
 	//TextOut(getMemDC(), 1300, 520, str, strlen(str));
 	//
-	//sprintf_s(str, "마지막타일 x : %d   마지막타일 y : %d", _tileBox.lastX, _tileBox.lastY);
-	//TextOut(getMemDC(), 1300, 550, str, strlen(str));
+	sprintf_s(str, "마지막타일 x : %d   마지막타일 y : %d", _tileBox.lastX, _tileBox.lastY);
+	TextOut(getMemDC(), 1300, 550, str, strlen(str));
 	//
 	//sprintf_s(str, "뺀 타일 x : %d   뺀 타일 y : %d", abs(_tileBox.q), abs(_tileBox.w));
 	//TextOut(getMemDC(), 1300, 580, str, strlen(str));
 
 	sprintf_s(str, "타일X개수 : %d", TILEX);
-	TextOut(getMemDC(), 1100, 530, str, strlen(str));
+	TextOut(getMemDC(), 1000, 530, str, strlen(str));
 	sprintf_s(str, "타일Y개수 : %d", TILEY);
-	TextOut(getMemDC(), 1100, 550, str, strlen(str));
+	TextOut(getMemDC(), 1000, 550, str, strlen(str));
 
 	if (selectNumber == 0)
 	{
@@ -1578,6 +1571,13 @@ OBJECT mapTool::objSelect(int frameX, int frameY)
 			if (frameX == i && frameY == j)
 
 				return OBJ_WALL;
+
+			//else if (tilenum == 3 && frameX == 18 && frameY == 1)
+			//{
+			//	return OBJ_WATER;
+			//}
+			
+			
 		}
 	}
 }
