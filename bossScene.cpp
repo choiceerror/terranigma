@@ -15,6 +15,8 @@ HRESULT bossScene::init()
 {
 	setWindowsSize(WINSTARTX, WINSTARTY, GAMESIZEX, GAMESIZEY);
 
+	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
+
 	_enemyManager = new enemyManager;
 	_player = new player;
 	_camera = new camera;
@@ -36,11 +38,20 @@ HRESULT bossScene::init()
 	_enemyManager->setEnemy();
 
 	//플레이어 초기위치
-	_player->setPlayerPosX(1280 / 2 - 50);
-	_player->setPlayerPosY(1000);
+	_player->setPlayerPosX(574);
+	_player->setPlayerPosY(2464);
+	_player->setPlayerDirection(UP);
 
 	_camera->init(GAMESIZEX, GAMESIZEY, 1280, 2560);
+	_dungeonDown = RectMake(512, 2528, 128, 32);
 
+	_isAlphaOn = false;
+	_isAlphaOut = true;
+	_alphaValue = 255;
+
+	_isDungeonDown = false;
+	_once = false;
+	_worldTime = 0;
 
 	return S_OK;
 }
@@ -55,11 +66,16 @@ void bossScene::release()
 
 void bossScene::update()
 {
+	alphaBlend();
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
-	_player->update(true, 1);
 	_itemManager->update();
 	_enemyManager->update();
 	_dungeonBossMap->update();
+	dungeonChange();
+	if (!_isDungeonDown)
+	{
+		_player->update(true, 1);
+	}
 }
 
 void bossScene::render()
@@ -69,6 +85,92 @@ void bossScene::render()
 	_enemyManager->bossBulletDraw(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
+
+	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
+}
+
+void bossScene::dungeonChange()
+{
+	RECT temp;
+
+	if (IntersectRect(&temp, &_player->getPlayerRc(), &_dungeonDown))
+	{
+		_isDungeonDown = true;
+		_isAlphaOn = true;
+	}
+	if (_isDungeonDown)
+	{
+		if (!_once)
+		{
+			_worldTime = TIMEMANAGER->getWorldTime();
+		}
+
+		_player->setPlayerUnMove(true);
+		_player->setTileCheck(false);
+		_player->setPlayerDirection(DOWN);
+		_player->setPlayerPosY(_player->getPlayerY() + 3);
+
+		if (1.4 + _worldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_isDungeonDown = true;
+			playerSceneSave();
+			SCENEMANAGER->changeScene("dungeon2F");
+		}
+
+		_once = true;
+	}
+}
+
+void bossScene::alphaBlend()
+{
+	if (_isAlphaOut)
+	{
+		if (_alphaValue > 0)
+		{
+			_alphaValue -= 3;
+		}
+
+		if (_alphaValue <= 0)
+		{
+			_isAlphaOut = false;
+		}
+	}
+
+	if (_isAlphaOn)
+	{
+		if (_alphaValue < 255)
+		{
+			_alphaValue += 3;
+		}
+
+		if (_alphaValue > 255)
+		{
+			_alphaValue = 255;
+		}
+	}
+
+	if (_isAlphaOut && _isAlphaOut)
+	{
+		_alphaValue -= 3;
+	}
+}
+
+void bossScene::playerSceneSave()
+{
+	HANDLE file;
+	DWORD save;
+	
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	int scene;
+
+	_player->setPlayerCurrentScene(PLAYERSCENE::BOSS);
+
+	scene = (int)_player->getPlayerCurrentScene();
+
+	WriteFile(file, &scene, sizeof(int), &save, NULL);
+
+	CloseHandle(file);
 }
 
 void bossScene::setWindowsSize(int x, int y, int width, int height)

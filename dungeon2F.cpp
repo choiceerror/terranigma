@@ -35,6 +35,9 @@ HRESULT dungeon2F::init()
 	_enemyManager->setEnemy();
 	_clockFade->init();
 
+	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
+
+	_alphaValue = 0;
 	_goal.x = 1000.f;
 	_goal.y = 30.f;
 
@@ -55,6 +58,7 @@ HRESULT dungeon2F::init()
 	_once = false;
 	_dungeonDownBool = false;
 	_dungeonUpBool = false;
+	_alphaBlendOut = false;
 
 	playerSceneLoad();
 
@@ -79,7 +83,7 @@ void dungeon2F::update()
 	itemRandomDrop();
 	playerItemGet();
 	_clockFade->update();
-
+	alphaBlend();
 
 	//==============밑에 작성 금지===============
 	dungeonChange();
@@ -111,6 +115,7 @@ void dungeon2F::render()
 		}
 	}
 
+	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_clockFade->render();
 }
 
@@ -158,8 +163,11 @@ void dungeon2F::playerSceneLoad()
 	if (_player->getPlayerCurrentScene() == PLAYERSCENE::BOSS)
 	{
 		_player->setPlayerDirection(DOWN);
-		_player->setPlayerPosX(832);
+		_player->setPlayerPosX(862);
 		_player->setPlayerPosY(192);
+		_clockFade->setClockFadeIn(false);
+		_alphaValue = 255;
+		_alphaBlendOut = true;
 	}
 
 	CloseHandle(file);
@@ -185,7 +193,17 @@ void dungeon2F::dungeonChange()
 		}
 		
 
-		_clockFade->setClockFadeOut(true);
+		//_clockFade->setClockFadeOut(true);
+
+		if (_alphaValue < 255)
+		{
+			_alphaValue += 3;
+		}
+
+		if (_alphaValue > 255)
+		{
+			_alphaValue = 255;
+		}
 
 		_player->setTileCheck(false);
 		_player->setPlayerUnMove(true);
@@ -239,6 +257,28 @@ void dungeon2F::dungeonChange()
 		}
 	}
 
+}
+
+void dungeon2F::alphaBlend()
+{
+	if (_alphaBlendOut)
+	{
+		if (_alphaValue > 0)
+		{
+			_alphaValue -= 3;
+		}
+
+		if (_alphaValue <= 0)
+		{
+			_alphaValue = 0;
+			_alphaBlendOut = false;
+		}
+	}
+
+	if (_alphaBlendOut && _dungeonUpBool)
+	{
+		_alphaValue += 3;
+	}
 }
 
 void dungeon2F::itemRandomDrop()

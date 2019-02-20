@@ -37,7 +37,9 @@ private:
 	bool _dungeonDownBool;
 	bool _dungeonUpBool;
 
+	int _alphaValue;
 
+	bool _alphaBlendOut;
 
 public:
 	dungeon2F();
@@ -52,6 +54,8 @@ public:
 	void playerSceneLoad();
 
 	void dungeonChange();
+
+	void alphaBlend();
 
 	void itemRandomDrop(); //랜덤 아이템드랍
 	void playerItemGet(); //플레이어 아이템 얻는 함수
