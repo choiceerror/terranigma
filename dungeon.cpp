@@ -226,7 +226,6 @@ void dungeon::dungeonChange()
 			_changeScene = true;
 			_player->playerSave();
 			playerSceneSave();
-			SOUNDMANAGER->stop("theTower");
 			SCENEMANAGER->changeScene("dungeon2F");
 		}
 
