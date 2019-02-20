@@ -104,6 +104,9 @@ HRESULT IntroDungeon::init()
 	introDungeonLoad();
 	//playerLoad();
 	playerSceneLoad();
+
+	_player->setPlayerCurrentScene(PLAYERSCENE::INTRO_DUNGEON);
+
 	return S_OK;
 }
 
@@ -343,8 +346,8 @@ void IntroDungeon::render()
 	//Rectangle(getMemDC(), _introDungeonPlayerRc);
 
 	char str[128];
-	sprintf_s(str, "%d", _twice);
-	TextOut(getMemDC(), 100, 280, str, strlen(str));
+	//sprintf_s(str, "%d", _twice);
+	//TextOut(getMemDC(), 100, 280, str, strlen(str));
 
 	//sprintf_s(str, "%d", _clock->getClockFadeIn());
 	//TextOut(getMemDC(), 100, 100, str, strlen(str));
@@ -447,8 +450,6 @@ void IntroDungeon::playerSceneSave()
 	DWORD save;
 
 	file = CreateFile("saveFile/playerScene.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	_player->setPlayerCurrentScene(PLAYERSCENE::INTRO_DUNGEON);
 
 	int scene = (int)_player->getPlayerCurrentScene();
 

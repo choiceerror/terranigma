@@ -105,8 +105,8 @@ void townMap::render(float cameraX, float cameraY)
 
 	char str[128];
 
-	sprintf_s(str, "오브x:%d 오브y:%d  지형x:%d 지형y:%d", obx, oby, tix, tiy);
-	TextOut(getMemDC(), 600, 500, str, strlen(str));
+	//sprintf_s(str, "오브x:%d 오브y:%d  지형x:%d 지형y:%d", obx, oby, tix, tiy);
+	//TextOut(getMemDC(), 600, 500, str, strlen(str));
 }
 
 void townMap::load()

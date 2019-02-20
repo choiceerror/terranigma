@@ -27,7 +27,9 @@ HRESULT ui::init()
 	_inventory = new Inventory;
 	_inventory->init();
 
-	
+	_player = new player;
+	_player->init();
+
 	dataLoad();
 
 	//아이템 셋팅
@@ -84,12 +86,34 @@ void ui::update()
 	//방이동
 	placeChange();
 
-
-
 	if (KEYMANAGER->isOnceKeyDown(VK_SHIFT))
 	{
 		_inventory->inventorySave();
-		SCENEMANAGER->changeScene("dungeon");
+
+		if (_player->getPlayerCurrentScene() == PLAYERSCENE::TOWN)
+		{
+			SCENEMANAGER->changeScene("town");
+		}
+		else if (_player->getPlayerCurrentScene() == PLAYERSCENE::WORLDMAP)
+		{
+			SCENEMANAGER->changeScene("worldMap");
+		}
+		else if (_player->getPlayerCurrentScene() == PLAYERSCENE::INTRO_DUNGEON)
+		{
+			SCENEMANAGER->changeScene("introDungeon");
+		}
+		else if (_player->getPlayerCurrentScene() == PLAYERSCENE::DUNGEON_1F)
+		{
+			SCENEMANAGER->changeScene("dungeon");
+		}
+		else if (_player->getPlayerCurrentScene() == PLAYERSCENE::DUNGEON_2F)
+		{
+			SCENEMANAGER->changeScene("dungeon2F");
+		}
+		else if (_player->getPlayerCurrentScene() == PLAYERSCENE::BOSS)
+		{
+			SCENEMANAGER->changeScene("bossScene");
+		}
 	}
 
 	//===============지울것================

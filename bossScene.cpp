@@ -38,9 +38,9 @@ HRESULT bossScene::init()
 	_enemyManager->setEnemy();
 
 	//플레이어 초기위치
-	_player->setPlayerPosX(574);
-	_player->setPlayerPosY(2464);
-	_player->setPlayerDirection(UP);
+	//_player->setPlayerPosX(574);
+	//_player->setPlayerPosY(2464);
+	//_player->setPlayerDirection(UP);
 
 	_camera->init(GAMESIZEX, GAMESIZEY, 1280, 2560);
 	_dungeonDown = RectMake(512, 2528, 128, 32);
@@ -52,6 +52,10 @@ HRESULT bossScene::init()
 	_isDungeonDown = false;
 	_once = false;
 	_worldTime = 0;
+
+	playerSceneLoad();
+
+	_player->setPlayerCurrentScene(PLAYERSCENE::BOSS);
 
 	return S_OK;
 }
@@ -164,11 +168,44 @@ void bossScene::playerSceneSave()
 
 	int scene;
 
-	_player->setPlayerCurrentScene(PLAYERSCENE::BOSS);
-
 	scene = (int)_player->getPlayerCurrentScene();
 
 	WriteFile(file, &scene, sizeof(int), &save, NULL);
+
+	CloseHandle(file);
+}
+
+void bossScene::playerSceneLoad()
+{
+	HANDLE file;
+	DWORD load;
+
+	int scene;
+
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	ReadFile(file, &scene, sizeof(int), &load, NULL);
+
+	if (scene > 7)
+	{
+		scene = (int)PLAYERSCENE::DUNGEON_2F;
+	}
+
+	_player->setPlayerCurrentScene((PLAYERSCENE)scene);
+
+	if (_player->getPlayerCurrentScene() == PLAYERSCENE::DUNGEON_2F)
+	{
+		_player->setPlayerPosX(574);
+		_player->setPlayerPosY(2464);
+		_player->setPlayerDirection(UP);
+	}
+
+	if (_player->getPlayerY() < 2000)
+	{
+		_player->setPlayerPosX(574);
+		_player->setPlayerPosY(2464);
+		_player->setPlayerDirection(UP);
+	}
 
 	CloseHandle(file);
 }

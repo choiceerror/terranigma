@@ -4,7 +4,7 @@
 #include "ItemManager.h"
 #include "Inventory.h"
 #include "ClockFadeOut.h"
-
+#include "player.h"
 
 class ui : public gameNode
 {
@@ -20,6 +20,7 @@ private:
 	blackFadeOut* _blackFade;
 	ItemManager* _iMgr;
 	Inventory* _inventory;
+	player* _player;
 
 	//=====테스트용====
 	ClockFadeOut* _clockFade;

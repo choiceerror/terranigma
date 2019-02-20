@@ -173,6 +173,11 @@ public:
 	void playerLoad();
 	//던전 2층에서 떨어지는거
 	void playerDungeonFall(RECT fallRc, RECT unMoveRc);
+	//캐릭터 Ui 스텟 저장
+	void playerUiSave();
+	void playerSceneSave();
+	//캐릭터 Ui 스텟 불러오기
+	void playerUiLoad();
 
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }

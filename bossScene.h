@@ -39,6 +39,7 @@ public:
 	void alphaBlend();
 
 	void playerSceneSave();
+	void playerSceneLoad();
 
 	void setWindowsSize(int x, int y, int width, int height);
 };

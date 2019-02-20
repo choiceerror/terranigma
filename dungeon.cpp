@@ -40,8 +40,6 @@ HRESULT dungeon::init()
 	_clockFade->setClockFadeOut(false);
 	_clockFade->setClockFadeIn(true);
 
-	_dungeonUp = RectMake(416, 0, 192, 50);
-	_dungeonDown = RectMake(352, 3200 - 278, 320, 64);
 
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 	_alphaValue = 0;
@@ -53,11 +51,17 @@ HRESULT dungeon::init()
 	_dungeonUpbool = false;
 	_dungeonDownbool = false;
 
-	_player->setPlayerDirection(UP);
-	_player->setPlayerPosX(500);
-	_player->setPlayerPosY(2816);
+	_dungeonUp = RectMake(416, 0, 192, 50);
+	_dungeonDown = RectMake(352, 3200 - 180, 320, 64);
+
+	//_player->setPlayerDirection(UP);
+	//_player->setPlayerPosX(500);
+	//_player->setPlayerPosY(2816);
 
 	playerSceneLoad();
+
+	_player->setPlayerCurrentScene(PLAYERSCENE::DUNGEON_1F);
+
 
 	return S_OK;
 }
@@ -134,16 +138,15 @@ void dungeon::render()
 		//Rectangle(getMemDC(), _dungeonDown);
 		//Rectangle(getMemDC(), _dungeonUp);
 
-		//char str[100];
-		//sprintf_s(str, "%d", _player->getInventory()->getPotionCount());
-		//TextOut(getMemDC(), 120, 120, str, strlen(str));
+		char str[100];
+		//sprintf_s(str, "%f   %f",_player->getPlayerX(),_player->getPlayerY());
+		//TextOut(getMemDC(), 120, 520, str, strlen(str));
 	}
 }
 
 void dungeon::dungeonChange()
 {
-	_dungeonUp = RectMake(416, 0, 192, 50);
-	_dungeonDown = RectMake(352, 3200 - 180, 320, 64);
+	
 
 	//던전 나갈때
 	if (!_changeScene)
@@ -225,22 +228,10 @@ void dungeon::dungeonChange()
 
 void dungeon::playerSceneSave()
 {
-	//_player->setPlayerCurrentScene(PLAYERSCENE::DUNGEON_1F);
-	//
-	//char temp[128];
-	//
-	//vector<string> vStr;
-	//
-	//vStr.push_back(itoa((int)_player->getPlayerCurrentScene(), temp, 10));
-	//
-	//TXTDATA->txtSave("saveFile/playerScene.txt", vStr);
-
 	HANDLE file;
 	DWORD save;
 
 	file = CreateFile("saveFile/playerScene.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	_player->setPlayerCurrentScene(PLAYERSCENE::DUNGEON_1F);
 
 	int scene = (int)_player->getPlayerCurrentScene();
 
@@ -251,33 +242,6 @@ void dungeon::playerSceneSave()
 
 void dungeon::playerSceneLoad()
 {
-	//vector<string> vStr;
-	//vStr = TXTDATA->txtLoad("saveFile/playerScene.txt");
-	//if (vStr.size() > 4)
-	//{
-	//	_player->setPlayerCurrentScene((PLAYERSCENE)atoi(vStr[0].c_str()));
-	//}
-	//else
-	//{
-	//	_player->setPlayerCurrentScene(PLAYERSCENE::INTRO_DUNGEON);
-	//}
-	//
-	//
-	//if (_player->getPlayerCurrentScene() == PLAYERSCENE::INTRO_DUNGEON)
-	//{
-	//	_player->setPlayerDirection(UP);
-	//	_player->setPlayerPosX(500);
-	//	_player->setPlayerPosY(2816);
-	//}
-	//
-	//if (_player->getPlayerCurrentScene() == PLAYERSCENE::DUNGEON_2F)
-	//{
-	//	_player->setPlayerDirection(DOWN);
-	//	_player->setPlayerPosX(992);
-	//	_player->setPlayerPosY(1440);
-	//}
-
-
 	HANDLE file;
 	DWORD load;
 

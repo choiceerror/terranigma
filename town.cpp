@@ -61,10 +61,13 @@ HRESULT town::init()
 
 	_house = RectMake(672, 1280, 352, 256);
 
-	_player->setPlayerPosX(704);
-	_player->setPlayerPosY(1792);
+	//_player->setPlayerPosX(704);
+	//_player->setPlayerPosY(1792);
+
 
 	playerSceneLoad();
+
+	_player->setPlayerCurrentScene(PLAYERSCENE::TOWN);
 
 	return S_OK;
 }
@@ -188,8 +191,6 @@ void town::worldMapIn()
 
 void town::playerSceneSave()
 {
-	_player->setPlayerCurrentScene(PLAYERSCENE::TOWN);
-
 	int scene = (int)_player->getPlayerCurrentScene();
 
 	HANDLE file;

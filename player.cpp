@@ -76,7 +76,9 @@ HRESULT player::init()
 	_death = _levelUP = false;
 	_tileCheck = true;
 
+
 	playerLoad();
+	playerUiLoad();
 
 	return S_OK;
 }
@@ -148,10 +150,15 @@ void player::update(bool enemyCheck, int a)
 
 	_player.rc = RectMakeCenter(_player.x, _player.y + 10, 40, 50);
 
-	if (KEYMANAGER->isOnceKeyDown(VK_SHIFT))
+	if (_player.currentScene == PLAYERSCENE::DUNGEON_1F || _player.currentScene == PLAYERSCENE::DUNGEON_2F || _player.currentScene == PLAYERSCENE::BOSS)
 	{
-		_inventory->inventorySave();
-		SCENEMANAGER->changeScene("ui");
+		if (KEYMANAGER->isOnceKeyDown(VK_SHIFT))
+		{
+			playerUiSave();
+			playerSceneSave();
+			_inventory->inventorySave();
+			SCENEMANAGER->changeScene("ui");
+		}
 	}
 
 	if (KEYMANAGER->isOnceKeyDown('Y'))
@@ -191,12 +198,13 @@ void player::render(float cameraX, float cameraY, bool uiRender)
 	//SetTextColor(getMemDC(), RGB(0, 0, 0));
 	//TextOut(getMemDC(), 100, 120, str, strlen(str));
 	
-	//sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
-	//TextOut(getMemDC(), 140, 120, str, strlen(str));
+	//sprintf_s(str, "%d", (int)_player.currentScene);
+	//TextOut(getMemDC(), 140, 320, str, strlen(str));
+
 	playerUIRender(uiRender);
 
-	sprintf_s(str, "%d", _attackComboKey);
-	TextOut(getMemDC(), 120, 120, str, strlen(str));
+	//sprintf_s(str, "%d", _attackComboKey);
+	//TextOut(getMemDC(), 120, 120, str, strlen(str));
 	//sprintf_s(str, "%d", _player.maxExp);
 	//TextOut(getMemDC(), 140, 120, str, strlen(str));
 	//sprintf_s(str, "%d", _levelUP);
@@ -1229,6 +1237,62 @@ void player::playerDungeonFall(RECT fallRc, RECT unMoveRc)
 	{
 		_player.y += _player.speed;
 	}
+}
+
+void player::playerUiSave()
+{
+	HANDLE file;
+	DWORD save;
+
+	file = CreateFile("saveFile/UiSave.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	float x, y;
+	int scene;
+
+	x = _player.x;
+	y = _player.y;
+	scene = (int)_player.currentScene;
+
+	WriteFile(file, &x, sizeof(float), &save, NULL);
+	WriteFile(file, &y, sizeof(float), &save, NULL);
+	WriteFile(file, &scene, sizeof(int), &save, NULL);
+
+	CloseHandle(file);
+}
+
+void player::playerSceneSave()
+{
+	HANDLE file;
+	DWORD save;
+
+	file = CreateFile("saveFile/playerScene.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	int scene = (int)_player.currentScene;
+
+	WriteFile(file, &scene, sizeof(int), &save, NULL);
+
+	CloseHandle(file);
+}
+
+void player::playerUiLoad()
+{
+	HANDLE file;
+	DWORD load;
+
+	file = CreateFile("saveFile/UiSave.txt", GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	float x, y;
+	int scene;
+
+	ReadFile(file, &x, sizeof(float), &load, NULL);
+	ReadFile(file, &y, sizeof(float), &load, NULL);
+	ReadFile(file, &scene, sizeof(int), &load, NULL);
+
+	_player.x = x;
+	_player.y = y;
+	_player.currentScene = (PLAYERSCENE)scene;
+
+	CloseHandle(file);
 }
 
 

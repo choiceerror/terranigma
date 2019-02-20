@@ -49,9 +49,9 @@ HRESULT dungeon2F::init()
 	_dungeonUp = RectMake(832, 96 , 64, 64);
 	_dungeonDown = RectMake(928 , 1568 , 192, 32);
 
-	_player->setPlayerDirection(UP);
-	_player->setPlayerPosX(1020);
-	_player->setPlayerPosY(1460);
+	//_player->setPlayerDirection(UP);
+	//_player->setPlayerPosX(1020);
+	//_player->setPlayerPosY(1460);
 
 	_sceneChange = false;
 	_worldTime = 0;
@@ -66,8 +66,16 @@ HRESULT dungeon2F::init()
 	_dungeDownJumpRc = RectMake(100, 350, 170, 100);
 	_dungeUnMove = RectMake(100, 440, 180, 50);
 
-
 	playerSceneLoad();
+
+	_player->setPlayerCurrentScene(PLAYERSCENE::DUNGEON_2F);
+
+	if (_player->getPlayerX() < 0 || _player->getPlayerX() > 2240 || _player->getPlayerY() < 0 || _player->getPlayerY() > 1600 || (_player->getPlayerX() == 0 && _player->getPlayerY() == 0))
+	{
+		_player->setPlayerPosX(1020);
+		_player->setPlayerPosY(1460);
+	}
+
 
 	return S_OK;
 }
@@ -141,8 +149,6 @@ void dungeon2F::playerSceneSave()
 	DWORD save;
 
 	file = CreateFile("saveFile/playerScene.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-
-	_player->setPlayerCurrentScene(PLAYERSCENE::DUNGEON_2F);
 
 	int scene = (int)_player->getPlayerCurrentScene();
 

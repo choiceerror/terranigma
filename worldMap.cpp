@@ -53,6 +53,8 @@ HRESULT worldMap::init()
 
 	//playerWorldLoad();
 	playerSceneLoad();
+	_player->setPlayerCurrentScene(PLAYERSCENE::WORLDMAP);
+
 
 	return S_OK;
 }
@@ -275,8 +277,6 @@ void worldMap::playerSceneSave()
 
 	file = CreateFile("saveFile/playerScene.txt", GENERIC_WRITE, NULL, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	_player->setPlayerCurrentScene(PLAYERSCENE::WORLDMAP);
-
 	int scene = (int)_player->getPlayerCurrentScene();
 
 	WriteFile(file, &scene, sizeof(int), &save, NULL);
@@ -294,11 +294,6 @@ void worldMap::playerSceneLoad()
 	file = CreateFile("saveFile/playerScene.txt", GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	ReadFile(file, &scene, sizeof(int), &load, NULL);
-
-	if (scene > 7)
-	{
-		scene = (int)PLAYERSCENE::TOWN;
-	}
 
 	_player->setPlayerCurrentScene((PLAYERSCENE)scene);
 
