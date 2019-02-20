@@ -15,7 +15,7 @@ player::~player()
 {
 }
 
-HRESULT player::init()
+HRESULT player::init(bool unAttack)
 {
 	IMAGEMANAGER->addFrameImage("player_obj", "image/player_obj.bmp", 0, 0, 1540, 800, 10, 10, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addFrameImage("player_ui", "image/playerUIFont.bmp", 0, 0, 450, 90, 10, 2, true, RGB(255, 0, 255));
@@ -72,6 +72,8 @@ HRESULT player::init()
 	_attackMoveStop = false;
 
 	_unMove = false;
+
+	_unAttack = false;
 
 	_death = _levelUP = false;
 	_tileCheck = true;
@@ -154,6 +156,7 @@ void player::update(bool enemyCheck, int a)
 	{
 		if (KEYMANAGER->isOnceKeyDown(VK_SHIFT))
 		{
+			playerSave();
 			playerUiSave();
 			playerSceneSave();
 			_inventory->inventorySave();
@@ -404,39 +407,42 @@ void player::keyInput()
 		keyUpInput(DOWN);
 	}
 
-	if (KEYMANAGER->isOnceKeyDown('C'))
+	if (!_unAttack)
 	{
-		if (!_isRun && !_isJump)
+		if (KEYMANAGER->isOnceKeyDown('C'))
 		{
-			_attackMoveStop = true;
-			if (_attackComboKey >= 1)
+			if (!_isRun && !_isJump)
 			{
-				_player.state = PLAYER_COMBINATION;
+				_attackMoveStop = true;
+				if (_attackComboKey >= 1)
+				{
+					_player.state = PLAYER_COMBINATION;
+				}
+				if (!(_player.state == PLAYER_COMBINATION)) _player.state = PLAYER_ATTACK;
 			}
-			if (!(_player.state == PLAYER_COMBINATION)) _player.state = PLAYER_ATTACK;
+			else if (_isRun && !_isJump && _player.speed == 5)
+			{
+				_player.state = PLAYER_DASH_ATTACK;
+				_startX = _player.x;
+				_startY = _player.y;
+				_dashAttack->dashAttacking(&_player.x, &_player.y, &_startX, &_startY, _player.direction, _player.speed);
+			}
+			if (_isJump && !(_player.speed == 5))
+			{
+				_player.state = PLAYER_JUMP_ATTACK;
+				_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
+			}
+			else if (_isJump && _player.speed == 5)
+			{
+				_player.state = PLAYER_DASH_JUMP_ATTACK;
+				_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
+			}
 		}
-		else if (_isRun && !_isJump)
+		if (KEYMANAGER->isOnceKeyUp('C'))
 		{
-			_player.state = PLAYER_DASH_ATTACK;
-			_startX = _player.x;
-			_startY = _player.y;
-			_dashAttack->dashAttacking(&_player.x, &_player.y, &_startX, &_startY, _player.direction, _player.speed);
-		}
-		if (_isJump && !(_player.speed == 5))
-		{
-			_player.state = PLAYER_JUMP_ATTACK;
-			_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
-		}
-		else if (_isJump && _player.speed == 5)
-		{
-			_player.state = PLAYER_DASH_JUMP_ATTACK;
-			_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
-		}
-	}
-	if (KEYMANAGER->isOnceKeyUp('C'))
-	{
 
-		if (_attackComboKey < 2) _attackComboKey++;
+			if (_attackComboKey < 2) _attackComboKey++;
+		}
 	}
 
 	if (KEYMANAGER->isOnceKeyDown('X'))
@@ -665,6 +671,10 @@ void player::callBackFall(void * obj)
 	playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleDown"));
 	playerAttack->getPlayerAni()->start();
 
+}
+
+void player::callBackDashJumpAttack(void * obj)
+{
 }
 
 void player::tileCheck()

@@ -37,7 +37,7 @@ HRESULT town::init()
 	_player->setnpcManagerAddressLink(_npcManager);
 	_npcManager->setTownManagerAddressLink(_town);
 
-	_player->init();
+	_player->init(true);
 	_town->init();
 	_messageSpear->init();
 

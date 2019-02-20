@@ -31,7 +31,7 @@ HRESULT bossScene::init()
 
 	_dungeonBossMap->setDungeonFloor(DUNGEON_FLOOR::BOSS_FLOOR);
 	_dungeonBossMap->init(_dungeonBossMap->getDungeonFloor());
-	_player->init();
+	_player->init(false);
 	_enemyManager->init();
 	_itemManager->init();
 

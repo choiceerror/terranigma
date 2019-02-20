@@ -28,7 +28,7 @@ HRESULT IntroDungeon::init()
 	_messageSpear = new messageSpear;
 
 	_camera->init(GAMESIZEX, GAMESIZEY, GAMESIZEX, 2490);
-	_player->init();
+	_player->init(true);
 	_clock->init();
 
 	_door = IMAGEMANAGER->findImage("door");

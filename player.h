@@ -119,6 +119,7 @@ private:
 	bool _isJump;						// 점프중
 	bool _isWalk;						// 걷는중
 	bool _unMove;						// 플레이어 움직이지 못하게
+	bool _unAttack;						// 플레이어 공격 못하게
 
 	bool _death;						//죽을때
 	bool _levelUP;						//레벨업				
@@ -140,7 +141,7 @@ public:
 	player();
 	~player();
 
-	HRESULT init();
+	HRESULT init(bool unAttack);
 	void release();
 	void update(bool enemyCheck, int a);
 	void render(float cameraX, float cameraY, bool uiRender);
@@ -191,8 +192,10 @@ public:
 	static void callBackDashAttack(void* obj);
 	//콜백 점프
 	static void callBackJump(void* obj);
-
+	//콜백 낭떠러지
 	static void callBackFall(void* obj);
+	//콜백 대쉬점프공격
+	static void callBackDashJumpAttack(void* obj);
 
 	//===================== 타일 검출 =======================
 	void tileCheck();

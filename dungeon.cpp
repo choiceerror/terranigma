@@ -29,7 +29,7 @@ HRESULT dungeon::init()
 
 	_dungeon->setDungeonFloor(DUNGEON_FLOOR::FIRST_FLOOR);
 	_dungeon->init(_dungeon->getDungeonFloor());
-	_player->init();
+	_player->init(false);
 	_enemyManager->init();
 	_itemManager->init();
 	_enemyManager->setEnemy();
