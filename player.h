@@ -16,6 +16,7 @@ class enemyManager;
 class dungeonMap;
 class townMap;
 class npcManager;
+class messageSpear;
 enum PLAYERSTATE
 {
 	PLAYER_IDLE = 0,			//캐릭터 아이들 상태
@@ -134,7 +135,7 @@ private:
 	dungeonMap* _dungeon;
 	townMap* _town;
 	npcManager* _npcMgr;
-
+	messageSpear* _message;
 	bool _tileCheck;
 
 public:
@@ -184,6 +185,7 @@ public:
 	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }
 	void setTownManagerAddressLink(townMap* to) { _town = to; }
 	void setnpcManagerAddressLink(npcManager* npc) { _npcMgr = npc; }
+	void setMessageManagerAddressLink(messageSpear* msg) { _message = msg; }
 	//===================== 콜백 함수 =======================
 
 	//콜백 공격함수

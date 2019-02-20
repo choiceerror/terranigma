@@ -4,6 +4,7 @@
 #include "dungeonMap.h"
 #include "townMap.h"
 #include "npcManager.h"
+#include "messageSpear.h"
 #pragma warning(disable:4996)
 
 player::player()
@@ -861,6 +862,11 @@ void player::npcCheck()
 	{
 		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVBird()[i]->getRect()))
 		{
+			// 대화 //
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setBird(true);
+			}
 			if (_player.direction == UP)
 			{
 				_player.y += _player.speed;
@@ -876,6 +882,18 @@ void player::npcCheck()
 			else if (_player.direction == RIGHT)
 			{
 				_player.x -= _player.speed;
+			}
+		}
+		// 대화가 진행중일때 //
+		else if (_message->getBird() == true)
+		{
+
+			//한번더 스페이스를 누르면 다 꺼진닷//
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setBird(false);
+				_message->setOn(true);
+				_message->setPage(false);
 			}
 		}
 	}
@@ -884,6 +902,11 @@ void player::npcCheck()
 	{
 		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVElder()[i]->getRect()))
 		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setElder(true);
+			}
+
 			if (_player.direction == UP)
 			{
 				_player.y += _player.speed;
@@ -899,6 +922,15 @@ void player::npcCheck()
 			else if (_player.direction == RIGHT)
 			{
 				_player.x -= _player.speed;
+			}
+		}
+		else if (_message->getElder() == true)
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setElder(false);
+				_message->setOn(true);
+				_message->setPage(false);
 			}
 		}
 	}
@@ -907,6 +939,11 @@ void player::npcCheck()
 	{
 		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVElle()[i]->getRect()))
 		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setElle(true);
+
+			}
 			if (_player.direction == UP)
 			{
 				_player.y += _player.speed;
@@ -924,7 +961,18 @@ void player::npcCheck()
 				_player.x -= _player.speed;
 			}
 		}
+		else if (_message->getElle() == true)
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setElle(false);
+				_message->setOn(true);
+				_message->setPage(false);
+			}
+		}
 	}
+
+
 
 	for (int i = 0; i < _npcMgr->getVTownHuman().size(); ++i)
 	{
@@ -945,6 +993,56 @@ void player::npcCheck()
 			else if (_player.direction == RIGHT)
 			{
 				_player.x -= _player.speed;
+			}
+		}
+		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVTownHuman()[0]->getRect()))
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setFishMan(true);
+			}
+		}
+
+		else if (_message->getFishMan() == true)
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setFishMan(false);
+				_message->setOn(true);
+				_message->setPage(false);
+			}
+		}
+		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVTownHuman()[1]->getRect()))
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setGrandFa(true);
+			}
+		}
+		else if (_message->getGrandFa() == true)
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setGrandFa(false);
+				_message->setOn(true);
+				_message->setPage(false);
+			}
+		}
+
+		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVTownHuman()[2]->getRect()))
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setGrandMa(true);
+			}
+		}
+		else if (_message->getGrandMa() == true)
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setGrandMa(false);
+				_message->setOn(true);
+				_message->setPage(false);
 			}
 		}
 	}

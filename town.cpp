@@ -36,7 +36,7 @@ HRESULT town::init()
 	_player->setTownManagerAddressLink(_town);
 	_player->setnpcManagerAddressLink(_npcManager);
 	_npcManager->setTownManagerAddressLink(_town);
-
+	_player->setMessageManagerAddressLink(_messageSpear);
 	_player->init(true);
 	_town->init();
 	_messageSpear->init();
@@ -64,11 +64,12 @@ HRESULT town::init()
 	//_player->setPlayerPosX(704);
 	//_player->setPlayerPosY(1792);
 
-
+	
 	playerSceneLoad();
 
 	_player->setPlayerCurrentScene(PLAYERSCENE::TOWN);
 
+	_player->setTileCheck(false);
 	return S_OK;
 }
 

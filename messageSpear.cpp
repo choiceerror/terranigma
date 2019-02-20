@@ -22,7 +22,6 @@ HRESULT messageSpear::init()
 	//maidMessage();
 	//guardianMessage();
 	//townManMessage();
-	
 	_once = false;
 
 	_talkCount = _talkCount2 = 0;
@@ -60,14 +59,14 @@ void messageSpear::render()
 {
 	if (KEYMANAGER->isOnceKeyDown('1'))
 	{
-		if(!_grandfaTalk) _grandfaTalk = true;
+		if (!_grandfaTalk) _grandfaTalk = true;
 		else
 		{
 			_once = true;
 			_grandfaTalk = false;
 			_pageOn = false;
 		}
-			
+
 	}
 	if (KEYMANAGER->isOnceKeyDown('2'))
 	{
@@ -92,8 +91,8 @@ void messageSpear::render()
 	if (KEYMANAGER->isOnceKeyDown('4'))
 	{
 		if (!_birdTalk) _birdTalk = true;
-		
-		else 
+
+		else
 		{
 			_once = true;
 			_birdTalk = false;
@@ -131,15 +130,14 @@ void messageSpear::render()
 		}
 	}
 
-	messageRender("messageFile/할아버지.txt", _grandfaTalk, 8 , 26, 0);
+	messageRender("messageFile/할아버지.txt", _grandfaTalk, 8, 26, 0);
 	messageRender("messageFile/할머니.txt", _grandmaTalk, 33, 34, 0);
-	messageRender("messageFile/엘.txt", _elleTalk, 14, 31, 1);
+	messageRender("messageFile/엘.txt", _elleTalk, 24, 30, 1);
 	messageRender("messageFile/꼬꼬.txt", _birdTalk, 14, 6, 0);
 	messageRender("messageFile/낚시꾼.txt", _fishManTalk, 23, 15, 0);
 	messageRender("messageFile/장로할아범.txt", _elderTalk, 4, 31, 2);
 	messageRender("messageFile/메이드.txt", _maidTalk, 33, 34, 0);
 	messageRender("messageFile/마을사람.txt", _townManTalk, 33, 34, 0);
-
 
 	if (_once)
 	{
@@ -147,15 +145,15 @@ void messageSpear::render()
 		_once = false;
 	}
 
-	
-	
+
+
 
 	if (KEYMANAGER->isOnceKeyDown('B'))
 	{
 		if (!_playerKey) _playerKey = true;
 		else
 		{
-			
+
 			_playerKey = false;
 		}
 	}
@@ -163,7 +161,7 @@ void messageSpear::render()
 	{
 		_guardianPageNext = true;
 	}
-	
+
 	//char str[128];
 	//sprintf_s(str, "%d", _guardianPageNext);
 	//TextOut(getMemDC(), 100, 100, str, strlen(str));
@@ -173,7 +171,7 @@ void messageSpear::render()
 void messageSpear::grandfaMessage()
 {
 	string message[2];
-	
+
 	vector<string> vStr;
 
 
@@ -230,8 +228,8 @@ void messageSpear::elleMessage()
 	string message[2];
 	vector<string> vStr;
 
-	message[0] = "아크..탑이..";
-	message[1] = "무서워..  안좋은  예감이  들어..";
+	message[0] = "";
+	message[1] = "";
 
 	vStr.push_back(message[0]);
 	vStr.push_back(message[1]);
@@ -249,7 +247,9 @@ void messageSpear::fishManMessage()
 	vStr.push_back(message[0]);
 	vStr.push_back(message[1]);
 	TXTDATA->txtSave("messageFile/낚시꾼.txt", vStr);
+
 }
+
 
 void messageSpear::maidMessage()
 {
@@ -282,7 +282,7 @@ void messageSpear::guardianMessage()
 	string message[8];
 	vector<string> vStr;
 
-	
+
 	message[0] = "나는  가디언이다";
 	message[1] = "이  타워안에는  층이";
 	message[2] = "층이 3개로 나뉘어져 있다";
@@ -349,7 +349,7 @@ void messageSpear::messageRender(const char* txtName, bool messageBool, int time
 		case 0:
 			break;
 		case 1:
-		
+
 			name = "엘 :";
 			TextOut(getMemDC(), 70, 500, name.c_str(), strlen(name.c_str()));
 			break;
@@ -368,9 +368,9 @@ void messageSpear::messageRender(const char* txtName, bool messageBool, int time
 		DeleteObject(_font);
 	}
 }
-void messageSpear::guardianMessageRender(bool guardian ,bool playerKey)
+void messageSpear::guardianMessageRender(bool guardian, bool playerKey)
 {
-	if (guardian == false && _pageNext <= 3) 
+	if (guardian == false && _pageNext <= 3)
 	{
 		vector<string> vStr;
 		_font = CreateFont(35, 25, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
@@ -430,8 +430,8 @@ void messageSpear::guardianMessageRender(bool guardian ,bool playerKey)
 			_guardianTalkCount[0] = _guardianTalkCount[1] = 0;
 		}
 		string playerTalk[3];
-		if(_pageNext != 0)
-		{ 
+		if (_pageNext != 0)
+		{
 			IMAGEMANAGER->findImage("messageSpear")->expandRender(getMemDC(), 0, GAMESIZEY / 2 + 80, 0, 0, 1.7, 1.7);
 		}
 		else
