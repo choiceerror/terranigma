@@ -22,40 +22,70 @@ void DashAttack::release()
 {
 }
 
-void DashAttack::update(float* x, float* y)
+void DashAttack::update(float* x, float* y, bool objUnMove)
 {
 	if (_isDashAttack == false) return;
 
-	switch(_direction)
-	{ 
-	case 0:
-		*_x -= _speed;
-		if (*_startX - *x  >= 200)
+	if (!objUnMove)
+	{
+		switch (_direction)
 		{
-			_isDashAttack = false;
+		case 0:
+			*_x -= _speed;
+			if (*_startX - *x >= 200)
+			{
+				_isDashAttack = false;
+			}
+			break;
+		case 1:
+			*_x += _speed;
+			if (*x - *_startX >= 200)
+			{
+				_isDashAttack = false;
+			}
+			break;
+		case 2:
+			*_y -= _speed;
+			if (*_startY - *y >= 200)
+			{
+				_isDashAttack = false;
+			}
+			break;
+		case 3:
+			*_y += _speed;
+			if (*y - *_startY >= 200)
+			{
+				_isDashAttack = false;
+			}
+			break;
 		}
-		break;
-	case 1:
-		*_x += _speed;
-		if (*x - *_startX >= 200)
+	}
+	else
+	{
+		switch (_direction)
 		{
+		case 0:
+			
 			_isDashAttack = false;
-		}
-		break;
-	case 2:
-		*_y -= _speed;
-		if (*_startY - *y >= 200)
-		{
+			
+			break;
+		case 1:
+			
+			
 			_isDashAttack = false;
-		}
-		break;
-	case 3:
-		*_y += _speed;
-		if (*y - *_startY >= 200)
-		{
+			
+			break;
+		case 2:
+		
 			_isDashAttack = false;
+			
+			break;
+		case 3:
+			
+			_isDashAttack = false;
+			
+			break;
 		}
-		break;
 	}
 }
 

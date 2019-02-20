@@ -28,7 +28,7 @@ HRESULT player::init(bool unAttack)
 	_dashAttack->init();
 	_inventory->init();
 	_inventory->inventoryLoad();
-
+	check = false;
 	keyFrameInit();
 
 	_player.image = IMAGEMANAGER->findImage("player");
@@ -136,7 +136,7 @@ void player::update(bool enemyCheck, int a)
 
 	playerState();
 	_jump->update();
-	_dashAttack->update(&_player.x, &_player.y);
+	_dashAttack->update(&_player.x, &_player.y, check);
 	_inventory->update();
 	if (_tileCheck)
 	{
@@ -198,9 +198,9 @@ void player::render(float cameraX, float cameraY, bool uiRender)
 	//	TextOut(getMemDC(), 100 + i * 30, 100, str, strlen(str));
 	//}
 	//
-	//sprintf_s(str, "%d", _player.state);
-	//SetTextColor(getMemDC(), RGB(0, 0, 0));
-	//TextOut(getMemDC(), 100, 120, str, strlen(str));
+	sprintf_s(str, "%d", check);
+	SetTextColor(getMemDC(), RGB(0, 0, 0));
+	TextOut(getMemDC(), 300, 120, str, strlen(str));
 	
 	//sprintf_s(str, "%d", (int)_player.currentScene);
 	//TextOut(getMemDC(), 140, 320, str, strlen(str));
@@ -699,7 +699,6 @@ void player::tileCheck()
 		tileIndex[0].x = TileX - 1;
 		tileIndex[0].y = TileY;
 
-
 		for (int i = 0; i < 1; ++i)
 		{
 			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_FIRE)
@@ -707,6 +706,13 @@ void player::tileCheck()
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
 					_player.x += _player.speed;
+					
+						check = true;
+					
+				}
+				else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision)))
+				{
+					check = false;
 				}
 			}
 		}
@@ -724,6 +730,11 @@ void player::tileCheck()
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
 					_player.x -= _player.speed;
+					check = true;
+				}
+				else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision)))
+				{
+					check = false;
 				}
 			}
 		}
@@ -741,6 +752,11 @@ void player::tileCheck()
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
 					_player.y += _player.speed;
+					check = true;
+				}
+				else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision)))
+				{
+					check = false;
 				}
 			}
 		}
@@ -758,6 +774,11 @@ void player::tileCheck()
 				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
 					_player.y -= _player.speed;
+					check = true;
+				}
+				else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision)))
+				{
+					check = false;
 				}
 			}
 		}
@@ -794,6 +815,11 @@ void player::townCheck()
 				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
 					_player.x += _player.speed;
+					check = true;
+				}
+				else if (check == true || (!(IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))))
+				{
+					check = false;
 				}
 			}
 		}
@@ -804,7 +830,6 @@ void player::townCheck()
 		tileIndex[0].x = TileX + 1;
 		tileIndex[0].y = TileY;
 
-
 		for (int i = 0; i < 1; ++i)
 		{
 			if (_town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _town->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WATER
@@ -813,6 +838,11 @@ void player::townCheck()
 				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
 					_player.x -= _player.speed;
+					check = true;
+				}
+				else if (check == true || (!(IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))))
+				{
+					check = false;
 				}
 			}
 		}
@@ -831,6 +861,11 @@ void player::townCheck()
 				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
 					_player.y += _player.speed;
+					check = true;
+				}
+				else if (check == true || (!(IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))))
+				{
+					check = false;
 				}
 			}
 		}
@@ -849,6 +884,11 @@ void player::townCheck()
 				if (IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
 				{
 					_player.y -= _player.speed;
+					check = true;
+				}
+				else if (check == true || (!(IntersectRect(&rc, &_town->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))))
+				{
+					check = false;
 				}
 			}
 		}

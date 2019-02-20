@@ -71,6 +71,7 @@ struct tagPlayer
 	PLAYERDIRECTION direction;		//캐릭터 상하좌우 상태
 	float x, y;						//캐릭터 좌표
 	float speed;					//스피드
+	float dashLen;				//대쉬 나가는 거리
 	float jumpPower;				//점프 파워
 	float gravity;					//중력값
 	int idX, idY;					//타일 인덱스값
@@ -137,6 +138,8 @@ private:
 	npcManager* _npcMgr;
 	messageSpear* _message;
 	bool _tileCheck;
+
+	bool check;
 
 public:
 	player();
@@ -248,6 +251,8 @@ public:
 
 	bool getTileCheck() { return _tileCheck; }
 	void setTileCheck(bool torf) { _tileCheck = torf; }
+
+
 
 };
 
