@@ -150,7 +150,7 @@ void ui::render()
 	//sprintf_s(str, "%d", _placeFrameX);
 	//TextOut(getMemDC(), 30, 140, str, strlen(str));
 
-	Rectangle(getMemDC(), _goal);
+	//Rectangle(getMemDC(), _goal);
 }
 
 //윈도우 사이즈조정
