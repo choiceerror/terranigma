@@ -40,7 +40,7 @@ HRESULT dungeon::init()
 	_clockFade->setClockFadeOut(false);
 	_clockFade->setClockFadeIn(true);
 
-	SOUNDMANAGER->play("theTower", 1);
+	SOUNDMANAGER->play("theTower", SOUNDSIZE);
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 	_alphaValue = 0;
 	_changeScene = false;
@@ -97,7 +97,7 @@ void dungeon::update()
 	dungeonChange();
 	if (!_changeScene)
 	{
-		_player->update(false, 1);
+		_player->update(true, 1);
 	}
 }
 

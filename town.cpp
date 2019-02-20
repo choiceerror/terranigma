@@ -23,7 +23,7 @@ HRESULT town::init()
 	IMAGEMANAGER->findImage("townTile")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->setAlpahBlend(true);
 
-	SOUNDMANAGER->play("theTown", 1);
+	SOUNDMANAGER->play("theTown", SOUNDSIZE);
 
 	_alphaValue = 255;
 	_houseAlpha = 255;
@@ -39,7 +39,7 @@ HRESULT town::init()
 	_player->setnpcManagerAddressLink(_npcManager);
 	_npcManager->setTownManagerAddressLink(_town);
 	_player->setMessageManagerAddressLink(_messageSpear);
-	_player->init(true);
+	_player->init(false);
 	_town->init();
 	_messageSpear->init();
 
@@ -103,8 +103,9 @@ void town::update()
 void town::render()
 {
 	_town->render(_camera->getCameraX(), _camera->getCameraY());
-	_player->render(_camera->getCameraX(), _camera->getCameraY(), false);
 	_npcManager->render(_camera->getCameraX(), _camera->getCameraY());
+	_player->render(_camera->getCameraX(), _camera->getCameraY(), false);
+
 
 	for (int i = 0; i < 7; ++i)
 	{

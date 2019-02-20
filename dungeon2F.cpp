@@ -110,7 +110,7 @@ void dungeon2F::update()
 	dungeonChange();
 	if (!_sceneChange)
 	{
-		_player->update(false, 1);
+		_player->update(true, 1);
 	}
 }
 

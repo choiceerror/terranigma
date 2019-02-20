@@ -7,12 +7,16 @@ private:
 	float _jumpPower;
 	float _gravity;
 
+	float _speed;
+
 	float* _x;
 	float* _y;
 	float* _startX;
 	float* _startY;
 
-	bool _isJump;
+	int _direction;
+
+	bool _isJumpAttack;
 
 public:
 	DashJumpAttack();
@@ -20,8 +24,8 @@ public:
 
 	HRESULT init();
 	void release();
-	void update();
+	void update(float* x, float* y);
 	void render();
 
-	void jumping(float* x, float* y, float* startX, float* startY, float jumpPower, float gravity);
+	void dashJumpAttack(float* x, float* y, float* startX, float* startY, float jumpPower, float gravity, int direction, float speed);
 };

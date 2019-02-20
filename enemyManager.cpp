@@ -713,7 +713,6 @@ void enemyManager::playerAttackEnemyCollision()
 			}
 		}
 
-
 		break;
 	}
 }
@@ -1390,7 +1389,7 @@ void enemyManager::bossAppear()
 	if (_player->getPlayerY() <= 900 && _isOnce[BOSS_APPEAR] == false)
 	{
 		_isBossAppear = true;
-		SOUNDMANAGER->play("bossSceneBGM");
+		SOUNDMANAGER->play("bossSceneBGM", SOUNDSIZE);
 		_isOnce[BOSS_APPEAR] = true;
 	}
 

@@ -2,6 +2,7 @@
 #include "gameNode.h"
 #include "jump.h"
 #include "DashAttack.h"
+#include "DashJumpAttack.h"
 #include "Inventory.h"
 #include "txtData.h"
 
@@ -96,6 +97,7 @@ private:
 	DashAttack* _dashAttack;
 	Inventory* _inventory;
 	txtData* _txtData;
+	DashJumpAttack* _dashJumpAttack;
 
 	int _doubleKey[4];					// 키를 2번 눌렀을때 달리게 해주기위한 인트형 변수
 	int _curTime[4], _oldTime[4];

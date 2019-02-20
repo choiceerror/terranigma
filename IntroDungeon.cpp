@@ -55,6 +55,8 @@ HRESULT IntroDungeon::init()
 	_doorAni = KEYANIMANAGER->findAnimation("doorAnime", "doorClosed");
 	_guardianAni = KEYANIMANAGER->findAnimation("guardianAnime", "guardianClocking");
 
+	SOUNDMANAGER->play("introDungeon", SOUNDSIZE);
+
 	_count = 0;
 	_doorDirection = 0;
 	_doorPos.x = GAMESIZEX / 2 - 105;
@@ -392,6 +394,7 @@ void IntroDungeon::linearMove()
 			_changScene = true;
 			introDungeonSave();
 			playerSceneSave();
+			SOUNDMANAGER->stop("introDungeon");
 			SCENEMANAGER->changeScene("dungeon");
 		}
 
@@ -425,6 +428,7 @@ void IntroDungeon::escapeDungeon()
 			playerSceneSave();
 			//playerSave();
 			_changScene2 = true;
+			SOUNDMANAGER->stop("introDungeon");
 			SCENEMANAGER->changeScene("worldMap");
 		}
 

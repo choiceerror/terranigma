@@ -13,7 +13,7 @@ DashJumpAttack::~DashJumpAttack()
 
 HRESULT DashJumpAttack::init()
 {
-	_isJump = _jumpPower = _gravity = 0;
+	_isJumpAttack = _jumpPower = _gravity = 0;
 
 	return S_OK;
 }
@@ -22,20 +22,41 @@ void DashJumpAttack::release()
 {
 }
 
-void DashJumpAttack::update()
+void DashJumpAttack::update(float* x, float* y)
 {
 
-	if (_isJump == false) return;
-
-	*_y -= _jumpPower;
-	_jumpPower -= _gravity;
-
-	if (*_startY < *_y)
+	if (_isJumpAttack == false) return;
+	switch (_direction)
 	{
-		_isJump = false;
-		*_y = *_startY;
+	case 0:
+		*_x -= _speed;
+		if (*_startX - *x >= 280)
+		{
+			_isJumpAttack = false;
+		}
+		break;
+	case 1:
+		*_x += _speed;
+		if (*x - *_startX >= 280)
+		{
+			_isJumpAttack = false;
+		}
+		break;
+	case 2:
+		*_y -= _speed;
+		if (*_startY - *y >= 280)
+		{
+			_isJumpAttack = false;
+		}
+		break;
+	case 3:
+		*_y += _speed;
+		if (*y - *_startY >= 280)
+		{
+			_isJumpAttack = false;
+		}
+		break;
 	}
-
 
 
 }
@@ -45,11 +66,11 @@ void DashJumpAttack::render()
 
 }
 
-void DashJumpAttack::jumping(float* x, float* y, float* startX, float* startY, float jumpPower, float gravity)
+void DashJumpAttack::dashJumpAttack(float* x, float* y, float* startX, float* startY, float jumpPower, float gravity, int direction, float speed)
 {
 
-	if (_isJump == true) return;
-	_isJump = true;
+	if (_isJumpAttack == true) return;
+	_isJumpAttack = true;
 
 	_x = x;
 	_y = y;
@@ -59,6 +80,11 @@ void DashJumpAttack::jumping(float* x, float* y, float* startX, float* startY, f
 
 	_gravity = gravity;
 	_jumpPower = jumpPower;
+
+	_direction = direction;
+
+	_speed = speed;
+
 }
 
 

@@ -22,6 +22,7 @@ HRESULT player::init(bool unAttack)
 	IMAGEMANAGER->addFrameImage("player_ui", "image/playerUIFont.bmp", 0, 0, 450, 90, 10, 2, true, RGB(255, 0, 255));
 	_jump = new jump;
 	_dashAttack = new DashAttack;
+	_dashJumpAttack = new DashJumpAttack;
 	_inventory = new Inventory;
 	_txtData = new txtData;
 	_jump->init();
@@ -137,6 +138,7 @@ void player::update(bool enemyCheck, int a)
 	playerState();
 	_jump->update();
 	_dashAttack->update(&_player.x, &_player.y, check);
+	_dashJumpAttack->update(&_player.x, &_player.y);
 	_inventory->update();
 	if (_tileCheck)
 	{
@@ -290,25 +292,25 @@ void player::keyFrameInit()
 	int jumpAttackDown[] = { 264, 265, 266, 267, 268, 269, 270, 271 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "jumpAttackDown", "player", jumpAttackDown, 8, PLAYERJUMP, false, callBackJump, this);
 	int dashJumpAttackLeft[] = { 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackLeft", "player", dashJumpAttackLeft, 12, PLAYERJUMP, false, callBackJump, this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackLeft", "player", dashJumpAttackLeft, 12, 12, false, callBackDashJumpAttack, this);
 	int dashJumpAttackRight[] = { 276,277,278,279,280,281,282,283,284,285,286,287 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackRight", "player", dashJumpAttackRight, 12, PLAYERJUMP, false, callBackJump, this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackRight", "player", dashJumpAttackRight, 12, 12, false, callBackDashJumpAttack, this);
 	int dashJumpAttackUp[] = { 300, 301, 302, 303, 304, 305, 306, 307 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackUp", "player", dashJumpAttackUp, 8, PLAYERJUMP, false, callBackJump, this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackUp", "player", dashJumpAttackUp, 8, 12, false, callBackDashJumpAttack, this);
 	int dashJumpAttackDown[] = { 312, 313, 314, 315, 316, 317, 318, 319 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackDown", "player", dashJumpAttackDown, 8, PLAYERJUMP, false, callBackJump, this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackDown", "player", dashJumpAttackDown, 8, 12, false, callBackDashJumpAttack, this);
 	int death[] = { 324,325,326,327,328,329 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "death", "player", death, 6, PLAYERFPS, false);
 	int fall[] = { 330, 331,331, 332 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "fall", "player", fall, 4, 4, false, callBackFall, this);
 	int dashAttackLeft[] = { 340, 341, 342, 343 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackLeft", "player", dashAttackLeft, 4, PLAYERFPS, false, callBackDashAttack, this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackLeft", "player", dashAttackLeft, 4, PLAYERFPS, false, callBackJump, this);
 	int dashAttackRight[] = { 336, 337, 338, 339 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackRight", "player", dashAttackRight, 4, PLAYERFPS, false, callBackDashAttack, this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackRight", "player", dashAttackRight, 4, PLAYERFPS, false, callBackJump, this);
 	int dashAttackUp[] = { 348, 349, 350, 351 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackUp", "player", dashAttackUp, 4, PLAYERFPS, false, callBackDashAttack, this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackUp", "player", dashAttackUp, 4, PLAYERFPS, false, callBackJump, this);
 	int dashAttackDown[] = { 352, 353, 354, 355 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackDown", "player", dashAttackDown, 4, PLAYERFPS, false, callBackDashAttack, this);
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackDown", "player", dashAttackDown, 4, PLAYERFPS, false, callBackJump, this);
 	int pickupLeft[] = { 0, 1, 2, 3 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark_obj", "pickupLeft", "player_obj", pickupLeft, 4, PLAYERFPS, false);
 	int pickupRight[] = { 4, 5, 6, 7 };
@@ -569,28 +571,6 @@ void player::callBackAttack(void * obj)
 	player* playerAttack = (player*)obj;
 
 	playerAttack->setPlayerState(PLAYER_IDLE);
-
-	if (playerAttack->getPlayerDirection() == LEFT)
-	{
-		playerAttack->setPlayerDirection(LEFT);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleLeft"));
-	}
-	else if (playerAttack->getPlayerDirection() == RIGHT)
-	{
-		playerAttack->setPlayerDirection(RIGHT);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleRight"));
-	}
-	else if (playerAttack->getPlayerDirection() == UP)
-	{
-		playerAttack->setPlayerDirection(UP);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleUp"));
-	}
-	else if (playerAttack->getPlayerDirection() == DOWN)
-	{
-		playerAttack->setPlayerDirection(DOWN);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleDown"));
-	}
-	playerAttack->getPlayerAni()->start();
 }
 
 void player::callBackDashAttack(void * obj)
@@ -599,27 +579,6 @@ void player::callBackDashAttack(void * obj)
 
 	if (playerAttack->getPlayerState() == PLAYER_IDLE)  playerAttack->setPlayerState(PLAYER_IDLE);
 	else if (playerAttack->getPlayerSpeed() == 5)  playerAttack->setPlayerState(PLAYER_RUN);
-	if (playerAttack->getPlayerDirection() == LEFT)
-	{
-		playerAttack->setPlayerDirection(LEFT);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runLeft"));
-	}
-	else if (playerAttack->getPlayerDirection() == RIGHT)
-	{
-		playerAttack->setPlayerDirection(RIGHT);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runRight"));
-	}
-	else if (playerAttack->getPlayerDirection() == UP)
-	{
-		playerAttack->setPlayerDirection(UP);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runUp"));
-	}
-	else if (playerAttack->getPlayerDirection() == DOWN)
-	{
-		playerAttack->setPlayerDirection(DOWN);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runDown"));
-	}
-	playerAttack->getPlayerAni()->start();
 }
 
 void player::callBackJump(void * obj)
@@ -639,27 +598,6 @@ void player::callBackJump(void * obj)
 	{
 		playerAttack->setPlayerState(PLAYER_RUN);
 	}
-	if (playerAttack->getPlayerDirection() == LEFT)
-	{
-		playerAttack->setPlayerDirection(LEFT);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runLeft"));
-	}
-	else if (playerAttack->getPlayerDirection() == RIGHT)
-	{
-		playerAttack->setPlayerDirection(RIGHT);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runRight"));
-	}
-	else if (playerAttack->getPlayerDirection() == UP)
-	{
-		playerAttack->setPlayerDirection(UP);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runUp"));
-	}
-	else if (playerAttack->getPlayerDirection() == DOWN)
-	{
-		playerAttack->setPlayerDirection(DOWN);
-		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runDown"));
-	}
-	playerAttack->getPlayerAni()->start();
 
 }
 
@@ -669,13 +607,18 @@ void player::callBackFall(void * obj)
 
 	playerAttack->setPlayerState(PLAYER_IDLE);
 	playerAttack->setPlayerDirection(DOWN);
-	playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleDown"));
-	playerAttack->getPlayerAni()->start();
 
 }
 
 void player::callBackDashJumpAttack(void * obj)
 {
+	player* playerAttack = (player*)obj;
+
+	if (playerAttack->getPlayerSpeed() == 5)
+	{
+		playerAttack->setPlayerState(PLAYER_RUN);
+	}
+	else playerAttack->setPlayerState(PLAYER_IDLE);
 }
 
 void player::tileCheck()
