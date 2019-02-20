@@ -28,7 +28,7 @@ HRESULT ui::init()
 	_inventory->init();
 
 	_player = new player;
-	_player->init();
+	_player->init(true);
 
 	dataLoad();
 

@@ -220,6 +220,7 @@ public:
 	void setPlayerDef(int def) { _player.def = def; }
 	void setPlayerExp(int exp) { _player.exp = exp; }
 	void setPlayerCurrentScene(PLAYERSCENE num) { _player.currentScene = num; }
+	void setPlayerUnAttack(bool unAttack) { _unAttack = unAttack; }
 
 	RECT getPlayerRc() { return _player.rc; }
 
