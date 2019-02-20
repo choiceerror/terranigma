@@ -2,27 +2,68 @@
 #include "gameNode.h"
 #include "camera.h"
 
+enum MESSAGE
+{
+	MESSAGE_ONE,
+	MESSAGE_TWO,
+	MESSAGE_THREE,
+	MESSAGE_FOUR,
+	MESSAGE_FIVE,
+	MESSAGE_SIX,
+	MESSAGE_SEVEN,
+	MESSAGE_EIGHT,
+	MESSAGE_NINE,
+	MESSAGE_TEN,
+
+	MESSAGE_X = 150,
+	MESSAGE_Y = GAMESIZEY / 2,
+};
+
+enum class IMAGECHANGE
+{
+	ONE,
+	TWO,
+	THREE,
+	FOUR,
+	FIVE,
+	SIX,
+	SEVEN,
+};
+enum IMAGEINFO
+{
+	ALPHA = 5,
+};
+
 struct tagIntro
 {
 	image* image;
 	int alphaValue; //알파값
-	bool padeIn, padeOut; 
-	bool isIntroImageShow; //인트로이미지 보여줄건지
 	POINTFLOAT cameraPos;
+	float changeWorldTime; //체인지 시간
+	float changeTime;
+	bool isAlpahOn, isAlpahOut;
+	bool isOnce[4];
+	bool isSizeUpStop;
 };
 
 class intro : public gameNode
 {
 private:
+	image* _earthImage;
+	float _earthSizeX, _earthSizeY;
 	tagIntro _intro;
 	camera* _camera;
 	HFONT _font;
 	HFONT _oldFont;
-	vector<string*> _vMessage;
 
 	float _textWolrldTime;
+	IMAGECHANGE _imageChange;
+	int _textCount[2];
+	int _textSizeMax[10];
+	int _nextText;
+	int _num;
+	bool _isNextPage;
 
-	int _talkCount;
 public:
 	intro();
 	~intro();
@@ -35,7 +76,7 @@ public:
 	void opening(); //오프닝
 
 	void messageAll(); //메시지 모음
-	void messageDraw(const char* txtName); //메시지 그리기
+	void messageDraw(); //메시지 그리기
 
 	void setWindowsSize(int x, int y, int width, int height);
 	

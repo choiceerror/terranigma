@@ -44,7 +44,7 @@ HRESULT playGround::init()
 	IMAGEMANAGER->addImage("인트로2", "image/인트로2.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
 	IMAGEMANAGER->addImage("인트로3", "image/인트로3.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
 	IMAGEMANAGER->addImage("인트로4", "image/인트로4.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
-	IMAGEMANAGER->addImage("인트로5", "image/인트로5.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("인트로5", "image/인트로5.bmp", 124, 125, 1, 1, true, MAGENTA);
 	IMAGEMANAGER->addImage("인트로6", "image/인트로6.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
 	IMAGEMANAGER->addImage("인트로7", "image/인트로7.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
 	IMAGEMANAGER->addImage("인트로8", "image/인트로8.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
