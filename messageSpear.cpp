@@ -21,6 +21,7 @@ HRESULT messageSpear::init()
 	//fishManMessage();
 	//maidMessage();
 	//guardianMessage();
+	//townManMessage();
 	
 	_once = false;
 
@@ -135,8 +136,9 @@ void messageSpear::render()
 	messageRender("messageFile/엘.txt", _elleTalk, 14, 31, 1);
 	messageRender("messageFile/꼬꼬.txt", _birdTalk, 14, 6, 0);
 	messageRender("messageFile/낚시꾼.txt", _fishManTalk, 23, 15, 0);
-	messageRender("messageFile/장로할아범.txt", _elderTalk, 33, 34, 2);
+	messageRender("messageFile/장로할아범.txt", _elderTalk, 4, 31, 2);
 	messageRender("messageFile/메이드.txt", _maidTalk, 33, 34, 0);
+	messageRender("messageFile/마을사람.txt", _townManTalk, 33, 34, 0);
 
 
 	if (_once)
@@ -272,7 +274,7 @@ void messageSpear::townManMessage()
 
 	vStr.push_back(message[0]);
 	vStr.push_back(message[1]);
-	TXTDATA->txtSave("messageFile/메이드.txt", vStr);
+	TXTDATA->txtSave("messageFile/마을사람.txt", vStr);
 }
 
 void messageSpear::guardianMessage()
