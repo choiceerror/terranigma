@@ -707,6 +707,7 @@ void enemyManager::playerAttackEnemyCollision()
 		{
 			if (IntersectRect(&temp, &_playerAttackRc, &_vBoss[0]->getRect()) && _vBoss[0]->getIsHit() == false)
 			{
+				EFFECTMANAGER->play("damageEffect", _player->getPlayerX() - _camera->getCameraX(), _player->getPlayerY() - 50 - _camera->getCameraY());
 				_vBoss[0]->setIsHit(true);
 				_vBoss[0]->setCurrentHP(_vBoss[0]->getCurrentHP() - _player->getPlayerStr());
 			}

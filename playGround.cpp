@@ -39,6 +39,16 @@ HRESULT playGround::init()
 	IMAGEMANAGER->addImage("black", "image/black.bmp", 1024, 768, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("messageSpear", "image/massageSpear.bmp", 600, 179, 1, 1, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("talkPage", "image/talkPageNext.bmp", 75, 30, 3, 1, true, MAGENTA);
+	EFFECTMANAGER->addEffect("damageEffect", "image/타격이펙트.bmp", 200, 100, 100, 100, 3, 0.04f, 1000);
+	IMAGEMANAGER->addImage("인트로1", "image/인트로1.bmp", WINSIZEX, GAMESIZEY, true, MAGENTA);
+	IMAGEMANAGER->addImage("인트로2", "image/인트로2.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
+	IMAGEMANAGER->addImage("인트로3", "image/인트로3.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
+	IMAGEMANAGER->addImage("인트로4", "image/인트로4.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
+	IMAGEMANAGER->addImage("인트로5", "image/인트로5.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
+	IMAGEMANAGER->addImage("인트로6", "image/인트로6.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
+	IMAGEMANAGER->addImage("인트로7", "image/인트로7.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
+	IMAGEMANAGER->addImage("인트로8", "image/인트로8.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
+
 
 
 	_worldMap = new worldMap;
@@ -112,7 +122,6 @@ void playGround::update()
 	{
 		SCENEMANAGER->changeScene("introDungeon");
 	}
-
 	if (KEYMANAGER->isOnceKeyDown(VK_F6))
 	{
 		SCENEMANAGER->changeScene("dungeon2F");
@@ -120,6 +129,10 @@ void playGround::update()
 	if (KEYMANAGER->isOnceKeyDown(VK_F7))
 	{
 		SCENEMANAGER->changeScene("bossScene");
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_F8))
+	{
+		SCENEMANAGER->changeScene("menu");
 	}
 
 	KEYANIMANAGER->update();
