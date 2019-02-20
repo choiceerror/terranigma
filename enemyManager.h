@@ -48,6 +48,7 @@ struct tagShockAttack
 	float x, y;
 	image* image;
 	animation* ani;
+	bool isAttack;
 };
 
 class player;

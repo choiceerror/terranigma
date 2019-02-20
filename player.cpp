@@ -1032,72 +1032,73 @@ void player::enemyCollision(bool enemyCheck)
 				//보스 층이라면
 				if (_dungeon->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
 				{
-					//for (int i = 0; i < _enemyManager->getGoldBullet()->getVBossBullet().size(); i++)
-					//{
-					//	if (IntersectRect(&rc, &_player.rc, &_enemyManager->getGoldBullet()->getVBossBullet()[i].rc))
-					//	{
-					//		if (_playerProtect == false)
-					//		{
-					//			_player.HP -= 5 - _player.def;
-					//			if(_player.HP <= 0) _player.HP = 0;
-					//		}
+					for (int i = 0; i < _enemyManager->getGoldBullet()->getVBossBullet().size(); i++)
+					{
+						if (IntersectRect(&rc, &_player.rc, &_enemyManager->getGoldBullet()->getVBossBullet()[i].rc))
+						{
+							if (_playerProtect == false)
+							{
+								_player.HP -= 5 - _player.def;
+								if(_player.HP <= 0) _player.HP = 0;
+							}
 
-					//		_playerProtect = true;
-					//		_alphaChangeTime = GetTickCount();
-					//		_playerProtectTime = GetTickCount();
-					//		_player.state = PLAYER_ENEMY_ATTACK;
-					//	}
-					//}
-					//for (int i = 0; i < _enemyManager->getBlueBullet()->getVBossBullet().size(); i++)
-					//{
-					//	if (IntersectRect(&rc, &_player.rc, &_enemyManager->getBlueBullet()->getVBossBullet()[i].rc))
-					//	{
-					//		if (_playerProtect == false)
-					//		{
-					//			_player.HP -= 5 - _player.def;
-					//			if (_player.HP <= 0) _player.HP = 0;
-					//		}
+							_playerProtect = true;
+							_alphaChangeTime = GetTickCount();
+							_playerProtectTime = GetTickCount();
+							_player.state = PLAYER_ENEMY_ATTACK;
+						}
+					}
+					for (int i = 0; i < _enemyManager->getBlueBullet()->getVBossBullet().size(); i++)
+					{
+						if (IntersectRect(&rc, &_player.rc, &_enemyManager->getBlueBullet()->getVBossBullet()[i].rc))
+						{
+							if (_playerProtect == false)
+							{
+								_player.HP -= 5 - _player.def;
+								if (_player.HP <= 0) _player.HP = 0;
+							}
 
-					//		_playerProtect = true;
-					//		_alphaChangeTime = GetTickCount();
-					//		_playerProtectTime = GetTickCount();
-					//		_player.state = PLAYER_ENEMY_ATTACK;
-					//	}
-					//}
-					//for (int i = 0; i < _enemyManager->getRedBullet()->getVBossBullet().size(); i++)
-					//{
-					//	if (IntersectRect(&rc, &_player.rc, &_enemyManager->getRedBullet()->getVBossBullet()[i].rc))
-					//	{
-					//		if (_playerProtect == false)
-					//		{
-					//			_player.HP -= 5 - _player.def;
-					//			if (_player.HP <= 0) _player.HP = 0;
-					//		}
+							_playerProtect = true;
+							_alphaChangeTime = GetTickCount();
+							_playerProtectTime = GetTickCount();
+							_player.state = PLAYER_ENEMY_ATTACK;
+						}
+					}
+					for (int i = 0; i < _enemyManager->getRedBullet()->getVBossBullet().size(); i++)
+					{
+						if (IntersectRect(&rc, &_player.rc, &_enemyManager->getRedBullet()->getVBossBullet()[i].rc))
+						{
+							if (_playerProtect == false)
+							{
+								_player.HP -= 5 - _player.def;
+								if (_player.HP <= 0) _player.HP = 0;
+							}
 
-					//		_playerProtect = true;
-					//		_alphaChangeTime = GetTickCount();
-					//		_playerProtectTime = GetTickCount();
-					//		_player.state = PLAYER_ENEMY_ATTACK;
-					//	}
-					//}
-					//for (int i = 0; i < _enemyManager->getRgbBullet()->getVBossBullet().size(); i++)
-					//{
-					//	if (IntersectRect(&rc, &_player.rc, &_enemyManager->getRgbBullet()->getVBossBullet()[i].rc))
-					//	{
-					//		if (_playerProtect == false)
-					//		{
-					//			_player.HP -= 5 - _player.def;
-					//			if (_player.HP <= 0) _player.HP = 0;
-					//		}
+							_playerProtect = true;
+							_alphaChangeTime = GetTickCount();
+							_playerProtectTime = GetTickCount();
+							_player.state = PLAYER_ENEMY_ATTACK;
+						}
+					}
+					for (int i = 0; i < _enemyManager->getRgbBullet()->getVBossBullet().size(); i++)
+					{
+						if (IntersectRect(&rc, &_player.rc, &_enemyManager->getRgbBullet()->getVBossBullet()[i].rc))
+						{
+							if (_playerProtect == false)
+							{
+								_player.HP -= 5 - _player.def;
+								if (_player.HP <= 0) _player.HP = 0;
+							}
 
-					//		_playerProtect = true;
-					//		_alphaChangeTime = GetTickCount();
-					//		_playerProtectTime = GetTickCount();
-					//		_player.state = PLAYER_ENEMY_ATTACK;
-					//	}
-					//}
+							_playerProtect = true;
+							_alphaChangeTime = GetTickCount();
+							_playerProtectTime = GetTickCount();
+							_player.state = PLAYER_ENEMY_ATTACK;
+						}
+					}
 
-					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getShockAttack()->rc))
+					if (IntersectRect(&rc, &_player.rc, &_enemyManager->getShockAttack()->rc)
+						|| IntersectRect(&rc, &_player.rc, &_enemyManager->getShockAttack()->rc2))
 					{
 						if (_playerProtect == false)
 						{

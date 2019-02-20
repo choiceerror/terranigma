@@ -138,8 +138,8 @@ void enemyManager::render(float cameraX, float cameraY)
 {
 	//Rectangle(getMemDC(), _objectRc);
 	//Rectangle(getMemDC(), _playerAttackRc);
-	Rectangle(getMemDC(), _shockAttack->rc.left - cameraX, _shockAttack->rc.top - cameraY, _shockAttack->rc.right - cameraX, _shockAttack->rc.bottom - cameraY);
-	Rectangle(getMemDC(), _shockAttack->rc2.left - cameraX, _shockAttack->rc2.top - cameraY, _shockAttack->rc2.right - cameraX, _shockAttack->rc2.bottom - cameraY);
+	//Rectangle(getMemDC(), _shockAttack->rc.left - cameraX, _shockAttack->rc.top - cameraY, _shockAttack->rc.right - cameraX, _shockAttack->rc.bottom - cameraY);
+	//Rectangle(getMemDC(), _shockAttack->rc2.left - cameraX, _shockAttack->rc2.top - cameraY, _shockAttack->rc2.right - cameraX, _shockAttack->rc2.bottom - cameraY);
 	//렌더링 모음 함수
 	drawAll(cameraX, cameraY);
 
@@ -323,8 +323,6 @@ void enemyManager::setEnemy()
 		boss* bs;
 		bs = new boss;
 
-		_shockAttack->x = bs->getX();
-		_shockAttack->y = bs->getY();
 		bs->init("boss", "boss", GAMESIZEX / 2 + 70, 1600, 0, 0, BOSS_HP);
 		_vBoss.push_back(bs);
 	}
@@ -858,13 +856,14 @@ void enemyManager::enemyDead()
 	{
 		if (_vBoss[0]->getCurrentHP() <= 0.0f)
 		{
-			//erase 뻑나서 이런식으로 처리함.
+			//erase는 업데이트를 계속돌면 뻑나서 한번만 들어오게끔 처리함.
 			if (_isOnce[4] == false)
 			{
 				EFFECTMANAGER->play("bossDeadEffect", _vBoss[0]->getViewX(), _vBoss[0]->getViewY());
+				_vBoss.erase(_vBoss.begin());
 				_isOnce[4] = true;
 			}
-			//_vBoss.erase(_vBoss.begin());
+			
 		}
 	}
 
@@ -1634,8 +1633,8 @@ void enemyManager::bossAttackPattern()
 
 				_shockAttack->x = _vBoss[0]->getX() - 70;
 				_shockAttack->y = _vBoss[0]->getY() / 2 + 200;
-				_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y + 300, 50, 200);
-				_shockAttack->rc2 = RectMakeCenter(_shockAttack->x + 140, _shockAttack->y + 300, 50, 200);
+				_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y + 300, 40, 250);
+				_shockAttack->rc2 = RectMakeCenter(_shockAttack->x + 140, _shockAttack->y + 300, 40, 250);
 
 				_shockAttack->ani->start();
 
@@ -1659,7 +1658,7 @@ void enemyManager::bossAttackPattern()
 				//시간마다 공격
 				if (3.0f + _attackWorldTime[ATTACK_ONE] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::GOLD_BULLET)
 				{
-					_rndAttack[ATTACK_ONE] = RND->getRandomInt(1, 3);
+					_rndAttack[ATTACK_ONE] = RND->getRandomInt(1, 2);
 					_rndAttackType[0] = RND->getRandomInt(1, 2);
 
 					if (_rndAttackType[0] == 1)
@@ -1687,10 +1686,6 @@ void enemyManager::bossAttackPattern()
 						_bulletPattern = BULLET_PATTERN::RED_BULLET;
 						_attackPattern = ATTACK_THREE;
 					}
-					else if (_rndAttack[ATTACK_ONE] == 3)
-					{
-						_attackPattern = ATTACK_SHOCK;
-					}
 
 					_attackWorldTime[ATTACK_ONE] = TIMEMANAGER->getWorldTime();
 				}
@@ -1698,9 +1693,9 @@ void enemyManager::bossAttackPattern()
 			case ATTACK_TWO:
 
 				//시간마다 공격
-				if (3.0f + _attackWorldTime[ATTACK_TWO] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::BLUE_BULLET)
+				if (3.5f + _attackWorldTime[ATTACK_TWO] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::BLUE_BULLET)
 				{
-					_rndAttack[ATTACK_TWO] = RND->getRandomInt(1, 3);
+					_rndAttack[ATTACK_TWO] = RND->getRandomInt(1, 2);
 
 					_blueBullet->bossFire(boss.x - 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_TWO], 1);
 					_blueBullet->bossFire(boss.x + 150, boss.y, (PI / 180) * 270, _bulletSpeed[ATTACK_TWO], 1);
@@ -1716,10 +1711,6 @@ void enemyManager::bossAttackPattern()
 						_bulletPattern = BULLET_PATTERN::RED_BULLET;
 						_attackPattern = ATTACK_THREE;
 					}
-					else if (_rndAttack[ATTACK_ONE] == 3)
-					{
-						_attackPattern = ATTACK_SHOCK;
-					}
 
 					_attackWorldTime[ATTACK_TWO] = TIMEMANAGER->getWorldTime();
 
@@ -1729,9 +1720,9 @@ void enemyManager::bossAttackPattern()
 			case ATTACK_THREE:
 
 				//시간마다 공격
-				if (3.0f + _attackWorldTime[ATTACK_THREE] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::RED_BULLET)
+				if (4.0f + _attackWorldTime[ATTACK_THREE] <= TIMEMANAGER->getWorldTime() && _bulletPattern == BULLET_PATTERN::RED_BULLET)
 				{
-					_rndAttack[ATTACK_THREE] = RND->getRandomInt(1, 3);
+					_rndAttack[ATTACK_THREE] = RND->getRandomInt(1, 2);
 					_rndAttackType[1] = RND->getRandomInt(1, 2);
 
 					if (_rndAttackType[1] == 1)
@@ -1758,58 +1749,36 @@ void enemyManager::bossAttackPattern()
 						_bulletPattern = BULLET_PATTERN::BLUE_BULLET;
 						_attackPattern = ATTACK_TWO;
 					}
-					else if (_rndAttack[ATTACK_ONE] == 3)
-					{
-						_attackPattern = ATTACK_SHOCK;
-					}
 
 					_attackWorldTime[ATTACK_THREE] = TIMEMANAGER->getWorldTime();
 				}
 				break;
-			case ATTACK_SHOCK:
+			}
 
-				if (_vBoss[0]->countAttack() == true)
-				{
-					_rndAttack[ATTACK_SHOCK] = RND->getRandomInt(1, 3);
-					_rndAttackType[2] = RND->getRandomInt(1, 2);
-
-					if (_rndAttackType[2] == 1)
-					{
-						_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "leftShock");
-					}
-					else if (_rndAttackType[2] == 2)
-					{
-						_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "rightShock");
-					}
-
-					//랜덤어택
-					if (_rndAttack[ATTACK_SHOCK] == 1)
-					{
-						_bulletPattern = BULLET_PATTERN::GOLD_BULLET;
-						_attackPattern = ATTACK_ONE;
-					}
-					else if (_rndAttack[ATTACK_SHOCK] == 2)
-					{
-						_bulletPattern = BULLET_PATTERN::BLUE_BULLET;
-						_attackPattern = ATTACK_TWO;
-					}
-					else if (_rndAttack[ATTACK_SHOCK] == 3)
-					{
-						_bulletPattern = BULLET_PATTERN::RED_BULLET;
-						_attackPattern = ATTACK_THREE;
-					}
-					_shockAttack->x = _vBoss[0]->getX();
-					_shockAttack->y = _vBoss[0]->getY() / 2 + 200;
-					_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y + 100, 50, 100);
-					_shockAttack->ani->start();
-
-				}
-				else
-				{
-					_shockAttack->rc = RectMakeCenter(NULL, NULL, NULL, NULL);
-				}
-				break;
-
+			//0.5초와 2.5초사이에 공격
+			if (0.5f + _attackWorldTime[ATTACK_SHOCK] <= TIMEMANAGER->getWorldTime() && 2.5f + _attackWorldTime[ATTACK_SHOCK] > TIMEMANAGER->getWorldTime())
+			{
+				_shockAttack->isAttack = true;
+				_shockAttack->ani = KEYANIMANAGER->findAnimation("shock", "leftShock");
+				_shockAttack->ani->start();
+			}
+			//3초가 지나면 공격끄고
+			else if (3.0f + _attackWorldTime[ATTACK_SHOCK] <= TIMEMANAGER->getWorldTime() && 4.0f + _attackWorldTime[ATTACK_SHOCK] > TIMEMANAGER->getWorldTime())
+			{
+				_shockAttack->isAttack = false;
+				_shockAttack->rc = RectMakeCenter(NULL, NULL, NULL, NULL);
+			}
+			//10초가 지나야 재공격
+			else if (10.0f + _attackWorldTime[ATTACK_SHOCK] <= TIMEMANAGER->getWorldTime())
+			{
+				_attackWorldTime[ATTACK_SHOCK] = TIMEMANAGER->getWorldTime();
+			}
+			//공격하는동안 렉트갱신
+			if (_shockAttack->isAttack == true)
+			{
+				_shockAttack->x = _vBoss[0]->getX() - 160;
+				_shockAttack->y = _vBoss[0]->getY() / 2 + 190;
+				_shockAttack->rc = RectMakeCenter(_shockAttack->x + 150, _shockAttack->y + 300, 50, 250);
 			}
 		}
 
@@ -1919,7 +1888,7 @@ void enemyManager::bossBulletDraw(float cameraX, float cameraY)
 			_rgbBullet->render(cameraX, cameraY);
 		}
 
-		if (_attackPattern == ATTACK_SHOCK)
+		if (_shockAttack->isAttack == true)
 		{
 			_shockAttack->image->expandAniRenderCenter(getMemDC(), _shockAttack->x, _shockAttack->y, _shockAttack->ani, 3.f, 3.f);
 		}

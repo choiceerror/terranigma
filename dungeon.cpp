@@ -131,7 +131,7 @@ void dungeon::render()
 		_clockFade->render();
 		IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 
-		Rectangle(getMemDC(), _dungeonDown);
+		//Rectangle(getMemDC(), _dungeonDown);
 		//Rectangle(getMemDC(), _dungeonUp);
 
 		//char str[100];
