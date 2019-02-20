@@ -117,10 +117,11 @@ void player::update(bool enemyCheck, int a)
 	levelUP();
 	if (!_death)
 	{
-		if (!_levelUP)
+		if (!_levelUP && !(_player.state == PLAYER_FALL))
 		{
 			enemyCollision(enemyCheck);
-			if ((!(_player.state == PLAYER_ENEMY_ATTACK) || _player.state == PLAYER_IDLE) && !_unMove)
+			if ((!(_player.state == PLAYER_ENEMY_ATTACK) || _player.state == PLAYER_IDLE) && !_unMove &&
+				!(_player.state == PLAYER_DASH_ATTACK))
 			{
 				keyInput();
 			}
@@ -189,19 +190,17 @@ void player::render(float cameraX, float cameraY, bool uiRender)
 	//sprintf_s(str, "%d", _player.state);
 	//SetTextColor(getMemDC(), RGB(0, 0, 0));
 	//TextOut(getMemDC(), 100, 120, str, strlen(str));
-	//
-
-	//
+	
 	//sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
 	//TextOut(getMemDC(), 140, 120, str, strlen(str));
 	playerUIRender(uiRender);
 
-	sprintf_s(str, "%d", _player.exp);
+	sprintf_s(str, "%d", _attackComboKey);
 	TextOut(getMemDC(), 120, 120, str, strlen(str));
-	sprintf_s(str, "%d", _player.maxExp);
-	TextOut(getMemDC(), 140, 120, str, strlen(str));
-	sprintf_s(str, "%d", _levelUP);
-	TextOut(getMemDC(), 160, 120, str, strlen(str));
+	//sprintf_s(str, "%d", _player.maxExp);
+	//TextOut(getMemDC(), 140, 120, str, strlen(str));
+	//sprintf_s(str, "%d", _levelUP);
+	//TextOut(getMemDC(), 160, 120, str, strlen(str));
 }
 // 캐릭터 프레임 초기값
 void player::keyFrameInit()
@@ -288,8 +287,8 @@ void player::keyFrameInit()
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashJumpAttackDown", "player", dashJumpAttackDown, 8, PLAYERJUMP, false, callBackJump, this);
 	int death[] = { 324,325,326,327,328,329 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "death", "player", death, 6, PLAYERFPS, false);
-	int fall[] = { 330, 331, 332 };
-	KEYANIMANAGER->addArrayFrameAnimation("ark", "fall", "player", fall, 3, PLAYERFPS, false);
+	int fall[] = { 330, 331,331, 332 };
+	KEYANIMANAGER->addArrayFrameAnimation("ark", "fall", "player", fall, 4, 4, false, callBackFall, this);
 	int dashAttackLeft[] = { 340, 341, 342, 343 };
 	KEYANIMANAGER->addArrayFrameAnimation("ark", "dashAttackLeft", "player", dashAttackLeft, 4, PLAYERFPS, false, callBackDashAttack, this);
 	int dashAttackRight[] = { 336, 337, 338, 339 };
@@ -402,7 +401,7 @@ void player::keyInput()
 		if (!_isRun && !_isJump)
 		{
 			_attackMoveStop = true;
-			if (_attackComboKey == 1)
+			if (_attackComboKey >= 1)
 			{
 				_player.state = PLAYER_COMBINATION;
 			}
@@ -411,6 +410,9 @@ void player::keyInput()
 		else if (_isRun && !_isJump)
 		{
 			_player.state = PLAYER_DASH_ATTACK;
+			_startX = _player.x;
+			_startY = _player.y;
+			_dashAttack->dashAttacking(&_player.x, &_player.y, &_startX, &_startY, _player.direction, _player.speed);
 		}
 		if (_isJump && !(_player.speed == 5))
 		{
@@ -452,7 +454,10 @@ void player::keyDownInput(PLAYERDIRECTION direction)
 	{
 		if (!_isAttack)
 		{
-			if (!(_player.state == PLAYER_JUMP_ATTACK) && !(_player.state == PLAYER_COMBINATION)) _player.direction = direction;
+			if (!(_player.state == PLAYER_JUMP_ATTACK) && !(_player.state == PLAYER_COMBINATION))
+			{
+				_player.direction = direction;
+			}
 		}
 		if (!(_player.state == PLAYER_DASH_ATTACK))
 		{
@@ -549,6 +554,7 @@ void player::callBackAttack(void * obj)
 	player* playerAttack = (player*)obj;
 
 	playerAttack->setPlayerState(PLAYER_IDLE);
+
 	if (playerAttack->getPlayerDirection() == LEFT)
 	{
 		playerAttack->setPlayerDirection(LEFT);
@@ -577,7 +583,7 @@ void player::callBackDashAttack(void * obj)
 	player* playerAttack = (player*)obj;
 
 	if (playerAttack->getPlayerState() == PLAYER_IDLE)  playerAttack->setPlayerState(PLAYER_IDLE);
-	else  playerAttack->setPlayerState(PLAYER_RUN);
+	else if (playerAttack->getPlayerSpeed() == 5)  playerAttack->setPlayerState(PLAYER_RUN);
 	if (playerAttack->getPlayerDirection() == LEFT)
 	{
 		playerAttack->setPlayerDirection(LEFT);
@@ -638,6 +644,17 @@ void player::callBackJump(void * obj)
 		playerAttack->setPlayerDirection(DOWN);
 		playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "runDown"));
 	}
+	playerAttack->getPlayerAni()->start();
+
+}
+
+void player::callBackFall(void * obj)
+{
+	player* playerAttack = (player*)obj;
+
+	playerAttack->setPlayerState(PLAYER_IDLE);
+	playerAttack->setPlayerDirection(DOWN);
+	playerAttack->setPlayerAni(KEYANIMANAGER->findAnimation("ark", "idleDown"));
 	playerAttack->getPlayerAni()->start();
 
 }
@@ -1192,6 +1209,25 @@ void player::playerLoad()
 		_player.maxExp = (atoi(vStr[5].c_str()));
 		_player.money = (atoi(vStr[6].c_str()));
 		_player.level = (atoi(vStr[7].c_str()));
+	}
+}
+
+void player::playerDungeonFall(RECT fallRc, RECT unMoveRc)
+{
+	RECT rc;
+	if (IntersectRect(&rc, &_player.rc, &fallRc) && _player.rc.bottom >= fallRc.top )
+	{
+		_player.state = PLAYER_FALL;
+
+	}
+	if (_player.state == PLAYER_FALL && !(KEYANIMANAGER->findAnimation("ark", "fall")->getFramePosArrOnce() == 332))
+	{
+		_player.y += 2.8f;
+	}
+
+	if (IntersectRect(&rc, &_player.rc, &unMoveRc) && !(_player.state == PLAYER_FALL))
+	{
+		_player.y += _player.speed;
 	}
 }
 

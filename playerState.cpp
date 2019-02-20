@@ -245,5 +245,8 @@ void player::playerState()
 	case PLAYER_DEATH:
 		playerAniName("ark", "death");
 		break;
+	case PLAYER_FALL:
+		playerAniName("ark", "fall");
+		break;
 	}
 }

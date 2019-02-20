@@ -171,6 +171,8 @@ public:
 	void playerSave();
 	//캐릭터 스텟 불러오기
 	void playerLoad();
+	//던전 2층에서 떨어지는거
+	void playerDungeonFall(RECT fallRc, RECT unMoveRc);
 
 	void setEnemyManagerAddressLink(enemyManager* em) { _enemyManager = em; }
 	void setMapManagerAddressLink(dungeonMap* dun) { _dungeon = dun; }
@@ -184,6 +186,8 @@ public:
 	static void callBackDashAttack(void* obj);
 	//콜백 점프
 	static void callBackJump(void* obj);
+
+	static void callBackFall(void* obj);
 
 	//===================== 타일 검출 =======================
 	void tileCheck();

@@ -30,28 +30,28 @@ void DashAttack::update(float* x, float* y)
 	{ 
 	case 0:
 		*_x -= _speed;
-		if (*_startX - *x  >= 5)
+		if (*_startX - *x  >= 200)
 		{
 			_isDashAttack = false;
 		}
 		break;
 	case 1:
 		*_x += _speed;
-		if (*x - *_startX >= 5)
+		if (*x - *_startX >= 200)
 		{
 			_isDashAttack = false;
 		}
 		break;
 	case 2:
 		*_y -= _speed;
-		if (*_startY - *y >= 5)
+		if (*_startY - *y >= 200)
 		{
 			_isDashAttack = false;
 		}
 		break;
 	case 3:
 		*_y += _speed;
-		if (*y - *_startY >= 5)
+		if (*y - *_startY >= 200)
 		{
 			_isDashAttack = false;
 		}

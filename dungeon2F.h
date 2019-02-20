@@ -20,6 +20,8 @@ private:
 	RECT _dungeonUp;
 	RECT _dungeonDown;
 
+	RECT _dungeDownJumpRc, _dungeUnMove;
+
 	POINT _goal;
 
 	float _speed;
@@ -61,5 +63,7 @@ public:
 	void playerItemGet(); //플레이어 아이템 얻는 함수
 
 	void setWindowsSize(int x, int y, int width, int height);
+
+	RECT getDungeonJumpRc() { return _dungeDownJumpRc; }
 };
 

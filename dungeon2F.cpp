@@ -60,6 +60,13 @@ HRESULT dungeon2F::init()
 	_dungeonUpBool = false;
 	_alphaBlendOut = false;
 
+	_dungeonDownBool = false;
+	_dungeonUpBool = false;
+
+	_dungeDownJumpRc = RectMake(100, 350, 170, 100);
+	_dungeUnMove = RectMake(100, 440, 180, 50);
+
+
 	playerSceneLoad();
 
 	return S_OK;
@@ -84,6 +91,12 @@ void dungeon2F::update()
 	playerItemGet();
 	_clockFade->update();
 	alphaBlend();
+
+
+	_dungeDownJumpRc = RectMake(100 - _camera->getCameraX(), 350 - _camera->getCameraY(), 170, 100);
+	_dungeUnMove = RectMake(100 - _camera->getCameraX(), 440 - _camera->getCameraY(), 180, 50);
+
+	_player->playerDungeonFall(_dungeDownJumpRc, _dungeUnMove);
 
 	//==============¹Ø¿¡ ÀÛ¼º ±İÁö===============
 	dungeonChange();
@@ -114,6 +127,9 @@ void dungeon2F::render()
 			}
 		}
 	}
+
+	//Rectangle(getMemDC(), _dungeDownJumpRc);
+	//Rectangle(getMemDC(), _dungeUnMove);
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_clockFade->render();
