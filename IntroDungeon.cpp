@@ -354,7 +354,7 @@ void IntroDungeon::render()
 
 	if (_guardianOn)
 	{
-		_messageSpear->guardianMessageRender(1, _playerTalkKey);
+		_messageSpear->guardianMessageRender(_twice, _playerTalkKey);
 		_playerTalkKey = false;
 	}
 }

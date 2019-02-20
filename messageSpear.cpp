@@ -109,6 +109,27 @@ void messageSpear::render()
 			_pageOn = false;
 		}
 	}
+	if (KEYMANAGER->isOnceKeyDown('6'))
+	{
+		if (!_elderTalk) _elderTalk = true;
+		else
+		{
+			_once = true;
+			_elderTalk = false;
+			_pageOn = false;
+		}
+	}
+	if (KEYMANAGER->isOnceKeyDown('7'))
+	{
+		if (!_elderTalk) _elderTalk = true;
+		else
+		{
+			_once = true;
+			_elderTalk = false;
+			_pageOn = false;
+		}
+	}
+
 	messageRender("messageFile/할아버지.txt", _grandfaTalk, 8 , 26, 0);
 	messageRender("messageFile/할머니.txt", _grandmaTalk, 33, 34, 0);
 	messageRender("messageFile/엘.txt", _elleTalk, 14, 31, 1);
@@ -140,9 +161,7 @@ void messageSpear::render()
 	{
 		_guardianPageNext = true;
 	}
-	guardianMessageRender(_playerKey, _guardianPageNext);
-	_guardianPageNext = false;
-
+	
 	//char str[128];
 	//sprintf_s(str, "%d", _guardianPageNext);
 	//TextOut(getMemDC(), 100, 100, str, strlen(str));
@@ -243,6 +262,19 @@ void messageSpear::maidMessage()
 	TXTDATA->txtSave("messageFile/메이드.txt", vStr);
 }
 
+void messageSpear::townManMessage()
+{
+	string message[2];
+	vector<string> vStr;
+
+	message[0] = "";
+	message[1] = "";
+
+	vStr.push_back(message[0]);
+	vStr.push_back(message[1]);
+	TXTDATA->txtSave("messageFile/메이드.txt", vStr);
+}
+
 void messageSpear::guardianMessage()
 {
 	string message[8];
@@ -265,6 +297,8 @@ void messageSpear::guardianMessage()
 
 	TXTDATA->txtSave("messageFile/가디언.txt", vStr);
 }
+
+
 
 void messageSpear::messageRender(const char* txtName, bool messageBool, int timeNum, int timeNum2, int nameTrue)
 {
@@ -334,7 +368,7 @@ void messageSpear::messageRender(const char* txtName, bool messageBool, int time
 }
 void messageSpear::guardianMessageRender(bool guardian ,bool playerKey)
 {
-	if (guardian == true)
+	if (guardian == false && _pageNext <= 3) 
 	{
 		vector<string> vStr;
 		_font = CreateFont(35, 25, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
@@ -380,7 +414,6 @@ void messageSpear::guardianMessageRender(bool guardian ,bool playerKey)
 			{
 				_pageNext++;
 			}
-			else _pageNext = 0;
 			if (_num < 6)
 			{
 				_num += 2;
@@ -390,7 +423,6 @@ void messageSpear::guardianMessageRender(bool guardian ,bool playerKey)
 				_num = 0;
 				_guardianTalkCount[0] = _guardianTalkCount[1] = 0;
 				_pageOn = false;
-				_pageNext = 0;
 			}
 			_pageOn = false;
 			_guardianTalkCount[0] = _guardianTalkCount[1] = 0;

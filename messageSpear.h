@@ -43,7 +43,9 @@ public:
 	void elleMessage();
 	void fishManMessage();
 	void maidMessage();
+	void townManMessage();
 	void guardianMessage(); 
+
 
 	void messageRender(const char* txtName, bool messageBool, int timeNum, int timeNum2, int nameTrue);
 	void guardianMessageRender(bool guardian, bool playeyKey);
