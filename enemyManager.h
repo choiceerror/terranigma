@@ -166,6 +166,11 @@ public:
 	vector<POINTFLOAT>* setVEnemyDeadPoint() { return &_vEnemyDeadPoint; }
 
 	fireMonsterBullet* getFireMonsterBullet() { return _fireMonsterBullet; }
+	bossBullet* getGoldBullet() { return _goldBullet; }
+	bossBullet* getBlueBullet() { return _blueBullet; }
+	bossBullet* getRedBullet() { return _redBullet; }
+	bossBullet* getRgbBullet() { return _rgbBullet; }
+	tagShockAttack* getShockAttack() { return _shockAttack; }
 
 	void setPlayerMemoryAddressLink(player* player) { _player = player; }
 	void setDungeonMapAddressLink(dungeonMap* map) { _dungeonMap = map; }

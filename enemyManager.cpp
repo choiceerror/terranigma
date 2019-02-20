@@ -138,6 +138,8 @@ void enemyManager::render(float cameraX, float cameraY)
 {
 	//Rectangle(getMemDC(), _objectRc);
 	//Rectangle(getMemDC(), _playerAttackRc);
+	Rectangle(getMemDC(), _shockAttack->rc.left - cameraX, _shockAttack->rc.top - cameraY, _shockAttack->rc.right - cameraX, _shockAttack->rc.bottom - cameraY);
+	Rectangle(getMemDC(), _shockAttack->rc2.left - cameraX, _shockAttack->rc2.top - cameraY, _shockAttack->rc2.right - cameraX, _shockAttack->rc2.bottom - cameraY);
 	//렌더링 모음 함수
 	drawAll(cameraX, cameraY);
 
@@ -1632,8 +1634,8 @@ void enemyManager::bossAttackPattern()
 
 				_shockAttack->x = _vBoss[0]->getX() - 70;
 				_shockAttack->y = _vBoss[0]->getY() / 2 + 200;
-				_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y, 10, 300);
-				_shockAttack->rc2 = RectMakeCenter(_shockAttack->x + 140, _shockAttack->y, 10, 300);
+				_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y + 300, 50, 200);
+				_shockAttack->rc2 = RectMakeCenter(_shockAttack->x + 140, _shockAttack->y + 300, 50, 200);
 
 				_shockAttack->ani->start();
 
@@ -1798,7 +1800,7 @@ void enemyManager::bossAttackPattern()
 					}
 					_shockAttack->x = _vBoss[0]->getX();
 					_shockAttack->y = _vBoss[0]->getY() / 2 + 200;
-					_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y, 10, 300);
+					_shockAttack->rc = RectMakeCenter(_shockAttack->x, _shockAttack->y + 100, 50, 100);
 					_shockAttack->ani->start();
 
 				}

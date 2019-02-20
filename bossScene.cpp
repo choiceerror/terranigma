@@ -56,7 +56,7 @@ void bossScene::release()
 void bossScene::update()
 {
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
-	_player->update(false, 1);
+	_player->update(true, 1);
 	_itemManager->update();
 	_enemyManager->update();
 	_dungeonBossMap->update();
