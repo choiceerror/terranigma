@@ -63,6 +63,13 @@ HRESULT dungeon::init()
 	_player->setPlayerCurrentScene(PLAYERSCENE::DUNGEON_1F);
 
 
+	if (_player->getPlayerX() < 100 || _player->getPlayerX() > 924 || _player->getPlayerY() < 0 || _player->getPlayerY() > 3200 || (_player->getPlayerX() == 0 && _player->getPlayerY() == 0))
+	{
+		_player->setPlayerDirection(UP);
+		_player->setPlayerPosX(500);
+		_player->setPlayerPosY(2816);
+	}
+
 	return S_OK;
 }
 
