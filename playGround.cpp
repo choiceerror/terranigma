@@ -160,6 +160,7 @@ void playGround::fileDelete()
 	deleteFile("saveFile/inventory.txt");
 	deleteFile("saveFile/플레이어.txt");
 	deleteFile("saveFile/playerScene.txt");
+	deleteFile("saveFile/UiSave.txt");
 }
 
 void playGround::deleteFile(const char * fileAddress)

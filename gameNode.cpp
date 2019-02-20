@@ -93,6 +93,7 @@ void gameNode::fileDelete()
 	deleteFile("saveFile/inventory.txt");
 	deleteFile("saveFile/플레이어.txt");
 	deleteFile("saveFile/playerScene.txt");
+	deleteFile("saveFile/UiSave.txt");
 }
 
 void gameNode::deleteFile(const char * fileAddress)

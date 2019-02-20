@@ -67,7 +67,7 @@ void ui::release()
 	SAFE_DELETE(_blackFade);
 	SAFE_DELETE(_iMgr);
 	SAFE_DELETE(_inventory);
-	//SAFE_DELETE(_clockFade);
+	SAFE_DELETE(_player);
 }
 
 void ui::update()

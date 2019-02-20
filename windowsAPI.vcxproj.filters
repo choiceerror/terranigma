@@ -336,6 +336,9 @@
     <ClInclude Include="messageSpear.h">
       <Filter>PlayGround\npc</Filter>
     </ClInclude>
+    <ClInclude Include="Bubble.h">
+      <Filter>PlayGround\effect</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -544,6 +547,9 @@
     </ClCompile>
     <ClCompile Include="messageSpear.cpp">
       <Filter>PlayGround\npc</Filter>
+    </ClCompile>
+    <ClCompile Include="Bubble.cpp">
+      <Filter>PlayGround\effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
