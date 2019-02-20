@@ -330,9 +330,6 @@
     <ClInclude Include="dungeonMap.h">
       <Filter>PlayGround\tileMap</Filter>
     </ClInclude>
-    <ClInclude Include="JumpAttack.h">
-      <Filter>PlayGround\player\state</Filter>
-    </ClInclude>
     <ClInclude Include="messageSpear.h">
       <Filter>PlayGround\npc</Filter>
     </ClInclude>
@@ -474,9 +471,6 @@
       <Filter>PlayGround\player\state</Filter>
     </ClCompile>
     <ClCompile Include="jump.cpp">
-      <Filter>PlayGround\player\state</Filter>
-    </ClCompile>
-    <ClCompile Include="JumpAttack.cpp">
       <Filter>PlayGround\player\state</Filter>
     </ClCompile>
     <ClCompile Include="Armor.cpp">

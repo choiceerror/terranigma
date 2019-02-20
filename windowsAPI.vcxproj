@@ -185,7 +185,6 @@
     <ClInclude Include="ItemManager.h" />
     <ClInclude Include="ItemType.h" />
     <ClInclude Include="jump.h" />
-    <ClInclude Include="JumpAttack.h" />
     <ClInclude Include="keyAniManager.h" />
     <ClInclude Include="keyManager.h" />
     <ClInclude Include="knightMonster.h" />
@@ -260,7 +259,6 @@
     <ClCompile Include="item.cpp" />
     <ClCompile Include="ItemManager.cpp" />
     <ClCompile Include="jump.cpp" />
-    <ClCompile Include="JumpAttack.cpp" />
     <ClCompile Include="keyAniManager.cpp" />
     <ClCompile Include="keyManager.cpp" />
     <ClCompile Include="knightMonster.cpp" />

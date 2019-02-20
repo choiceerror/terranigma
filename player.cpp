@@ -467,6 +467,8 @@ void player::keyInput()
 // Å° ´­·¶À»¶§
 void player::keyDownInput(PLAYERDIRECTION direction)
 {
+
+	
 	if (!(_player.state == PLAYER_JUMP || _player.state == PLAYER_DASH_ATTACK || _player.state == PLAYER_JUMP_ATTACK || _player.state == PLAYER_DASH_JUMP_ATTACK))
 	{
 		if (!_isAttack)
@@ -478,7 +480,11 @@ void player::keyDownInput(PLAYERDIRECTION direction)
 		}
 		if (!(_player.state == PLAYER_DASH_ATTACK))
 		{
-			if (!_isRun) _player.state = PLAYER_WALK;
+			if (!_isRun)
+			{
+				_player.speed = 3;
+				_player.state = PLAYER_WALK;
+			}
 			if (_doubleKey[direction] == 1)
 			{
 				_player.state = PLAYER_RUN;
@@ -509,7 +515,7 @@ void player::keyUpInput(PLAYERDIRECTION direction)
 	else
 	{
 		_isJump = false;
-		//_player.speed = 0;
+		_player.speed = 0;
 	}
 }
 

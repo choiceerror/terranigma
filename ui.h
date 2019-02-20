@@ -64,6 +64,9 @@ private:
 	//디버그용
 	bool _isIndexMode;
 
+	//환경설정
+	bool _preferences;
+
 public:
 	ui();
 	~ui();
@@ -83,5 +86,8 @@ public:
 	void dataLoad();
 	void itemSetting();
 	void itemDraw();
+
+	void uiIndexNameMessageBox();
+	void uiReferences();
 };
 

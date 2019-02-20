@@ -334,6 +334,7 @@ void messageSpear::messageRender(const char* txtName, bool messageBool, int time
 			else _pageFrameX = 0;
 		}
 		IMAGEMANAGER->findImage("messageSpear")->expandRender(getMemDC(), 0, GAMESIZEY / 2 + 80, 0, 0, 1.7, 1.7);
+		SetTextColor(getMemDC(), RGB(255, 255, 255));
 		TextOut(getMemDC(), 70, 570, vStr[0].c_str(), _talkCount);
 		TextOut(getMemDC(), 70, 620, vStr[1].c_str(), _talkCount2);
 		if (_pageOn)
@@ -452,14 +453,17 @@ void messageSpear::guardianMessageRender(bool guardian, bool playerKey)
 			TextOut(getMemDC(), 70, 170, playerTalk[2].c_str(), _guardianTalkCount[1]);
 			break;
 		case 1:
+			SetTextColor(getMemDC(), RGB(255, 255, 255));
 			TextOut(getMemDC(), 70, 570, vStr[0].c_str(), _guardianTalkCount[0]);
 			TextOut(getMemDC(), 70, 620, vStr[1].c_str(), _guardianTalkCount[1]);
 			break;
 		case 2:
+			SetTextColor(getMemDC(), RGB(255, 255, 255));
 			TextOut(getMemDC(), 70, 570, vStr[2].c_str(), _guardianTalkCount[0]);
 			TextOut(getMemDC(), 70, 620, vStr[3].c_str(), _guardianTalkCount[1]);
 			break;
 		case 3:
+			SetTextColor(getMemDC(), RGB(255, 255, 255));
 			TextOut(getMemDC(), 70, 570, vStr[4].c_str(), _guardianTalkCount[0]);
 			TextOut(getMemDC(), 70, 620, vStr[5].c_str(), _guardianTalkCount[1]);
 			break;
@@ -468,7 +472,11 @@ void messageSpear::guardianMessageRender(bool guardian, bool playerKey)
 
 		if (_pageOn)
 		{
-			IMAGEMANAGER->findImage("talkPage")->expandRender(getMemDC(), GAMESIZEX - 100, GAMESIZEY - 100, _pageFrameX, 0, 1.5, 1.5);
+			if (_pageNext == 0)
+			{
+				IMAGEMANAGER->findImage("talkPage")->expandRender(getMemDC(), GAMESIZEX - 100, 200, _pageFrameX, 0, 1.5, 1.5); 
+			}
+			else IMAGEMANAGER->findImage("talkPage")->expandRender(getMemDC(), GAMESIZEX - 100, GAMESIZEY - 100, _pageFrameX, 0, 1.5, 1.5);
 		}
 
 		string name;

@@ -40,6 +40,7 @@ HRESULT ui::init()
 	IMAGEMANAGER->addFrameImage("UI", "image/UI.bmp", 4096, 768, 4, 1, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("UIIndex", "image/UIIndex.bmp", 4096, 768, 4, 1, true, MAGENTA);
 	IMAGEMANAGER->addImage("blackRect", GAMESIZEX, GAMESIZEY);
+	IMAGEMANAGER->addFrameImage("uiMessageBox", "image/uiTextBox.bmp", 328, 70, 1, 1, true, MAGENTA);
 
 	//변수 초기화
 	_room = ROOMTYPE::MAIN_ROOM;
@@ -59,6 +60,8 @@ HRESULT ui::init()
 	_move = true;
 	_onceTime = false;
 	_isIndexMode = false;
+	_preferences = false;
+
 	return S_OK;
 }
 
@@ -158,7 +161,7 @@ void ui::render()
 	//_inventory->render();
 	itemDraw();
 
-
+	uiIndexNameMessageBox();
 	//요미
 	IMAGEMANAGER->expandRender("yomi", getMemDC(), _x - 30, _y - 36 * 3, _yomiFrameX, _yomiFrameY, 3.f, 3.f);
 	//페이드아웃
@@ -869,6 +872,13 @@ void ui::placeChange()
 				}
 			}
 		}
+		else if(_yomiIndex == 7)
+		{
+			if (KEYMANAGER->isOnceKeyDown('X'))
+			{
+				_preferences = true;
+			}
+		}
 	}
 
 	if (_isRoomChanging)
@@ -1025,4 +1035,104 @@ void ui::itemDraw()
 	default:
 		break;
 	}
+}
+
+void ui::uiIndexNameMessageBox()
+{
+	string name;
+	HFONT font;
+	HFONT oldFont;
+	font = CreateFont(45, 25, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
+	oldFont = (HFONT)SelectObject(getMemDC(), font);
+	switch (_room)
+	{
+	case ROOMTYPE::MAIN_ROOM:
+		switch (_yomiIndex)
+		{
+		case 0:
+			name = "무기 방";
+			break;
+		case 1:
+			name = "아이템 방";
+			break;
+		case 2:
+			name = "갑옷방";
+			break;
+		case 3:
+			name = "전투 안내서";
+			break;
+		case 4:
+			name = "보석 상자";
+			break;
+		case 5:
+			name = "가이드 북";
+			break;
+		case 6:
+			name = "능력 보기";
+			break;
+		case 7:
+			name = "환경 설정";
+			break;
+		case 8:
+			name = "지도";
+			break;
+		}
+		break;
+	case ROOMTYPE::WEAPON_ROOM:
+		switch (_yomiIndex)
+		{
+		case 0:
+			name = "중앙 방";
+			break;
+		case 1:
+			name = "아이템 방";
+			break;
+		case 2:
+			name = "갑옷 방";
+			break;
+		}
+		break;
+	case ROOMTYPE::ACCESSERY_ROOM:
+		switch (_yomiIndex)
+		{
+		case 0:
+			name = "무기 방";
+			break;
+		case 1:
+			name = "중앙 방";
+			break;
+		case 2:
+			name = "갑옷 방";
+			break;
+		}
+		break;
+	case ROOMTYPE::ARMOR_ROOM:
+		switch (_yomiIndex)
+		{
+		case 0:
+			name = "무기 방";
+			break;
+		case 1:
+			name = "아이템 방";
+			break;
+		case 2:
+			name = "중앙 방";
+			break;
+		}
+		break;
+	}
+
+	IMAGEMANAGER->findImage("uiMessageBox")->expandRender(getMemDC(), GAMESIZEX / 2 - 180, GAMESIZEY - 100, 0, 0, 1.3, 1.3);
+	TextOut(getMemDC(), GAMESIZEX / 2 - 100, GAMESIZEY - 80, name.c_str(), strlen(name.c_str()));
+	SelectObject(getMemDC(), oldFont);
+	DeleteObject(font);
+}
+
+void ui::uiReferences()
+{
+	if (_preferences)
+	{
+		
+	}
+	
 }
