@@ -217,6 +217,7 @@ void dungeon2F::dungeonChange()
 		{
 			playerSceneSave();
 			_sceneChange = true;
+			_player->playerSave();
 			SCENEMANAGER->changeScene("bossScene");
 		}
 
@@ -250,6 +251,7 @@ void dungeon2F::dungeonChange()
 			{
 				playerSceneSave();
 				_sceneChange = true;
+				_player->playerSave();
 				SCENEMANAGER->changeScene("dungeon");
 			}
 

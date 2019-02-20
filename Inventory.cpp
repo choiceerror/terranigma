@@ -263,7 +263,7 @@ void Inventory::inventorySave()
 	WriteFile(file, _weaponInv, sizeof(WEAPONTYPE) * WEAPON_MAX_ARR, &save, NULL);
 	WriteFile(file, _armorInv, sizeof(ARMORTYPE) * ARMOR_MAX_ARR, &save, NULL);
 	WriteFile(file, _accessoryInv, sizeof(ACCESSORYTYPE) * ACCESSORY_MAX_ARR, &save, NULL);
-	WriteFile,(file, _potionInv, sizeof(POTIONTYPE) * POTION_MAX_ARR, &save, NULL);
+	WriteFile(file, _potionInv, sizeof(POTIONTYPE) * POTION_MAX_ARR, &save, NULL);
 
 	CloseHandle(file);
 }
@@ -271,15 +271,19 @@ void Inventory::inventorySave()
 void Inventory::inventoryLoad()
 {
 	HANDLE file;
-	DWORD lode;
+	DWORD load;
 
 	file = CreateFile("saveFile/inventory.txt", GENERIC_READ, NULL, NULL,
 						OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
-	ReadFile(file, _weaponInv, sizeof(WEAPONTYPE) * WEAPON_MAX_ARR, &lode, NULL);
-	ReadFile(file, _armorInv, sizeof(ARMORTYPE) * ARMOR_MAX_ARR, &lode, NULL);
-	ReadFile(file, _accessoryInv, sizeof(ACCESSORYTYPE) * ACCESSORY_MAX_ARR, &lode, NULL);
-	ReadFile(file, _potionInv, sizeof(POTIONTYPE) * POTION_MAX_ARR, &lode, NULL);
+	LARGE_INTEGER curPtr;
+	curPtr.QuadPart = 0;
+	SetFilePointerEx(file, curPtr, NULL, FILE_BEGIN);
+
+	ReadFile(file, _weaponInv, sizeof(WEAPONTYPE) * WEAPON_MAX_ARR, &load, NULL);
+	ReadFile(file, _armorInv, sizeof(ARMORTYPE) * ARMOR_MAX_ARR, &load, NULL);
+	ReadFile(file, _accessoryInv, sizeof(ACCESSORYTYPE) * ACCESSORY_MAX_ARR, &load, NULL);
+	ReadFile(file, _potionInv, sizeof(POTIONTYPE) * POTION_MAX_ARR, &load, NULL);
 
 	CloseHandle(file);
 }
