@@ -199,7 +199,8 @@ void npcManager::townCheck()
 
 			for (int j = 0; j < 1; ++j)
 			{
-				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL)
+				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL || _townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WATER
+					|| _townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_SHIRT)
 				{
 					if (IntersectRect(&rc, &_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->rc, &Collision))
 					{
@@ -216,7 +217,8 @@ void npcManager::townCheck()
 
 			for (int j = 0; j < 1; ++j)
 			{
-				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL)
+				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL || _townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WATER
+					|| _townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_SHIRT)
 				{
 					if (IntersectRect(&rc, &_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->rc, &Collision))
 					{
@@ -233,7 +235,8 @@ void npcManager::townCheck()
 
 			for (int j = 0; j < 1; ++j)
 			{
-				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL)
+				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL || _townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WATER
+					|| _townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_SHIRT)
 				{
 					if (IntersectRect(&rc, &_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->rc, &Collision))
 					{
@@ -250,7 +253,8 @@ void npcManager::townCheck()
 
 			for (int j = 0; j < 1; ++j)
 			{
-				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL)
+				if (_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WALL || _townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_WATER
+					|| _townMap->getTile(tileIndex[j].x, tileIndex[j].y)->obj == OBJ_SHIRT)
 				{
 					if (IntersectRect(&rc, &_townMap->getTile(tileIndex[j].x, tileIndex[j].y)->rc, &Collision))
 					{
