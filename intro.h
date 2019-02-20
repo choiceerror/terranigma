@@ -27,11 +27,10 @@ enum class IMAGECHANGE
 	FOUR,
 	FIVE,
 	SIX,
-	SEVEN,
 };
 enum IMAGEINFO
 {
-	ALPHA = 5,
+	ALPHA = 3,
 };
 
 struct tagIntro
@@ -46,12 +45,27 @@ struct tagIntro
 	bool isSizeUpStop;
 };
 
+struct tagText
+{
+	image* image;
+	float x, y;
+	POINTFLOAT goal;
+	float moveSpeed;
+	float distance;
+	float angle;
+	bool isOnce;
+	float moveWorldTime;
+};
+
 class intro : public gameNode
 {
 private:
 	image* _earthImage;
+	image* _buttonImage;
+	float _buttonWorldTime;
 	float _earthSizeX, _earthSizeY;
 	tagIntro _intro;
+	tagText _text;
 	camera* _camera;
 	HFONT _font;
 	HFONT _oldFont;

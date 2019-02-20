@@ -22,7 +22,16 @@ HRESULT intro::init()
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 
 	_intro.image = IMAGEMANAGER->findImage("인트로1");
-	_earthImage = IMAGEMANAGER->findImage("인트로5");
+	_intro.image->setAlpahBlend(true);
+	_earthImage = IMAGEMANAGER->findImage("인트로5"); //지구 이미지
+	_buttonImage = IMAGEMANAGER->findImage("인트로8"); //버튼이미지
+	_buttonWorldTime = TIMEMANAGER->getWorldTime();
+	//===========텍스트 관련 =============
+	_text.image = IMAGEMANAGER->findImage("인트로6"); //텍스트 이미지
+	_text.x = GAMESIZEX / 2;
+	_text.y = GAMESIZEY / 2 + 80;
+	//===================================
+
 	_intro.alphaValue = 255;
 	_intro.isAlpahOn = false;
 	_intro.isAlpahOut = true;
@@ -30,12 +39,11 @@ HRESULT intro::init()
 	_intro.cameraPos.x = WINSIZEX / 2;
 	_intro.cameraPos.y = 0;
 	_intro.changeWorldTime = TIMEMANAGER->getWorldTime();
-	_intro.changeTime = 5.f;
+	_intro.changeTime = 3.f;
 
 	_textCount[MESSAGE_ONE] = _textCount[MESSAGE_TWO] = 0;
 	_nextText = 0;
 	_imageChange = IMAGECHANGE::ONE;
-	//_earthSizeX = _earthSizeY = 1;
 	//messageAll();
 
 	return S_OK;
@@ -48,28 +56,39 @@ void intro::release()
 
 void intro::update()
 {
-
 	opening();
 	_camera->update(_intro.cameraPos.x, _intro.cameraPos.y);
-
 }
 
 void intro::render()
 {
-	if (_imageChange == IMAGECHANGE::ONE || _imageChange == IMAGECHANGE::TWO || _imageChange == IMAGECHANGE::THREE || _imageChange == IMAGECHANGE::FOUR)
+	switch (_imageChange)
 	{
+	case IMAGECHANGE::ONE:
+	case IMAGECHANGE::TWO:
+	case IMAGECHANGE::THREE:
+	case IMAGECHANGE::FOUR:
 		_intro.image->render(getMemDC(), 0, 0, _intro.cameraPos.x - _camera->getCameraX(), _intro.cameraPos.y - _camera->getCameraY(), GAMESIZEX, GAMESIZEY);
-	}
-
-	if (_imageChange == IMAGECHANGE::FIVE)
-	{
+		break;
+	case IMAGECHANGE::FIVE:
 		_earthImage->expandRenderCenter(getMemDC(), GAMESIZEX / 2, GAMESIZEY / 2, 0, 0, _earthSizeX, _earthSizeY);
-	}
+		break;
+	case IMAGECHANGE::SIX:
+		_intro.image->render(getMemDC(), 0, 0);
+		_text.image->expandRenderCenter(getMemDC(), _text.x, _text.y, 0, 0, 1.5f, 1.5f);
 
+		if (0.5f + _buttonWorldTime <= TIMEMANAGER->getWorldTime() && 1.3f + _buttonWorldTime > TIMEMANAGER->getWorldTime())
+		{
+			_buttonImage->expandRenderCenter(getMemDC(), GAMESIZEX / 2 + 30, GAMESIZEY / 2 + 200, 0, 0, 2.f, 2.f);
+		}
+		else if (1.3f + _buttonWorldTime <= TIMEMANAGER->getWorldTime())
+		{
+			_buttonWorldTime = TIMEMANAGER->getWorldTime();
+		}
+		break;
+	}
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _intro.alphaValue);
-
-
 
 	//messageDraw();
 
@@ -107,11 +126,15 @@ void intro::render()
 	sprintf_s(str, "changeWorldTime : %f", _intro.changeWorldTime);
 	TextOut(getMemDC(), 100, 220, str, strlen(str));
 
-	sprintf_s(str, "sizeX : %f", _earthSizeX);
+	//sprintf_s(str, "sizeX : %f", _earthSizeX);
+	//TextOut(getMemDC(), 100, 240, str, strlen(str));
+
+	//sprintf_s(str, "sizeY : %f", _earthSizeY);
+	//TextOut(getMemDC(), 100, 260, str, strlen(str));
+
+	sprintf_s(str, "isSizeUpStop : %d", _intro.isSizeUpStop);
 	TextOut(getMemDC(), 100, 240, str, strlen(str));
 
-	sprintf_s(str, "sizeY : %f", _earthSizeY);
-	TextOut(getMemDC(), 100, 260, str, strlen(str));
 }
 
 
@@ -138,7 +161,7 @@ void intro::opening()
 		//0보다 클때만 카메라좌표빼고
 		if (_intro.cameraPos.x > 0)
 		{
-			_intro.cameraPos.x -= 10;
+			_intro.cameraPos.x -= 1;
 		}
 		else if (_intro.cameraPos.x <= 0)
 		{
@@ -167,8 +190,6 @@ void intro::opening()
 
 			}
 		}
-
-
 		break;
 	case IMAGECHANGE::TWO:
 
@@ -334,7 +355,7 @@ void intro::opening()
 				_intro.isSizeUpStop = true; //점점 커지다가 멈춤
 			}
 		}
-		
+
 		//지구 사이즈업이 끝나면
 		else if (_intro.isSizeUpStop == true)
 		{
@@ -352,7 +373,52 @@ void intro::opening()
 		}
 
 		break;
-	case IMAGECHANGE::SEVEN:
+	case IMAGECHANGE::SIX:
+
+		if (_intro.isAlpahOut == true)
+		{
+			if (_intro.alphaValue > 0)
+			{
+				_intro.alphaValue -= ALPHA;
+			}
+			else if (_intro.alphaValue <= 0)
+			{
+				_intro.alphaValue = 0;
+				_intro.isAlpahOut = false; //알파꺼주고
+			}
+		}
+		else if (_intro.isAlpahOut == false)
+		{
+			//==========선형보간 구간===========
+			_text.goal.x = 250;
+			_text.goal.y = 150;
+
+			_text.angle = getAngle(_text.x, _text.y, _text.goal.x, _text.goal.y);
+			_text.distance = getDistance(_text.x, _text.y, _text.goal.x, _text.goal.y);
+
+			if (_text.isOnce == false)
+			{
+				_text.moveSpeed = _text.distance * (TIMEMANAGER->getElapsedTime() / 3.0f);
+				_text.isOnce = true;
+				_text.moveWorldTime = TIMEMANAGER->getWorldTime();
+			}
+
+			if (3.f + _text.moveWorldTime >= TIMEMANAGER->getWorldTime())
+			{
+				_text.x += cosf(_text.angle) * _text.moveSpeed;
+				_text.y += -sinf(_text.angle) * _text.moveSpeed;
+			}
+			//==============================
+		}
+
+
+
+		if (_intro.isOnce[3] == false)
+		{
+			_intro.image = IMAGEMANAGER->findImage("인트로7");
+			_intro.isOnce[3] = true;
+		}
+
 		break;
 
 	}
