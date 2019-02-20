@@ -69,7 +69,14 @@ HRESULT town::init()
 
 	_player->setPlayerCurrentScene(PLAYERSCENE::TOWN);
 
-	_player->setTileCheck(false);
+	if (_player->getPlayerX() < 650 || _player->getPlayerX() > 1000 || _player->getPlayerY() < 1400 || _player->getPlayerY() > 1800)
+	{
+		_player->setPlayerDirection(UP);
+		_player->setPlayerPosX(990);
+		_player->setPlayerPosY(1408);
+	}
+
+	//_player->setTileCheck(false);
 	return S_OK;
 }
 
