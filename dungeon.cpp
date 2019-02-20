@@ -40,7 +40,7 @@ HRESULT dungeon::init()
 	_clockFade->setClockFadeOut(false);
 	_clockFade->setClockFadeIn(true);
 
-
+	SOUNDMANAGER->play("theTower", 1);
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 	_alphaValue = 0;
 	_changeScene = false;
@@ -192,6 +192,7 @@ void dungeon::dungeonChange()
 			_changeScene = true;
 			_player->playerSave();
 			playerSceneSave();
+			SOUNDMANAGER->stop("theTower");
 			SCENEMANAGER->changeScene("introDungeon");
 		}
 
@@ -225,6 +226,7 @@ void dungeon::dungeonChange()
 			_changeScene = true;
 			_player->playerSave();
 			playerSceneSave();
+			SOUNDMANAGER->stop("theTower");
 			SCENEMANAGER->changeScene("dungeon2F");
 		}
 

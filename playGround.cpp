@@ -49,8 +49,6 @@ HRESULT playGround::init()
 	IMAGEMANAGER->addImage("인트로7", "image/인트로7.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
 	IMAGEMANAGER->addImage("인트로8", "image/인트로8.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
 
-
-
 	_worldMap = new worldMap;
 	_ui = new ui;
 	_town = new town;
@@ -70,8 +68,9 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("introDungeon", _introDungeon);
 	SCENEMANAGER->addScene("bossScene", _bossScene);
 	SCENEMANAGER->addScene("dungeon2F", _dungeon2F);
-
 	SCENEMANAGER->changeScene("mapTool");
+
+	soundFileInit();
 
 	return S_OK;
 }
@@ -104,34 +103,42 @@ void playGround::update()
 
 	if (KEYMANAGER->isOnceKeyDown(VK_F1))
 	{
+		allSoundStop();
 		SCENEMANAGER->changeScene("dungeon");
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F2))
 	{
+		allSoundStop();
 		SCENEMANAGER->changeScene("ui");
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F3))
 	{
+		allSoundStop();
 		SCENEMANAGER->changeScene("town");
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F4))
 	{
+		allSoundStop();
 		SCENEMANAGER->changeScene("worldMap");
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F5))
 	{
+		allSoundStop();
 		SCENEMANAGER->changeScene("introDungeon");
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F6))
 	{
+		allSoundStop();
 		SCENEMANAGER->changeScene("dungeon2F");
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F7))
 	{
+		allSoundStop();
 		SCENEMANAGER->changeScene("bossScene");
 	}
 	if (KEYMANAGER->isOnceKeyDown(VK_F8))
 	{
+		allSoundStop();
 		SCENEMANAGER->changeScene("menu");
 	}
 
@@ -173,5 +180,25 @@ void playGround::deleteFile(const char * fileAddress)
 		TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	
 	CloseHandle(file);
+}
+
+void playGround::soundFileInit()
+{
+	SOUNDMANAGER->addSound("bossSceneBGM", "sound/bossFight.mp3", true, true);
+	SOUNDMANAGER->addSound("introDungeon", "sound/introDungeon.mp3", true, true);
+	SOUNDMANAGER->addSound("introOpening", "sound/introOpening.mp3", true, true);
+	SOUNDMANAGER->addSound("theTower", "sound/theTower.mp3", true, true);
+	SOUNDMANAGER->addSound("theTown", "sound/theTown.mp3", true, true);
+	SOUNDMANAGER->addSound("worldMap", "sound/worldMap.mp3", true, true);
+}
+
+void playGround::allSoundStop()
+{
+	SOUNDMANAGER->stop("bossSceneBGM");
+	SOUNDMANAGER->stop("introDungeon");
+	SOUNDMANAGER->stop("introOpening");
+	SOUNDMANAGER->stop("theTower");
+	SOUNDMANAGER->stop("theTown");
+	SOUNDMANAGER->stop("worldMap");
 }
 

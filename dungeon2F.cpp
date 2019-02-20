@@ -36,6 +36,7 @@ HRESULT dungeon2F::init()
 	_clockFade->init();
 
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
+	SOUNDMANAGER->play("theTower", 1);
 
 	_alphaValue = 0;
 	_goal.x = 1000.f;
@@ -240,6 +241,7 @@ void dungeon2F::dungeonChange()
 			playerSceneSave();
 			_sceneChange = true;
 			_player->playerSave();
+			SOUNDMANAGER->stop("theTower");
 			SCENEMANAGER->changeScene("bossScene");
 		}
 
@@ -274,6 +276,7 @@ void dungeon2F::dungeonChange()
 				playerSceneSave();
 				_sceneChange = true;
 				_player->playerSave();
+				SOUNDMANAGER->stop("theTower");
 				SCENEMANAGER->changeScene("dungeon");
 			}
 

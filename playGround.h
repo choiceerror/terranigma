@@ -35,6 +35,10 @@ public:
 	void fileDelete();
 	void deleteFile(const char* fileAddress);
 
+	void soundFileInit();
+
+	void allSoundStop();
+
 	playGround();
 	~playGround();
 };

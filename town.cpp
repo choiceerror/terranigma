@@ -23,6 +23,8 @@ HRESULT town::init()
 	IMAGEMANAGER->findImage("townTile")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->setAlpahBlend(true);
 
+	SOUNDMANAGER->play("theTown", 1);
+
 	_alphaValue = 255;
 	_houseAlpha = 255;
 	_bedAlpha = 0;
@@ -186,9 +188,8 @@ void town::worldMapIn()
 
 		if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
 		{
-
 			playerSceneSave();
-
+			SOUNDMANAGER->stop("theTown");
 			SCENEMANAGER->changeScene("worldMap");
 		}
 

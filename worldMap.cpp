@@ -37,6 +37,8 @@ HRESULT worldMap::init()
 	IMAGEMANAGER->findImage("middle2")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 
+	SOUNDMANAGER->play("worldMap", 1);
+
 	_playerWorldMap->setTownManagerAddressLink(_world);
 
 	_alphaValue = 255;
@@ -237,6 +239,7 @@ void worldMap::playerChangeScene()
 					_changeScene = true;
 					playerSceneSave();
 					//playerWorldSave();
+					SOUNDMANAGER->stop("worldMap");
 					SCENEMANAGER->changeScene("town");
 				}
 			}
@@ -262,6 +265,7 @@ void worldMap::playerChangeScene()
 					{
 						playerSceneSave();
 						//playerWorldSave();
+						SOUNDMANAGER->stop("worldMap");
 						SCENEMANAGER->changeScene("introDungeon");
 					}
 				}
