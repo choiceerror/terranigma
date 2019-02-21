@@ -64,6 +64,8 @@ HRESULT dungeon2F::init()
 	_dungeonDownBool = false;
 	_dungeonUpBool = false;
 
+	_soundOnce = false;
+
 	_dungeDownJumpRc = RectMake(100, 350, 170, 100);
 	_dungeUnMove = RectMake(100, 440, 180, 50);
 
@@ -335,6 +337,12 @@ void dungeon2F::playerDead()
 
 	if (_player->getPlayerHP() <= 0)
 	{
+		if (!_soundOnce)
+		{
+			SOUNDMANAGER->stop("theTower");
+			SOUNDMANAGER->play("playerDeath", 1);
+		}
+		_soundOnce = true;
 		_isPlayerDeadAlphaOn = true;
 	}
 
@@ -474,6 +482,7 @@ void dungeon2F::playerItemGet()
 	{
 		if (IntersectRect(&temp, &_player->getPlayerRc(), &_itemManager->getVGlod()[i]->getItemRect()))
 		{
+			SOUNDMANAGER->play("goldGet", 1);
 			_player->setPlayerMoney(_player->getPlayerMoney() + _itemManager->getVGlod()[i]->getGoldNum());
 			_itemManager->getVGlod()[i]->setItemIsLive(false);
 		}

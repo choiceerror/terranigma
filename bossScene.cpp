@@ -60,6 +60,8 @@ HRESULT bossScene::init()
 	_fireAlphaValue = 0;
 	_count = 0;
 
+	_soundOnce = false;
+
 	playerSceneLoad();
 
 	_player->setPlayerCurrentScene(PLAYERSCENE::BOSS);
@@ -310,6 +312,12 @@ void bossScene::playerDead()
 
 	if (_player->getPlayerHP() <= 0)
 	{
+		if (!_soundOnce)
+		{
+			SOUNDMANAGER->stop("theTower");
+			SOUNDMANAGER->play("playerDeath", 1);
+		}
+		_soundOnce = true;
 		_isPlayerDeadAlphaOn = true;
 	}
 

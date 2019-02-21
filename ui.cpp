@@ -66,7 +66,7 @@ HRESULT ui::init()
 	_isIndexMode = false;
 	_preferences = false;
 
-	SOUNDMANAGER->play("yomiSound", 1);
+	SOUNDMANAGER->play("yomiSound", 0.7);
 
 	return S_OK;
 }
@@ -117,6 +117,7 @@ void ui::update()
 		}
 		else if (_player->getPlayerCurrentScene() == PLAYERSCENE::DUNGEON_2F)
 		{
+			SOUNDMANAGER->play("theTower", 0.7);
 			SCENEMANAGER->changeScene("dungeon2F");
 		}
 		else if (_player->getPlayerCurrentScene() == PLAYERSCENE::BOSS)
@@ -878,6 +879,7 @@ void ui::placeChange()
 			{
 				if (KEYMANAGER->isOnceKeyDown('X'))
 				{
+					SOUNDMANAGER->play("doorSound", 1);
 					_isRoomChanging = true;
 					_worldTime = TIMEMANAGER->getWorldTime();
 					_blackFade->setGoal(_x, _y);

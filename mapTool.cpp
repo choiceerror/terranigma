@@ -366,7 +366,7 @@ void mapTool::render()
 
 	//=========================================================================
 	char str[128];
-
+	SetTextColor(getMemDC(), RGB(0, 0, 0));
 	if (_leftDragMode)
 	{
 		sprintf_s(str, "드래그모드 활성화");
@@ -468,7 +468,7 @@ void mapTool::render()
 
 	Rectangle(IMAGEMANAGER->findImage("background")->getMemDC(), viewRc);
 	IMAGEMANAGER->render("background", getMemDC(), 0, 0, 0, 0, 800, WINSIZEY);
-
+	SetTextColor(getMemDC(), RGB(255, 255, 255));
 }
 
 void mapTool::setUp()

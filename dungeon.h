@@ -38,6 +38,8 @@ private:
 	float _playerDeadAlpha;
 	bool _isPlayerDeadAlphaOn;
 
+	bool _soundOnce;
+
 public:
 	dungeon();
 	~dungeon();

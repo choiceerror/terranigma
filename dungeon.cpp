@@ -59,6 +59,8 @@ HRESULT dungeon::init()
 	_dungeonUp = RectMake(416, 0, 192, 50);
 	_dungeonDown = RectMake(352, 3200 - 180, 320, 64);
 
+	_soundOnce = false;
+
 	//_player->setPlayerDirection(UP);
 	//_player->setPlayerPosX(500);
 	//_player->setPlayerPosY(2816);
@@ -318,6 +320,12 @@ void dungeon::playerDead()
 
 	if (_player->getPlayerHP() <= 0)
 	{
+		if (!_soundOnce)
+		{
+			SOUNDMANAGER->stop("theTower");
+			SOUNDMANAGER->play("playerDeath", 1);
+		}
+		_soundOnce = true;
 		_isPlayerDeadAlphaOn = true;
 	}
 
@@ -455,6 +463,7 @@ void dungeon::playerItemGet()
 	//골드아이템
 	for (int i = 0; i < _itemManager->getVGlod().size(); i++)
 	{
+		SOUNDMANAGER->play("goldGet", 1);
 		if (IntersectRect(&temp, &_player->getPlayerRc(), &_itemManager->getVGlod()[i]->getItemRect()))
 		{
 			_player->setPlayerMoney(_player->getPlayerMoney() + _itemManager->getVGlod()[i]->getGoldNum());

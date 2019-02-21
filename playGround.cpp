@@ -158,6 +158,8 @@ void playGround::render()
 
 	SCENEMANAGER->render();
 	EFFECTMANAGER->render();
+	SetBkMode(getMemDC(), TRANSPARENT);
+	SetTextColor(getMemDC(), RGB(255, 255, 255));
 	//TIMEMANAGER->render(getMemDC());
 	//===========================================================
 	this->getBackBuffer()->render(getHDC(), 0, 0);
@@ -224,6 +226,7 @@ void playGround::effectSoundInit()
 	SOUNDMANAGER->addSound("playerJumpAttack", "sound/점프공격.mp3", false, false);
 	SOUNDMANAGER->addSound("textSound", "sound/텍스트사운드.mp3", false, true);
 	SOUNDMANAGER->addSound("levelUP", "sound/레벨업.mp3", false, false);
+	SOUNDMANAGER->addSound("doorSound", "sound/문여는소리.mp3", false, false);
 }
 
 void playGround::allSoundStop()
