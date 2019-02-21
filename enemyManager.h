@@ -176,5 +176,11 @@ public:
 	void setPlayerMemoryAddressLink(player* player) { _player = player; }
 	void setDungeonMapAddressLink(dungeonMap* map) { _dungeonMap = map; }
 	void setCameraAddressLink(camera* camera) { _camera = camera; }
+
+	bool getIsBossApear() { return _isBossAppear; }
+	void setIsBossApear(bool torf) { _isBossAppear = torf; }
+
+	bool getIsOnce(int num) { return _isOnce[num]; }
+	void setIsOnce(bool torf,int num) { _isOnce[num] = torf; }
 };
 

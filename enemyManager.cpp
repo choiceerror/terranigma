@@ -703,9 +703,9 @@ void enemyManager::playerAttackEnemyCollision()
 		}
 
 		//보스층일때만
-		else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR)
+		else if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR && _camera->getCameraY() <= 320)
 		{
-			if (IntersectRect(&temp, &_playerAttackRc, &_vBoss[0]->getRect()) && _vBoss[0]->getIsHit() == false)
+			if (IntersectRect(&temp, &_playerAttackRc, &_vBoss[0]->getRect()) && _vBoss[0]->getIsHit() == false && _player->getPlayerDirection() == UP)
 			{
 				EFFECTMANAGER->play("damageEffect", _player->getPlayerX() - _camera->getCameraX(), _player->getPlayerY() - 50 - _camera->getCameraY());
 				_vBoss[0]->setIsHit(true);
