@@ -205,7 +205,7 @@ void playGround::soundFileInit()
 	SOUNDMANAGER->addSound("theTower", "sound/theTower.mp3", true, true);
 	SOUNDMANAGER->addSound("theTown", "sound/theTown.mp3", true, true);
 	SOUNDMANAGER->addSound("worldMap", "sound/worldMap.mp3", true, true);
-	SOUNDMANAGER->addSound("yomi", "sound/yomi.mp3", true, true);
+	SOUNDMANAGER->addSound("yomiSound", "sound/yomi.mp3", true, true);
 	SOUNDMANAGER->addSound("playerDeath", "sound/55_Defeat.mp3", true, false);
 	SOUNDMANAGER->addSound("heartBeat", "sound/57_Heartbeat.mp3", true, false);
 }
@@ -232,7 +232,7 @@ void playGround::allSoundStop()
 	SOUNDMANAGER->stop("theTower");
 	SOUNDMANAGER->stop("theTown");
 	SOUNDMANAGER->stop("worldMap");
-	SOUNDMANAGER->stop("yomi");
+	SOUNDMANAGER->stop("yomiSound");
 	SOUNDMANAGER->stop("heartBeat");
 	SOUNDMANAGER->stop("playerDeath");
 }
