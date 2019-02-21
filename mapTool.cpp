@@ -86,7 +86,7 @@ HRESULT mapTool::init()
 
 void mapTool::release()
 {
-
+	SAFE_DELETE(_camera);
 }
 
 void mapTool::update()

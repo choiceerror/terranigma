@@ -24,6 +24,7 @@ HRESULT npcManager::init()
 
 void npcManager::release()
 {
+	SAFE_DELETE(_randomFunction);
 	for (_viBird = _vBird.begin(); _viBird != _vBird.end(); _viBird++)
 	{
 		SAFE_DELETE((*_viBird));
@@ -130,7 +131,6 @@ void npcManager::setTownHuman(TOWNHUMAN townHumanName, float x, float y)
 
 void npcManager::aiBirdUpdate()
 {
-
 	if (GetTickCount() - _aiStatePattenOldTime >= 1 * 1000)
 	{
 		for (int i = 0; i < _vBird.size(); i++)

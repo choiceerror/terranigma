@@ -81,6 +81,7 @@ void dungeon::release()
 	SAFE_DELETE(_player);
 	SAFE_DELETE(_dungeon);
 	SAFE_DELETE(_camera);
+	SAFE_DELETE(_itemManager);
 }
 
 void dungeon::update()

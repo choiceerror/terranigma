@@ -73,6 +73,7 @@ void bossScene::release()
 	SAFE_DELETE(_player);
 	SAFE_DELETE(_dungeonBossMap);
 	SAFE_DELETE(_camera);
+	SAFE_DELETE(_itemManager);
 }
 
 void bossScene::update()

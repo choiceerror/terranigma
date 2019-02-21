@@ -119,6 +119,7 @@ void IntroDungeon::release()
 	SAFE_DELETE(_camera);
 	SAFE_DELETE(_player);
 	SAFE_DELETE(_clock);
+	SAFE_DELETE(_messageSpear);
 }
 
 void IntroDungeon::update()

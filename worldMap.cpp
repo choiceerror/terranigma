@@ -67,6 +67,7 @@ void worldMap::release()
 	SAFE_DELETE(_world);
 	SAFE_DELETE(_camera);
 	SAFE_DELETE(_mode7);
+	SAFE_DELETE(_player);
 }
 
 void worldMap::update()

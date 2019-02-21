@@ -54,6 +54,7 @@ HRESULT messageSpear::init()
 
 void messageSpear::release()
 {
+	SAFE_DELETE(_ui);
 }
 
 void messageSpear::update()

@@ -14,6 +14,8 @@ intro::~intro()
 HRESULT intro::init()
 {
 	setWindowsSize(WINSTARTX, WINSTARTY, GAMESIZEX, GAMESIZEY);
+	
+	IMAGEMANAGER->addFrameImage("맵툴버튼", "image/맵툴버튼.bmp", 112, 100, 1, 2, true, MAGENTA);
 
 	_camera = new camera;
 

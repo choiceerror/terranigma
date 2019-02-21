@@ -103,6 +103,7 @@ void town::release()
 	SAFE_DELETE(_bubble);
 	SAFE_DELETE(_npcManager);
 	SAFE_DELETE(_messageSpear);
+	SAFE_DELETE(_town);
 }
 
 void town::update()
