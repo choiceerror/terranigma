@@ -23,9 +23,6 @@ HRESULT messageSpear::init()
 	//guardianMessage();
 	//townManMessage();
 
-	_ui = new ui;
-	_ui->init();
-
 	_once = false;
 
 	_talkCount = _talkCount2 = 0;
@@ -54,7 +51,6 @@ HRESULT messageSpear::init()
 
 void messageSpear::release()
 {
-	SAFE_DELETE(_ui);
 }
 
 void messageSpear::update()

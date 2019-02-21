@@ -1,6 +1,5 @@
 #pragma once
 #include "gameNode.h"
-#include "ui.h"
 
 class messageSpear : public gameNode
 {
