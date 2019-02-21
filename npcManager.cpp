@@ -98,7 +98,7 @@ void npcManager::setBird()
 			Bird* bird;
 			bird = new Bird;
 
-			bird->init("birdAni", "bird", 300 + j * 100, 300 + i * 100, j, i);
+			bird->init("birdAni", "bird", 704 + j * 100, 448 + i * 100, j, i);
 			_vBird.push_back(bird);
 		}
 	}
@@ -108,7 +108,7 @@ void npcManager::setElder()
 {
 	Elder* elder;
 	elder = new Elder;
-	elder->init("elderAni", "elder", 200, 200, 0, 0);
+	elder->init("elderAni", "elder", 1280, 512, 0, 0);
 	_vElder.push_back(elder);
 
 }
@@ -117,7 +117,7 @@ void npcManager::setElle()
 {
 	Elle* elle;
 	elle = new Elle;
-	elle->init("elleAni", "elle", 400, 400, 0, 0);
+	elle->init("elleAni", "elle", 384, 1216, 0, 0);
 	_vElle.push_back(elle);
 }
 
