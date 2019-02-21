@@ -10,6 +10,8 @@
 #include "bossScene.h"
 #include "IntroDungeon.h"
 
+
+
 class playGround : public gameNode
 {
 private:
@@ -36,6 +38,7 @@ public:
 	void deleteFile(const char* fileAddress);
 
 	void soundFileInit();
+	void effectSoundInit();
 
 	void allSoundStop();
 

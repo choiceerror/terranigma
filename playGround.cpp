@@ -71,6 +71,7 @@ HRESULT playGround::init()
 	SCENEMANAGER->changeScene("mapTool");
 
 	soundFileInit();
+	effectSoundInit();
 
 	return S_OK;
 }
@@ -190,6 +191,19 @@ void playGround::soundFileInit()
 	SOUNDMANAGER->addSound("theTower", "sound/theTower.mp3", true, true);
 	SOUNDMANAGER->addSound("theTown", "sound/theTown.mp3", true, true);
 	SOUNDMANAGER->addSound("worldMap", "sound/worldMap.mp3", true, true);
+}
+
+void playGround::effectSoundInit()
+{
+	SOUNDMANAGER->addSound("goldGet", "sound/골드먹을때.mp3", false, false);
+	SOUNDMANAGER->addSound("playerAttack", "sound/공격.mp3", false, false);
+	SOUNDMANAGER->addSound("dashAttack", "sound/대쉬공격.mp3", false, false);
+	SOUNDMANAGER->addSound("dashJumpAttack", "sound/대쉬점프공격.mp3", false, false);
+	SOUNDMANAGER->addSound("comboAttack", "sound/연속공격.mp3", false, false);
+	SOUNDMANAGER->addSound("yomiMove", "sound/요미무브.mp3", false, false);
+	SOUNDMANAGER->addSound("playerJump", "sound/점프.mp3", false, false);
+	SOUNDMANAGER->addSound("playerJumpAttack", "sound/점프공격.mp3", false, false);
+	SOUNDMANAGER->addSound("textSound", "sound/텍스트사운드.mp3", false, true);
 }
 
 void playGround::allSoundStop()
