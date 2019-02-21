@@ -79,6 +79,7 @@ void intro::update()
 		if (KEYMANAGER->isOnceKeyDown(VK_RETURN))
 		{
 			SCENEMANAGER->changeScene("town");
+			SOUNDMANAGER->stop("introOpening");
 		}
 	}
 	if (KEYMANAGER->isOnceKeyDown('A'))

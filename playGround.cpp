@@ -158,7 +158,7 @@ void playGround::render()
 
 	SCENEMANAGER->render();
 	EFFECTMANAGER->render();
-	TIMEMANAGER->render(getMemDC());
+	//TIMEMANAGER->render(getMemDC());
 	//===========================================================
 	this->getBackBuffer()->render(getHDC(), 0, 0);
 }
