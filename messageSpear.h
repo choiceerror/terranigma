@@ -1,11 +1,12 @@
 #pragma once
 #include "gameNode.h"
-
-
+#include "ui.h"
 
 class messageSpear : public gameNode
 {
 private:
+	ui* _ui;
+
 	int _count;
 	HFONT _font;
 	HFONT _oldFont;
@@ -17,6 +18,8 @@ private:
 	int _pageFrameX;
 
 	bool _once;
+
+	int _soundOnce;
 
 	bool _pageOn;
 

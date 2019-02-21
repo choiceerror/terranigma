@@ -67,6 +67,9 @@ private:
 	//환경설정
 	bool _preferences;
 
+	float _backgroundSoundSize;
+	float _effectSoundSize;
+
 public:
 	ui();
 	~ui();
@@ -89,5 +92,10 @@ public:
 
 	void uiIndexNameMessageBox();
 	void uiReferences();
+
+public:
+
+	float getBackgroundSoundSize() { return _backgroundSoundSize; }
+	float getEffectSoundSize() { return _effectSoundSize; }
 };
 

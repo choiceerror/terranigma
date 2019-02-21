@@ -22,6 +22,10 @@ HRESULT messageSpear::init()
 	//maidMessage();
 	//guardianMessage();
 	//townManMessage();
+
+	_ui = new ui;
+	_ui->init();
+
 	_once = false;
 
 	_talkCount = _talkCount2 = 0;
@@ -36,6 +40,8 @@ HRESULT messageSpear::init()
 	_texOldTime = GetTickCount();
 
 	_playerKey = _guardianPageNext = false;
+
+	_soundOnce = 0;
 
 	_guardianTalkCount[0] = _guardianTalkCount[1] = 0;
 
@@ -315,6 +321,14 @@ void messageSpear::messageRender(const char* txtName, bool messageBool, int time
 		{
 			if (timeNum >= _talkCount)
 			{
+				if (_soundOnce == 0)
+				{
+					SOUNDMANAGER->play("textSound", 1);
+					if (_soundOnce == 0)
+					{
+						_soundOnce++;
+					}
+				}
 				_talkCount += 2;
 			}
 			else if (timeNum2 >= _talkCount2)
@@ -323,6 +337,8 @@ void messageSpear::messageRender(const char* txtName, bool messageBool, int time
 			}
 			else
 			{
+				SOUNDMANAGER->stop("textSound");
+				_soundOnce = 0;
 				_pageOn = true;
 			}
 			_texOldTime = GetTickCount();
@@ -391,6 +407,14 @@ void messageSpear::guardianMessageRender(bool guardian, bool playerKey)
 		{
 			if (_sizeNum[_num] >= _guardianTalkCount[0])
 			{
+				if (_soundOnce == 0)
+				{
+					SOUNDMANAGER->play("textSound", 1);
+					if (_soundOnce == 0)
+					{
+						_soundOnce++;
+					}
+				}
 				_guardianTalkCount[0] += 2;
 			}
 			else if (_sizeNum[_num + 1] >= _guardianTalkCount[1])
@@ -399,6 +423,8 @@ void messageSpear::guardianMessageRender(bool guardian, bool playerKey)
 			}
 			else
 			{
+				_soundOnce = 0;
+				SOUNDMANAGER->stop("textSound");
 				_pageOn = true;
 			}
 			_texOldTime = GetTickCount();

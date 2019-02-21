@@ -419,12 +419,18 @@ void player::keyInput()
 				_attackMoveStop = true;
 				if (_attackComboKey >= 1)
 				{
+					SOUNDMANAGER->play("comboAttack", 1);
 					_player.state = PLAYER_COMBINATION;
 				}
-				if (!(_player.state == PLAYER_COMBINATION)) _player.state = PLAYER_ATTACK;
+				if (!(_player.state == PLAYER_COMBINATION))
+				{
+					SOUNDMANAGER->play("playerAttack", 1);
+					_player.state = PLAYER_ATTACK;
+				}
 			}
 			else if (_isRun && !_isJump && _player.speed == 5)
 			{
+				SOUNDMANAGER->play("dashAttack", 1);
 				_player.state = PLAYER_DASH_ATTACK;
 				_startX = _player.x;
 				_startY = _player.y;
@@ -432,11 +438,13 @@ void player::keyInput()
 			}
 			if (_isJump && !(_player.speed == 5))
 			{
+				SOUNDMANAGER->play("dashJumpAttack", 1);
 				_player.state = PLAYER_JUMP_ATTACK;
 				_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
 			}
 			else if (_isJump && _player.speed == 5)
 			{
+				SOUNDMANAGER->play("dashJumpAttack", 1);
 				_player.state = PLAYER_DASH_JUMP_ATTACK;
 				_jump->jumping(&_player.x, &_player.y, &_startX, &_startY, _player.jumpPower, _player.gravity);
 			}
@@ -450,6 +458,7 @@ void player::keyInput()
 
 	if (KEYMANAGER->isOnceKeyDown('X'))
 	{
+		SOUNDMANAGER->play("playerJump", 1);
 		if (GetTickCount() - _oldJumpTime >= 1 * 900)
 		{
 			if (!_isAttack)

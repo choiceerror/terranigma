@@ -56,6 +56,9 @@ HRESULT ui::init()
 	_count = 0;
 	_worldTime = 0;
 
+	_backgroundSoundSize = 0;
+	_effectSoundSize = 0;
+
 	_isRoomChanging = false;
 	_move = true;
 	_onceTime = false;
@@ -241,6 +244,7 @@ void ui::yomiMove()
 		{
 			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex % 3 == 1 || _yomiIndex % 3 == 2)
 				{
 					_yomiIndex -= 1;
@@ -248,6 +252,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex % 3 == 0 || _yomiIndex % 3 == 1)
 				{
 					_yomiIndex += 1;
@@ -255,6 +260,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_UP))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex / 3 == 1 || _yomiIndex / 3 == 2)
 				{
 					_yomiIndex -= 3;
@@ -262,6 +268,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex / 3 == 0 || _yomiIndex / 3 == 1)
 				{
 					_yomiIndex += 3;
@@ -272,6 +279,7 @@ void ui::yomiMove()
 		{
 			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 5;
@@ -283,6 +291,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 6;
@@ -298,6 +307,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_UP))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 5 || _yomiIndex == 6)
 				{
 					_yomiIndex = 3;
@@ -321,6 +331,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 5;
@@ -343,6 +354,7 @@ void ui::yomiMove()
 		{
 			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 7;
@@ -354,6 +366,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 9;
@@ -365,6 +378,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_UP))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 1;
@@ -404,6 +418,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 8;
@@ -450,6 +465,7 @@ void ui::yomiMove()
 		{
 			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 5;
@@ -461,6 +477,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 6;
@@ -472,6 +489,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_UP))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 5 || _yomiIndex == 6)
 				{
 					_yomiIndex = 3;
@@ -495,6 +513,7 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
 			{
+				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 5;
@@ -1134,5 +1153,4 @@ void ui::uiReferences()
 	{
 		
 	}
-	
 }
