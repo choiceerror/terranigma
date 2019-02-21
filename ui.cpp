@@ -41,6 +41,7 @@ HRESULT ui::init()
 	IMAGEMANAGER->addFrameImage("UIIndex", "image/UIIndex.bmp", 4096, 768, 4, 1, true, MAGENTA);
 	IMAGEMANAGER->addImage("blackRect", GAMESIZEX, GAMESIZEY);
 	IMAGEMANAGER->addFrameImage("uiMessageBox", "image/uiTextBox.bmp", 328, 70, 1, 1, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("preferencesMessageBox", "image/preferencesMessageBox.bmp", 600, 400, 1, 1, true, MAGENTA);
 
 	//변수 초기화
 	_room = ROOMTYPE::MAIN_ROOM;
@@ -65,7 +66,7 @@ HRESULT ui::init()
 	_isIndexMode = false;
 	_preferences = false;
 
-	SOUNDMANAGER->play("yomi", 1);
+	SOUNDMANAGER->play("yomiSound", 1);
 
 	return S_OK;
 }
@@ -122,7 +123,7 @@ void ui::update()
 		{
 			SCENEMANAGER->changeScene("bossScene");
 		}
-		SOUNDMANAGER->stop("yomi");
+		SOUNDMANAGER->stop("yomiSound");
 	}
 
 	//===============지울것================
@@ -168,17 +169,19 @@ void ui::render()
 	itemDraw();
 
 	uiIndexNameMessageBox();
+	
 	//요미
 	IMAGEMANAGER->expandRender("yomi", getMemDC(), _x - 30, _y - 36 * 3, _yomiFrameX, _yomiFrameY, 3.f, 3.f);
+	uiReferencesRender();
 	//페이드아웃
 	_blackFade->render();
 	//_clockFade->render();
 
 
 	//char str[100];
-	//sprintf_s(str, "%d  %d", _inventory->getWeaponCount(),_inventory->getAccessoryCount());
+	//sprintf_s(str, "%d", _preferences);
 	//TextOut(getMemDC(), 30, 100, str, strlen(str));
-	//sprintf_s(str, "골 좌표 : %d  %d", _goalX, _goalY);
+	//sprintf_s(str, "%d ", _yomiIndex );
 	//TextOut(getMemDC(), 30, 120, str, strlen(str));
 	//sprintf_s(str, "%d", _placeFrameX);
 	//TextOut(getMemDC(), 30, 140, str, strlen(str));
@@ -245,9 +248,9 @@ void ui::yomiMove()
 	{
 		if (_room == ROOMTYPE::MAIN_ROOM)
 		{
+			yomiMoveSound();
 			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex % 3 == 1 || _yomiIndex % 3 == 2)
 				{
 					_yomiIndex -= 1;
@@ -255,7 +258,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex % 3 == 0 || _yomiIndex % 3 == 1)
 				{
 					_yomiIndex += 1;
@@ -263,7 +265,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_UP))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex / 3 == 1 || _yomiIndex / 3 == 2)
 				{
 					_yomiIndex -= 3;
@@ -271,7 +272,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex / 3 == 0 || _yomiIndex / 3 == 1)
 				{
 					_yomiIndex += 3;
@@ -280,9 +280,9 @@ void ui::yomiMove()
 		}
 		else if (_room == ROOMTYPE::WEAPON_ROOM)
 		{
+			yomiMoveSound();
 			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 5;
@@ -294,7 +294,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 6;
@@ -310,7 +309,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_UP))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 5 || _yomiIndex == 6)
 				{
 					_yomiIndex = 3;
@@ -334,7 +332,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 5;
@@ -355,9 +352,9 @@ void ui::yomiMove()
 		}
 		else if (_room == ROOMTYPE::ACCESSERY_ROOM)
 		{
+			yomiMoveSound();
 			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 7;
@@ -369,7 +366,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 9;
@@ -381,7 +377,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_UP))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 1;
@@ -421,7 +416,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 8;
@@ -466,9 +460,9 @@ void ui::yomiMove()
 		}
 		else if (_room == ROOMTYPE::ARMOR_ROOM)
 		{
+		yomiMoveSound();
 			if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 5;
@@ -480,7 +474,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 6;
@@ -492,7 +485,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_UP))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 5 || _yomiIndex == 6)
 				{
 					_yomiIndex = 3;
@@ -516,7 +508,6 @@ void ui::yomiMove()
 			}
 			if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
 			{
-				SOUNDMANAGER->play("yomiMove", 1);
 				if (_yomiIndex == 3)
 				{
 					_yomiIndex = 5;
@@ -894,12 +885,14 @@ void ui::placeChange()
 				}
 			}
 		}
-		else if(_yomiIndex == 7)
+	}
+
+	if (KEYMANAGER->isOnceKeyDown('X'))
+	{
+		if (_yomiIndex == 7)
 		{
-			if (KEYMANAGER->isOnceKeyDown('X'))
-			{
-				_preferences = true;
-			}
+			if (_preferences) _preferences = false;
+			else _preferences = true;
 		}
 	}
 
@@ -1150,10 +1143,46 @@ void ui::uiIndexNameMessageBox()
 	DeleteObject(font);
 }
 
-void ui::uiReferences()
+void ui::uiReferencesRender()
 {
 	if (_preferences)
 	{
-		
+		//HFONT font;
+		//HFONT oldFont;
+		//font = CreateFont(45, 25, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
+		//oldFont = (HFONT)SelectObject(getMemDC(), font);
+		//IMAGEMANAGER->findImage("preferencesMessageBox")->expandRenderCenter(getMemDC(), GAMESIZEX / 2, GAMESIZEY / 2, 0, 0, 1.0f, 1.0f);
+		//
+		//string deaName[2];
+		//string number;
+		//
+		//deaName[0] = "배경음";
+		//deaName[1] = "효과음";
+		//
+		//TextOut(getMemDC(),250, 230, deaName[0].c_str(), strlen(deaName[0].c_str()));
+		//TextOut(getMemDC(),250, 330, deaName[1].c_str(), strlen(deaName[1].c_str()));
+		//
+		//SelectObject(getMemDC(), oldFont);
+		//DeleteObject(font);
+	}
+}
+
+void ui::yomiMoveSound()
+{
+	if (KEYMANAGER->isOnceKeyDown(VK_LEFT))
+	{
+		SOUNDMANAGER->play("yomiMove", 1);
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_RIGHT))
+	{
+		SOUNDMANAGER->play("yomiMove", 1);
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_UP))
+	{
+		SOUNDMANAGER->play("yomiMove", 1);
+	}
+	if (KEYMANAGER->isOnceKeyDown(VK_DOWN))
+	{
+		SOUNDMANAGER->play("yomiMove", 1);
 	}
 }

@@ -91,7 +91,9 @@ public:
 	void itemDraw();
 
 	void uiIndexNameMessageBox();
-	void uiReferences();
+	void uiReferencesRender();
+
+	void yomiMoveSound();
 
 public:
 
