@@ -136,7 +136,7 @@ void ui::update()
 	//	_placeFrameX++;
 	//}
 
-	if (KEYMANAGER->isOnceKeyDown(VK_NUMPAD9))
+	if (KEYMANAGER->isOnceKeyDown('9'))
 	{
 		if (_isIndexMode)
 		{
