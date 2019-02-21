@@ -22,7 +22,7 @@ public:
 
 	HRESULT init();
 	void release();
-	void update(float* x, float* y, bool objUnMove);
+	void update(float* x, float* y, bool objUnMove, int _playerState);
 	void render();
 
 	void dashAttacking(float* x, float* y, float* startX, float* startY, int direction, float speed);

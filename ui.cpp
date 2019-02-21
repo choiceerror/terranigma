@@ -65,6 +65,8 @@ HRESULT ui::init()
 	_isIndexMode = false;
 	_preferences = false;
 
+	SOUNDMANAGER->play("yomi", 1);
+
 	return S_OK;
 }
 
@@ -120,6 +122,7 @@ void ui::update()
 		{
 			SCENEMANAGER->changeScene("bossScene");
 		}
+		SOUNDMANAGER->stop("yomi");
 	}
 
 	//===============Áö¿ï°Í================

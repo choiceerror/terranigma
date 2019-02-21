@@ -67,6 +67,8 @@ HRESULT player::init(bool unAttack)
 
 	_attackComboKey = 0;
 
+	_unAttack = unAttack;
+
 	_isRun = _isAttack = _isJump = _isWalk = false;
 
 	_playerProtect = _alphaChange = false;
@@ -141,7 +143,7 @@ void player::update(bool enemyCheck, int a)
 
 	playerState();
 	_jump->update();
-	_dashAttack->update(&_player.x, &_player.y, check);
+	_dashAttack->update(&_player.x, &_player.y, check, _player.state);
 	_dashJumpAttack->update(&_player.x, &_player.y);
 	_inventory->update();
 	if (_tileCheck)
@@ -167,6 +169,7 @@ void player::update(bool enemyCheck, int a)
 			playerUiSave();
 			playerSceneSave();
 			_inventory->inventorySave();
+			SOUNDMANAGER->stop("theTower");
 			SCENEMANAGER->changeScene("ui");
 		}
 	}

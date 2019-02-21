@@ -144,6 +144,7 @@ void playGround::update()
 	KEYANIMANAGER->update();
 	EFFECTMANAGER->update();
 	SCENEMANAGER->update();
+	
 }
 
 
@@ -231,5 +232,8 @@ void playGround::allSoundStop()
 	SOUNDMANAGER->stop("theTower");
 	SOUNDMANAGER->stop("theTown");
 	SOUNDMANAGER->stop("worldMap");
+	SOUNDMANAGER->stop("yomi");
+	SOUNDMANAGER->stop("heartBeat");
+	SOUNDMANAGER->stop("playerDeath");
 }
 

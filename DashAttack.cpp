@@ -22,11 +22,11 @@ void DashAttack::release()
 {
 }
 
-void DashAttack::update(float* x, float* y, bool objUnMove)
+void DashAttack::update(float* x, float* y, bool objUnMove, int _playerState)
 {
 	if (_isDashAttack == false) return;
 
-	if (!objUnMove)
+	if (!objUnMove && !( _playerState == 6))
 	{
 		switch (_direction)
 		{
