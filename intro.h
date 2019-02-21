@@ -15,7 +15,7 @@ enum MESSAGE
 	MESSAGE_NINE,
 	MESSAGE_TEN,
 
-	MESSAGE_X = 150,
+	MESSAGE_X = 100,
 	MESSAGE_Y = GAMESIZEY / 2,
 };
 
@@ -30,7 +30,7 @@ enum class IMAGECHANGE
 };
 enum IMAGEINFO
 {
-	ALPHA = 3,
+	ALPHA = 1,
 };
 
 struct tagIntro

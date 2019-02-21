@@ -90,48 +90,51 @@ void enemyManager::release()
 
 void enemyManager::update()
 {
-	//업데이트 모음 함수
-	updateCollection();
-
-	if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR || _dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::SECOND_FLOOR)
+	if (_player->getPlayerState() != PLAYER_LEVELUP && _player->getPlayerDeath() == false)
 	{
-		//에너미들의 타일검출
-		tileCheckObjectCollision();
-	}
+		//업데이트 모음 함수
+		updateCollection();
 
-	if (_player->getPlayerDeath() == false || _player->getPlayerLevelUP() == false)
-	{
-		//에너미 AI 함수
-		enemyAI();
-	}
-
-	//보스층일때만
-	if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR && _vBoss[0]->getCurrentHP() > 0)
-	{
-		//보스 등장
-		bossAppear();
-		//보스 무브패턴
-		bossMovePattern();
-		//보스 공격패턴
-		bossAttackPattern();
-
-		if (_bulletPattern == BULLET_PATTERN::GOLD_BULLET || _bulletPattern == BULLET_PATTERN::BLUE_BULLET || _bulletPattern == BULLET_PATTERN::RED_BULLET)
+		if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::FIRST_FLOOR || _dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::SECOND_FLOOR)
 		{
-			_goldBullet->update();
-			_blueBullet->update();
-			_redBullet->update();
+			//에너미들의 타일검출
+			tileCheckObjectCollision();
 		}
-		else if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+
+		if (_player->getPlayerDeath() == false || _player->getPlayerLevelUP() == false)
 		{
-			_rgbBullet->update();
+			//에너미 AI 함수
+			enemyAI();
 		}
+
+		//보스층일때만
+		if (_dungeonMap->getDungeonFloor() == DUNGEON_FLOOR::BOSS_FLOOR && _vBoss[0]->getCurrentHP() > 0)
+		{
+			//보스 등장
+			bossAppear();
+			//보스 무브패턴
+			bossMovePattern();
+			//보스 공격패턴
+			bossAttackPattern();
+
+			if (_bulletPattern == BULLET_PATTERN::GOLD_BULLET || _bulletPattern == BULLET_PATTERN::BLUE_BULLET || _bulletPattern == BULLET_PATTERN::RED_BULLET)
+			{
+				_goldBullet->update();
+				_blueBullet->update();
+				_redBullet->update();
+			}
+			else if (_bulletPattern == BULLET_PATTERN::RGB_BULLET)
+			{
+				_rgbBullet->update();
+			}
+		}
+
+		//플레이어 공격에 에너미들이 맞을 함수
+		playerAttackEnemyCollision();
+
+		//에너미들이 죽을함수
+		enemyDead();
 	}
-
-	//플레이어 공격에 에너미들이 맞을 함수
-	playerAttackEnemyCollision();
-
-	//에너미들이 죽을함수
-	enemyDead();
 }
 
 void enemyManager::render(float cameraX, float cameraY)

@@ -39,7 +39,7 @@ HRESULT intro::init()
 	_intro.cameraPos.x = WINSIZEX / 2;
 	_intro.cameraPos.y = 0;
 	_intro.changeWorldTime = TIMEMANAGER->getWorldTime();
-	_intro.changeTime = 3.f;
+	_intro.changeTime = 10.f;
 
 	_textCount[MESSAGE_ONE] = _textCount[MESSAGE_TWO] = 0;
 	_nextText = 0;
@@ -58,6 +58,8 @@ void intro::update()
 {
 	opening();
 	_camera->update(_intro.cameraPos.x, _intro.cameraPos.y);
+
+	
 }
 
 void intro::render()
@@ -90,9 +92,9 @@ void intro::render()
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _intro.alphaValue);
 
-	//messageDraw();
+	messageDraw();
 
-	char str[128];
+	//char str[128];
 
 	//sprintf_s(str, "_textCount[MESSAGE_ONE] : %d", _textCount[0]);
 	//TextOut(getMemDC(), 100, 80, str, strlen(str));
@@ -109,31 +111,26 @@ void intro::render()
 	//sprintf_s(str, "num : %d", _num);
 	//TextOut(getMemDC(), 100, 160, str, strlen(str));
 
-	sprintf_s(str, "alpha : %d", _intro.alphaValue);
-	TextOut(getMemDC(), 100, 140, str, strlen(str));
+	//sprintf_s(str, "alpha : %d", _intro.alphaValue);
+	//TextOut(getMemDC(), 100, 240, str, strlen(str));
 
-	sprintf_s(str, "imageChange : %d", _imageChange);
-	TextOut(getMemDC(), 100, 160, str, strlen(str));
-
-
-	sprintf_s(str, "isAlphaOut : %d", _intro.isAlpahOut);
-	TextOut(getMemDC(), 100, 180, str, strlen(str));
+	//sprintf_s(str, "imageChange : %d", _imageChange);
+	//TextOut(getMemDC(), 100, 260, str, strlen(str));
 
 
-	sprintf_s(str, "isAlphaOn : %d", _intro.isAlpahOn);
-	TextOut(getMemDC(), 100, 200, str, strlen(str));
+	//sprintf_s(str, "isAlphaOut : %d", _intro.isAlpahOut);
+	//TextOut(getMemDC(), 100, 180, str, strlen(str));
 
-	sprintf_s(str, "changeWorldTime : %f", _intro.changeWorldTime);
-	TextOut(getMemDC(), 100, 220, str, strlen(str));
+
+	//sprintf_s(str, "isAlphaOn : %d", _intro.isAlpahOn);
+	//TextOut(getMemDC(), 100, 200, str, strlen(str));
+
 
 	//sprintf_s(str, "sizeX : %f", _earthSizeX);
 	//TextOut(getMemDC(), 100, 240, str, strlen(str));
 
 	//sprintf_s(str, "sizeY : %f", _earthSizeY);
 	//TextOut(getMemDC(), 100, 260, str, strlen(str));
-
-	sprintf_s(str, "isSizeUpStop : %d", _intro.isSizeUpStop);
-	TextOut(getMemDC(), 100, 240, str, strlen(str));
 
 }
 
@@ -195,6 +192,7 @@ void intro::opening()
 
 		if (_intro.isAlpahOut == true)
 		{
+			
 			if (_intro.alphaValue > 0)
 			{
 				_intro.alphaValue -= ALPHA;
@@ -411,8 +409,6 @@ void intro::opening()
 			//==============================
 		}
 
-
-
 		if (_intro.isOnce[3] == false)
 		{
 			_intro.image = IMAGEMANAGER->findImage("인트로7");
@@ -422,8 +418,6 @@ void intro::opening()
 		break;
 
 	}
-
-
 
 }
 
@@ -461,49 +455,48 @@ void intro::messageAll()
 
 void intro::messageDraw()
 {
-
 	if (_nextText < 6)
 	{
 		string introText[10];
 
-		_font = CreateFont(30, 20, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
+		_font = CreateFont(30, 17, 0, 0, 0, 0, 0, 0, HANGUL_CHARSET, 0, 0, 0, 0, "Sam3KRFont");
 		_oldFont = (HFONT)SelectObject(getMemDC(), _font);
-
 
 		_textSizeMax[MESSAGE_ONE] = 40;
 		_textSizeMax[MESSAGE_TWO] = 46;
-		_textSizeMax[MESSAGE_THREE] = 44;
+		_textSizeMax[MESSAGE_THREE] = 38;
 		_textSizeMax[MESSAGE_FOUR] = 60;
-		_textSizeMax[MESSAGE_FIVE] = 40;
+		_textSizeMax[MESSAGE_FIVE] = 44;
 		_textSizeMax[MESSAGE_SIX] = 36;
 		_textSizeMax[MESSAGE_SEVEN] = 40;
 		_textSizeMax[MESSAGE_EIGHT] = 20;
 		_textSizeMax[MESSAGE_NINE] = 50;
-		_textSizeMax[MESSAGE_TEN] = 46;
+		_textSizeMax[MESSAGE_TEN] = 52;
 
-
+		
 		if (0.1f + _textWolrldTime <= TIMEMANAGER->getWorldTime())
 		{
-			if (_textSizeMax[_num] >= _textCount[MESSAGE_ONE])
+			if (_textSizeMax[_num] > _textCount[MESSAGE_ONE])
 			{
+				if(_intro.isAlpahOut == false)
 				_textCount[MESSAGE_ONE] += 2;
 			}
-			else if (_textSizeMax[_num + 1] >= _textCount[MESSAGE_TWO])
+			else if (_textSizeMax[_num + 1] > _textCount[MESSAGE_TWO])
 			{
+				if (_intro.isAlpahOut == false)
 				_textCount[MESSAGE_TWO] += 2;
 			}
 
 			_textWolrldTime = TIMEMANAGER->getWorldTime();
 		}
-
-
+		
 		if (_isNextPage == true)
 		{
 			if (_nextText < 6)
 			{
 				_nextText++;
 			}
-			if (_num < 10)
+			if (_num < 8)
 			{
 				_num += 2;
 			}
@@ -520,47 +513,68 @@ void intro::messageDraw()
 		switch (_nextText)
 		{
 		case MESSAGE_ONE:
-			introText[MESSAGE_ONE] = "그  별은  가지고  있었다  두개의  마음을";
-			introText[MESSAGE_TWO] = "밝은면과  어두운면의  두개의  얼굴이었다......";
-			TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_ONE].c_str(), _textCount[MESSAGE_ONE]);
-			TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_TWO].c_str(), _textCount[MESSAGE_TWO]);
+			if (_imageChange == IMAGECHANGE::ONE)
+			{
+				introText[MESSAGE_ONE] = "그  별은  가지고  있었다  두개의  마음을";
+				introText[MESSAGE_TWO] = "밝은면과  어두운면의  두개의  얼굴이었다......";
+				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_ONE].c_str(), _textCount[MESSAGE_ONE]);
+				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_TWO].c_str(), _textCount[MESSAGE_TWO]);
+			}
 			break;
 		case MESSAGE_TWO:
-			introText[MESSAGE_THREE] = "이별이  태어난  후  46억년의  세월은..";
-			introText[MESSAGE_FOUR] = "커다란  두개의  의지에  의해  진화와  쇠퇴를  반복하고  있다";
-			TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_THREE].c_str(), _textCount[MESSAGE_ONE]);
-			TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_FOUR].c_str(), _textCount[MESSAGE_TWO]);
+			if (_imageChange == IMAGECHANGE::ONE)
+			{
+				introText[MESSAGE_THREE] = "이별이  태어난  후  46억년의  세월은..";
+				introText[MESSAGE_FOUR] = "커다란  두개의  의지에  의해  진화와  쇠퇴를  반복하고  있다";
+				TextOut(getMemDC(), MESSAGE_X + 30, MESSAGE_Y, introText[MESSAGE_THREE].c_str(), _textCount[MESSAGE_ONE]);
+				TextOut(getMemDC(), MESSAGE_X - 30, MESSAGE_Y + 50, introText[MESSAGE_FOUR].c_str(), _textCount[MESSAGE_TWO]);
+			}
 			break;
 		case MESSAGE_THREE:
-			introText[MESSAGE_FIVE] = "밝은  면의  의지로  새로운  생명이  태어나고";
-			introText[MESSAGE_SIX] = "어두운  면의  의지로  빙하기가  온다";
-			TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_FIVE].c_str(), _textCount[MESSAGE_ONE]);
-			TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_SIX].c_str(), _textCount[MESSAGE_TWO]);
+			if (_imageChange == IMAGECHANGE::TWO)
+			{
+				introText[MESSAGE_FIVE] = "밝은  면의  의지로  새로운  생명이  태어나고";
+				introText[MESSAGE_SIX] = "어두운  면의  의지로  빙하기가  온다";
+				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_FIVE].c_str(), _textCount[MESSAGE_ONE]);
+				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_SIX].c_str(), _textCount[MESSAGE_TWO]);
+			}
 			break;
 		case MESSAGE_FOUR:
-			introText[MESSAGE_SEVEN] = "밝은  면으로  새로운  기술이  만들어지고";
-			introText[MESSAGE_EIGHT] = "세월이  지난다음....";
-			TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_SEVEN].c_str(), _textCount[MESSAGE_ONE]);
-			TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_EIGHT].c_str(), _textCount[MESSAGE_TWO]);
+			if (_imageChange == IMAGECHANGE::THREE)
+			{
+				introText[MESSAGE_SEVEN] = "밝은  면으로  새로운  기술이  만들어지고";
+				introText[MESSAGE_EIGHT] = "세월이  지난다음....";
+				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_SEVEN].c_str(), _textCount[MESSAGE_ONE]);
+				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_EIGHT].c_str(), _textCount[MESSAGE_TWO]);
+			}
 			break;
 		case MESSAGE_SIX:
-			introText[MESSAGE_NINE] = "어두운  면의  의지에  의해  그  희생자가  나온다..";
-			introText[MESSAGE_TEN] = "인류는  그  두개의  의지를  신과  악마라고  불렀다..";
-			TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_NINE].c_str(), _textCount[MESSAGE_ONE]);
-			TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_TEN].c_str(), _textCount[MESSAGE_TWO]);
+			if (_imageChange == IMAGECHANGE::FOUR)
+			{
+				introText[MESSAGE_NINE] = "어두운  면의  의지에  의해  그  희생자가  나온다..";
+				introText[MESSAGE_TEN] = "인류는  그  두개의  의지를  신과  악마라고  불렀다..";
+				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_NINE].c_str(), _textCount[MESSAGE_ONE]);
+				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_TEN].c_str(), _textCount[MESSAGE_TWO]);
+			}
 			break;
 
 		}
 
+		//if ((_textCount[MESSAGE_ONE] > introText[MESSAGE_ONE].size() && _textCount[MESSAGE_TWO] > introText[MESSAGE_TWO].size())
+		//	&& (_textCount[MESSAGE_ONE] > introText[MESSAGE_THREE].size() && _textCount[MESSAGE_TWO] > introText[MESSAGE_FOUR].size())
+		//	&& (_textCount[MESSAGE_ONE] > introText[MESSAGE_FIVE].size() && _textCount[MESSAGE_TWO] > introText[MESSAGE_SIX].size())
+		//	&& (_textCount[MESSAGE_ONE] > introText[MESSAGE_SEVEN].size() && _textCount[MESSAGE_TWO] > introText[MESSAGE_EIGHT].size())
+		//	&& (_textCount[MESSAGE_ONE] > introText[MESSAGE_NINE].size() && _textCount[MESSAGE_TWO] > introText[MESSAGE_TEN].size()))
+		//{
+		//	_isNextPage = true;
+		//}
 
-		if ((_textCount[MESSAGE_ONE] > introText[MESSAGE_ONE].size() && _textCount[MESSAGE_TWO] > introText[MESSAGE_TWO].size())
-			&& (_textCount[MESSAGE_ONE] > introText[MESSAGE_THREE].size() && _textCount[MESSAGE_TWO] > introText[MESSAGE_FOUR].size())
-			&& (_textCount[MESSAGE_ONE] > introText[MESSAGE_FIVE].size() && _textCount[MESSAGE_TWO] > introText[MESSAGE_SIX].size())
-			&& (_textCount[MESSAGE_ONE] > introText[MESSAGE_SEVEN].size() && _textCount[MESSAGE_TWO] > introText[MESSAGE_EIGHT].size())
-			&& (_textCount[MESSAGE_ONE] > introText[MESSAGE_NINE].size() && _textCount[MESSAGE_TWO] > introText[MESSAGE_TEN].size()))
+		if (KEYMANAGER->isOnceKeyDown('Z'))
 		{
 			_isNextPage = true;
 		}
+
+		
 		SelectObject(getMemDC(), _oldFont);
 		DeleteObject(_font);
 	}
