@@ -24,8 +24,9 @@ HRESULT intro::init()
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 
 	_intro.image = IMAGEMANAGER->findImage("인트로1");
-	_intro.image->setAlpahBlend(true);
 	_earthImage = IMAGEMANAGER->findImage("인트로5"); //지구 이미지
+	_menuImage = IMAGEMANAGER->findImage("인트로7");
+	_menuImage->setAlpahBlend(true);
 	_buttonImage = IMAGEMANAGER->findImage("스타트버튼"); //버튼이미지
 	_buttonWorldTime = TIMEMANAGER->getWorldTime();
 	//===========텍스트 관련 =============
@@ -34,9 +35,10 @@ HRESULT intro::init()
 	_text.y = GAMESIZEY / 2 + 80;
 	//===================================
 
-	_mapToolButton->init("맵툴버튼", GAMESIZEX / 3 + 200, GAMESIZEY / 2 + 150, PointMake(0, 1), PointMake(0, 0), cbMapToolSceneChange);
+	_mapToolButton->init("맵툴버튼", GAMESIZEX / 3 + 320, GAMESIZEY / 2 + 160, PointMake(0, 1), PointMake(0, 0), cbMapToolSceneChange);
 
 	_intro.alphaValue = 255;
+	_intro.alphaValue2 = 0;
 	_intro.isAlpahOn = false;
 	_intro.isAlpahOut = true;
 
@@ -47,7 +49,8 @@ HRESULT intro::init()
 
 	_textCount[MESSAGE_ONE] = _textCount[MESSAGE_TWO] = 0;
 	_nextText = 0;
-	_imageChange = IMAGECHANGE::SIX;
+	_imageChange = IMAGECHANGE::ONE;
+	_certainWorldTime = TIMEMANAGER->getWorldTime();
 	//messageAll();
 
 	return S_OK;
@@ -56,7 +59,6 @@ HRESULT intro::init()
 void intro::release()
 {
 	SAFE_DELETE(_camera);
-
 	SAFE_DELETE(_mapToolButton);
 }
 
@@ -74,6 +76,10 @@ void intro::update()
 			SCENEMANAGER->changeScene("town");
 		}
 	}
+	if (KEYMANAGER->isOnceKeyDown('A'))
+	{
+		_imageChange = IMAGECHANGE::SIX;
+	}
 }
 
 void intro::render()
@@ -90,29 +96,48 @@ void intro::render()
 		_earthImage->expandRenderCenter(getMemDC(), GAMESIZEX / 2, GAMESIZEY / 2, 0, 0, _earthSizeX, _earthSizeY);
 		break;
 	case IMAGECHANGE::SIX:
-		_intro.image->render(getMemDC(), 0, 0);
-		_text.image->expandRenderCenter(getMemDC(), _text.x, _text.y, 0, 0, 1.5f, 1.5f);
 
-		if (0.5f + _buttonWorldTime <= TIMEMANAGER->getWorldTime() && 1.3f + _buttonWorldTime > TIMEMANAGER->getWorldTime())
+		if (9.f + _certainWorldTime <= TIMEMANAGER->getWorldTime())
 		{
-			_buttonImage->expandRenderCenter(getMemDC(), GAMESIZEX / 2 + 30, GAMESIZEY / 2 + 200, 0, 0, 2.f, 2.f);
+			if (_intro.alphaValue2 < 255)
+			{
+				_intro.alphaValue2 += ALPHA;
+			}
+			else if (_intro.alphaValue2 >= 255)
+			{
+				_intro.alphaValue2 = 255;
+			}
+
+			_menuImage->alphaRender(getMemDC(), _intro.alphaValue2);
+			//_intro.image->alphaRender(getMemDC(), 0);
+
+			if (0.5f + _buttonWorldTime <= TIMEMANAGER->getWorldTime() && 1.3f + _buttonWorldTime > TIMEMANAGER->getWorldTime())
+			{
+				_buttonImage->expandRenderCenter(getMemDC(), GAMESIZEX / 2 + 30, GAMESIZEY / 2 + 200, 0, 0, 2.f, 2.f);
+			}
+			else if (1.3f + _buttonWorldTime <= TIMEMANAGER->getWorldTime())
+			{
+				_buttonWorldTime = TIMEMANAGER->getWorldTime();
+			}
+
+			if (10.0f + _certainWorldTime <= TIMEMANAGER->getWorldTime())
+			{
+				_mapToolButton->render();
+			}
 		}
-		else if (1.3f + _buttonWorldTime <= TIMEMANAGER->getWorldTime())
-		{
-			_buttonWorldTime = TIMEMANAGER->getWorldTime();
-		}
+		_text.image->expandRenderCenter(getMemDC(), _text.x, _text.y, 0, 0, 1.5f, 1.5f);
 
 		//IMAGEMANAGER->findImage("맵툴버튼")->frameRender(getMemDC(), GAMESIZEX / 3 + 70, GAMESIZEY / 2 + 130, 0, _mapToolButtonFrameY);
 		break;
 	}
 
-	_mapToolButton->render();
+
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _intro.alphaValue);
 
 	messageDraw();
 
-	//char str[128];
+	char str[128];
 
 	//sprintf_s(str, "_textCount[MESSAGE_ONE] : %d", _textCount[0]);
 	//TextOut(getMemDC(), 100, 80, str, strlen(str));
@@ -129,8 +154,10 @@ void intro::render()
 	//sprintf_s(str, "num : %d", _num);
 	//TextOut(getMemDC(), 100, 160, str, strlen(str));
 
-	//sprintf_s(str, "alpha : %d", _intro.alphaValue);
-	//TextOut(getMemDC(), 100, 240, str, strlen(str));
+	sprintf_s(str, "alpha2 : %d", _intro.alphaValue2);
+	TextOut(getMemDC(), 100, 240, str, strlen(str));
+	sprintf_s(str, "alpha : %d", _intro.alphaValue);
+	TextOut(getMemDC(), 100, 260, str, strlen(str));
 
 	//sprintf_s(str, "imageChange : %d", _imageChange);
 	//TextOut(getMemDC(), 100, 260, str, strlen(str));
@@ -427,11 +454,11 @@ void intro::opening()
 			//==============================
 		}
 
-		if (_intro.isOnce[3] == false)
-		{
-			_intro.image = IMAGEMANAGER->findImage("인트로7");
-			_intro.isOnce[3] = true;
-		}
+		//if (_intro.isOnce[3] == false)
+		//{
+		//	_intro.image = IMAGEMANAGER->findImage("인트로7");
+		//	_intro.isOnce[3] = true;
+		//}
 
 		break;
 
@@ -441,12 +468,12 @@ void intro::opening()
 
 void intro::messageAll()
 {
-	string message[2];
+	//string message[2];
 
-	vector<string> vStr;
+	//vector<string> vStr;
 
-	message[0] = "그 별은 가지고 있었다 두개의 마음을";
-	message[1] = "밝은면과 어두운면의 두개의 얼굴이었다.....";
+	//message[0] = "그 별은 가지고 있었다 두개의 마음을";
+	//message[1] = "밝은면과 어두운면의 두개의 얼굴이었다.....";
 	//message[2] = "이별이 태어난 후 46억년의 세월은..";
 	//message[3] = "커다란 두개의 의지에 의해 진화와 쇠퇴를 반복하고 있다.";
 	//message[4] = "밝은 면의 의지로 새로운 생명이 태어나고,";
@@ -456,8 +483,8 @@ void intro::messageAll()
 	//message[8] = "어두운 면의 의지에 의해 그 희생자가 나온다..";
 	//message[9] = "인류는 그 두개의 의지를 신과 악마 라고 불렀다";
 
-	vStr.push_back(message[0]);
-	vStr.push_back(message[1]);
+	//vStr.push_back(message[0]);
+	//vStr.push_back(message[1]);
 	//vStr.push_back(message[2]);
 	//vStr.push_back(message[3]);
 	//vStr.push_back(message[4]);
@@ -467,7 +494,7 @@ void intro::messageAll()
 	//vStr.push_back(message[8]);
 	//vStr.push_back(message[9]);
 
-	TXTDATA->txtSave("messageFile/인트로.txt", vStr);
+	//TXTDATA->txtSave("messageFile/인트로.txt", vStr);
 
 }
 

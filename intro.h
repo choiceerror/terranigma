@@ -38,11 +38,12 @@ struct tagIntro
 {
 	image* image;
 	int alphaValue; //알파값
+	int alphaValue2;
 	POINTFLOAT cameraPos;
 	float changeWorldTime; //체인지 시간
 	float changeTime;
 	bool isAlpahOn, isAlpahOut;
-	bool isOnce[4];
+	bool isOnce[3];
 	bool isSizeUpStop;
 };
 
@@ -72,6 +73,7 @@ private:
 	HFONT _font;
 	HFONT _oldFont;
 
+	image* _menuImage;
 	float _textWolrldTime;
 	IMAGECHANGE _imageChange;
 	int _textCount[2];
@@ -79,6 +81,7 @@ private:
 	int _nextText;
 	int _num;
 	bool _isNextPage;
+	float _certainWorldTime; //일정시간 뒤에 나오게끔.
 
 	button* _mapToolButton; //맵툴버튼
 
