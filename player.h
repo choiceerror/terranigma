@@ -214,6 +214,7 @@ public:
 	PLAYERDIRECTION getPlayerDirection() { return _player.direction; }
 	animation* getPlayerAni() { return _player.ani; }
 	Inventory* getInventory() { return _inventory; }
+	jump* getJump() {return _jump;}
 
 	void setPlayerState(PLAYERSTATE state) { _player.state = state; }
 	void setPlayerDirection(PLAYERDIRECTION direction) { _player.direction = direction; }
