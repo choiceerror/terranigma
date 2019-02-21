@@ -97,6 +97,12 @@ void ItemManager::deleteAll()
 			++_viAccessery;
 		}
 	}
+
+	_vAccessery.clear();
+	_vArmor.clear();
+	_vWeapon.clear();
+	_vPotion.clear();
+	_vGold.clear();
 }
 
 void ItemManager::itemDraw(float cameraX, float cameraY)

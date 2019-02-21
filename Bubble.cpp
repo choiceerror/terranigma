@@ -22,6 +22,12 @@ HRESULT Bubble::init()
 
 void Bubble::release()
 {
+	for (int i = 0; i < _vBubble.size(); ++i)
+	{
+		SAFE_DELETE(_vBubble[i]);
+	}
+
+	_vBubble.clear();
 }
 
 void Bubble::update()
