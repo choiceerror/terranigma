@@ -634,10 +634,10 @@ void player::tileCheck()
 
 	rcCollision = _player.rc;
 
-	rcCollision.left += 4;
-	rcCollision.top += 4;
-	rcCollision.right -= 4;
-	rcCollision.bottom -= 4;
+	//rcCollision.left += 4;
+	//rcCollision.top += 4;
+	//rcCollision.right -= 4;
+	//rcCollision.bottom -= 4;
 
 	TileX = _player.x / TileSIZE;
 	TileY = _player.y / TileSIZE;
@@ -648,23 +648,59 @@ void player::tileCheck()
 		tileIndex[0].x = TileX - 1;
 		tileIndex[0].y = TileY;
 
-		for (int i = 0; i < 1; ++i)
+		tileIndex[1].x = TileX;
+		tileIndex[1].y = TileY - 1;
+
+		tileIndex[2].x = TileX;
+		tileIndex[2].y = TileY + 1;
+
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->rc, &rcCollision))
 		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_FIRE)
+			if (_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->obj == OBJ_FIRE)
 			{
-				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-				{
-					_player.x += _player.speed;
-					
-						check = true;
-					
-				}
-				else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision)))
-				{
-					check = false;
-				}
+				_player.x += _player.speed;
+
+				check = true;
 			}
 		}
+
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->rc, &rcCollision))
+		{
+			if (_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->obj == OBJ_FIRE)
+			{
+				_player.x += _player.speed;
+
+				check = true;
+			}
+
+		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->rc, &rcCollision))
+		{
+			if (_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->obj == OBJ_FIRE)
+			{
+				_player.x += _player.speed;
+
+				check = true;
+			}
+
+		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
 	}
 
 	if (KEYMANAGER->isStayKeyDown(VK_RIGHT) && _player.direction != LEFT || _player.direction != RIGHT)
@@ -672,21 +708,60 @@ void player::tileCheck()
 		tileIndex[0].x = TileX + 1;
 		tileIndex[0].y = TileY;
 
-		for (int i = 0; i < 1; ++i)
+		tileIndex[1].x = TileX;
+		tileIndex[1].y = TileY - 1;
+
+		tileIndex[2].x = TileX;
+		tileIndex[2].y = TileY + 1;
+
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->rc, &rcCollision))
 		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_FIRE)
+			if (_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->obj == OBJ_FIRE)
 			{
-				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-				{
-					_player.x -= _player.speed;
-					check = true;
-				}
-				else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision)))
-				{
-					check = false;
-				}
+				_player.x -= _player.speed;
+
+				check = true;
 			}
+
 		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
+
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->rc, &rcCollision))
+		{
+			if (_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->obj == OBJ_FIRE)
+			{
+				_player.x -= _player.speed;
+
+				check = true;
+			}
+
+		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->rc, &rcCollision))
+		{
+			if (_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->obj == OBJ_FIRE)
+			{
+				_player.x -= _player.speed;
+
+				check = true;
+			}
+
+		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
 	}
 
 	if (KEYMANAGER->isStayKeyDown(VK_UP) && _player.direction != UP || _player.direction != DOWN)
@@ -694,21 +769,60 @@ void player::tileCheck()
 		tileIndex[0].x = TileX;
 		tileIndex[0].y = TileY - 1;
 
-		for (int i = 0; i < 1; ++i)
+		tileIndex[1].x = TileX + 1;
+		tileIndex[1].y = TileY;
+
+		tileIndex[2].x = TileX - 1;
+		tileIndex[2].y = TileY;
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->rc, &rcCollision))
 		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_FIRE)
+			if (_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->obj == OBJ_FIRE)
 			{
-				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-				{
-					_player.y += _player.speed;
-					check = true;
-				}
-				else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision)))
-				{
-					check = false;
-				}
+				_player.y += _player.speed;
+
+				check = true;
+			}
+
+		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
+
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->rc, &rcCollision))
+		{
+			if (_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->obj == OBJ_FIRE)
+			{
+				_player.y += _player.speed;
+
+				check = true;
 			}
 		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
+
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->rc, &rcCollision))
+		{
+			if (_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->obj == OBJ_FIRE)
+			{
+				_player.y += _player.speed;
+
+				check = true;
+			}
+
+		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
 	}
 
 	if (KEYMANAGER->isStayKeyDown(VK_DOWN) && _player.direction != UP || _player.direction != DOWN)
@@ -716,23 +830,63 @@ void player::tileCheck()
 		tileIndex[0].x = TileX;
 		tileIndex[0].y = TileY + 1;
 
-		for (int i = 0; i < 1; ++i)
-		{
-			if (_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->obj == OBJ_FIRE)
-			{
-				if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision))
-				{
-					_player.y -= _player.speed;
-					check = true;
-				}
-				else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[i].x, tileIndex[i].y)->rc, &rcCollision)))
-				{
-					check = false;
-				}
-			}
-		}
-	}
+		tileIndex[1].x = TileX + 1;
+		tileIndex[1].y = TileY;
 
+		tileIndex[2].x = TileX - 1;
+		tileIndex[2].y = TileY;
+
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->rc, &rcCollision))
+		{
+			if (_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->obj == OBJ_FIRE)
+			{
+				_player.y -= _player.speed;
+
+				check = true;
+			}
+
+		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[0].x, tileIndex[0].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
+
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->rc, &rcCollision))
+		{
+			if (_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->obj == OBJ_FIRE)
+			{
+				_player.y -= _player.speed;
+
+				check = true;
+			}
+
+		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[1].x, tileIndex[1].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
+
+
+		if (IntersectRect(&rc, &_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->rc, &rcCollision))
+		{
+			if (_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->obj == OBJ_WALL || _dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->obj == OBJ_FIRE)
+			{
+				_player.y -= _player.speed;
+
+				check = true;
+			}
+
+		}
+		else if (!(IntersectRect(&rc, &_dungeon->getTile(tileIndex[2].x, tileIndex[2].y)->rc, &rcCollision)))
+		{
+			check = false;
+		}
+
+	}
 }
 
 void player::townCheck()

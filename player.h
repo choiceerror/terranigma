@@ -132,7 +132,7 @@ private:
 	int TileX, TileY;
 
 	int rightX, rightY;
-	POINT tileIndex[2];
+	POINT tileIndex[3];
 
 	enemyManager* _enemyManager;
 	dungeonMap* _dungeon;
