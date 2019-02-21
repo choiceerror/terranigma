@@ -62,7 +62,7 @@ HRESULT town::init()
 	_worldMapIn = false;
 	_fadeOut = true;
 	_houseAlphaBlend = false;
-
+	_sceneChange = false;
 	_house = RectMake(672, 1280, 352, 256);
 
 	//_player->setPlayerPosX(704);
@@ -112,13 +112,16 @@ void town::update()
 	_camera->update(_player->getPlayerX(), _player->getPlayerY());
 	_npcManager->update(2);
 	_npcManager->aiBirdUpdate();
-	worldMapIn();
 	houseCollision();
 	bubbleTimeCreate();
 	_bubble->update();
 
 	//==============밑에 작성 금지===============
-	_player->update(false, 2);
+	worldMapIn();
+	if (!_sceneChange)
+	{
+		_player->update(false, 2);
+	}
 }
 
 void town::render()
@@ -213,6 +216,7 @@ void town::worldMapIn()
 
 		if (1.4f + _worldTime <= TIMEMANAGER->getWorldTime())
 		{
+			_sceneChange = true;
 			playerSceneSave();
 			SOUNDMANAGER->stop("theTown");
 			SCENEMANAGER->changeScene("worldMap");

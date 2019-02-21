@@ -43,6 +43,8 @@ private:
 	float _bubbleWorldTime;
 	int _bubbleIndex;
 
+	bool _sceneChange;
+
 public:
 	town();
 	~town();
