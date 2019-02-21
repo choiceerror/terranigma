@@ -6,7 +6,7 @@
 #include "npcManager.h"
 #include "randomFunction.h"
 #include "messageSpear.h"
-
+#include "Bubble.h"
 
 class town : public gameNode
 {
@@ -20,6 +20,7 @@ private:
 	npcManager* _npcManager;
 
 	messageSpear* _messageSpear;
+	Bubble* _bubble;
 
 	RECT _escape;
 	RECT _house;
@@ -39,6 +40,9 @@ private:
 	int _index;
 	int _count;
 
+	float _bubbleWorldTime;
+	int _bubbleIndex;
+
 public:
 	town();
 	~town();
@@ -56,6 +60,7 @@ public:
 	void houseCollision();
 	void playerSceneSave();
 	void playerSceneLoad();
+	void bubbleTimeCreate();
 
 };
 

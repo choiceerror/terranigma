@@ -34,6 +34,7 @@ HRESULT town::init()
 	_town = new townMap;
 	_npcManager = new npcManager;
 	_messageSpear = new messageSpear;
+	_bubble = new Bubble;
 
 	_player->setTownManagerAddressLink(_town);
 	_player->setnpcManagerAddressLink(_npcManager);
@@ -42,6 +43,7 @@ HRESULT town::init()
 	_player->init(false);
 	_town->init();
 	_messageSpear->init();
+	_bubble->init();
 
 	_npcManager->setBird();
 	_npcManager->setElder();
@@ -78,12 +80,29 @@ HRESULT town::init()
 		_player->setPlayerPosY(1408);
 	}
 
+	for (int i = 0; i < 8; ++i)
+	{
+		for (int j = 0; j < 10; ++j)
+		{
+			_bubble->createBubble(-1920 + j * RND->getRandomInt(380, 420) + (i % 2) * 200, 50 + RND->getRandomInt(230, 270) * i, RND->getRandomInt(2, 6), RND->getRandomInt(0, 3));
+		}
+	}
+
+	_bubbleIndex = 0;
+	_bubbleWorldTime = 0;
+
 	//_player->setTileCheck(false);
 	return S_OK;
 }
 
 void town::release()
 {
+	SAFE_DELETE(_player);
+	SAFE_DELETE(_camera);
+	SAFE_DELETE(_town);
+	SAFE_DELETE(_bubble);
+	SAFE_DELETE(_npcManager);
+	SAFE_DELETE(_messageSpear);
 }
 
 void town::update()
@@ -95,6 +114,8 @@ void town::update()
 	_npcManager->aiBirdUpdate();
 	worldMapIn();
 	houseCollision();
+	bubbleTimeCreate();
+	_bubble->update();
 
 	//==============¹Ø¿¡ ÀÛ¼º ±ÝÁö===============
 	_player->update(false, 2);
@@ -123,9 +144,12 @@ void town::render()
 			IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->alphaFrameRender(getMemDC(), 960 + 32 * j - _camera->getCameraX(), 1408 + 32 * i - _camera->getCameraY(), 21 + j, 5 + i, _bedAlpha);
 		}
 	}
+	_bubble->render(_camera->getCameraX(), _camera->getCameraY());
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_messageSpear->render();
+
+	
 
 	//Rectangle(getMemDC(), _escape);
 }
@@ -244,6 +268,30 @@ void town::playerSceneLoad()
 	}
 
 	CloseHandle(file);
+}
+
+void town::bubbleTimeCreate()
+{
+	//if (3.0f + _bubbleWorldTime <= TIMEMANAGER->getWorldTime())
+	//{
+	//	if (_bubbleIndex % 2 == 0)
+	//	{
+	//		for (int i = 0; i < 11; ++i)
+	//		{
+	//			_bubble->createBubble(-1920 + RND->getFromIntTo(0, 400) + i * RND->getRandomInt(380, 420), 1930, RND->getRandomInt(1, 6), RND->getRandomInt(0, 3));
+	//		}
+	//	}
+	//	else
+	//	{
+	//		for (int i = 0; i < 11; ++i)
+	//		{
+	//			_bubble->createBubble(-1920 + RND->getFromIntTo(100,300) + i * RND->getRandomInt(380, 420), 1930, RND->getRandomInt(1, 6), RND->getRandomInt(0, 3));
+	//		}
+	//	}
+	//
+	//	++_bubbleIndex;
+	//	_bubbleWorldTime = TIMEMANAGER->getWorldTime();
+	//}
 }
 
 void town::townIn()
