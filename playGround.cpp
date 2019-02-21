@@ -77,7 +77,7 @@ HRESULT playGround::init()
 	SCENEMANAGER->addScene("introDungeon", _introDungeon);
 	SCENEMANAGER->addScene("bossScene", _bossScene);
 	SCENEMANAGER->addScene("dungeon2F", _dungeon2F);
-	SCENEMANAGER->changeScene("mapTool");
+	SCENEMANAGER->changeScene("menu");
 
 	soundFileInit();
 	effectSoundInit();

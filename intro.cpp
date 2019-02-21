@@ -69,7 +69,6 @@ void intro::update()
 		_intro.isOnce[3] = true;
 	}
 
-
 	opening();
 	_camera->update(_intro.cameraPos.x, _intro.cameraPos.y);
 
