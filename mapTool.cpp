@@ -20,10 +20,14 @@ HRESULT mapTool::init()
 	_image5 = IMAGEMANAGER->addFrameImage("worldTile", "tileimage\\worldTile2.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
 	_image6 = IMAGEMANAGER->addFrameImage("bossTile", "tileimage\\bossTile.bmp", 960, 512, basicTileX, basicTileY, true, RGB(255, 0, 255));
 	IMAGEMANAGER->addImage("backMap", "image/mapToolbackground.bmp", 1920, 800, true, MAGENTA);
-	IMAGEMANAGER->addImage("right", "tileimage/Right.bmp", 30, 30, true, WHITE);
-	IMAGEMANAGER->addImage("left", "tileimage/Left.bmp", 30, 30, true, WHITE);
-	IMAGEMANAGER->addImage("up", "tileimage/Up.bmp", 30, 30, true, WHITE);
-	IMAGEMANAGER->addImage("down", "tileimage/Down.bmp", 30, 30, true, WHITE);
+	IMAGEMANAGER->addImage("right", "tileimage/Right.bmp", 30, 30, true, MAGENTA);
+	IMAGEMANAGER->addImage("left", "tileimage/Left.bmp", 30, 30, true, MAGENTA);
+	IMAGEMANAGER->addImage("up", "tileimage/Up.bmp", 30, 30, true, MAGENTA);
+	IMAGEMANAGER->addImage("down", "tileimage/Down.bmp", 30, 30, true, MAGENTA);
+	IMAGEMANAGER->addImage("dungeon", "tileimage/dun.bmp", 30, 30, true, WHITE);
+	IMAGEMANAGER->addImage("town", "tileimage/town.bmp", 30, 30, true, WHITE);
+	IMAGEMANAGER->addImage("world", "tileimage/world.bmp", 30, 30, true, WHITE);
+	IMAGEMANAGER->addImage("boss1", "tileimage/boss.bmp", 30, 30, true, WHITE);
 	setUp();
 
 	_camera = new camera;
@@ -148,6 +152,12 @@ void mapTool::render()
 	IMAGEMANAGER->render("down", getMemDC(), sizeButton[1].left, sizeButton[1].top);
 	IMAGEMANAGER->render("left", getMemDC(), SelectMap[0].left, SelectMap[0].top);
 	IMAGEMANAGER->render("right", getMemDC(), SelectMap[1].left, SelectMap[1].top);
+	IMAGEMANAGER->render("dungeon", getMemDC(), tileMoveBox[0].left, tileMoveBox[0].top);
+	IMAGEMANAGER->render("dungeon", getMemDC(), tileMoveBox[1].left, tileMoveBox[1].top);
+	IMAGEMANAGER->render("dungeon", getMemDC(), tileMoveBox[2].left, tileMoveBox[2].top);
+	IMAGEMANAGER->render("town", getMemDC(), tileMoveBox[3].left, tileMoveBox[3].top);
+	IMAGEMANAGER->render("world", getMemDC(), tileMoveBox[4].left, tileMoveBox[4].top);
+	IMAGEMANAGER->render("boss1", getMemDC(), tileMoveBox[5].left, tileMoveBox[5].top);
 	if (tilenum == 0)
 	{
 	_image->render(getMemDC(), _image->GetX() - _mapSpeed, 0);	
@@ -275,11 +285,6 @@ void mapTool::render()
 
 	//==========================체크 박스 =====================================//
 
-	for (int i = 0; i < 6; ++i)
-	{
-		Rectangle(getMemDC(), tileMoveBox[i]);
-	}
-			
 	
 	IMAGEMANAGER->render("save", getMemDC(), box[0].left, box[0].top);
 	IMAGEMANAGER->render("load", getMemDC(), box[1].left, box[1].top);
