@@ -34,6 +34,9 @@ private:
 	int _count;
 	float _tum;
 
+	float _playerDeadAlpha;
+	bool _isPlayerDeadAlphaOn;
+
 public:
 	bossScene();
 	~bossScene();
@@ -52,6 +55,8 @@ public:
 
 	void playerSceneSave();
 	void playerSceneLoad();
+
+	void playerDead();
 
 	void setWindowsSize(int x, int y, int width, int height);
 };

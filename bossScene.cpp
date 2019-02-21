@@ -107,7 +107,7 @@ void bossScene::render()
 	{
 		IMAGEMANAGER->findImage("bossTile")->alphaFrameRender(getMemDC(), 416 + i * 32 - _camera->getCameraX(), 1088 - _camera->getCameraY(), 1, _fireIndex, _fireAlphaValue);
 	}
-
+	playerDead();
 	_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
@@ -301,6 +301,30 @@ void bossScene::playerSceneLoad()
 	}
 
 	CloseHandle(file);
+}
+
+void bossScene::playerDead()
+{
+	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _playerDeadAlpha);
+
+	if (_player->getPlayerHP() <= 0)
+	{
+		_isPlayerDeadAlphaOn = true;
+	}
+
+	if (_isPlayerDeadAlphaOn)
+	{
+		if (_playerDeadAlpha < 255)
+		{
+			_playerDeadAlpha += 3;
+		}
+
+		if (_playerDeadAlpha > 255)
+		{
+			_playerDeadAlpha = 255;
+			_isPlayerDeadAlphaOn = false;
+		}
+	}
 }
 
 void bossScene::setWindowsSize(int x, int y, int width, int height)

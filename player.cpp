@@ -160,14 +160,17 @@ void player::update(bool enemyCheck, int a)
 
 	if (_player.currentScene == PLAYERSCENE::DUNGEON_1F || _player.currentScene == PLAYERSCENE::DUNGEON_2F || _player.currentScene == PLAYERSCENE::BOSS)
 	{
-		if (KEYMANAGER->isOnceKeyDown(VK_SHIFT))
+		if (_player.HP > 0)
 		{
-			playerSave();
-			playerUiSave();
-			playerSceneSave();
-			_inventory->inventorySave();
-			SOUNDMANAGER->stop("theTower");
-			SCENEMANAGER->changeScene("ui");
+			if (KEYMANAGER->isOnceKeyDown(VK_SHIFT))
+			{
+				playerSave();
+				playerUiSave();
+				playerSceneSave();
+				_inventory->inventorySave();
+				SOUNDMANAGER->stop("theTower");
+				SCENEMANAGER->changeScene("ui");
+			}
 		}
 	}
 
@@ -188,6 +191,7 @@ void player::update(bool enemyCheck, int a)
 	{
 		_player.damage = 10;
 	}
+	
 
 	playerDeath(enemyCheck);
 }
@@ -211,7 +215,10 @@ void player::render(float cameraX, float cameraY, bool uiRender)
 	//sprintf_s(str, "%d", (int)_player.currentScene);
 	//TextOut(getMemDC(), 140, 320, str, strlen(str));
 
-	playerUIRender(uiRender);
+	if (_player.HP > 0)
+	{
+		playerUIRender(uiRender);
+	}
 
 	//sprintf_s(str, "%d", _unAttack);
 	//TextOut(getMemDC(), 120, 120, str, strlen(str));

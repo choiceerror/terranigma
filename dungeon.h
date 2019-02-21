@@ -35,6 +35,9 @@ private:
 
 	int _dungeonSound;
 
+	float _playerDeadAlpha;
+	bool _isPlayerDeadAlphaOn;
+
 public:
 	dungeon();
 	~dungeon();
@@ -48,6 +51,7 @@ public:
 	void playerSceneSave();
 	void playerSceneLoad();
 
+	void playerDead();
 
 	void itemRandomDrop(); //랜덤 아이템드랍
 	void playerItemGet(); //플레이어 아이템 얻는 함수

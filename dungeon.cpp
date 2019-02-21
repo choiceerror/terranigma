@@ -51,6 +51,8 @@ HRESULT dungeon::init()
 	_dungeonUpbool = false;
 	_dungeonDownbool = false;
 
+	_isPlayerDeadAlphaOn = false;
+	_playerDeadAlpha = 0;
 	_dungeonSound = 0;
 
 	_dungeonUp = RectMake(416, 0, 192, 50);
@@ -92,7 +94,6 @@ void dungeon::update()
 	itemRandomDrop();
 	playerItemGet();
 	_clockFade->update();
-
 	if (_player->getPlayerLevelUP() == true)
 	{
 		if (_dungeonSound == 0)
@@ -130,35 +131,38 @@ void dungeon::render()
 		_dungeon->render(_camera->getCameraX(), _camera->getCameraY());
 		_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 		_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
+		playerDead();
 		_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
 
-		for (int i = 0; i < 2; ++i)
+		if (_player->getPlayerHP() > 0)
 		{
-			for (int j = 0; j < 6; ++j)
+			for (int i = 0; i < 2; ++i)
 			{
-				IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->frameRender(getMemDC(), 416 + 32 * j, i * 32 - _camera->getCameraY(), 14, 3);
-
-				if (i == 0)
+				for (int j = 0; j < 6; ++j)
 				{
-					IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->frameRender(getMemDC(), 416 + 32 * j, 2 * 32 - _camera->getCameraY(), 15, 4);
+					IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->frameRender(getMemDC(), 416 + 32 * j, i * 32 - _camera->getCameraY(), 14, 3);
+
+					if (i == 0)
+					{
+						IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê4")->frameRender(getMemDC(), 416 + 32 * j, 2 * 32 - _camera->getCameraY(), 15, 4);
+					}
+				}
+			}
+			for (int i = 0; i < 5; ++i)
+			{
+				for (int j = 0; j < 10; ++j)
+				{
+					if (i == 0)
+					{
+						IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê2")->frameRender(getMemDC(), 352 + 32 * j, 2976 + i * 32 - _camera->getCameraY(), 7, 13);
+					}
+					if (i != 0)
+					{
+						IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê2")->frameRender(getMemDC(), 352 + 32 * j, 2976 + i * 32 - _camera->getCameraY(), 7, 14);
+					}
 				}
 			}
 		}
-		for (int i = 0; i < 5; ++i)
-		{
-			for (int j = 0; j < 10; ++j)
-			{
-				if (i == 0)
-				{
-					IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê2")->frameRender(getMemDC(), 352 + 32 * j,2976 + i * 32 - _camera->getCameraY(), 7, 13);
-				}
-				if (i != 0)
-				{
-					IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê2")->frameRender(getMemDC(), 352 + 32 * j, 2976 + i * 32 - _camera->getCameraY(), 7, 14);
-				}
-			}
-		}
-
 
 
 		_clockFade->render();
@@ -305,6 +309,30 @@ void dungeon::playerSceneLoad()
 
 	CloseHandle(file);
 
+}
+
+void dungeon::playerDead()
+{
+	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _playerDeadAlpha);
+
+	if (_player->getPlayerHP() <= 0)
+	{
+		_isPlayerDeadAlphaOn = true;
+	}
+
+	if (_isPlayerDeadAlphaOn)
+	{
+		if (_playerDeadAlpha < 255)
+		{
+			_playerDeadAlpha += 3;
+		}
+
+		if (_playerDeadAlpha > 255)
+		{
+			_playerDeadAlpha = 255;
+			_isPlayerDeadAlphaOn = false;
+		}
+	}
 }
 
 void dungeon::itemRandomDrop()

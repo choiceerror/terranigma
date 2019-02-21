@@ -137,23 +137,26 @@ void dungeon2F::render()
 	_dungeon2F->render(_camera->getCameraX(), _camera->getCameraY());
 	_enemyManager->render(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
+	playerDead();
 	_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
 
-	for (int i = 0; i < 5; ++i)
+	if (_player->getPlayerHP() > 0)
 	{
-		for (int j = 0; j < 2; ++j)
+		for (int i = 0; i < 5; ++i)
 		{
-			if (i == 0)
+			for (int j = 0; j < 2; ++j)
 			{
-				IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê2")->frameRender(getMemDC(), 896 - _camera->getCameraX(), 32 - _camera->getCameraY(), 7, 15);
-			}
-			else
-			{
-				IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê")->frameRender(getMemDC(), 896 + 32*j - _camera->getCameraX(), 32 + 32*i - _camera->getCameraY(), 24 + j, 8 + i);
+				if (i == 0)
+				{
+					IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê2")->frameRender(getMemDC(), 896 - _camera->getCameraX(), 32 - _camera->getCameraY(), 7, 15);
+				}
+				else
+				{
+					IMAGEMANAGER->findImage("Å¸ÀÏ¸Ê")->frameRender(getMemDC(), 896 + 32 * j - _camera->getCameraX(), 32 + 32 * i - _camera->getCameraY(), 24 + j, 8 + i);
+				}
 			}
 		}
 	}
-
 	//Rectangle(getMemDC(), _dungeDownJumpRc);
 	//Rectangle(getMemDC(), _dungeUnMove);
 
@@ -322,6 +325,30 @@ void dungeon2F::alphaBlend()
 	if (_alphaBlendOut && _dungeonUpBool)
 	{
 		_alphaValue += 3;
+	}
+}
+
+void dungeon2F::playerDead()
+{
+	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _playerDeadAlpha);
+
+	if (_player->getPlayerHP() <= 0)
+	{
+		_isPlayerDeadAlphaOn = true;
+	}
+
+	if (_isPlayerDeadAlphaOn)
+	{
+		if (_playerDeadAlpha < 255)
+		{
+			_playerDeadAlpha += 3;
+		}
+
+		if (_playerDeadAlpha > 255)
+		{
+			_playerDeadAlpha = 255;
+			_isPlayerDeadAlphaOn = false;
+		}
 	}
 }
 
