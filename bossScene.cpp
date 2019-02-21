@@ -16,6 +16,7 @@ HRESULT bossScene::init()
 	setWindowsSize(WINSTARTX, WINSTARTY, GAMESIZEX, GAMESIZEY);
 
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
+	IMAGEMANAGER->findImage("bossTile")->setAlpahBlend(true);
 
 	_enemyManager = new enemyManager;
 	_player = new player;
@@ -48,15 +49,21 @@ HRESULT bossScene::init()
 	_isAlphaOn = false;
 	_isAlphaOut = true;
 	_alphaValue = 255;
+	_isFireAlphaOn = false;
 
+	_fireIndex = 0;
+	_fireWallOn = false;
 	_isDungeonDown = false;
 	_once = false;
 	_worldTime = 0;
+	_fireAlphaValue = 0;
+	_count = 0;
 
 	playerSceneLoad();
 
 	_player->setPlayerCurrentScene(PLAYERSCENE::BOSS);
 
+	_tum = 0;
 	return S_OK;
 }
 
@@ -75,6 +82,12 @@ void bossScene::update()
 	_itemManager->update();
 	_enemyManager->update();
 	_dungeonBossMap->update();
+	playerUnAttack();
+	playerUnDown();
+	bossAppear();
+
+
+	//===========================================
 	dungeonChange();
 	if (!_isDungeonDown)
 	{
@@ -88,9 +101,52 @@ void bossScene::render()
 	_dungeonBossMap->render(_camera->getCameraX(), _camera->getCameraY());
 	_enemyManager->bossBulletDraw(_camera->getCameraX(), _camera->getCameraY());
 	_itemManager->render(_camera->getCameraX(), _camera->getCameraY());
+	for (int i = 0; i < 10; ++i)
+	{
+		IMAGEMANAGER->findImage("bossTile")->alphaFrameRender(getMemDC(), 416 + i * 32 - _camera->getCameraX(), 1088 - _camera->getCameraY(), 1, _fireIndex, _fireAlphaValue);
+	}
+
 	_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
+
+}
+
+void bossScene::bossAppear()
+{
+	if (_enemyManager->getIsOnce(BOSS_APPEAR) == true)
+	{
+		_fireWallOn = true;
+		_isFireAlphaOn = true;
+	}
+	
+	if (_fireWallOn)
+	{
+		_count++;
+
+		if (_count % 10 == 0)
+		{
+			if (_fireIndex > 2) _fireIndex = -1;
+			_fireIndex++;
+
+			_count = 0;
+		}
+	}
+
+	if (_isFireAlphaOn)
+	{
+		if (_fireAlphaValue < 255)
+		{
+			_fireAlphaValue += 5;
+		}
+
+		if (_fireAlphaValue > 255)
+		{
+			_fireAlphaValue = 255;
+			_isFireAlphaOn = false;
+		}
+	}
+
 }
 
 void bossScene::dungeonChange()
@@ -156,6 +212,41 @@ void bossScene::alphaBlend()
 	if (_isAlphaOut && _isAlphaOut)
 	{
 		_alphaValue -= 3;
+	}
+}
+
+void bossScene::playerUnAttack()
+{
+	if (_player->getPlayerY() > 1150)
+	{
+		_player->setPlayerUnAttack(true);
+	}
+
+	if (_player->getPlayerY() < 1150)
+	{
+		_player->setPlayerUnAttack(false);
+	}
+}
+
+void bossScene::playerUnDown()
+{
+	if (_enemyManager->getIsOnce(BOSS_APPEAR) == true)
+	{
+		if (_player->getPlayerY() > 1050)
+		{
+			_tum = _player->getPlayerY() - 1050;
+
+			_player->setPlayerPosY(_player->getPlayerY() - _tum);
+
+			//if (_player->getJump()->getIsJump() == true)
+			//{
+			//	_player->getJump()->setIsJump(false);
+			//}
+		}
+		else
+		{
+			_tum = 0;
+		}
 	}
 }
 

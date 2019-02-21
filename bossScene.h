@@ -21,10 +21,18 @@ private:
 	int _alphaValue;
 	bool _isAlphaOut;
 	bool _isAlphaOn;
+	bool _isFireAlphaOn;
 
 	bool _isDungeonDown;
 	float _worldTime;
 	bool _once;
+
+	int _fireAlphaValue;
+	int _fireIndex;
+	bool _fireWallOn;
+
+	int _count;
+	float _tum;
 
 public:
 	bossScene();
@@ -35,8 +43,12 @@ public:
 	void update();
 	void render();
 
+	void bossAppear();
 	void dungeonChange();
 	void alphaBlend();
+
+	void playerUnAttack();
+	void playerUnDown();
 
 	void playerSceneSave();
 	void playerSceneLoad();
