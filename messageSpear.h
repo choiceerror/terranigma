@@ -4,7 +4,6 @@
 class messageSpear : public gameNode
 {
 private:
-	ui* _ui;
 
 	int _count;
 	HFONT _font;
