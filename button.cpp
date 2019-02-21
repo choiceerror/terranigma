@@ -26,7 +26,7 @@ HRESULT button::init(const char * imageName, int x, int y, POINT btnDownFramePoi
 	_imageName = imageName;
 	_image = IMAGEMANAGER->findImage(imageName);
 
-	_rc = RectMakeCenter(x, y, _image->getFrameWidth(), _image->getFrameHeight());
+	_rc = RectMakeCenter(x, y, _image->getFrameWidth() * 1.5f, _image->getFrameHeight() * 1.5f);
 
 
 	return S_OK;
@@ -60,11 +60,11 @@ void button::render()
 	switch (_direction)
 	{
 		case BUTTONDIRECTION_NULL:	case BUTTONDIRECTION_UP:
-			_image->expandRenderCenter(getMemDC(), _rc.left, _rc.top,
+			_image->expandRenderCenter(getMemDC(), _x, _y,
 				_btnUpFramePoint.x, _btnUpFramePoint.y, 1.5f, 1.5f);
 		break;
 		case BUTTONDIRECTION_DOWN:
-			_image->expandRenderCenter(getMemDC(), _rc.left, _rc.top,
+			_image->expandRenderCenter(getMemDC(), _x, _y,
 				_btnDownFramePoint.x, _btnDownFramePoint.y, 1.5f, 1.5f);
 		break;
 	

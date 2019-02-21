@@ -35,7 +35,7 @@ HRESULT intro::init()
 	_text.y = GAMESIZEY / 2 + 80;
 	//===================================
 
-	_mapToolButton->init("맵툴버튼", GAMESIZEX / 3 + 320, GAMESIZEY / 2 + 160, PointMake(0, 1), PointMake(0, 0), cbMapToolSceneChange);
+	_mapToolButton->init("맵툴버튼", GAMESIZEX / 3 + 200, GAMESIZEY / 2 + 150, PointMake(0, 1), PointMake(0, 0), cbMapToolSceneChange);
 
 	_intro.alphaValue = 255;
 	_intro.alphaValue2 = 0;
@@ -52,7 +52,6 @@ HRESULT intro::init()
 	_imageChange = IMAGECHANGE::ONE;
 	_certainWorldTime = TIMEMANAGER->getWorldTime();
 	//messageAll();
-
 	return S_OK;
 }
 
@@ -64,6 +63,13 @@ void intro::release()
 
 void intro::update()
 {
+	if (_intro.isOnce[3] == false)
+	{
+		SOUNDMANAGER->play("introOpening");
+		_intro.isOnce[3] = true;
+	}
+
+
 	opening();
 	_camera->update(_intro.cameraPos.x, _intro.cameraPos.y);
 
@@ -137,7 +143,7 @@ void intro::render()
 
 	messageDraw();
 
-	char str[128];
+	//char str[128];
 
 	//sprintf_s(str, "_textCount[MESSAGE_ONE] : %d", _textCount[0]);
 	//TextOut(getMemDC(), 100, 80, str, strlen(str));
@@ -154,10 +160,10 @@ void intro::render()
 	//sprintf_s(str, "num : %d", _num);
 	//TextOut(getMemDC(), 100, 160, str, strlen(str));
 
-	sprintf_s(str, "alpha2 : %d", _intro.alphaValue2);
-	TextOut(getMemDC(), 100, 240, str, strlen(str));
-	sprintf_s(str, "alpha : %d", _intro.alphaValue);
-	TextOut(getMemDC(), 100, 260, str, strlen(str));
+	//sprintf_s(str, "alpha2 : %d", _intro.alphaValue2);
+	//TextOut(getMemDC(), 100, 240, str, strlen(str));
+	//sprintf_s(str, "alpha : %d", _intro.alphaValue);
+	//TextOut(getMemDC(), 100, 260, str, strlen(str));
 
 	//sprintf_s(str, "imageChange : %d", _imageChange);
 	//TextOut(getMemDC(), 100, 260, str, strlen(str));
@@ -192,11 +198,13 @@ void intro::opening()
 			if (_intro.alphaValue > 0)
 			{
 				_intro.alphaValue -= ALPHA;
+
 			}
 			else if (_intro.alphaValue <= 0)
 			{
 				_intro.alphaValue = 0;
 				_intro.isAlpahOut = false; //알파꺼주고
+	
 			}
 		}
 
@@ -412,6 +420,7 @@ void intro::opening()
 				_intro.isSizeUpStop = false;
 				_intro.isAlpahOut = true; //다음알파값 적용시키기위해서 켜줌.
 				_imageChange = IMAGECHANGE::SIX;
+				_certainWorldTime = TIMEMANAGER->getWorldTime();
 			}
 		}
 
@@ -528,8 +537,7 @@ void intro::messageDraw()
 			}
 			else if (_textSizeMax[_num + 1] > _textCount[MESSAGE_TWO])
 			{
-				if (_intro.isAlpahOut == false)
-					_textCount[MESSAGE_TWO] += 2;
+				_textCount[MESSAGE_TWO] += 2;
 			}
 
 			_textWolrldTime = TIMEMANAGER->getWorldTime();
@@ -562,8 +570,8 @@ void intro::messageDraw()
 			{
 				introText[MESSAGE_ONE] = "그  별은  가지고  있었다  두개의  마음을";
 				introText[MESSAGE_TWO] = "밝은면과  어두운면의  두개의  얼굴이었다......";
-				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_ONE].c_str(), _textCount[MESSAGE_ONE]);
-				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_TWO].c_str(), _textCount[MESSAGE_TWO]);
+				TextOut(getMemDC(), MESSAGE_X + 80, MESSAGE_Y, introText[MESSAGE_ONE].c_str(), _textCount[MESSAGE_ONE]);
+				TextOut(getMemDC(), MESSAGE_X + 50, MESSAGE_Y + 50, introText[MESSAGE_TWO].c_str(), _textCount[MESSAGE_TWO]);
 			}
 			break;
 		case MESSAGE_TWO:
@@ -571,7 +579,7 @@ void intro::messageDraw()
 			{
 				introText[MESSAGE_THREE] = "이별이  태어난  후  46억년의  세월은..";
 				introText[MESSAGE_FOUR] = "커다란  두개의  의지에  의해  진화와  쇠퇴를  반복하고  있다";
-				TextOut(getMemDC(), MESSAGE_X + 30, MESSAGE_Y, introText[MESSAGE_THREE].c_str(), _textCount[MESSAGE_ONE]);
+				TextOut(getMemDC(), MESSAGE_X + 100, MESSAGE_Y, introText[MESSAGE_THREE].c_str(), _textCount[MESSAGE_ONE]);
 				TextOut(getMemDC(), MESSAGE_X - 30, MESSAGE_Y + 50, introText[MESSAGE_FOUR].c_str(), _textCount[MESSAGE_TWO]);
 			}
 			break;
@@ -580,8 +588,8 @@ void intro::messageDraw()
 			{
 				introText[MESSAGE_FIVE] = "밝은  면의  의지로  새로운  생명이  태어나고";
 				introText[MESSAGE_SIX] = "어두운  면의  의지로  빙하기가  온다";
-				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_FIVE].c_str(), _textCount[MESSAGE_ONE]);
-				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_SIX].c_str(), _textCount[MESSAGE_TWO]);
+				TextOut(getMemDC(), MESSAGE_X + 70, MESSAGE_Y, introText[MESSAGE_FIVE].c_str(), _textCount[MESSAGE_ONE]);
+				TextOut(getMemDC(), MESSAGE_X + 100, MESSAGE_Y + 50, introText[MESSAGE_SIX].c_str(), _textCount[MESSAGE_TWO]);
 			}
 			break;
 		case MESSAGE_FOUR:
@@ -589,11 +597,11 @@ void intro::messageDraw()
 			{
 				introText[MESSAGE_SEVEN] = "밝은  면으로  새로운  기술이  만들어지고";
 				introText[MESSAGE_EIGHT] = "세월이  지난다음....";
-				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y, introText[MESSAGE_SEVEN].c_str(), _textCount[MESSAGE_ONE]);
-				TextOut(getMemDC(), MESSAGE_X, MESSAGE_Y + 50, introText[MESSAGE_EIGHT].c_str(), _textCount[MESSAGE_TWO]);
+				TextOut(getMemDC(), MESSAGE_X + 100, MESSAGE_Y, introText[MESSAGE_SEVEN].c_str(), _textCount[MESSAGE_ONE]);
+				TextOut(getMemDC(), MESSAGE_X + 250, MESSAGE_Y + 50, introText[MESSAGE_EIGHT].c_str(), _textCount[MESSAGE_TWO]);
 			}
 			break;
-		case MESSAGE_SIX:
+		case MESSAGE_FIVE:
 			if (_imageChange == IMAGECHANGE::FOUR)
 			{
 				introText[MESSAGE_NINE] = "어두운  면의  의지에  의해  그  희생자가  나온다..";

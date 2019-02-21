@@ -43,7 +43,7 @@ struct tagIntro
 	float changeWorldTime; //체인지 시간
 	float changeTime;
 	bool isAlpahOn, isAlpahOut;
-	bool isOnce[3];
+	bool isOnce[4];
 	bool isSizeUpStop;
 };
 
