@@ -42,6 +42,7 @@ HRESULT dungeon::init()
 
 	SOUNDMANAGER->play("theTower", SOUNDSIZE);
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
+	IMAGEMANAGER->findImage("gameOver")->setAlpahBlend(true);
 	_alphaValue = 0;
 	_changeScene = false;
 
@@ -313,7 +314,7 @@ void dungeon::playerSceneLoad()
 
 void dungeon::playerDead()
 {
-	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _playerDeadAlpha);
+	IMAGEMANAGER->findImage("gameOver")->alphaRender(getMemDC(), _playerDeadAlpha);
 
 	if (_player->getPlayerHP() <= 0)
 	{

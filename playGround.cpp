@@ -49,6 +49,7 @@ HRESULT playGround::init()
 	IMAGEMANAGER->addImage("인트로2", "image/인트로2.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
 	IMAGEMANAGER->addImage("인트로3", "image/인트로3.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
 	IMAGEMANAGER->addImage("인트로4", "image/인트로4.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);
+	IMAGEMANAGER->addImage("gameOver", "image/gameOver.bmp", 1024, 768, true, MAGENTA);
 
 	//이펙트
 	EFFECTMANAGER->addEffect("deadEffect", "image/deadEffect2.bmp", 1496, 110, 136, 110, 5, 0.17f, 1000);

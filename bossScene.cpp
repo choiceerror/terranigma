@@ -17,6 +17,7 @@ HRESULT bossScene::init()
 
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
 	IMAGEMANAGER->findImage("bossTile")->setAlpahBlend(true);
+	IMAGEMANAGER->findImage("gameOver")->setAlpahBlend(true);
 
 	_enemyManager = new enemyManager;
 	_player = new player;
@@ -305,7 +306,7 @@ void bossScene::playerSceneLoad()
 
 void bossScene::playerDead()
 {
-	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _playerDeadAlpha);
+	IMAGEMANAGER->findImage("gameOver")->alphaRender(getMemDC(), _playerDeadAlpha);
 
 	if (_player->getPlayerHP() <= 0)
 	{

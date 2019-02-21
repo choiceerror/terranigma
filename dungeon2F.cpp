@@ -36,6 +36,7 @@ HRESULT dungeon2F::init()
 	_clockFade->init();
 
 	IMAGEMANAGER->findImage("black")->setAlpahBlend(true);
+	IMAGEMANAGER->findImage("gameOver")->setAlpahBlend(true);
 
 	_alphaValue = 0;
 	_goal.x = 1000.f;
@@ -330,7 +331,7 @@ void dungeon2F::alphaBlend()
 
 void dungeon2F::playerDead()
 {
-	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _playerDeadAlpha);
+	IMAGEMANAGER->findImage("gameOver")->alphaRender(getMemDC(), _playerDeadAlpha);
 
 	if (_player->getPlayerHP() <= 0)
 	{
