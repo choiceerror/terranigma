@@ -204,17 +204,17 @@ void player::render(float cameraX, float cameraY, bool uiRender)
 	//	TextOut(getMemDC(), 100 + i * 30, 100, str, strlen(str));
 	//}
 	//
-	sprintf_s(str, "%d", check);
-	SetTextColor(getMemDC(), RGB(0, 0, 0));
-	TextOut(getMemDC(), 300, 120, str, strlen(str));
+	//sprintf_s(str, "%d", check);
+	//SetTextColor(getMemDC(), RGB(0, 0, 0));
+	//TextOut(getMemDC(), 300, 120, str, strlen(str));
 	
 	//sprintf_s(str, "%d", (int)_player.currentScene);
 	//TextOut(getMemDC(), 140, 320, str, strlen(str));
 
 	playerUIRender(uiRender);
 
-	sprintf_s(str, "%d", _unAttack);
-	TextOut(getMemDC(), 120, 120, str, strlen(str));
+	//sprintf_s(str, "%d", _unAttack);
+	//TextOut(getMemDC(), 120, 120, str, strlen(str));
 	//sprintf_s(str, "%d", _player.maxExp);
 	//TextOut(getMemDC(), 140, 120, str, strlen(str));
 	//sprintf_s(str, "%d", _levelUP);
