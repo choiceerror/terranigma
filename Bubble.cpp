@@ -56,16 +56,12 @@ void Bubble::render(float cameraX, float cameraY)
 {
 	for (int i = 0; i < _vBubble.size(); ++i)
 	{
-		_vBubble[i]->image->alphaFrameRender(getMemDC(), _vBubble[i]->x - cameraX, _vBubble[i]->y - cameraY, _vBubble[i]->frameX, _vBubble[i]->frameY, 180);
 
-		//if (_vBubble[i]->x - cameraX > -100 && _vBubble[i]->x - cameraX < 1154 && _vBubble[i]->y - cameraY > -130 && _vBubble[i]->y - cameraY < 898)
+		if (_vBubble[i]->x - cameraX > -100 && _vBubble[i]->x - cameraX < 1154 && _vBubble[i]->y - cameraY > -130 && _vBubble[i]->y - cameraY < 898)
 		{
+			_vBubble[i]->image->alphaFrameRender(getMemDC(), _vBubble[i]->x - cameraX, _vBubble[i]->y - cameraY, _vBubble[i]->frameX, _vBubble[i]->frameY, 180);
+
 		}
-
-		//char str[120];
-		//sprintf_s(str, "%d %d", _vBubble[20]->frameX, _vBubble[20]->frameY);
-		//TextOut(getMemDC(), 300, 400, str, strlen(str));
-
 	}
 }
 
