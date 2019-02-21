@@ -119,6 +119,8 @@ void dungeon::update()
 	{
 		_player->update(true, 1);
 	}
+
+	EFFECTMANAGER->update();
 }
 
 void dungeon::render()
@@ -162,6 +164,7 @@ void dungeon::render()
 		_clockFade->render();
 		IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 
+		EFFECTMANAGER->render();
 		//Rectangle(getMemDC(), _dungeonDown);
 		//Rectangle(getMemDC(), _dungeonUp);
 

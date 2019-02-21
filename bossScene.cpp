@@ -94,6 +94,7 @@ void bossScene::update()
 	{
 		_player->update(true, 1);
 	}
+	EFFECTMANAGER->update();
 }
 
 void bossScene::render()
@@ -110,7 +111,7 @@ void bossScene::render()
 	_player->render(_camera->getCameraX(), _camera->getCameraY(), true);
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
-
+	EFFECTMANAGER->render();
 }
 
 void bossScene::bossAppear()
@@ -239,10 +240,10 @@ void bossScene::playerUnDown()
 
 			_player->setPlayerPosY(_player->getPlayerY() - _tum);
 
-			//if (_player->getJump()->getIsJump() == true)
-			//{
-			//	_player->getJump()->setIsJump(false);
-			//}
+			if (_player->getJump()->getIsJump() == true)
+			{
+				_player->getJump()->setIsJump(false);
+			}
 		}
 		else
 		{

@@ -34,7 +34,8 @@ HRESULT playGround::init()
 	IMAGEMANAGER->addFrameImage("talkPage", "image/talkPageNext.bmp", 75, 30, 3, 1, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("인트로5", "image/인트로5.bmp", 124, 125, 1, 1, true, MAGENTA);
 	IMAGEMANAGER->addFrameImage("인트로6", "image/인트로6.bmp", 318, 122, 1, 1, true, MAGENTA);
-	IMAGEMANAGER->addFrameImage("인트로8", "image/인트로8.bmp", 290, 36, 1, 1, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("스타트버튼", "image/인트로8.bmp", 290, 36, 1, 1, true, MAGENTA);
+	IMAGEMANAGER->addFrameImage("맵툴버튼", "image/맵툴버튼.bmp", 240, 88, 1, 2, true, MAGENTA);
 
 	//이미지
 	IMAGEMANAGER->addImage("인트로7", "image/인트로7.bmp", GAMESIZEX, GAMESIZEY, true, MAGENTA);

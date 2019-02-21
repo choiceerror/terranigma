@@ -14,10 +14,10 @@ intro::~intro()
 HRESULT intro::init()
 {
 	setWindowsSize(WINSTARTX, WINSTARTY, GAMESIZEX, GAMESIZEY);
-	
-	IMAGEMANAGER->addFrameImage("맵툴버튼", "image/맵툴버튼.bmp", 112, 100, 1, 2, true, MAGENTA);
 
 	_camera = new camera;
+
+	_mapToolButton = new button;
 
 	_camera->init(GAMESIZEX, GAMESIZEY, WINSIZEX, GAMESIZEY);
 
@@ -26,13 +26,15 @@ HRESULT intro::init()
 	_intro.image = IMAGEMANAGER->findImage("인트로1");
 	_intro.image->setAlpahBlend(true);
 	_earthImage = IMAGEMANAGER->findImage("인트로5"); //지구 이미지
-	_buttonImage = IMAGEMANAGER->findImage("인트로8"); //버튼이미지
+	_buttonImage = IMAGEMANAGER->findImage("스타트버튼"); //버튼이미지
 	_buttonWorldTime = TIMEMANAGER->getWorldTime();
 	//===========텍스트 관련 =============
 	_text.image = IMAGEMANAGER->findImage("인트로6"); //텍스트 이미지
 	_text.x = GAMESIZEX / 2;
 	_text.y = GAMESIZEY / 2 + 80;
 	//===================================
+
+	_mapToolButton->init("맵툴버튼", GAMESIZEX / 3 + 200, GAMESIZEY / 2 + 150, PointMake(0, 1), PointMake(0, 0), cbMapToolSceneChange);
 
 	_intro.alphaValue = 255;
 	_intro.isAlpahOn = false;
@@ -45,7 +47,7 @@ HRESULT intro::init()
 
 	_textCount[MESSAGE_ONE] = _textCount[MESSAGE_TWO] = 0;
 	_nextText = 0;
-	_imageChange = IMAGECHANGE::ONE;
+	_imageChange = IMAGECHANGE::SIX;
 	//messageAll();
 
 	return S_OK;
@@ -54,6 +56,8 @@ HRESULT intro::init()
 void intro::release()
 {
 	SAFE_DELETE(_camera);
+
+	SAFE_DELETE(_mapToolButton);
 }
 
 void intro::update()
@@ -61,7 +65,15 @@ void intro::update()
 	opening();
 	_camera->update(_intro.cameraPos.x, _intro.cameraPos.y);
 
-	
+	_mapToolButton->update();
+
+	if (_imageChange == IMAGECHANGE::SIX)
+	{
+		if (KEYMANAGER->isOnceKeyDown(VK_RETURN))
+		{
+			SCENEMANAGER->changeScene("town");
+		}
+	}
 }
 
 void intro::render()
@@ -89,8 +101,12 @@ void intro::render()
 		{
 			_buttonWorldTime = TIMEMANAGER->getWorldTime();
 		}
+
+		//IMAGEMANAGER->findImage("맵툴버튼")->frameRender(getMemDC(), GAMESIZEX / 3 + 70, GAMESIZEY / 2 + 130, 0, _mapToolButtonFrameY);
 		break;
 	}
+
+	_mapToolButton->render();
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _intro.alphaValue);
 
@@ -194,7 +210,7 @@ void intro::opening()
 
 		if (_intro.isAlpahOut == true)
 		{
-			
+
 			if (_intro.alphaValue > 0)
 			{
 				_intro.alphaValue -= ALPHA;
@@ -475,23 +491,23 @@ void intro::messageDraw()
 		_textSizeMax[MESSAGE_NINE] = 50;
 		_textSizeMax[MESSAGE_TEN] = 52;
 
-		
+
 		if (0.1f + _textWolrldTime <= TIMEMANAGER->getWorldTime())
 		{
 			if (_textSizeMax[_num] > _textCount[MESSAGE_ONE])
 			{
-				if(_intro.isAlpahOut == false)
-				_textCount[MESSAGE_ONE] += 2;
+				if (_intro.isAlpahOut == false)
+					_textCount[MESSAGE_ONE] += 2;
 			}
 			else if (_textSizeMax[_num + 1] > _textCount[MESSAGE_TWO])
 			{
 				if (_intro.isAlpahOut == false)
-				_textCount[MESSAGE_TWO] += 2;
+					_textCount[MESSAGE_TWO] += 2;
 			}
 
 			_textWolrldTime = TIMEMANAGER->getWorldTime();
 		}
-		
+
 		if (_isNextPage == true)
 		{
 			if (_nextText < 6)
@@ -576,7 +592,7 @@ void intro::messageDraw()
 			_isNextPage = true;
 		}
 
-		
+
 		SelectObject(getMemDC(), _oldFont);
 		DeleteObject(_font);
 	}
@@ -599,3 +615,10 @@ void intro::setWindowsSize(int x, int y, int width, int height)
 		(winRect.bottom - winRect.top),
 		SWP_NOZORDER | SWP_NOMOVE);
 }
+
+void intro::cbMapToolSceneChange()
+{
+	SCENEMANAGER->changeScene("mapTool");
+	setWindowsSize(WINSTARTX, WINSTARTY, WINSIZEX, WINSIZEY);
+}
+

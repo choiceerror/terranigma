@@ -7,11 +7,26 @@
 //ÆÄÀÌ
 #define PI 3.141592654f
 //¿ø
+
+inline POINTFLOAT PointFloatMake(float x, float y)
+{
+	POINTFLOAT pt = { x, y };
+	return pt;
+}
+
+inline POINT PointMake(int x, int y)
+{
+	POINT pt = { x, y };
+
+	return pt;
+}
+
 typedef struct tagELLIPSE
 {
 	POINT p;
 	float r;
 } ELLIPSE, *LPELLIPSE;
+
 inline void LineMake(HDC hdc, int startX, int startY, int endX, int endY)
 {
 	MoveToEx(hdc, startX, startY, NULL);

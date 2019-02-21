@@ -128,6 +128,8 @@ void dungeon2F::update()
 	{
 		_player->update(true, 1);
 	}
+
+	EFFECTMANAGER->update();
 }
 
 void dungeon2F::render()
@@ -157,6 +159,7 @@ void dungeon2F::render()
 
 	IMAGEMANAGER->findImage("black")->alphaRender(getMemDC(), _alphaValue);
 	_clockFade->render();
+	EFFECTMANAGER->render();
 }
 
 void dungeon2F::playerSceneSave()

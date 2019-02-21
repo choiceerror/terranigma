@@ -1,6 +1,7 @@
 #pragma once
 #include "gameNode.h"
 #include "camera.h"
+#include "button.h"
 
 enum MESSAGE
 {
@@ -63,6 +64,7 @@ private:
 	image* _earthImage;
 	image* _buttonImage;
 	float _buttonWorldTime;
+	int _mapToolButtonFrameY;
 	float _earthSizeX, _earthSizeY;
 	tagIntro _intro;
 	tagText _text;
@@ -78,6 +80,8 @@ private:
 	int _num;
 	bool _isNextPage;
 
+	button* _mapToolButton; //맵툴버튼
+
 public:
 	intro();
 	~intro();
@@ -92,7 +96,10 @@ public:
 	void messageAll(); //메시지 모음
 	void messageDraw(); //메시지 그리기
 
-	void setWindowsSize(int x, int y, int width, int height);
+	static void setWindowsSize(int x, int y, int width, int height);
+
+	static void cbMapToolSceneChange();
+	
 	
 };
 

@@ -15,7 +15,7 @@ HRESULT npcManager::init()
 {
 	_randomFunction = new randomFunction;
 
-	_aiDirectionPatten = _aiStatePatten = _aiIdleActionPatten = _aiStatePattenOldTime =  0;
+	_aiDirectionPatten = _aiStatePatten = _aiIdleActionPatten = _aiStatePattenOldTime = 0;
 
 	_randCheck = false;
 
@@ -110,7 +110,7 @@ void npcManager::setElder()
 	elder = new Elder;
 	elder->init("elderAni", "elder", 200, 200, 0, 0);
 	_vElder.push_back(elder);
-		
+
 }
 
 void npcManager::setElle()
@@ -141,7 +141,7 @@ void npcManager::aiBirdUpdate()
 			_aiStatePatten = _randomFunction->getRandomInt(0, 2);
 			_randCheck = _randomFunction->getRandomInt(0, 1);
 			_aiStatePattenOldTime = GetTickCount();
-			
+
 			if (_randCheck)
 			{
 				switch (_aiDirectionPatten)
