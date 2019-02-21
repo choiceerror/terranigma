@@ -67,8 +67,6 @@ HRESULT player::init(bool unAttack)
 
 	_attackComboKey = 0;
 
-	_unAttack = unAttack;
-
 	_isRun = _isAttack = _isJump = _isWalk = false;
 
 	_playerProtect = _alphaChange = false;
@@ -77,11 +75,10 @@ HRESULT player::init(bool unAttack)
 
 	_unMove = false;
 
-	_unAttack = false;
-
 	_death = _levelUP = false;
 	_tileCheck = true;
 
+	_unAttack = unAttack;
 
 	playerLoad();
 	playerUiLoad();
@@ -216,8 +213,8 @@ void player::render(float cameraX, float cameraY, bool uiRender)
 
 	playerUIRender(uiRender);
 
-	//sprintf_s(str, "%d", _attackComboKey);
-	//TextOut(getMemDC(), 120, 120, str, strlen(str));
+	sprintf_s(str, "%d", _unAttack);
+	TextOut(getMemDC(), 120, 120, str, strlen(str));
 	//sprintf_s(str, "%d", _player.maxExp);
 	//TextOut(getMemDC(), 140, 120, str, strlen(str));
 	//sprintf_s(str, "%d", _levelUP);
