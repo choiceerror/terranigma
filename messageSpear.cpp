@@ -139,8 +139,8 @@ void messageSpear::render()
 	messageRender("messageFile/꼬꼬.txt", _birdTalk, 14, 6, 0);
 	messageRender("messageFile/낚시꾼.txt", _fishManTalk, 23, 15, 0);
 	messageRender("messageFile/장로할아범.txt", _elderTalk, 4, 31, 2);
-	messageRender("messageFile/메이드.txt", _maidTalk, 33, 34, 0);
-	messageRender("messageFile/마을사람.txt", _townManTalk, 33, 34, 0);
+	messageRender("messageFile/메이드.txt", _maidTalk, 10, 10, 0);
+	messageRender("messageFile/마을사람.txt", _townManTalk, 22,23, 0);
 
 	if (_once)
 	{
@@ -231,8 +231,8 @@ void messageSpear::elleMessage()
 	string message[2];
 	vector<string> vStr;
 
-	message[0] = "";
-	message[1] = "";
+	message[0] = "안녕하세요";
+	message[1] = "반갑습니다.";
 
 	vStr.push_back(message[0]);
 	vStr.push_back(message[1]);
@@ -272,8 +272,8 @@ void messageSpear::townManMessage()
 	string message[2];
 	vector<string> vStr;
 
-	message[0] = "";
-	message[1] = "";
+	message[0] = "동훈이는 하나를 만들면";
+	message[1] = "다른 하나가 터집니다.";
 
 	vStr.push_back(message[0]);
 	vStr.push_back(message[1]);

@@ -73,7 +73,7 @@ HRESULT mapTool::init()
 
 	for (int i = 0; i < 2; ++i)
 	{
-		SelectMap[i] = RectMakeCenter(1500 + (i * 150), 650, 30, 30);
+		SelectMap[i] = RectMakeCenter(1500 + (i * 100), 650, 30, 30);
 	}
 
 

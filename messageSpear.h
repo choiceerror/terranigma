@@ -80,5 +80,11 @@ public:
 	bool getPage() { return _pageOn; }
 	void setPage(bool a) { _pageOn = a; }
 
+	bool getMaid() { return _maidTalk; }
+	void setMaid(bool a) { _maidTalk = a; }
+
+	bool getHuman() { return _townManTalk; }
+	void setHuman(bool a) { _townManTalk = a; }
+
 };
 

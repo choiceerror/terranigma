@@ -51,6 +51,8 @@ HRESULT town::init()
 	_npcManager->setTownHuman(TOWN_FISHMAN, 870, 870);
 	_npcManager->setTownHuman(TOWN_GRANDFA, 1696, 496);
 	_npcManager->setTownHuman(TOWN_GRANDMA, 1056, 480);
+	_npcManager->setTownHuman(TOWN_MAID, 816, 1376);
+	_npcManager->setTownHuman(TOWN_TOWNMAN, 1760, 1600);
 	_npcManager->init();
 
 	_escape = RectMake(672, 1856 + 32, 128, 64);

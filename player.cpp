@@ -1001,6 +1001,7 @@ void player::npcCheck()
 				_player.x -= _player.speed;
 			}
 		}
+
 		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVTownHuman()[0]->getRect()))
 		{
 			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
@@ -1047,6 +1048,39 @@ void player::npcCheck()
 			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
 			{
 				_message->setGrandMa(false);
+				_message->setOn(true);
+				_message->setPage(false);
+			}
+		}
+		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVTownHuman()[3]->getRect()))
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setMaid(true);
+			}
+		}
+		else if (_message->getMaid() == true)
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setMaid(false);
+				_message->setOn(true);
+				_message->setPage(false);
+			}
+		}
+
+		if (IntersectRect(&rc, &_player.rc, &_npcMgr->getVTownHuman()[4]->getRect()))
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setHuman(true);
+			}
+		}
+		else if (_message->getHuman() == true)
+		{
+			if (KEYMANAGER->isOnceKeyDown(VK_SPACE))
+			{
+				_message->setHuman(false);
 				_message->setOn(true);
 				_message->setPage(false);
 			}

@@ -98,7 +98,7 @@ void npcManager::setBird()
 			Bird* bird;
 			bird = new Bird;
 
-			bird->init("birdAni", "bird", 704 + j * 100, 448 + i * 100, j, i);
+			bird->init("birdAni", "bird", 704 + j * 100, 512 + i * 60, j, i);
 			_vBird.push_back(bird);
 		}
 	}
