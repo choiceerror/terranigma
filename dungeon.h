@@ -33,6 +33,8 @@ private:
 	bool _dungeonUpbool;
 	bool _dungeonDownbool;
 
+	int _dungeonSound;
+
 public:
 	dungeon();
 	~dungeon();

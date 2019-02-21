@@ -45,7 +45,7 @@ HRESULT player::init(bool unAttack)
 	_player.def = 1;
 	_player.money = 10;
 	_player.exp = 0;
-	_player.maxExp = 40;
+	_player.maxExp = 5;
 	_player.level = 1;
 
 	_player.x = GAMESIZEX / 2;
@@ -89,7 +89,11 @@ HRESULT player::init(bool unAttack)
 
 void player::release()
 {
-
+	SAFE_DELETE(_jump);
+	SAFE_DELETE(_dashAttack);
+	SAFE_DELETE(_dashJumpAttack);
+	SAFE_DELETE(_inventory);
+	SAFE_DELETE(_txtData);
 }
 
 void player::update(bool enemyCheck, int a)
@@ -1418,6 +1422,7 @@ void player::levelUP()
 {
 	if (_player.exp >= _player.maxExp)
 	{
+		SOUNDMANAGER->play("levelUP", 1);
 		_player.level += 1;
 		_player.damage += 5;
 		_player.def += 1;

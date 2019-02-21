@@ -51,6 +51,8 @@ HRESULT dungeon::init()
 	_dungeonUpbool = false;
 	_dungeonDownbool = false;
 
+	_dungeonSound = 0;
+
 	_dungeonUp = RectMake(416, 0, 192, 50);
 	_dungeonDown = RectMake(352, 3200 - 180, 320, 64);
 
@@ -89,6 +91,23 @@ void dungeon::update()
 	itemRandomDrop();
 	playerItemGet();
 	_clockFade->update();
+
+	if (_player->getPlayerLevelUP() == true)
+	{
+		if (_dungeonSound == 0)
+		{
+			_dungeonSound++;
+			SOUNDMANAGER->pause("theTower");
+		}
+	}
+	else
+	{
+		if (_dungeonSound == 1)
+		{
+			_dungeonSound--;
+			SOUNDMANAGER->resume("theTower");
+		}
+	}
 
 
 

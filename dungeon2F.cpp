@@ -100,6 +100,22 @@ void dungeon2F::update()
 	_clockFade->update();
 	alphaBlend();
 
+	if (_player->getPlayerLevelUP() == true)
+	{
+		if (_dungeonSound == 0)
+		{
+			_dungeonSound++;
+			SOUNDMANAGER->pause("theTower");
+		}
+	}
+	else
+	{
+		if (_dungeonSound == 1)
+		{
+			_dungeonSound--;
+			SOUNDMANAGER->resume("theTower");
+		}
+	}
 
 	_dungeDownJumpRc = RectMake(100 - _camera->getCameraX(), 350 - _camera->getCameraY(), 170, 100);
 	_dungeUnMove = RectMake(100 - _camera->getCameraX(), 440 - _camera->getCameraY(), 180, 50);

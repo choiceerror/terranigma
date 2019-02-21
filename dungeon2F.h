@@ -43,6 +43,9 @@ private:
 
 	bool _alphaBlendOut;
 
+	int _dungeonSound;
+
+
 public:
 	dungeon2F();
 	~dungeon2F();
