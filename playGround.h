@@ -36,6 +36,7 @@ public:
 
 	void fileDelete();
 	void deleteFile(const char* fileAddress);
+	void fileReset();
 
 	void soundFileInit();
 	void effectSoundInit();

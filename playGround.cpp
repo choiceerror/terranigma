@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "playGround.h"
-
+#pragma warning(disable:4996)
 
 playGround::playGround()
 {
@@ -164,11 +164,12 @@ void playGround::render()
 
 void playGround::fileDelete()
 {
-	deleteFile("saveFile/introDungeon.txt");
+	//deleteFile("saveFile/introDungeon.txt");
 	deleteFile("saveFile/inventory.txt");
 	deleteFile("saveFile/플레이어.txt");
 	deleteFile("saveFile/playerScene.txt");
 	deleteFile("saveFile/UiSave.txt");
+	fileReset();
 }
 
 void playGround::deleteFile(const char * fileAddress)
@@ -181,6 +182,20 @@ void playGround::deleteFile(const char * fileAddress)
 		TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	CloseHandle(file);
+}
+
+void playGround::fileReset()
+{
+	bool _twice;
+	_twice = false;
+
+	char temp[128];
+
+	vector<string> vStr;
+
+	vStr.push_back(itoa((int)_twice, temp, 10));
+
+	TXTDATA->txtSave("saveFile/introDungeon.txt", vStr);
 }
 
 void playGround::soundFileInit()

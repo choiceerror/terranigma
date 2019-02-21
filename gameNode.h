@@ -25,6 +25,7 @@ public:
 
 	void fileDelete();
 	void deleteFile(const char* fileAddress);
+	void fileReset();
 
 	LRESULT MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam);
 	

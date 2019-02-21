@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "gameNode.h"
-
+#pragma warning(disable:4996)
 
 gameNode::gameNode()
 {
@@ -89,7 +89,7 @@ void gameNode::render()
 
 void gameNode::fileDelete()
 {
-	deleteFile("saveFile/introDungeon.txt");
+	//deleteFile("saveFile/introDungeon.txt");
 	deleteFile("saveFile/inventory.txt");
 	deleteFile("saveFile/플레이어.txt");
 	deleteFile("saveFile/playerScene.txt");
@@ -106,6 +106,20 @@ void gameNode::deleteFile(const char * fileAddress)
 		TRUNCATE_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 	CloseHandle(file);
+}
+
+void gameNode::fileReset()
+{
+	bool _twice;
+	_twice = false;
+
+	char temp[128];
+
+	vector<string> vStr;
+
+	vStr.push_back(itoa((int)_twice, temp, 10));
+
+	TXTDATA->txtSave("saveFile/introDungeon.txt", vStr);
 }
 
 LRESULT gameNode::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lParam)
@@ -126,6 +140,7 @@ LRESULT gameNode::MainProc(HWND hWnd, UINT iMessage, WPARAM wParam, LPARAM lPara
 
 		case WM_DESTROY:
 			fileDelete();
+			fileReset();
 			PostQuitMessage(0);
 		return 0;
 	}
