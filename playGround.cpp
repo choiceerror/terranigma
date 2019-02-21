@@ -227,6 +227,8 @@ void playGround::effectSoundInit()
 	SOUNDMANAGER->addSound("textSound", "sound/텍스트사운드.mp3", false, true);
 	SOUNDMANAGER->addSound("levelUP", "sound/레벨업.mp3", false, false);
 	SOUNDMANAGER->addSound("doorSound", "sound/문여는소리.mp3", false, false);
+	SOUNDMANAGER->addSound("bossAttack", "sound/보스충돌.mp3", false, false);
+	SOUNDMANAGER->addSound("menuSelect", "sound/menu_SeletSound.mp3", false, false);
 }
 
 void playGround::allSoundStop()

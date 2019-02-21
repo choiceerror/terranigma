@@ -35,6 +35,8 @@ HRESULT dungeon::init()
 	_enemyManager->setEnemy();
 	_clockFade->init();
 
+	_soundOnce2 = false;
+
 	_camera->init(GAMESIZEX, GAMESIZEY, GAMESIZEX, 3200);
 
 	_clockFade->setClockFadeOut(false);
@@ -463,9 +465,10 @@ void dungeon::playerItemGet()
 	//골드아이템
 	for (int i = 0; i < _itemManager->getVGlod().size(); i++)
 	{
-		SOUNDMANAGER->play("goldGet", 1);
+	
 		if (IntersectRect(&temp, &_player->getPlayerRc(), &_itemManager->getVGlod()[i]->getItemRect()))
 		{
+			SOUNDMANAGER->play("goldGet", 1);
 			_player->setPlayerMoney(_player->getPlayerMoney() + _itemManager->getVGlod()[i]->getGoldNum());
 			_itemManager->getVGlod()[i]->setItemIsLive(false);
 		}

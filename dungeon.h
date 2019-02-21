@@ -39,6 +39,7 @@ private:
 	bool _isPlayerDeadAlphaOn;
 
 	bool _soundOnce;
+	bool _soundOnce2;
 
 public:
 	dungeon();

@@ -325,7 +325,11 @@ void IntroDungeon::render()
 {
 	IMAGEMANAGER->findImage("dungeonBackground")->render(getMemDC());
 	IMAGEMANAGER->findImage("dungeon")->render(getMemDC(), 0, 0, _camera->getCameraX(), _camera->getCameraY(), GAMESIZEX, GAMESIZEY);
-	//IMAGEMANAGER->findImage("pixelMap")->render(getMemDC(), 0, 0, _camera->getCameraX(), _camera->getCameraY(), GAMESIZEX, GAMESIZEY);
+	if (KEYMANAGER->isStayKeyDown('P'))
+	{
+		IMAGEMANAGER->findImage("pixelMap")->render(getMemDC(), 0, 0, _camera->getCameraX(), _camera->getCameraY(), GAMESIZEX, GAMESIZEY);
+	}
+	
 
 	_door->aniRender(getMemDC(), _doorPos.x - _camera->getCameraX(), _doorPos.y - _camera->getCameraY(), _doorAni);
 
